@@ -1,0 +1,12 @@
+{
+    "trigger": "/heartbeat",
+    "description": "Updates the dynamic session state and agent heartbeat in the context file",
+    "steps": [
+        "Analyze the chat history, terminal logs, and code changes from the current session.",
+        "Open the file located at .agents/context.md.",
+        "Locate section 5: Dynamic Session State and Agent Heartbeat.",
+        "Rewrite section 5 entirely to log the current date, completed milestones, active constraints, and next steps.",
+        "Verify the updated text complies with the documentation standards in .agents/rules/01-architecture.md.",
+        "Save the modifications to .agents/context.md without altering sections 1 through 4."
+    ]
+}

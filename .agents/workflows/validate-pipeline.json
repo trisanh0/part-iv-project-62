@@ -1,0 +1,10 @@
+{
+    "trigger": "/validate",
+    "description": "Scans modified src files to ensure compliance with repo governance rules",
+    "steps": [
+        "Review modified files in the active git staging area.",
+        "Cross-reference changes against the documentation constraints in .agents/rules/01-architecture.md.",
+        "Verify that no prohibited GNU or copyleft licenses have been introduced to requirements.txt.",
+        "Output a clean checklist showing any violations in typing, formatting, or architecture."
+    ]
+}
