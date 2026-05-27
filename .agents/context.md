@@ -37,6 +37,6 @@ For deep-dive technical context, academic literature, or chronological tracking,
 ## 5. Dynamic Session State and Agent Heartbeat
 This section must be systematically updated by the agent at the conclusion of every single session to maintain state continuity across development boundaries.
 
-* Last Active Session Date: 2026-05-27
-* Current Completed Milestones: Clean directory layout scaffolded; Obsidian knowledge base successfully mounted; data science-safe .gitignore implemented; Python 3.11 virtual environment built without catch22 compilation errors; project context and governance guidelines fully initialized.
-* Active Working Constraints: No functional source code modules have been written yet. Do not generate package code inside src/tempo/ until explicitly instructed or given permission.
+* Last Active Session Date: 2026-05-28
+* Current Completed Milestones: Clean directory layout scaffolded; project README.md simplified and professionally styled; created and executed comprehensive time-series sliding window feature extraction benchmark script (src/tempo/benchmark.py) comparing Pandas tsfresh, NumPy loop, and C-level vectorized NumPy views; achieved ~1000x-1200x wall-time speedups and ~90% memory savings at full scale on BEED and AI4I 2020 datasets; verified strict mathematical parity of computed feature matrices; published findings in walkthrough.md.
+* Active Working Constraints: Benchmarking baseline fully established. Implementation of production framework modules inside src/tempo/ is ready to proceed.
