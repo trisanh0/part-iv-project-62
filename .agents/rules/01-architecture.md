@@ -10,7 +10,7 @@ trigger: always_on
 
 ## 2. Telemetry and Caching
 * For core pipeline loops and heavy feature extraction blocks, track execution time and peak memory consumption when evaluating pipeline changes.
-* Favor caching intermediate pipeline data states to binary files (such as .npy or .parquet) where useful to prevent redundant computing overhead.
+* Favour caching intermediate pipeline data states to binary files (such as .npy or .parquet) where useful to prevent redundant computing overhead.
 
 ## 3. Concurrency and Data Integrity Check
 * If implementing parallel processing or multi-threading across time-series sequences, explicitly verify that data row tracking and indexing are mathematically preserved.
@@ -18,7 +18,7 @@ trigger: always_on
 
 ## 4. Scale-Agnostic Design
 * Do not hardcode fixed dataset dimensions, sample lengths, or array shapes into core utility functions.
-* Ensure all processing modules are parameterized to seamlessly handle scaling boundaries, allowing identical code to run smoothly on small local testing configurations or massive cloud cluster environments.
+* Ensure all processing modules are parameterised to seamlessly handle scaling boundaries, allowing identical code to run smoothly on small local testing configurations or massive cloud cluster environments.
 
 ## 5. Code Philosophy
 * Write code that is simple, clear, and easy to interpret.
@@ -32,8 +32,8 @@ trigger: always_on
 * Anticipate edge cases, such as NaN values returned during feature extraction, and handle them explicitly using clean, descriptive exceptions or logging rather than letting them silently break downstream execution.
 
 ## 7. Professional Code Documentation Standards
-* Maintain direct, professional, academic-grade engineering commentary throughout the codebase.
-* Do not use emojis inside code files, docstrings, or commit messages.
+* Maintain direct, professional, academic engineering commentary throughout the codebase.
+* Never use emojis inside code files, docstrings, or commit messages.
 * Avoid excessive or arbitrary Title Case in descriptive text and inline explanations.
 * Write explicit type hints and concise, meaningful docstrings explaining the underlying mathematics.
 * Avoid redundant comments that simply state what a line of code is doing visually.
