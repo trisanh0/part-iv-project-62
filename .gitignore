@@ -32,3 +32,6 @@ docs/.obsidian
 .DS_Store?
 ._*
 Thumbs.db
+
+# Caches
+*.cache

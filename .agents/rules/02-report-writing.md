@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: When writing any components of a report
+description: To be used when writing any components of a report
 ---
 
 # Skill Name: write-report-style
@@ -23,7 +23,3 @@ description: When writing any components of a report
 - **Paragraph Flow (Setup -> Action -> Result -> Impact)**: Establish problem context, detail analytical execution, state exact numerical outcomes, and conclude with practical impact.
 - **Front-Loaded Sentence Openers**: Frequently begin sentences with introductory participial, infinitive, or prepositional phrases ("To address this issue of scale...", "Given my background in...", "Upon receiving feedback from...").
 - **Balanced Trade-Off Clauses**: Frame nuances using contrastive compound structures ("While the ML model offered better predictive accuracy, the linear regression model was more interpretable...").
-
-## 4. Vocabulary & Idioms
-- **Verbs**: `yielded`, `characterised`, `demarcated`, `reconciled`, `benchmarked`, `paved the way for`, `delineates`.
-- **Key Idioms**: "curse of dimensionality", "single source of truth", "first-principles approach", "failed catastrophically", "not fit for purpose", "get into the weeds of".
