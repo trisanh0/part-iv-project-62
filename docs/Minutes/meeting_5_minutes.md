@@ -1,0 +1,27 @@
+- choose feature geenration, selecior, classifier, 
+- q: 4 categories of each f coeff. i interpreted this as it would be bad to remove an entire cat., e.g. wanted to test one coeffs., take each, instead of e.g. just one real.
+- a: how it is implemented is taht it uses FFT algo from scipy. this alg. always computes a certrain amount of fourier coeffs. removing one doesn’t really make sense. you would remove clusters of feature extractors.
+- clustrered wrt. funciton. fftfreq gens. >400 features. some are standalion, e.g. mean, then quantiles (which sometimes = median), then linear agg. trend (sliding window, fits lin. regr then returns linregr.). would remove linear aggregated trends together (window of 10 and window of 50 is distinct). can establish a hierarchy to remove one but not theother.
+- if you have several ts, mesuresd from diff. physical sources, can makenew features by dividing/making a ratio.
+- can compute first deriv. of the time series, could be some information in there.
+- if you have lots of measurements iwth the same unit, can compute differences too.
+- sm: current idea is to take a number of fft parameters, specify how many that you want.
+- phd student found application where splitting the angle into sin and cos gave additional features
+- created shared dataset with variety of datasets, can be improved upon and developed upon as we go.
+- turned the dataset into x_train and x_test, y_train and y_test for each seed
+- take a look at ts classfication bake off. 10 repeated cv, on each dataset. for each of these 100 folds, hyperparameter optimisation for the classification, of which has at least 100 iterations. need a convenient way of configuring this.
+- with nesi, if you have 10000 experiements, with every combination of experiement, there are a lot of combos. the feature selection is the same between all of them. come up with a dtabase that can access the faeture for a give sample/window. in the end, you have 100% of features, only need certain rows for training, and certain blocks of features.
+- let W be set of windows of data in the dataset. {w1, w2….wt}
+- dp. on problem, windows may be adjacent or overlapping, etc.
+- for each window, have a set of time series. might be composed of a few time series. w1={z11 to z1_gammea} to wt = {zt1 to z1_gamma}
+- fpr each TS, can make a feature vector, x1_1, which would have the 700 tsfresh features.
+- within the feature vectors of all the TSs, there are block of specific data, e.g. fourier coeffs.
+- we take differnet horiz. slices for training and testing.
+- during feature selection, might decide we only want certain samples and features.
+- dont want to select several times. 
+- run a full run on a subset, then select, then run on the rest.
+- for this benchmarking framework, dont want to do feature extraction again.
+- akl: i previously decomposing this into directory hierarchy, then used the type of input TS as one directory folder, then within that have a sets of “databases” as files.
+- root of all evil is optimsiing too early. follow tracer bullet development….
+- from what we have, need to move back up.
+- pitch idea about why tsml is important. look at tsfresh
