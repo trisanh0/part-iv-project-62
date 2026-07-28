@@ -1,7 +1,7 @@
 """
 Memory Optimisation Figure Generator for Slide 10.
 
-Generates presentation-ready figures (SVG & 300 DPI PNG) comparing:
+Generates presentation-ready figures (SVG & 300 DPI PNG):
   - Pandas Baseline vs NumPy Engine Peak Memory Consumption (MB) across scale N=20, 50, 100
   - Execution time trade-off across scale N=20, 50, 100
 
@@ -19,6 +19,11 @@ import seaborn as sns
 
 # Ensure Matplotlib cache dir is inside workspace
 os.environ["MPLCONFIGDIR"] = str(Path("presentation_figures/.cache").resolve())
+
+# Semi-Pastel Rose vs. Sage Green Palette for Memory Optimization
+COLOR_PANDAS = "#B86B7D"     # Soft Muted Rose (Pandas Baseline)
+COLOR_NUMPY = "#529985"      # Soft Sage Green (NumPy Engine)
+COLOR_ACCENT = "#2D5E52"     # Dark Teal Text Accent for Callout / Percentage Labels
 
 # Set high-legibility presentation theme with Arial font & enlarged labels
 plt.style.use("default")
@@ -63,9 +68,6 @@ beed_data = [
 
 df_beed = pd.DataFrame(beed_data)
 
-COLOR_PANDAS = "#E11D48"  # Rose Red (High Memory Spike)
-COLOR_NUMPY = "#059669"   # Emerald Green (Low Memory Optimized)
-
 def save_fig(fig, filename_stem):
     """Saves figure in both SVG and PNG format across output directories."""
     for d in [OUTPUT_DIR, DOCS_DIR]:
@@ -83,52 +85,53 @@ def plot_memory_optimisation_peak_memory():
     
     scales = [20, 50, 100]
     x = np.arange(len(scales))
-    width = 0.36
+    width = 0.42
     
     pandas_mem = [df_beed[(df_beed["Scale"] == s) & (df_beed["Engine"] == "Pandas Baseline")]["PeakMemory_MB"].values[0] for s in scales]
     numpy_mem = [df_beed[(df_beed["Scale"] == s) & (df_beed["Engine"] == "NumPy Engine")]["PeakMemory_MB"].values[0] for s in scales]
     
-    rects1 = ax.bar(x - width/2, pandas_mem, width, label="Pandas Baseline", color=COLOR_PANDAS, zorder=3)
-    rects2 = ax.bar(x + width/2, numpy_mem, width, label="NumPy Engine", color=COLOR_NUMPY, zorder=3)
+    rects1 = ax.bar(x - width/2, pandas_mem, width, label="Pandas", color=COLOR_PANDAS, hatch="//", edgecolor="#5C2938", linewidth=1.2, zorder=3)
+    rects2 = ax.bar(x + width/2, numpy_mem, width, label="NumPy", color=COLOR_NUMPY, hatch="..", edgecolor="#1E4D40", linewidth=1.2, zorder=3)
     
-    # Value annotations on top of bars
+    # Value annotations on top of bars - Font size 9.0pt / 8.5pt
     for rect in rects1:
         h = rect.get_height()
         ax.annotate(
             f"{h:.1f} MB",
             xy=(rect.get_x() + rect.get_width() / 2, h),
-            xytext=(0, 5),
+            xytext=(0, 4),
             textcoords="offset points",
             ha="center", va="bottom",
-            fontsize=12, fontweight="bold", color="#0F172A"
+            fontsize=9.0, fontweight="bold", color="#0F172A"
         )
         
-    for rect in rects2:
+    for rect, pct in zip(rects2, ["-89%", "-91%", "-91%"]):
         h = rect.get_height()
         ax.annotate(
-            f"{h:.1f} MB",
+            f"{h:.1f} MB\n({pct})",
             xy=(rect.get_x() + rect.get_width() / 2, h),
-            xytext=(0, 5),
+            xytext=(0, 4),
             textcoords="offset points",
             ha="center", va="bottom",
-            fontsize=12, fontweight="bold", color="#0F172A"
+            fontsize=8.5, fontweight="bold", color=COLOR_ACCENT
         )
         
     # Highlight 11x memory reduction callout at N=100
     ax.annotate(
         "11× Memory\nReduction",
         xy=(2 + width/2, 26.93),
-        xytext=(2 + width/2 + 0.15, 120),
-        arrowprops=dict(facecolor="#059669", edgecolor="#059669", width=2.5, headwidth=9, shrink=0.08),
-        fontsize=13, fontweight="bold", color="#059669",
-        bbox=dict(boxstyle="round,pad=0.4", facecolor="#ECFDF5", edgecolor="#A7F3D0", lw=1.2)
+        xytext=(2 + width/2 + 0.18, 120),
+        arrowprops=dict(facecolor=COLOR_NUMPY, edgecolor=COLOR_NUMPY, width=2.5, headwidth=9, shrink=0.08),
+        fontsize=11.5, fontweight="bold", color=COLOR_ACCENT,
+        bbox=dict(boxstyle="round,pad=0.4", facecolor="#E6F4F0", edgecolor="#A3D9C9", lw=1.2)
     )
     
-    ax.set_title("Peak Memory Consumption (BEED Dataset)")
+    ax.set_title("Peak Memory by Sample Scale")
     ax.set_xlabel("Sample Scale (N Rows)")
     ax.set_ylabel("Peak Memory (MB)")
     ax.set_xticks(x)
     ax.set_xticklabels([f"N = {s}" for s in scales])
+    ax.set_xlim(-0.6, len(scales) - 0.4)
     ax.set_ylim(0, 360)
     ax.grid(axis="y", zorder=0)
     ax.legend(loc="upper left", frameon=True, facecolor="white", edgecolor="#CBD5E1")
@@ -141,11 +144,11 @@ def plot_memory_optimisation_peak_memory():
 # FIGURE 2: Memory vs Execution Speed Trade-off (2 Subplots side-by-side)
 # ==============================================================================
 def plot_memory_optimisation_tradeoff():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13.5, 5.2))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.8))
     
     scales = [20, 50, 100]
     x = np.arange(len(scales))
-    width = 0.36
+    width = 0.42
     
     pandas_mem = [df_beed[(df_beed["Scale"] == s) & (df_beed["Engine"] == "Pandas Baseline")]["PeakMemory_MB"].values[0] for s in scales]
     numpy_mem = [df_beed[(df_beed["Scale"] == s) & (df_beed["Engine"] == "NumPy Engine")]["PeakMemory_MB"].values[0] for s in scales]
@@ -153,43 +156,45 @@ def plot_memory_optimisation_tradeoff():
     pandas_time = [df_beed[(df_beed["Scale"] == s) & (df_beed["Engine"] == "Pandas Baseline")]["ExecutionTime_s"].values[0] for s in scales]
     numpy_time = [df_beed[(df_beed["Scale"] == s) & (df_beed["Engine"] == "NumPy Engine")]["ExecutionTime_s"].values[0] for s in scales]
     
-    # Subplot 1: Peak Memory
-    rects1 = ax1.bar(x - width/2, pandas_mem, width, label="Pandas Baseline", color=COLOR_PANDAS, zorder=3)
-    rects2 = ax1.bar(x + width/2, numpy_mem, width, label="NumPy Engine", color=COLOR_NUMPY, zorder=3)
+    # Subplot 1: Peak Memory - Font size 9.0pt / 8.5pt
+    rects1 = ax1.bar(x - width/2, pandas_mem, width, label="Pandas", color=COLOR_PANDAS, hatch="//", edgecolor="#5C2938", linewidth=1.2, zorder=3)
+    rects2 = ax1.bar(x + width/2, numpy_mem, width, label="NumPy", color=COLOR_NUMPY, hatch="..", edgecolor="#1E4D40", linewidth=1.2, zorder=3)
     
     for rect in rects1:
         h = rect.get_height()
-        ax1.annotate(f"{h:.1f} MB", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=11, fontweight="bold")
-    for rect in rects2:
+        ax1.annotate(f"{h:.1f} MB", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=9.0, fontweight="bold", color="#0F172A")
+    for rect, pct in zip(rects2, ["-89%", "-91%", "-91%"]):
         h = rect.get_height()
-        ax1.annotate(f"{h:.1f} MB", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=11, fontweight="bold")
+        ax1.annotate(f"{h:.1f} MB\n({pct})", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=8.5, fontweight="bold", color=COLOR_ACCENT)
         
-    ax1.set_title("Peak Memory Usage")
-    ax1.set_xlabel("Sample Scale (Rows)")
+    ax1.set_title("Peak Memory by Sample Scale")
+    ax1.set_xlabel("Sample Scale (N Rows)")
     ax1.set_ylabel("Peak Memory (MB)")
     ax1.set_xticks(x)
     ax1.set_xticklabels([f"N = {s}" for s in scales])
+    ax1.set_xlim(-0.6, len(scales) - 0.4)
     ax1.set_ylim(0, 360)
     ax1.grid(axis="y", zorder=0)
     ax1.legend(loc="upper left", frameon=True, facecolor="white", edgecolor="#CBD5E1")
     sns.despine(ax=ax1, top=True, right=True)
     
-    # Subplot 2: Execution Time
-    rects3 = ax2.bar(x - width/2, pandas_time, width, label="Pandas Baseline", color=COLOR_PANDAS, zorder=3)
-    rects4 = ax2.bar(x + width/2, numpy_time, width, label="NumPy Engine", color=COLOR_NUMPY, zorder=3)
+    # Subplot 2: Execution Time - Font size 9.0pt / 8.5pt
+    rects3 = ax2.bar(x - width/2, pandas_time, width, label="Pandas", color=COLOR_PANDAS, hatch="//", edgecolor="#5C2938", linewidth=1.2, zorder=3)
+    rects4 = ax2.bar(x + width/2, numpy_time, width, label="NumPy", color=COLOR_NUMPY, hatch="..", edgecolor="#1E4D40", linewidth=1.2, zorder=3)
     
     for rect in rects3:
         h = rect.get_height()
-        ax2.annotate(f"{h:.1f}s", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=11, fontweight="bold")
-    for rect in rects4:
+        ax2.annotate(f"{h:.1f}s", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=9.0, fontweight="bold", color="#0F172A")
+    for rect, pct in zip(rects4, ["+272%", "+562%", "+754%"]):
         h = rect.get_height()
-        ax2.annotate(f"{h:.1f}s", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=11, fontweight="bold")
+        ax2.annotate(f"{h:.1f}s\n({pct})", xy=(rect.get_x() + rect.get_width()/2, h), xytext=(0, 4), textcoords="offset points", ha="center", va="bottom", fontsize=8.5, fontweight="bold", color=COLOR_ACCENT)
         
-    ax2.set_title("Execution Time")
-    ax2.set_xlabel("Sample Scale (Rows)")
+    ax2.set_title("Execution Time by Sample Scale")
+    ax2.set_xlabel("Sample Scale (N Rows)")
     ax2.set_ylabel("Execution Time (s)")
     ax2.set_xticks(x)
     ax2.set_xticklabels([f"N = {s}" for s in scales])
+    ax2.set_xlim(-0.6, len(scales) - 0.4)
     ax2.set_ylim(0, 150)
     ax2.grid(axis="y", zorder=0)
     ax2.legend(loc="upper left", frameon=True, facecolor="white", edgecolor="#CBD5E1")
@@ -200,7 +205,7 @@ def plot_memory_optimisation_tradeoff():
 
 
 if __name__ == "__main__":
-    print("Generating memory optimisation figures (SVG & PNG)...")
+    print("Generating memory optimisation figures in Rose/Sage semi-pastel palette...")
     plot_memory_optimisation_peak_memory()
     plot_memory_optimisation_tradeoff()
     print("Memory optimisation figures successfully generated!")

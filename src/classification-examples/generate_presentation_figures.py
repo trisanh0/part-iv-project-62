@@ -107,28 +107,47 @@ df_fourier[["Preset", "n"]] = pd.DataFrame(
 )
 df_fourier = df_fourier.sort_values(by=["Preset", "n"])
 
-# Palette Definitions
+# ==============================================================================
+# SEMI-PASTEL SLATE/PERIWINKLE HARMONY PALETTES & ACCESSIBILITY HATCHING
+# ==============================================================================
 COLOR_EXTRACTORS = {
-    "Statistics": "#E11D48",        # Vibrant Rose
-    "TSFEL": "#059669",             # Emerald Green
-    "TSFresh-Minimal": "#D97706",   # Amber/Orange
-    "TSFresh Minimal": "#D97706",   # Amber/Orange
-    "TSFresh-Efficient-25FFT": "#2563EB", # Cobalt Blue
-    "TSFresh-Efficient-50FFT": "#2563EB", # Cobalt Blue
-    "TSFresh Efficient": "#2563EB", # Cobalt Blue
+    "Statistics": "#B86B7D",                # Soft Muted Rose/Mauve
+    "TSFEL": "#529985",                     # Soft Sage Green/Teal
+    "TSFresh-Minimal": "#D49A6A",           # Soft Terracotta/Sand
+    "TSFresh Minimal": "#D49A6A",           # Soft Terracotta/Sand
+    "TSFresh-Efficient-25FFT": "#4C4C7A",   # Deep Slate Periwinkle
+    "TSFresh-Efficient-50FFT": "#4C4C7A",   # Deep Slate Periwinkle
+    "TSFresh Efficient": "#4C4C7A",         # Deep Slate Periwinkle
+}
+
+HATCH_EXTRACTORS = {
+    "Statistics": "",
+    "TSFEL": "//",
+    "TSFresh-Minimal": "\\\\",
+    "TSFresh Minimal": "\\\\",
+    "TSFresh-Efficient-25FFT": "..",
+    "TSFresh-Efficient-50FFT": "..",
+    "TSFresh Efficient": "..",
 }
 
 COLOR_SELECTORS = {
-    "None": "#64748B",              # Slate Gray
-    "SelectKBest": "#0D9488",       # Teal
-    "Boruta": "#3B82F6",            # Bright Blue
-    "TSFresh": "#6366F1",           # Indigo
+    "None": "#78789A",              # Muted Slate Lavender (Baseline)
+    "SelectKBest": "#529985",       # Soft Sage Green/Teal
+    "Boruta": "#7C6E99",            # Soft Muted Violet
+    "TSFresh": "#4C4C7A",           # Deep Slate Periwinkle
+}
+
+HATCH_SELECTORS = {
+    "None": "//",
+    "SelectKBest": "",
+    "Boruta": "\\\\",
+    "TSFresh": "..",
 }
 
 COLOR_FOURIER = {
-    "Minimal": "#E11D48",
-    "Efficient": "#059669",
-    "Comprehensive": "#2563EB",
+    "Minimal": "#D49A6A",           # Soft Terracotta/Sand (Consistent with TSFresh Minimal)
+    "Efficient": "#529985",         # Soft Sage Green/Teal
+    "Comprehensive": "#4C4C7A",     # Deep Slate Periwinkle
 }
 
 def save_fig(fig, filename_stem):
@@ -152,8 +171,22 @@ def plot_extraction_time_by_extractor():
     means = [df_cross[df_cross["Extractor"] == e]["Extraction Time_mean"].mean() for e in order]
     stds = [df_cross[df_cross["Extractor"] == e]["Extraction Time_std"].mean() for e in order]
     colors = [COLOR_EXTRACTORS[e] for e in order]
+    hatches = [HATCH_EXTRACTORS[e] for e in order]
     
-    bars = ax.bar(display_names, means, yerr=stds, capsize=6, color=colors, width=0.55, edgecolor="none", zorder=3, error_kw={"ecolor": "#334155", "lw": 1.8})
+    bars = ax.bar(
+        display_names,
+        means,
+        yerr=stds,
+        capsize=6,
+        color=colors,
+        width=0.55,
+        edgecolor="#333352",
+        linewidth=1.2,
+        zorder=3,
+        error_kw={"ecolor": "#334155", "lw": 1.8}
+    )
+    for bar, h_pat in zip(bars, hatches):
+        bar.set_hatch(h_pat)
     
     for bar, std_val in zip(bars, stds):
         h = bar.get_height()
@@ -189,8 +222,22 @@ def plot_prediction_accuracy_by_extractor():
     means = [df_cross[df_cross["Extractor"] == e]["Prediction Accuracy_mean"].mean() * 100 for e in order]
     stds = [df_cross[df_cross["Extractor"] == e]["Prediction Accuracy_std"].mean() * 100 for e in order]
     colors = [COLOR_EXTRACTORS[e] for e in order]
+    hatches = [HATCH_EXTRACTORS[e] for e in order]
     
-    bars = ax.bar(display_names, means, yerr=stds, capsize=6, color=colors, width=0.55, edgecolor="none", zorder=3, error_kw={"ecolor": "#334155", "lw": 1.8})
+    bars = ax.bar(
+        display_names,
+        means,
+        yerr=stds,
+        capsize=6,
+        color=colors,
+        width=0.55,
+        edgecolor="#333352",
+        linewidth=1.2,
+        zorder=3,
+        error_kw={"ecolor": "#334155", "lw": 1.8}
+    )
+    for bar, h_pat in zip(bars, hatches):
+        bar.set_hatch(h_pat)
     
     for bar, std_val in zip(bars, stds):
         h = bar.get_height()
@@ -223,8 +270,22 @@ def plot_prediction_accuracy_by_selector():
     means = [df_cross[df_cross["Selector"] == s]["Prediction Accuracy_mean"].mean() * 100 for s in order]
     stds = [df_cross[df_cross["Selector"] == s]["Prediction Accuracy_std"].mean() * 100 for s in order]
     colors = [COLOR_SELECTORS[s] for s in order]
+    hatches = [HATCH_SELECTORS[s] for s in order]
     
-    bars = ax.bar(order, means, yerr=stds, capsize=6, color=colors, width=0.55, edgecolor="none", zorder=3, error_kw={"ecolor": "#334155", "lw": 1.8})
+    bars = ax.bar(
+        order,
+        means,
+        yerr=stds,
+        capsize=6,
+        color=colors,
+        width=0.55,
+        edgecolor="#333352",
+        linewidth=1.2,
+        zorder=3,
+        error_kw={"ecolor": "#334155", "lw": 1.8}
+    )
+    for bar, h_pat in zip(bars, hatches):
+        bar.set_hatch(h_pat)
     
     for bar, std_val in zip(bars, stds):
         h = bar.get_height()
@@ -275,6 +336,7 @@ def plot_prediction_accuracy_by_combination():
     df_combo = pd.DataFrame(df_sorted)
     
     colors = [COLOR_EXTRACTORS[row["DisplayExt"]] for _, row in df_combo.iterrows()]
+    hatches = [HATCH_EXTRACTORS[row["DisplayExt"]] for _, row in df_combo.iterrows()]
     means = df_combo["Prediction Accuracy_mean"] * 100
     stds = df_combo["Prediction Accuracy_std"] * 100
     
@@ -285,9 +347,13 @@ def plot_prediction_accuracy_by_combination():
         capsize=5,
         color=colors,
         width=0.68,
+        edgecolor="#333352",
+        linewidth=1.2,
         zorder=3,
         error_kw={"ecolor": "#334155", "lw": 1.5}
     )
+    for bar, h_pat in zip(bars, hatches):
+        bar.set_hatch(h_pat)
     
     for bar, std_val in zip(bars, stds):
         h = bar.get_height()
@@ -297,7 +363,7 @@ def plot_prediction_accuracy_by_combination():
             xytext=(0, 4),
             textcoords="offset points",
             ha="center", va="bottom",
-            fontsize=11, fontweight="bold", color="#0F172A"
+            fontsize=9.0, fontweight="bold", color="#0F172A"
         )
         
     ax.set_title("Prediction Accuracy by Combination")
@@ -377,7 +443,7 @@ def plot_prediction_accuracy_by_tsfresh_extractor():
 
 
 if __name__ == "__main__":
-    print("Generating presentation-ready figures in Arial font with enlarged labels...")
+    print("Generating presentation-ready figures in semi-pastel palette with matching slate/periwinkle themes...")
     plot_extraction_time_by_extractor()
     plot_prediction_accuracy_by_extractor()
     plot_prediction_accuracy_by_selector()
