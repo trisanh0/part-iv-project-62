@@ -6,6 +6,7 @@ from time import perf_counter
 import warnings
 from my_selectors import *
 from my_extractors import *
+from pathlib import Path
 
 
 class Data:
@@ -221,6 +222,9 @@ class Extractor:
         self.name = name
         self.function = function
         self.representation = representation
+        self.cached_seed = None
+        self.cached_dataset = None
+        self.cached_time = None
         self.kwargs = kwargs
 
     def extract(self, X_train, X_test, y_train, y_test):
@@ -308,7 +312,7 @@ from tsfresh import extract_features
 from tsfresh.utilities.dataframe_functions import impute
 
 
-def run(dataset, extractor=None, selector=None, classifier=None):
+def run(dataset, seed, extractor=None, selector=None, classifier=None):
     """
     Generic benchmark pipeline.
 
@@ -341,32 +345,42 @@ def run(dataset, extractor=None, selector=None, classifier=None):
 
     if extractor is not None:
 
-        t0 = perf_counter()
+        if extractor.cached_seed != seed or extractor.cached_dataset is None:
 
-        X_train, X_test, y_train, y_test = extractor.extract(
-            dataset.data_train,
-            dataset.data_test,
-            dataset.y_train,
-            dataset.y_test,
-        )
+            t0 = perf_counter()
 
-        # tsfresh returns DataFrames
-        if hasattr(X_train, "to_numpy"):
-            impute(X_train)
-            X_train = X_train.to_numpy()
+            X_train, X_test, y_train, y_test = extractor.extract(
+                dataset.data_train,
+                dataset.data_test,
+                dataset.y_train,
+                dataset.y_test,
+            )
 
-        if hasattr(X_test, "to_numpy"):
-            impute(X_test)
-            X_test = X_test.to_numpy()
+            # tsfresh returns DataFrames
+            if hasattr(X_train, "to_numpy"):
+                impute(X_train)
+                X_train = X_train.to_numpy()
 
-        dataset = Dataset(
-            X_train,
-            X_test,
-            y_train,
-            y_test,
-        )
+            if hasattr(X_test, "to_numpy"):
+                impute(X_test)
+                X_test = X_test.to_numpy()
 
-        extract_time = perf_counter() - t0
+            dataset = Dataset(
+                X_train,
+                X_test,
+                y_train,
+                y_test,
+            )
+
+            extractor.cached_seed = seed
+            extractor.cached_dataset = dataset
+
+            extract_time = perf_counter() - t0
+            extractor.cached_time = extract_time
+
+        else:
+            dataset = extractor.cached_dataset
+            extract_time = extractor.cached_time
 
     ############################################################
     # Feature Selection
@@ -501,18 +515,18 @@ if __name__ == "__main__":
 
     extractors = [
 
-    Extractor(
-        name="Statistics",
-        function=statistical,
-        representation="numpy"
-    ),
+    # Extractor(
+    #     name="Statistics",
+    #     function=statistical,
+    #     representation="numpy"
+    # ),
 
-    Extractor(
-        name="TSFresh-Minimal",
-        function=tsfresh_extractor,
-        representation="long",
-        parameter_set="minimal",
-    ),
+    # Extractor(
+    #     name="TSFresh-Minimal",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="minimal",
+    # ),
 
     # Extractor(
     #     name="TSFresh-Efficient-10FFT",
@@ -522,20 +536,44 @@ if __name__ == "__main__":
     #     fft_coefficients=10,
     # ),
 
-    Extractor(
-        name="TSFresh-Efficient-25FFT",
-        function=tsfresh_extractor,
-        representation="long",
-        parameter_set="efficient",
-        fft_coefficients=25,
-    ),
-
     # Extractor(
-    #     name="TSFresh-Efficient-50FFT",
+    #     name="TSFresh-Efficient-25FFT",
     #     function=tsfresh_extractor,
     #     representation="long",
     #     parameter_set="efficient",
-    #     fft_coefficients=50,
+    #     fft_coefficients=25,
+    # ),
+
+    Extractor(
+        name="TSFresh-Efficient-50FFT",
+        function=tsfresh_extractor,
+        representation="long",
+        parameter_set="efficient",
+        fft_coefficients=50,
+    ),
+
+    # Extractor(
+    #     name="TSFresh-Efficient-75FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="efficient",
+    #     fft_coefficients=75,
+    # ),
+
+    # Extractor(
+    #     name="TSFresh-Efficient-100FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="efficient",
+    #     fft_coefficients=100,
+    # ),
+
+    # Extractor(
+    #     name="TSFresh-Comprehensive-10FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="comprehensive",
+    #     fft_coefficients=10,
     # ),
 
     # Extractor(
@@ -554,11 +592,27 @@ if __name__ == "__main__":
     #     fft_coefficients=50,
     # ),
 
-    Extractor(
-    name="TSFEL",
-    function=tsfel_extractor,
-    representation="numpy"
-    )
+    # Extractor(
+    #     name="TSFresh-Comprehensive-75FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="comprehensive",
+    #     fft_coefficients=75,
+    # ),
+
+    # Extractor(
+    #     name="TSFresh-Comprehensive-100FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="comprehensive",
+    #     fft_coefficients=100,
+    # ),
+
+    # Extractor(
+    # name="TSFEL",
+    # function=tsfel_extractor,
+    # representation="numpy"
+    # )
     ]
 
     ############################################################
@@ -567,7 +621,7 @@ if __name__ == "__main__":
 
     selectors = [
 
-    # None,
+    None,
 
     Selector(
         name="TSFresh",
@@ -593,7 +647,7 @@ if __name__ == "__main__":
     ############################################################
 
     benchmark_results = []
-    NO_SEEDS = 5
+    NO_SEEDS = 20
     for seed in range(NO_SEEDS):
 
         print(f"\n===== Dataset {seed} =====")
@@ -625,6 +679,7 @@ if __name__ == "__main__":
 
                 results = run(
                     dataset=dataset,
+                    seed=seed,
                     extractor=extractor,
                     selector=selector,
                     classifier=classifier
@@ -658,16 +713,17 @@ if __name__ == "__main__":
 
     print("\n")
     print(results_df)
+
+    index = 0
+
     while True:
-        index = 0
-        try:
-            results_df.to_csv(
-                f"benchmark_results{index}.csv",
-                index=False
-            )
+        filename = Path(f"benchmark_results{index}.csv")
+
+        if not filename.exists():
+            results_df.to_csv(filename, index=False)
             break
-        except:
-            index += 1
+
+        index += 1
 
 
     print(f"\nSaved benchmark_results{index}.csv")
