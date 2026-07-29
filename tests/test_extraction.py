@@ -69,8 +69,9 @@ class TestExtraction(unittest.TestCase):
         self.assertEqual(df_feat.shape[0], 2)
         self.assertIn("var_0__mean", df_feat.columns)
         self.assertAlmostEqual(df_feat.iloc[0]["var_0__mean"], 3.0)
-        self.assertAlmostEqual(df_feat.iloc[0]["var_0__min"], 1.0)
-        self.assertAlmostEqual(df_feat.iloc[0]["var_0__max"], 5.0)
+        self.assertAlmostEqual(df_feat.iloc[0]["var_0__minimum"], 1.0)
+        self.assertAlmostEqual(df_feat.iloc[0]["var_0__maximum"], 5.0)
+
 
 
 if __name__ == "__main__":
