@@ -35,3 +35,10 @@ Thumbs.db
 
 # Caches
 *.cache
+
+# Temporary agent run logs
+.agents/orchestrator/
+.agents/sentinel/
+.agents/victory_auditor/
+.agents/teamwork_preview_*
+.agents/ORIGINAL_REQUEST.md
