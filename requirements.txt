@@ -15,3 +15,6 @@ scipy>=1.11.0
 # Environment and notebooks
 python-dotenv>=1.0.0
 jupyterlab>=4.0.0
+
+# RAG and context management
+./packages/contexere

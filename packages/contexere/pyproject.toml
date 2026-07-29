@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contexere"
+version = "0.1.0"
+description = "Contexere RAG indexing and context management framework"
+authors = [{ name = "Oliver Kempa-Liehr" }]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+nxt = "contexere.cli:main"

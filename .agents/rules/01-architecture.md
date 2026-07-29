@@ -37,3 +37,18 @@ trigger: always_on
 * Avoid excessive or arbitrary Title Case in descriptive text and inline explanations.
 * Write explicit type hints and concise, meaningful docstrings explaining the underlying mathematics.
 * Avoid redundant comments that simply state what a line of code is doing visually.
+
+## 8. Contexere RAG Naming Conventions & Repository Governance
+* All project documentation, meeting minutes, experiment notebooks, and reference dataset artifacts must comply with the Contexere RAG index format: `PIyymDc[_x]__keyword`.
+* **Project Identifier (`PI`) Prefixes**:
+  - `P4P`: Part IV Project administrative docs, agendas, and meeting minutes stored in `docs/Minutes/` (e.g. `P4P26s7a__meeting_with_ivan_minutes.md`).
+  - `TM`: TEMPO project codebase, experiment notebooks, and benchmark scripts stored in `notebooks/` (e.g. `TM26sRa__beed_tsfresh.ipynb`).
+  - `DS`: Data Science reference material, external literature, and foundational benchmark datasets in `notebooks/examples/` (e.g. `DS26sRa__lab1_scikit_learn.ipynb`).
+* **Format Breakdown**:
+  - `yy`: Two-digit year (e.g., `26` for 2026).
+  - `m`: One-character month in hexadecimal or sequence code (`1`-`9`, `a`=October, `b`=November, `c`=December, or month code).
+  - `D`: One-character day identifier (`1`-`9`, `A`-`V` for days 1 through 31).
+  - `c`: One-character document sequence or chunk identifier (e.g. `a`, `b`).
+  - `[_x]`: Optional sub-chunk or revision index suffix.
+  - `__keyword`: Double-underscore separator followed by concise, descriptive `snake_case` keyword tags.
+* **Commit Requirement**: Developers may use default file names during initial drafting; however, all files MUST be renamed into compliance before git commit and pull request merge.

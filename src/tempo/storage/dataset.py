@@ -1,8 +1,12 @@
 """Dataset standardisation and schema validation for TEMPO framework."""
 
 import os
+from typing import Optional
 import polars as pl
 import numpy as np
+
+from tempo.export import save_dataframe
+
 
 
 def generate_simulated_dataset(
@@ -10,6 +14,7 @@ def generate_simulated_dataset(
     n_series: int = 1000,
     series_len: int = 200,
     seed: int = 42,
+    rag_prefix: Optional[str] = None,
 ) -> None:
     """Generate a synthetic time-series classification dataset.
 
@@ -18,6 +23,7 @@ def generate_simulated_dataset(
         n_series: Number of independent time-series signals to generate.
         series_len: Temporal length of each sequence.
         seed: Random state seed.
+        rag_prefix: Optional Contexere RAG prefix identifier (e.g. 'TM').
     """
     rng = np.random.default_rng(seed)
 
@@ -57,19 +63,25 @@ def generate_simulated_dataset(
     })
 
     os.makedirs(output_dir, exist_ok=True)
-    df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
-    df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="simulated_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="simulated_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
 
 
 def convert_predictive_maintenance(
     raw_path: str,
     output_dir: str,
+    rag_prefix: Optional[str] = None,
 ) -> None:
     """Standardize the AI4I 2020 Predictive Maintenance dataset.
 
     Args:
         raw_path: File path of raw source CSV.
         output_dir: Output directory path.
+        rag_prefix: Optional Contexere RAG prefix identifier.
     """
     if not os.path.exists(raw_path):
         raise FileNotFoundError(f"Raw file not found: {raw_path}")
@@ -99,19 +111,25 @@ def convert_predictive_maintenance(
     ])
 
     os.makedirs(output_dir, exist_ok=True)
-    df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
-    df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="pred_maintenance_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="pred_maintenance_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
 
 
 def convert_beed(
     raw_path: str,
     output_dir: str,
+    rag_prefix: Optional[str] = None,
 ) -> None:
     """Standardize the BEED EEG dataset.
 
     Args:
         raw_path: File path of raw source CSV.
         output_dir: Output directory path.
+        rag_prefix: Optional Contexere RAG prefix identifier.
     """
     if not os.path.exists(raw_path):
         raise FileNotFoundError(f"Raw file not found: {raw_path}")
@@ -136,8 +154,12 @@ def convert_beed(
     ])
 
     os.makedirs(output_dir, exist_ok=True)
-    df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
-    df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="beed_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="beed_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
 
 
 def validate_export(export_dir: str) -> bool:
@@ -168,3 +190,4 @@ def validate_export(export_dir: str) -> bool:
         return False
 
     return True
+

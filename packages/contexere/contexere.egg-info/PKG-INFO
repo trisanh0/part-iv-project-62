@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: contexere
+Version: 0.1.0
+Summary: Contexere RAG indexing and context management framework
+Author: Oliver Kempa-Liehr
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+
+# Contexere RAG Framework
+
+Contexere RAG indexing and context management framework for codebase artifact tracking.
