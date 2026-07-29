@@ -42,3 +42,9 @@ Thumbs.db
 .agents/victory_auditor/
 .agents/teamwork_preview_*
 .agents/ORIGINAL_REQUEST.md
+
+# Package build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
