@@ -1,3 +1,38 @@
+## Feature Extraction and Engineering
+- scipy's FFT algorithm computes a fixed set of Fourier coefficients, so individual coefficients should not be dropped in isolation; features should be removed in functional clusters or blocks.
+- `tsfresh` / `fftfreq` generates over 400 features categorized by function, including standalone metrics (e.g., mean), grouped statistics (e.g., quantiles/median), and sliding-window linear aggregated trends.
+- Linear aggregated trends should be removed as a group, though differing window sizes (e.g., window 10 vs window 50) allow establishing a hierarchy to selectively drop specific sub-groups.
+- Additional features can be engineered by taking ratios between time series from different physical sources, calculating first derivatives of time series, or taking differences between measurements sharing the same units.
+- Scott's current plan is to allow specifying a parameter for the desired number of FFT coefficients.
+- Splitting Fourier angles into sine and cosine components can yield valuable additional features for certain applications.
+
+## Benchmark Datasets and Cross-Validation
+- Created an expandable shared dataset split into X_train, X_test, y_train, and y_test for each random seed.
+- Review the Time-Series Classification Bake-Off methodology (10 repeated CV runs per dataset, with $\ge 100$ hyperparameter optimisation iterations per fold across 100 folds) to design a convenient pipeline configuration interface.
+
+## Data Storage Architecture for NeSI Execution
+- Executing ~10,000 experiment combinations on NeSI shares identical feature extraction/selection logic; feature extraction must only be run once overall rather than repeatedly per run.
+- Data structure formulation:
+  - Let $W = \{w_1, w_2, \dots, w_t\}$ be the set of data windows (adjacent or overlapping).
+  - Each window $w_i$ contains a set of time series $w_i = \{z_{i1}, z_{i2}, \dots, z_{i\gamma}\}$.
+  - Each time series generates a feature vector $x_{i,j}$ containing ~700 `tsfresh` features split into functional blocks (e.g., Fourier coefficients).
+  - Horizontal slices are taken for training/testing samples, while vertical slices select specific feature blocks.
+- Pre-compute and store 100% of features in a database/file structure, running feature selection on a subset first before evaluating the full feature matrix.
+
+## Strategy and Next Steps
+- Andreas previously used a directory hierarchy with the input time-series type as top-level folders containing database files.
+- Avoid premature optimisation; follow tracer bullet development and step back up to articulate high-level goals.
+- Prepare a pitch on why time-series machine learning (TSML) is important and review `tsfresh`.
+
+## Action Items
+- Review Time-Series Classification Bake-Off methodology and setup configuration schema (Owners: Trisan & Scott | Timeframe: Next meeting / TBD)
+- Draft pitch on the importance of TSML and conduct a detailed review of `tsfresh` features (Owners: Trisan & Scott | Timeframe: Next meeting / TBD)
+- Prototype tracer-bullet database structure for single-pass feature extraction on NeSI (Owners: Trisan & Scott | Timeframe: Next meeting / TBD)
+
+## Clarifications
+- Are the target timeframes for these action items set for the next meeting, or are there specific calendar deadlines?
+- Should any of the action items be assigned individually to Trisan or Scott rather than jointly?
+# Unprocessed
 - choose feature geenration, selecior, classifier, 
 - q: 4 categories of each f coeff. i interpreted this as it would be bad to remove an entire cat., e.g. wanted to test one coeffs., take each, instead of e.g. just one real.
 - a: how it is implemented is taht it uses FFT algo from scipy. this alg. always computes a certrain amount of fourier coeffs. removing one doesn’t really make sense. you would remove clusters of feature extractors.
