@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-contexere/__init__.py
-contexere/cli.py
-contexere.egg-info/PKG-INFO
-contexere.egg-info/SOURCES.txt
-contexere.egg-info/dependency_links.txt
-contexere.egg-info/entry_points.txt
-contexere.egg-info/top_level.txt
