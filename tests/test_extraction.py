@@ -9,6 +9,7 @@ from tempo.extraction import (
     numpy_statistical_extractor,
     polars_statistical_extractor,
     tsfresh_extractor,
+    numba_feature_extractor,
 )
 
 
@@ -56,7 +57,23 @@ class TestExtraction(unittest.TestCase):
         self.assertEqual(df_feat.shape[0], 2)
         self.assertGreater(df_feat.shape[1], 0)
 
+    def test_numba_feature_extractor(self):
+        """Verify Numba JIT feature extractor shape and mathematical accuracy."""
+        X = np.array([
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+            [10.0, 20.0, 30.0, 40.0, 50.0],
+        ])
+        df_feat = numba_feature_extractor(X, n_fft_coeffs=2)
+
+        self.assertIsInstance(df_feat, pd.DataFrame)
+        self.assertEqual(df_feat.shape[0], 2)
+        self.assertIn("var_0__mean", df_feat.columns)
+        self.assertAlmostEqual(df_feat.iloc[0]["var_0__mean"], 3.0)
+        self.assertAlmostEqual(df_feat.iloc[0]["var_0__min"], 1.0)
+        self.assertAlmostEqual(df_feat.iloc[0]["var_0__max"], 5.0)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
