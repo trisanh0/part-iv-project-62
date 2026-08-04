@@ -1,12 +1,13 @@
 """Native Polars expression feature extraction engine."""
 
+from typing import List, Optional
 import polars as pl
 
 
 def polars_statistical_extractor(
     df: pl.DataFrame,
-    id_col: str = "id",
-    value_cols: list[str] | None = None,
+    id_col: str = "sequence_id",
+    value_cols: Optional[List[str]] = None,
 ) -> pl.DataFrame:
     """Extract summary statistical features using native Polars aggregations.
 
@@ -18,8 +19,15 @@ def polars_statistical_extractor(
     Returns:
         Polars DataFrame of aggregated feature metrics per entity ID.
     """
+    if id_col not in df.columns:
+        if "id" in df.columns:
+            id_col = "id"
+        else:
+            raise KeyError(f"Identifier column '{id_col}' not found in DataFrame columns.")
+
     if value_cols is None:
-        value_cols = [c for c in df.columns if c not in (id_col, "time")]
+        exclude_cols = {id_col, "step", "time"}
+        value_cols = [c for c in df.columns if c not in exclude_cols]
 
     exprs = []
     for col in value_cols:

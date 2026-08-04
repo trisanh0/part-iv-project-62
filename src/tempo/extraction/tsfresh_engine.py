@@ -1,6 +1,7 @@
 """TSFresh extraction engine wrappers with Fourier coefficient truncation."""
 
 from copy import deepcopy
+from typing import Optional
 import pandas as pd
 from tsfresh import extract_features
 from tsfresh.feature_extraction import (
@@ -29,9 +30,9 @@ def fft_parameters(n_coeffs: int):
 def tsfresh_extractor(
     df: pd.DataFrame,
     parameter_set: str = "minimal",
-    fft_coefficients: int | None = None,
-    column_id: str = "id",
-    column_sort: str = "time",
+    fft_coefficients: Optional[int] = None,
+    column_id: Optional[str] = None,
+    column_sort: Optional[str] = None,
 ) -> pd.DataFrame:
     """Extract features using TSFresh with optional Fourier coefficient limit.
 
@@ -45,6 +46,22 @@ def tsfresh_extractor(
     Returns:
         pandas DataFrame of extracted features.
     """
+    if column_id is None:
+        if "sequence_id" in df.columns:
+            column_id = "sequence_id"
+        elif "id" in df.columns:
+            column_id = "id"
+        else:
+            raise KeyError("Neither 'sequence_id' nor 'id' column found in DataFrame.")
+
+    if column_sort is None:
+        if "step" in df.columns:
+            column_sort = "step"
+        elif "time" in df.columns:
+            column_sort = "time"
+        else:
+            column_sort = None
+
     if parameter_set == "minimal":
         settings = MinimalFCParameters()
     elif parameter_set == "efficient":
