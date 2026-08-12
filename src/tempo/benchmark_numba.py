@@ -20,8 +20,8 @@ from typing import List, Tuple
 import numpy as np
 import pandas as pd
 
+from tempo.storage import load_dataset, to_numpy_tensor
 from tempo.benchmark_efficient import (
-    load_dataset,
     benchmark_pandas_tsfresh_efficient,
     benchmark_numpy_efficient,
 )
@@ -70,7 +70,6 @@ def run_in_process(
 
 def run_numba_benchmarks():
     """Execute 1:1 apples-to-apples telemetry benchmark suite."""
-    base_dir = Path.cwd()
     datasets = ["beed", "pred-maintenance"]
     scale_sizes = [20, 50, 100, 200]
 
@@ -86,7 +85,11 @@ def run_numba_benchmarks():
         print(f"\nTarget Dataset: {ds_name.upper()}")
         print("-" * 95)
 
-        data, feature_names = load_dataset(ds_name, base_dir)
+        df_ts, _ = load_dataset(ds_name)
+        exclude_cols = {"sequence_id", "step", "id", "time"}
+        feature_names = [c for c in df_ts.columns if c not in exclude_cols]
+        data = df_ts.select(feature_names).to_numpy().astype(np.float64)
+
         print(f"Loaded dataset matrix shape: {data.shape[0]} rows x {data.shape[1]} raw variables")
 
         print("\n| Scale (N) | Method | Time (s) | Peak Memory (MB) | Speedup vs Ref | Memory Drop |")
