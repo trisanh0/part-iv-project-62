@@ -1,14 +1,21 @@
 """Wrapper-based feature selection methods."""
 
+from typing import Union
 import pandas as pd
 import numpy as np
-from boruta import BorutaPy
 from sklearn.ensemble import RandomForestClassifier
+
+try:
+    from boruta import BorutaPy
+    _HAS_BORUTA = True
+except ImportError:
+    BorutaPy = None
+    _HAS_BORUTA = False
 
 
 def boruta_selector(
     X: pd.DataFrame,
-    y: pd.Series | np.ndarray,
+    y: Union[pd.Series, np.ndarray],
     n_estimators: int = 500,
     random_state: int = 42,
 ) -> pd.DataFrame:
@@ -23,6 +30,9 @@ def boruta_selector(
     Returns:
         Filtered pandas DataFrame containing selected features.
     """
+    if not _HAS_BORUTA:
+        raise ImportError("boruta package is required for boruta_selector. Install with pip install boruta.")
+
     rf = RandomForestClassifier(
         n_estimators=n_estimators,
         random_state=random_state,

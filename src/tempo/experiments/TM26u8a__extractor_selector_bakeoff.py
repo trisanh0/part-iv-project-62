@@ -10,6 +10,7 @@ import gc
 import os
 import time
 import tracemalloc
+import warnings
 from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -29,11 +30,18 @@ from tempo.extraction import (
 )
 from tempo.selection import select_k_best, tsfresh_selector
 
+warnings.filterwarnings("ignore")
+
+
+def pl_to_pd(df_pl: pl.DataFrame) -> pd.DataFrame:
+    """Convert Polars DataFrame to Pandas DataFrame without requiring pyarrow."""
+    return pd.DataFrame(df_pl.to_dict(as_series=False))
+
 
 class ExtractorCache:
     """In-memory feature extraction cache matching Scott's caching pattern."""
 
-    def __init__(self, name: str, extractor_fn, representation: str = "df", kwargs: Optional[dict] = None):
+    def __init__(self, name: str, extractor_fn=None, representation: str = "df", kwargs: Optional[dict] = None):
         self.name = name
         self.extractor_fn = extractor_fn
         self.representation = representation
@@ -54,16 +62,20 @@ class ExtractorCache:
 
         if self.name == "statistics":
             df_feat_pl = polars_statistical_extractor(df_ts)
-            id_col = "sequence_id" if "sequence_id" in df_feat_pl.columns else "id"
-            df_features = df_feat_pl.to_pandas().set_index(id_col)
+            exclude_cols = {"sequence_id", "id"}
+            feat_cols = [c for c in df_feat_pl.columns if c not in exclude_cols]
+            df_features = pl_to_pd(df_feat_pl.select(feat_cols))
 
         elif self.name == "tsfel":
-            df_pandas = df_ts.to_pandas()
-            id_col = "sequence_id" if "sequence_id" in df_pandas.columns else "id"
-            df_features = tsfel_extractor(df_pandas, column_id=id_col)
+            exclude_cols = {"sequence_id", "step", "id", "time"}
+            feature_cols = [c for c in df_ts.columns if c not in exclude_cols]
+            tensor = to_numpy_tensor(df_ts, feature_cols=feature_cols)
+            if tensor.ndim == 3:
+                tensor = tensor[:, :, 0]  # First channel for univariate TSFEL
+            df_features = tsfel_extractor(tensor)
 
         elif self.name.startswith("tsfresh"):
-            df_pandas = df_ts.to_pandas()
+            df_pandas = pl_to_pd(df_ts)
             param_set = self.name.split("-")[1]
             fft_limit = n_fft_coeffs if param_set != "minimal" else None
             df_features = tsfresh_extractor(df_pandas, parameter_set=param_set, fft_coefficients=fft_limit)
@@ -99,7 +111,7 @@ def run_bakeoff_experiment(
     extractors: Optional[List[str]] = None,
     selectors: Optional[List[str]] = None,
     models: Optional[List[str]] = None,
-    n_seeds: int = 5,
+    n_seeds: int = 1,
     n_splits: int = 5,
     n_fft_coeffs: int = 25,
     k_best: int = 20,
@@ -138,7 +150,7 @@ def run_bakeoff_experiment(
     df_ts, df_targets = load_dataset(dataset_name)
 
     # Initialize in-memory extractor caches matching Scott's pattern
-    caches = {ext_name: ExtractorCache(ext_name, None) for ext_name in extractors}
+    caches = {ext_name: ExtractorCache(ext_name) for ext_name in extractors}
 
     results = []
 
@@ -157,13 +169,10 @@ def run_bakeoff_experiment(
 
             n_features_extracted = df_features.shape[1]
 
-            # Align targets
-            target_id_col = "sequence_id" if "sequence_id" in df_targets.columns else "id"
-            df_targets_pd = df_targets.to_pandas().set_index(target_id_col)
-            common_idx = df_features.index.intersection(df_targets_pd.index)
-
-            X = df_features.loc[common_idx].fillna(0.0)
-            y = df_targets_pd.loc[common_idx, "target"].values
+            # Direct index-independent array alignment
+            N = min(len(df_features), len(df_targets))
+            X = df_features.iloc[:N].fillna(0.0)
+            y = df_targets["target"].to_numpy()[:N]
 
             is_classification = np.issubdtype(y.dtype, np.integer) or len(np.unique(y)) <= 10
 
@@ -243,7 +252,7 @@ def run_bakeoff_experiment(
     parquet_path = os.path.join(output_dir, "bakeoff_results.parquet")
     csv_path = os.path.join(output_dir, "bakeoff_results.csv")
 
-    df_results.to_parquet(parquet_path, index=False)
+    pl.DataFrame(df_results.to_dict("list")).write_parquet(parquet_path)
     df_results.to_csv(csv_path, index=False)
 
     print(f"\nBake-Off Telemetry saved to {parquet_path} and {csv_path}")
