@@ -286,6 +286,252 @@ class Selector:
         )
     
 
+import threading
+import psutil
+
+
+class ResourceMonitor:
+
+    def __init__(self, interval=0.1):
+        self.interval = interval
+        self.process = psutil.Process()
+
+        self.running = False
+        self.thread = None
+
+        self.ram_samples = []
+        self.cpu_samples = []
+
+        self.gpu_util_samples = []
+        self.gpu_memory_samples = []
+
+        self.gpu_available = False
+        self.gpu_handles = []
+
+        # --------------------------------------------------
+        # Try to initialise NVIDIA GPU monitoring
+        # --------------------------------------------------
+
+        try:
+            import pynvml
+
+            pynvml.nvmlInit()
+
+            self.pynvml = pynvml
+            self.gpu_available = True
+
+            for i in range(pynvml.nvmlDeviceGetCount()):
+                self.gpu_handles.append(
+                    pynvml.nvmlDeviceGetHandleByIndex(i)
+                )
+
+        except Exception:
+            self.gpu_available = False
+
+    # ------------------------------------------------------
+    # Get current process + child processes
+    # ------------------------------------------------------
+
+    def _get_process_tree(self):
+
+        processes = [self.process]
+
+        try:
+            processes.extend(
+                self.process.children(recursive=True)
+            )
+        except Exception:
+            pass
+
+        return processes
+
+    # ------------------------------------------------------
+    # RAM
+    # ------------------------------------------------------
+
+    def _get_ram_mb(self):
+
+        total = 0
+
+        for process in self._get_process_tree():
+
+            try:
+                total += process.memory_info().rss
+
+            except (
+                psutil.NoSuchProcess,
+                psutil.AccessDenied
+            ):
+                pass
+
+        return total / (1024 ** 2)
+
+    # ------------------------------------------------------
+    # CPU
+    # ------------------------------------------------------
+
+    def _get_cpu_percent(self):
+
+        total = 0
+
+        for process in self._get_process_tree():
+
+            try:
+                total += process.cpu_percent()
+
+            except (
+                psutil.NoSuchProcess,
+                psutil.AccessDenied
+            ):
+                pass
+
+        return total
+
+    # ------------------------------------------------------
+    # GPU
+    # ------------------------------------------------------
+
+    def _get_gpu_stats(self):
+
+        if not self.gpu_available:
+            return 0.0, 0.0
+
+        total_util = 0.0
+        total_memory = 0.0
+
+        for handle in self.gpu_handles:
+
+            try:
+
+                utilisation = (
+                    self.pynvml
+                    .nvmlDeviceGetUtilizationRates(handle)
+                )
+
+                memory = (
+                    self.pynvml
+                    .nvmlDeviceGetMemoryInfo(handle)
+                )
+
+                total_util += utilisation.gpu
+
+                total_memory += (
+                    memory.used /
+                    (1024 ** 2)
+                )
+
+            except Exception:
+                pass
+
+        return total_util, total_memory
+
+    # ------------------------------------------------------
+    # Monitoring loop
+    # ------------------------------------------------------
+
+    def _monitor(self):
+
+        # Prime CPU measurement
+        for process in self._get_process_tree():
+
+            try:
+                process.cpu_percent()
+
+            except Exception:
+                pass
+
+        while self.running:
+
+            self.ram_samples.append(
+                self._get_ram_mb()
+            )
+
+            self.cpu_samples.append(
+                self._get_cpu_percent()
+            )
+
+            gpu_util, gpu_memory = (
+                self._get_gpu_stats()
+            )
+
+            self.gpu_util_samples.append(
+                gpu_util
+            )
+
+            self.gpu_memory_samples.append(
+                gpu_memory
+            )
+
+            threading.Event().wait(
+                self.interval
+            )
+
+    # ------------------------------------------------------
+    # Start
+    # ------------------------------------------------------
+
+    def start(self):
+
+        self.ram_samples = []
+        self.cpu_samples = []
+        self.gpu_util_samples = []
+        self.gpu_memory_samples = []
+        self.start_ram_mb = self._get_ram_mb()
+
+        self.running = True
+
+        self.thread = threading.Thread(
+            target=self._monitor,
+            daemon=True
+        )
+
+        self.thread.start()
+
+    # ------------------------------------------------------
+    # Stop
+    # ------------------------------------------------------
+
+    def stop(self):
+
+        self.running = False
+        
+
+        if self.thread is not None:
+            self.thread.join()
+
+        return {
+
+            "peak_ram_mb":
+                max(self.ram_samples, default=0.0),
+
+            "avg_cpu_percent":
+                np.mean(self.cpu_samples)
+                if self.cpu_samples
+                else 0.0,
+
+            "peak_cpu_percent":
+                max(self.cpu_samples, default=0.0),
+
+            "peak_gpu_percent":
+                max(self.gpu_util_samples, default=0.0),
+
+            "peak_gpu_memory_mb":
+                max(
+                    self.gpu_memory_samples,
+                    default=0.0
+                ),
+            "start_ram_mb":
+                self.start_ram_mb,
+
+            "peak_ram_mb":
+                max(self.ram_samples, default=0.0),
+
+            "peak_ram_increase_mb":
+                max(self.ram_samples, default=0.0)
+                - self.start_ram_mb,
+        }
+
+
 
 def evaluate(dataset, data_type, n_extracted_features=0, classifier = None, regressor = None):
 
@@ -360,6 +606,10 @@ def run(dataset,dataset_name, seed, data_type, extractor=None, selector=None, cl
 
         if cache_key not in extractor.cache:
 
+            monitor = ResourceMonitor()
+
+            monitor.start()
+
             t0 = perf_counter()
 
             X_train, X_test, y_train, y_test = extractor.extract(
@@ -378,7 +628,6 @@ def run(dataset,dataset_name, seed, data_type, extractor=None, selector=None, cl
                 impute(X_test)
                 X_test = X_test.to_numpy()
 
-            # Number of features BEFORE selection
             n_extracted_features = X_train.shape[1]
 
             dataset = Dataset(
@@ -390,15 +639,18 @@ def run(dataset,dataset_name, seed, data_type, extractor=None, selector=None, cl
 
             extract_time = perf_counter() - t0
 
+            extract_resources = monitor.stop()
+
             extractor.cache[cache_key] = (
                 dataset,
                 extract_time,
                 n_extracted_features,
+                extract_resources,
             )
 
         else:
 
-            dataset, extract_time, n_extracted_features = (
+            dataset, extract_time, n_extracted_features, extract_resources = (
                 extractor.cache[cache_key]
             )
 
@@ -408,13 +660,29 @@ def run(dataset,dataset_name, seed, data_type, extractor=None, selector=None, cl
 
     select_time = 0.0
 
+    select_time = 0.0
+
+    select_resources = {
+        "peak_ram_mb": 0.0,
+        "avg_cpu_percent": 0.0,
+        "peak_cpu_percent": 0.0,
+        "peak_gpu_percent": 0.0,
+        "peak_gpu_memory_mb": 0.0,
+    }
+
     if selector is not None and extractor is not None:
+
+        monitor = ResourceMonitor()
+
+        monitor.start()
 
         t0 = perf_counter()
 
         dataset = selector.select(dataset)
 
         select_time = perf_counter() - t0
+
+        select_resources = monitor.stop()
 
     ############################################################
     # Classification / Regression
@@ -439,9 +707,45 @@ def run(dataset,dataset_name, seed, data_type, extractor=None, selector=None, cl
     total_time = perf_counter() - total_start
 
     results.update({
+
         "extract_time": extract_time,
+
+        "extract_peak_ram_mb":
+            extract_resources["peak_ram_mb"],
+
+        "extract_avg_cpu_percent":
+            extract_resources["avg_cpu_percent"],
+
+        "extract_peak_cpu_percent":
+            extract_resources["peak_cpu_percent"],
+
+        "extract_peak_gpu_percent":
+            extract_resources["peak_gpu_percent"],
+
+        "extract_peak_gpu_memory_mb":
+            extract_resources["peak_gpu_memory_mb"],
+
+
         "select_time": select_time,
+
+        "select_peak_ram_mb":
+            select_resources["peak_ram_mb"],
+
+        "select_avg_cpu_percent":
+            select_resources["avg_cpu_percent"],
+
+        "select_peak_cpu_percent":
+            select_resources["peak_cpu_percent"],
+
+        "select_peak_gpu_percent":
+            select_resources["peak_gpu_percent"],
+
+        "select_peak_gpu_memory_mb":
+            select_resources["peak_gpu_memory_mb"],
+
+
         "predict_time": predict_time,
+
         "total_time": total_time,
     })
 
@@ -742,8 +1046,8 @@ def load_parquet_dataset(
 
 if __name__ == "__main__":
     warnings.filterwarnings('ignore')
-    NO_SEEDS = 5
-    DATA_TYPE = "regression"
+    NO_SEEDS = 3
+    DATA_TYPE = "classification"
 
     ############################################################
     # Classifier
@@ -776,21 +1080,21 @@ if __name__ == "__main__":
         parameter_set="minimal",
     ),
 
-    # Extractor(
-    #     name="TSFresh-Efficient-10FFT",
-    #     function=tsfresh_extractor,
-    #     representation="long",
-    #     parameter_set="efficient",
-    #     fft_coefficients=10,
-    # ),
-
     Extractor(
-        name="TSFresh-Efficient-25FFT",
+        name="TSFresh-Efficient-10FFT",
         function=tsfresh_extractor,
         representation="long",
         parameter_set="efficient",
-        fft_coefficients=25,
+        fft_coefficients=10,
     ),
+
+    # Extractor(
+    #     name="TSFresh-Efficient-25FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="efficient",
+    #     fft_coefficients=25,
+    # ),
 
     # Extractor(
     #     name="TSFresh-Efficient-50FFT",
@@ -824,13 +1128,13 @@ if __name__ == "__main__":
     #     fft_coefficients=10,
     # ),
 
-    Extractor(
-        name="TSFresh-Comprehensive-25FFT",
-        function=tsfresh_extractor,
-        representation="long",
-        parameter_set="comprehensive",
-        fft_coefficients=25,
-    ),
+    # Extractor(
+    #     name="TSFresh-Comprehensive-25FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="comprehensive",
+    #     fft_coefficients=25,
+    # ),
 
     # Extractor(
     #     name="TSFresh-Comprehensive-50FFT",
@@ -856,11 +1160,11 @@ if __name__ == "__main__":
     #     fft_coefficients=100,
     # ),
 
-    Extractor(
-    name="TSFEL",
-    function=tsfel_extractor,
-    representation="numpy"
-    )
+    # Extractor(
+    # name="TSFEL",
+    # function=tsfel_extractor,
+    # representation="numpy"
+    # )
     ]
 
     ############################################################
@@ -869,7 +1173,7 @@ if __name__ == "__main__":
 
     selectors = [
 
-    None,
+    # None,
 
     Selector(
         name="TSFresh",
@@ -885,12 +1189,12 @@ if __name__ == "__main__":
         data_type = DATA_TYPE
     ),
 
-    Selector(
-    name="Boruta",
-    function=boruta_selector,
-    representation="pandas",
-    data_type = DATA_TYPE
-    )
+    # Selector(
+    # name="Boruta",
+    # function=boruta_selector,
+    # representation="pandas",
+    # data_type = DATA_TYPE
+    # )
     ]
 
     ############################################################
@@ -947,6 +1251,8 @@ if __name__ == "__main__":
 
                 for selector in selectors:
 
+                    
+
                     extractor_name = (
                         extractor.name
                         if extractor is not None
@@ -998,24 +1304,96 @@ if __name__ == "__main__":
 
                     elif DATA_TYPE == "regression":
                         benchmark_results.append({
+
                             "Dataset": dataset_name,
                             "Seed": seed,
                             "Extractor": extractor_name,
                             "Selector": selector_name,
 
-                            "Extraction Time": results["extract_time"],
-                            "Selection Time": results["select_time"],
-                            "Prediction Time": results["predict_time"],
+                            # --------------------------------------------------
+                            # Extraction
+                            # --------------------------------------------------
 
-                            "N Extracted Features": results["n_extracted_features"],
-                            "N Selected Features": results["n_selected_features"],
+                            "Extraction Time":
+                                results["extract_time"],
 
-                            "RMSE": results["rmse"],
-                            "MAE": results["mae"],
-                            "R2": results["r2"],
+                            "Extraction Peak RAM (MB)":
+                                results["extract_peak_ram_mb"],
 
-                            "Total Time": results["total_time"]
+                            "Extraction Avg CPU (%)":
+                                results["extract_avg_cpu_percent"],
+
+                            "Extraction Peak CPU (%)":
+                                results["extract_peak_cpu_percent"],
+
+                            "Extraction Peak GPU (%)":
+                                results["extract_peak_gpu_percent"],
+
+                            "Extraction Peak GPU RAM (MB)":
+                                results["extract_peak_gpu_memory_mb"],
+
+                            # --------------------------------------------------
+                            # Selection
+                            # --------------------------------------------------
+
+                            "Selection Time":
+                                results["select_time"],
+
+                            "Selection Peak RAM (MB)":
+                                results["select_peak_ram_mb"],
+
+                            "Selection Avg CPU (%)":
+                                results["select_avg_cpu_percent"],
+
+                            "Selection Peak CPU (%)":
+                                results["select_peak_cpu_percent"],
+
+                            "Selection Peak GPU (%)":
+                                results["select_peak_gpu_percent"],
+
+                            "Selection Peak GPU RAM (MB)":
+                                results["select_peak_gpu_memory_mb"],
+
+                            # --------------------------------------------------
+                            # Prediction
+                            # --------------------------------------------------
+
+                            "Prediction Time":
+                                results["predict_time"],
+
+                            # --------------------------------------------------
+                            # Features
+                            # --------------------------------------------------
+
+                            "N Extracted Features":
+                                results["n_extracted_features"],
+
+                            "N Selected Features":
+                                results["n_selected_features"],
+
+                            # --------------------------------------------------
+                            # Regression performance
+                            # --------------------------------------------------
+
+                            "RMSE":
+                                results["rmse"],
+
+                            "MAE":
+                                results["mae"],
+
+                            "R2":
+                                results["r2"],
+
+                            "Total Time":
+                                results["total_time"]
                         })
+                # --------------------------------------------------------
+                # Free this extractor's cached feature matrix before
+                # moving to the next extractor.
+                # --------------------------------------------------------
+
+                if extractor is not None:
+                    extractor.cache.clear()
 
     ############################################################
     # Results
