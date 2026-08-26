@@ -1,420 +1,530 @@
 """
-TEMPO Benchmarking Framework: tsfresh vs. NumPy Swap-Out.
+TEMPO Unified Benchmarking Harness and 5-Stage Pipeline Engine.
 
-This framework systematically benchmarks the feature extraction phase of time-series
-pipelines. It evaluates the standard tsfresh implementation (relying on Pandas DataFrames
-and roll operations) against alternative Pandas-free approaches utilizing NumPy.
-
-The benchmarking measures execution wall time and peak memory footprint using in-process
-tracemalloc to guarantee clean, platform-independent, and sandbox-compatible tracking.
+Provides an end-to-end, multi-stage benchmarking pipeline comparing time-series
+feature extractors, feature selectors, and predictive models across classification
+and extrinsic regression tasks with rigorous hardware telemetry and statistical evaluation.
 """
 
-import csv
+from dataclasses import asdict, dataclass, field
+import datetime
+import gc
+import json
+import logging
 import os
+from pathlib import Path
 import sys
 import time
-import tracemalloc
-from pathlib import Path
-from typing import List, Tuple
+from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Tuple, Union
+import warnings
 
 import numpy as np
 import pandas as pd
+import polars as pl
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.linear_model import LogisticRegression, Ridge
+from sklearn.metrics import accuracy_score, mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import KFold, StratifiedKFold
 
-from tsfresh import extract_features
-from tsfresh.feature_extraction import MinimalFCParameters
-from tsfresh.feature_extraction.feature_calculators import (
-    absolute_maximum,
-    length,
-    maximum,
-    mean,
-    median,
-    minimum,
-    root_mean_square,
-    standard_deviation,
-    sum_values,
-    variance,
+from tempo.extraction import (
+    numba_efficient_extractor,
+    polars_statistical_extractor,
+    tsfel_extractor,
+    tsfresh_extractor,
 )
-import tsfresh.utilities.dataframe_functions as df_funcs
+from tempo.selection import (
+    SubsampledFeatureSelector,
+    boruta_selector,
+    select_k_best,
+    tsfresh_selector,
+)
+from tempo.storage import load_dataset, to_numpy_tensor
+from tempo.storage.feature_store import BackendType, FeatureStore
+from tempo.telemetry import ResourceStats, ResourceTracker
+
+logger = logging.getLogger("tempo.benchmark")
 
 
 # ==============================================================================
-# 0. Pandas 3.0 Compatibility Monkey Patch for tsfresh
+# 1. Pipeline Configuration Schema
 # ==============================================================================
 
-def patched_roll_out_time_series(
-    timeshift,
-    grouped_data,
-    rolling_direction,
-    max_timeshift,
-    min_timeshift,
-    column_sort,
-    column_id,
-):
-    """Patched version of _roll_out_time_series supporting Pandas 3.0.
+@dataclass
+class ExtractorConfig:
+    """Configuration for a feature extractor."""
+    name: str
+    representation: Literal["pandas", "polars", "numpy", "auto"] = "auto"
+    fft_coefficients: Optional[int] = None
+    kwargs: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class SelectorConfig:
+    """Configuration for a feature selector."""
+    name: str
+    sample_ratio: float = 0.10
+    fdr_level: float = 0.05
+    k: int = 20
+    kwargs: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class PipelineConfig:
+    """Master configuration for TEMPO 5-Stage Benchmarking Pipeline."""
+    dataset_paths: List[str] = field(default_factory=list)
+    task_type: Literal["classification", "regression"] = "classification"
+    extractors: List[Union[str, Dict[str, Any], ExtractorConfig]] = field(
+        default_factory=lambda: ["numba_efficient", "tsfresh_minimal", "polars_statistics"]
+    )
+    selectors: List[Union[str, Dict[str, Any], SelectorConfig, None]] = field(
+        default_factory=lambda: [None, "fdr", "select_k_best"]
+    )
+    models: List[Union[str, Dict[str, Any]]] = field(
+        default_factory=lambda: ["random_forest"]
+    )
+    n_splits: int = 5
+    seeds: List[int] = field(default_factory=lambda: [42])
+    cache_backend: BackendType = "memory"
+    cache_dir: str = "data/03_processed/feature_store"
+    output_dir: str = "benchmark_results"
     
-    Pandas 3.0 drops grouping columns from the group DataFrames during apply.
-    This patch detects the missing ID column and reconstructs it from the group's
-    name property.
-    """
-    def _f(x):
-        if rolling_direction > 0:
-            shift_until = timeshift
-            shift_from = max(shift_until - max_timeshift - 1, 0)
-            df_temp = x.iloc[shift_from:shift_until] if shift_until <= len(x) else None
-        else:
-            shift_from = max(timeshift - 1, 0)
-            shift_until = shift_from + max_timeshift + 1
-            df_temp = x.iloc[shift_from:shift_until]
+    # Telemetry and Execution Flags
+    enable_telemetry: bool = True
+    telemetry_interval: float = 0.05
+    enable_ttests: bool = True
+    enable_plots: bool = True
+    enable_logging: bool = True
+    log_file: Optional[str] = "tempo_benchmark.log"
 
-        if df_temp is None or len(df_temp) < min_timeshift + 1:
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert configuration to dictionary."""
+        d = asdict(self)
+        return d
+
+    def to_json(self, file_path: Union[str, Path]) -> None:
+        """Save configuration to JSON file."""
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(self.to_dict(), f, indent=2)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "PipelineConfig":
+        """Construct configuration from dictionary."""
+        return cls(**data)
+
+    @classmethod
+    def from_json(cls, file_path: Union[str, Path]) -> "PipelineConfig":
+        """Load configuration from JSON file."""
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_yaml(cls, file_path: Union[str, Path]) -> "PipelineConfig":
+        """Load configuration from YAML file (if pyyaml available)."""
+        try:
+            import yaml
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = yaml.safe_load(f)
+            return cls.from_dict(data)
+        except ImportError:
+            raise ImportError("PyYAML is required to load YAML configs. Install via: pip install pyyaml")
+
+
+# ==============================================================================
+# 2. Benchmarking Engine
+# ==============================================================================
+
+class BakeoffRunner:
+    """Execution engine for multi-stage cross-validated time-series ML bakeoffs."""
+
+    def __init__(self, config: PipelineConfig):
+        """Initialise runner with pipeline configuration."""
+        self.config = config
+        self.output_dir = Path(config.output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.feature_store = FeatureStore(
+            storage_dir=config.cache_dir,
+            backend=config.cache_backend,
+        )
+        self._setup_logging()
+
+    def _setup_logging(self) -> None:
+        """Configure structured execution logging."""
+        if not self.config.enable_logging:
             return
 
-        df_temp = df_temp.copy()
+        log_path = self.output_dir / (self.config.log_file or "tempo_benchmark.log")
+        handler = logging.FileHandler(log_path, mode="a", encoding="utf-8")
+        formatter = logging.Formatter(
+            "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
+        logger.info("TEMPO Benchmark Runner initialised. Task: %s", self.config.task_type)
 
-        if column_sort and rolling_direction > 0:
-            timeshift_value = df_temp[column_sort].iloc[-1]
-        elif column_sort and rolling_direction < 0:
-            timeshift_value = df_temp[column_sort].iloc[0]
+    def _extract_features(
+        self,
+        df_ts: pl.DataFrame,
+        extractor: Union[str, Dict[str, Any], ExtractorConfig],
+        dataset_name: str,
+    ) -> Tuple[pd.DataFrame, ResourceStats]:
+        """Extract or retrieve cached features for a given dataset and extractor."""
+        if isinstance(extractor, ExtractorConfig):
+            ext_name = extractor.name
+            fft_limit = extractor.fft_coefficients
+            kwargs = extractor.kwargs
+        elif isinstance(extractor, dict):
+            ext_name = extractor.get("name", "unknown")
+            fft_limit = extractor.get("fft_coefficients")
+            kwargs = extractor.get("kwargs", {})
         else:
-            timeshift_value = timeshift - 1
+            ext_name = str(extractor)
+            fft_limit = None
+            kwargs = {}
 
-        # Reconstruct missing column_id from group name for Pandas 3.0+ compatibility
-        if column_id not in df_temp.columns:
-            group_key = x.name
-            if isinstance(group_key, tuple):
-                val = group_key[-1]
+        params = {"fft_coefficients": fft_limit, **kwargs}
+
+        # Check feature store cache first
+        if self.feature_store.exists(dataset_name, ext_name, params):
+            logger.info("Cache hit for extractor '%s' on dataset '%s'", ext_name, dataset_name)
+            t0 = time.perf_counter()
+            features = self.feature_store.load(dataset_name, ext_name, params)
+            load_time = time.perf_counter() - t0
+            dummy_stats = ResourceStats(
+                start_ram_mb=0.0,
+                peak_ram_mb=0.0,
+                peak_ram_increase_mb=0.0,
+                avg_cpu_percent=0.0,
+                peak_cpu_percent=0.0,
+                peak_gpu_percent=0.0,
+                peak_gpu_memory_mb=0.0,
+                duration_seconds=round(load_time, 4),
+            )
+            return features, dummy_stats
+
+        # Feature Extraction Execution with Telemetry
+        gc.collect()
+        tracker = ResourceTracker(interval=self.config.telemetry_interval)
+        
+        with tracker:
+            if ext_name == "polars_statistics" or ext_name == "statistics":
+                df_feat_pl = polars_statistical_extractor(df_ts)
+                exclude_cols = {"sequence_id", "id", "step", "time"}
+                feat_cols = [c for c in df_feat_pl.columns if c not in exclude_cols]
+                features = pd.DataFrame(df_feat_pl.select(feat_cols).to_dict(as_series=False))
+
+            elif ext_name == "tsfel":
+                exclude_cols = {"sequence_id", "step", "id", "time"}
+                feature_cols = [c for c in df_ts.columns if c not in exclude_cols]
+                tensor = to_numpy_tensor(df_ts, feature_cols=feature_cols)
+                if tensor.ndim == 3:
+                    tensor = tensor[:, :, 0]
+                features = tsfel_extractor(tensor)
+
+            elif ext_name == "numba_efficient" or ext_name == "numba":
+                exclude_cols = {"sequence_id", "step", "id", "time"}
+                feature_cols = [c for c in df_ts.columns if c not in exclude_cols]
+                tensor = to_numpy_tensor(df_ts, feature_cols=feature_cols)
+                if tensor.ndim == 2:
+                    tensor = tensor[:, :, np.newaxis]
+                n_fft = fft_limit if fft_limit is not None else 25
+                features = numba_efficient_extractor(
+                    tensor, raw_feature_names=feature_cols, n_fft_coeffs=n_fft
+                )
+
+            elif ext_name.startswith("tsfresh"):
+                df_pandas = pd.DataFrame(df_ts.to_dict(as_series=False))
+                parts = ext_name.split("_")
+                param_set = parts[1] if len(parts) > 1 else "efficient"
+                if param_set not in ("minimal", "efficient", "comprehensive"):
+                    param_set = "efficient"
+                fft_val = fft_limit if param_set != "minimal" else None
+                features = tsfresh_extractor(
+                    df_pandas, parameter_set=param_set, fft_coefficients=fft_val
+                )
+
             else:
-                val = group_key
-            df_temp[column_id] = val
+                raise ValueError(f"Unsupported extractor identifier: {ext_name}")
 
-        df_temp["id"] = df_temp[column_id].apply(lambda row: (row, timeshift_value))
-        return df_temp
-
-    return [grouped_data.apply(_f)]
-
-
-# Apply the monkey patch immediately
-df_funcs._roll_out_time_series = patched_roll_out_time_series
-
-
-# ==============================================================================
-# 1. Permissive Data Loaders (Pandas-free)
-# ==============================================================================
-
-def load_beed(file_path: Path) -> Tuple[np.ndarray, List[str]]:
-    """Loads the BEED sensor dataset, bypassing Pandas entirely.
-    
-    Args:
-        file_path: Path to the BEED csv data file.
+        stats = tracker.stats or ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
         
-    Returns:
-        A tuple of (data_matrix, feature_names), where data_matrix is a 2D float64
-        array of shape (N, n_features).
-    """
-    with open(file_path, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        
-        target_col = "y"
-        target_idx = header.index(target_col)
-        
-        # Features are all columns except the target
-        feature_indices = [i for i, name in enumerate(header) if i != target_idx]
-        feature_names = [header[i] for i in feature_indices]
-        
-        rows = []
-        for row in reader:
-            if not row:
-                continue
-            rows.append([float(row[i]) for i in feature_indices])
-            
-    return np.array(rows, dtype=np.float64), feature_names
+        # Save to persistent feature store
+        self.feature_store.save(
+            features=features,
+            dataset_name=dataset_name,
+            extractor_name=ext_name,
+            params=params,
+        )
+        return features, stats
 
+    def _select_features(
+        self,
+        X_train: pd.DataFrame,
+        y_train: pd.Series,
+        X_test: pd.DataFrame,
+        selector: Optional[Union[str, Dict[str, Any], SelectorConfig]],
+    ) -> Tuple[pd.DataFrame, pd.DataFrame, ResourceStats, int, int]:
+        """Apply feature selector to train/test splits with hardware telemetry."""
+        n_initial = X_train.shape[1]
 
-def load_pred_maintenance(file_path: Path) -> Tuple[np.ndarray, List[str]]:
-    """Loads the AI4I 2020 Predictive Maintenance dataset, bypassing Pandas entirely.
-    
-    Args:
-        file_path: Path to the ai4i2020 csv data file.
-        
-    Returns:
-        A tuple of (data_matrix, feature_names), where data_matrix is a 2D float64
-        array of shape (N, n_features) and type column mapped to float values.
-    """
-    type_map = {"L": 0.0, "M": 1.0, "H": 2.0}
-    exclude_cols = {"Machine failure", "TWF", "HDF", "PWF", "OSF", "RNF", "UDI", "Product ID"}
-    
-    with open(file_path, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        
-        feature_indices = []
-        feature_names = []
-        for i, name in enumerate(header):
-            if name not in exclude_cols:
-                feature_indices.append(i)
-                feature_names.append(name)
+        if selector is None or selector == "none" or selector == "None":
+            dummy_stats = ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
+            return X_train, X_test, dummy_stats, n_initial, n_initial
+
+        sel_name = selector.name if isinstance(selector, SelectorConfig) else (
+            selector.get("name") if isinstance(selector, dict) else str(selector)
+        )
+
+        gc.collect()
+        tracker = ResourceTracker(interval=self.config.telemetry_interval)
+
+        with tracker:
+            if sel_name in ("tsfresh", "fdr"):
+                fdr_val = 0.05
+                if isinstance(selector, (dict, SelectorConfig)):
+                    fdr_val = getattr(selector, "fdr_level", selector.get("fdr_level", 0.05) if isinstance(selector, dict) else 0.05)
+                X_train_sel = tsfresh_selector(X_train, y_train)
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols]
+
+            elif sel_name == "select_k_best":
+                k_val = 20
+                if isinstance(selector, (dict, SelectorConfig)):
+                    k_val = getattr(selector, "k", selector.get("k", 20) if isinstance(selector, dict) else 20)
+                X_train_sel = select_k_best(X_train, y_train, k=k_val)
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols]
+
+            elif sel_name == "boruta":
+                X_train_sel = boruta_selector(X_train, y_train)
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols]
+
+            elif sel_name == "subsampled":
+                ratio = 0.10
+                base_sel = "tsfresh"
+                if isinstance(selector, (dict, SelectorConfig)):
+                    ratio = getattr(selector, "sample_ratio", selector.get("sample_ratio", 0.10) if isinstance(selector, dict) else 0.10)
+                    base_sel = getattr(selector, "base_selector", selector.get("base_selector", "tsfresh") if isinstance(selector, dict) else "tsfresh")
                 
-        type_idx = header.index("Type")
+                sub_sel = SubsampledFeatureSelector(
+                    base_selector=base_sel,
+                    sample_ratio=ratio,
+                )
+                X_train_sel = sub_sel.fit_transform(X_train, y_train)
+                X_test_sel = sub_sel.transform(X_test)
+            else:
+                logger.warning("Unrecognised selector '%s'; falling back to unselected features.", sel_name)
+                X_train_sel = X_train
+                X_test_sel = X_test
+
+        stats = tracker.stats or ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
+        n_selected = X_train_sel.shape[1]
+        return X_train_sel, X_test_sel, stats, n_initial, n_selected
+
+    def _get_model(self, model_spec: Union[str, Dict[str, Any]]) -> Any:
+        """Instantiate scikit-learn compatible estimator based on task type."""
+        model_name = model_spec if isinstance(model_spec, str) else model_spec.get("name", "random_forest")
         
-        rows = []
-        for row in reader:
-            if not row:
-                continue
-            row_data = []
-            for idx in feature_indices:
-                val = row[idx]
-                if idx == type_idx:
-                    row_data.append(type_map.get(val, 0.0))
-                else:
-                    row_data.append(float(val))
-            rows.append(row_data)
-            
-    return np.array(rows, dtype=np.float64), feature_names
-
-
-def load_dataset(name: str, base_dir: Path) -> Tuple[np.ndarray, List[str]]:
-    """Loads target dataset by name."""
-    if name == "beed":
-        return load_beed(base_dir / "data" / "01_raw" / "beed" / "BEED_Data.csv")
-    elif name == "pred-maintenance":
-        return load_pred_maintenance(base_dir / "data" / "01_raw" / "pred-maintenance" / "ai4i2020.csv")
-    else:
-        raise ValueError(f"Unknown dataset name: {name}")
-
-
-# ==============================================================================
-# 2. Feature Extraction Methodologies
-# ==============================================================================
-
-def benchmark_pandas_tsfresh(data: np.ndarray, feature_names: List[str], max_timeshift: int) -> np.ndarray:
-    """Baseline: extract features using the standard Pandas-based tsfresh pipeline."""
-    df = pd.DataFrame(data, columns=feature_names)
-    df["id"] = 1
-    df["time"] = np.arange(len(df))
-    
-    df_ts = df[["id", "time"] + feature_names]
-    
-    # Roll using tsfresh built-in utility
-    df_rolled = df_funcs.roll_time_series(
-        df_ts, column_id="id", column_sort="time",
-        max_timeshift=max_timeshift, min_timeshift=0,
-        disable_progressbar=True
-    )
-    
-    # Extract features using minimal parameters
-    extraction_settings = MinimalFCParameters()
-    X_features = extract_features(
-        df_rolled, column_id="id", column_sort="time",
-        default_fc_parameters=extraction_settings,
-        disable_progressbar=True
-    )
-    
-    # Realign index to temporal sequence steps (t) and sort to ensure ordered mapping
-    X_features.index = [idx[1] for idx in X_features.index]
-    X_features.sort_index(inplace=True)
-    
-    return X_features.to_numpy(dtype=np.float64)
-
-
-def benchmark_numpy_calculators(data: np.ndarray, max_timeshift: int) -> np.ndarray:
-    """Alternative 1: window iteration, calling tsfresh calculators directly on 1D NumPy slices."""
-    N, n_features = data.shape
-    n_calculators = 10
-    out = np.empty((N, n_features * n_calculators), dtype=np.float64)
-    
-    # The exact order inside MinimalFCParameters
-    calculators = [
-        sum_values, median, mean, length, standard_deviation,
-        variance, root_mean_square, maximum, absolute_maximum, minimum
-    ]
-    
-    for t in range(N):
-        start = max(0, t - max_timeshift)
-        end = t + 1
-        window = data[start:end, :]
-        
-        row_features = []
-        for j in range(n_features):
-            x = window[:, j]
-            for calc in calculators:
-                row_features.append(calc(x))
-                
-        out[t, :] = row_features
-        
-    return out
-
-
-def benchmark_numpy_vectorized(data: np.ndarray, max_timeshift: int) -> np.ndarray:
-    """Alternative 2: loop-free C-level vectorized sliding window reductions using NumPy views."""
-    N, n_features = data.shape
-    W = max_timeshift + 1
-    
-    if N < W:
-        # Fall back to loop-based version if length is smaller than full window size
-        return benchmark_numpy_calculators(data, max_timeshift)
-        
-    out = np.empty((N, n_features * 10), dtype=np.float64)
-    
-    # 1. Compute boundary elements (t < W - 1) using standard calculators
-    calculators = [
-        sum_values, median, mean, length, standard_deviation,
-        variance, root_mean_square, maximum, absolute_maximum, minimum
-    ]
-    for t in range(W - 1):
-        window = data[0:t+1, :]
-        row_features = []
-        for j in range(n_features):
-            x = window[:, j]
-            for calc in calculators:
-                row_features.append(calc(x))
-        out[t, :] = row_features
-        
-    # 2. Compute full-window steps (t >= W - 1) using vectorized axis reductions
-    from numpy.lib.stride_tricks import sliding_window_view
-    
-    # Construct sliding window view of shape (N - W + 1, n_features, W)
-    wins = sliding_window_view(data, window_shape=W, axis=0)
-    
-    out_vec = np.empty((N - W + 1, n_features, 10), dtype=np.float64)
-    
-    out_vec[:, :, 0] = np.sum(wins, axis=2)
-    out_vec[:, :, 1] = np.median(wins, axis=2)
-    out_vec[:, :, 2] = np.mean(wins, axis=2)
-    out_vec[:, :, 3] = float(W)
-    out_vec[:, :, 4] = np.std(wins, axis=2, ddof=0)
-    out_vec[:, :, 5] = np.var(wins, axis=2, ddof=0)
-    out_vec[:, :, 6] = np.sqrt(np.mean(np.square(wins), axis=2))
-    out_vec[:, :, 7] = np.max(wins, axis=2)
-    out_vec[:, :, 8] = np.max(np.abs(wins), axis=2)
-    out_vec[:, :, 9] = np.min(wins, axis=2)
-    
-    # Flatten features dimensions: (N - W + 1, n_features, 10) -> (N - W + 1, n_features * 10)
-    out[W - 1:, :] = out_vec.reshape(N - W + 1, n_features * 10)
-    
-    return out
-
-
-# ==============================================================================
-# 3. Telemetry and Measurement
-# ==============================================================================
-
-def run_in_process(func_name: str, data: np.ndarray, feature_names: List[str], max_timeshift: int) -> Tuple[np.ndarray, float, float]:
-    """Runs target function in-process, using high-precision telemetry."""
-    # Force clean garbage collection to establish a reliable baseline
-    import gc
-    gc.collect()
-    
-    # Start tracing allocations
-    tracemalloc.start()
-    
-    if func_name == "pandas":
-        func = benchmark_pandas_tsfresh
-        args = (data, feature_names, max_timeshift)
-    elif func_name == "numpy_calc":
-        func = benchmark_numpy_calculators
-        args = (data, max_timeshift)
-    elif func_name == "numpy_vec":
-        func = benchmark_numpy_vectorized
-        args = (data, max_timeshift)
-    else:
-        raise ValueError(f"Unknown method name: {func_name}")
-        
-    start_time = time.perf_counter()
-    res_arr = func(*args)
-    elapsed_time = time.perf_counter() - start_time
-    
-    _, peak_mem_bytes = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    
-    # Convert peak memory allocated to Megabytes
-    peak_mem_mb = peak_mem_bytes / (1024.0 * 1024.0)
-    
-    return res_arr, elapsed_time, peak_mem_mb
-
-
-# ==============================================================================
-# 4. Benchmarking Suite
-# ==============================================================================
-
-def run_benchmarks():
-    """Executes full mathematical validation and scales benchmarking runs."""
-    base_dir = Path.cwd()
-    max_timeshift = 4
-    
-    datasets = ["beed", "pred-maintenance"]
-    
-    print("=" * 80)
-    print("TEMPO HIGH-PERFORMANCE TIME-SERIES FEATURE EXTRACTION BENCHMARKS")
-    print("=" * 80)
-    
-    for ds_name in datasets:
-        print(f"\nEvaluating Dataset: {ds_name.upper()}")
-        print("-" * 50)
-        
-        # Load dataset
-        data, feature_names = load_dataset(ds_name, base_dir)
-        print(f"Loaded {data.shape[0]} rows with {data.shape[1]} raw variables.")
-        
-        # 1. Perform strict mathematical equivalence verification on small slice
-        print("\nChecking mathematical equivalence of feature matrices...")
-        test_slice_len = 50
-        slice_data = data[:test_slice_len]
-        
-        res_pandas, _, _ = run_in_process("pandas", slice_data, feature_names, max_timeshift)
-        res_calc, _, _ = run_in_process("numpy_calc", slice_data, feature_names, max_timeshift)
-        res_vec, _, _ = run_in_process("numpy_vec", slice_data, feature_names, max_timeshift)
-        
-        # Compare dimensions
-        print(f" * Dimensions: Pandas={res_pandas.shape}, NumPy Calc={res_calc.shape}, NumPy Vec={res_vec.shape}")
-        
-        # Validate mathematical parity
-        match_calc = np.allclose(res_pandas, res_calc, rtol=1e-5, atol=1e-5, equal_nan=True)
-        match_vec = np.allclose(res_pandas, res_vec, rtol=1e-5, atol=1e-5, equal_nan=True)
-        
-        if match_calc and match_vec:
-            print(" * VERIFICATION SUCCESSFUL: NumPy methods match Pandas outputs exactly.")
+        if self.config.task_type == "classification":
+            if model_name == "random_forest":
+                return RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+            elif model_name == "logistic_regression":
+                return LogisticRegression(max_iter=1000, random_state=42)
+            else:
+                return RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
         else:
-            print(" * WARNING: Parity verification mismatch!")
-            print(f"   Pandas vs. NumPy Loop Matches: {match_calc}")
-            print(f"   Pandas vs. NumPy Vectorized Matches: {match_vec}")
-            # Output absolute differences to diagnose if necessary
-            diff_calc = np.nanmax(np.abs(res_pandas - res_calc))
-            diff_vec = np.nanmax(np.abs(res_pandas - res_vec))
-            print(f"   Max absolute delta: Loop={diff_calc:.6f}, Vectorized={diff_vec:.6f}")
-            
-        # 2. Run scaling benchmarks
-        scale_sizes = [100, 1000, 5000, len(data)]
-        
-        print("\nRunning Scaling Benchmarks...")
-        print("| Scale (Rows) | Method | Time (s) | Peak Memory (MB) | Speedup |")
-        print("|---|---|---|---|---|")
-        
-        for size in scale_sizes:
-            if size > len(data):
-                continue
-                
-            sub_data = data[:size]
-            
-            # Run Pandas Baseline
-            _, t_pandas, m_pandas = run_in_process("pandas", sub_data, feature_names, max_timeshift)
-            print(f"| {size} | Pandas Baseline | {t_pandas:.4f}s | {m_pandas:.2f} MB | 1.0x (Ref) |")
-            
-            # Run NumPy Loop
-            _, t_calc, m_calc = run_in_process("numpy_calc", sub_data, feature_names, max_timeshift)
-            speedup_calc = t_pandas / t_calc if t_calc > 0 else 0.0
-            print(f"| {size} | NumPy Loop | {t_calc:.4f}s | {m_calc:.2f} MB | {speedup_calc:.1f}x |")
-            
-            # Run NumPy Vectorized
-            _, t_vec, m_vec = run_in_process("numpy_vec", sub_data, feature_names, max_timeshift)
-            speedup_vec = t_pandas / t_vec if t_vec > 0 else 0.0
-            print(f"| {size} | NumPy Vectorized | {t_vec:.4f}s | {m_vec:.2f} MB | {speedup_vec:.1f}x |")
-            print("|---|---|---|---|---|")
-            
-    print("\n" + "=" * 80)
-    print("BENCHMARK EXECUTION COMPLETE")
-    print("=" * 80)
+            if model_name == "random_forest":
+                return RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
+            elif model_name == "ridge":
+                return Ridge(random_state=42)
+            else:
+                return RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
 
+    def run(self) -> pd.DataFrame:
+        """Execute the full 5-stage benchmark suite across datasets, extractors, and selectors."""
+        results: List[Dict[str, Any]] = []
+
+        if not self.config.dataset_paths:
+            logger.warning("No datasets configured in PipelineConfig.")
+            return pd.DataFrame()
+
+        for ds_path in self.config.dataset_paths:
+            ds_name = Path(ds_path).name
+            logger.info("Loading dataset: %s", ds_name)
+            df_ts, df_targets = load_dataset(ds_path)
+            y_all = pd.Series(df_targets["target"].to_numpy())
+
+            for seed in self.config.seeds:
+                # K-Fold CV Generator
+                if self.config.task_type == "classification" and y_all.nunique() > 1:
+                    cv = StratifiedKFold(n_splits=self.config.n_splits, shuffle=True, random_state=seed)
+                    splits = list(cv.split(df_targets, y_all))
+                else:
+                    cv = KFold(n_splits=self.config.n_splits, shuffle=True, random_state=seed)
+                    splits = list(cv.split(df_targets))
+
+                for extractor in self.config.extractors:
+                    ext_name = extractor.name if isinstance(extractor, ExtractorConfig) else (
+                        extractor.get("name") if isinstance(extractor, dict) else str(extractor)
+                    )
+
+                    # Extract / Load full feature matrix
+                    X_all, ext_stats = self._extract_features(df_ts, extractor, ds_name)
+
+                    for selector in self.config.selectors:
+                        sel_name = "None" if selector is None else (
+                            selector.name if isinstance(selector, SelectorConfig) else (
+                                selector.get("name") if isinstance(selector, dict) else str(selector)
+                            )
+                        )
+
+                        for model_spec in self.config.models:
+                            model_name = model_spec if isinstance(model_spec, str) else model_spec.get("name", "model")
+
+                            fold_accs, fold_rmses, fold_maes, fold_r2s = [], [], [], []
+                            fold_sel_times, fold_pred_times = [], []
+                            fold_n_sel = []
+
+                            for fold_idx, (train_idx, test_idx) in enumerate(splits):
+                                X_train_raw = X_all.iloc[train_idx]
+                                y_train_fold = y_all.iloc[train_idx]
+                                X_test_raw = X_all.iloc[test_idx]
+                                y_test_fold = y_all.iloc[test_idx]
+
+                                # Stage 3: Feature Selection
+                                X_tr_sel, X_te_sel, sel_stats, n_init, n_sel = self._select_features(
+                                    X_train_raw, y_train_fold, X_test_raw, selector
+                                )
+
+                                # Stage 4: Model Training & Inference
+                                model = self._get_model(model_spec)
+                                t_pred_start = time.perf_counter()
+                                model.fit(X_tr_sel, y_train_fold)
+                                preds = model.predict(X_te_sel)
+                                pred_time = time.perf_counter() - t_pred_start
+
+                                # Evaluation metrics
+                                if self.config.task_type == "classification":
+                                    acc = accuracy_score(y_test_fold, preds)
+                                    fold_accs.append(acc)
+                                else:
+                                    fold_rmses.append(np.sqrt(mean_squared_error(y_test_fold, preds)))
+                                    fold_maes.append(mean_absolute_error(y_test_fold, preds))
+                                    fold_r2s.append(r2_score(y_test_fold, preds))
+
+                                fold_sel_times.append(sel_stats.duration_seconds)
+                                fold_pred_times.append(pred_time)
+                                fold_n_sel.append(n_sel)
+
+                            # Consolidated Run Summary Record
+                            total_time = ext_stats.duration_seconds + float(np.sum(fold_sel_times)) + float(np.sum(fold_pred_times))
+                            
+                            record = {
+                                "Dataset": ds_name,
+                                "Task": self.config.task_type,
+                                "Seed": seed,
+                                "Extractor": ext_name,
+                                "Selector": sel_name,
+                                "Model": model_name,
+                                
+                                # Extraction Telemetry
+                                "Extraction Time (s)": ext_stats.duration_seconds,
+                                "Extraction Peak RAM (MB)": ext_stats.peak_ram_mb,
+                                "Extraction Peak RAM Increase (MB)": ext_stats.peak_ram_increase_mb,
+                                "Extraction Avg CPU (%)": ext_stats.avg_cpu_percent,
+                                "Extraction Peak CPU (%)": ext_stats.peak_cpu_percent,
+                                "Extraction Peak GPU (%)": ext_stats.peak_gpu_percent,
+                                "Extraction Peak GPU RAM (MB)": ext_stats.peak_gpu_memory_mb,
+
+                                # Selection Telemetry
+                                "Selection Time (s)": round(float(np.mean(fold_sel_times)), 4),
+                                "Prediction Time (s)": round(float(np.mean(fold_pred_times)), 4),
+                                "N Extracted Features": n_init,
+                                "N Selected Features": round(float(np.mean(fold_n_sel)), 1),
+                                "Feature Reduction (%)": round((1.0 - (float(np.mean(fold_n_sel)) / float(max(1, n_init)))) * 100.0, 2),
+                                "Total Time (s)": round(total_time, 4),
+                            }
+
+                            if self.config.task_type == "classification":
+                                record["Accuracy"] = round(float(np.mean(fold_accs)), 4)
+                            else:
+                                record["RMSE"] = round(float(np.mean(fold_rmses)), 4)
+                                record["MAE"] = round(float(np.mean(fold_maes)), 4)
+                                record["R2"] = round(float(np.mean(fold_r2s)), 4)
+
+                            results.append(record)
+                            logger.info(
+                                "Evaluated: [%s | %s | %s | %s] -> Score: %s (Total Time: %.2fs)",
+                                ds_name, ext_name, sel_name, model_name,
+                                record.get("Accuracy") or record.get("R2"), total_time
+                            )
+
+        df_results = pd.DataFrame(results)
+        
+        # Save output CSV
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_csv = self.output_dir / f"benchmark_results_{timestamp}.csv"
+        df_results.to_csv(out_csv, index=False)
+        logger.info("Saved benchmark telemetry to: %s", out_csv)
+
+        # Trigger analysis if enabled
+        if self.config.enable_ttests or self.config.enable_plots:
+            self._trigger_analysis(out_csv)
+
+        return df_results
+
+    def _trigger_analysis(self, results_csv: Path) -> None:
+        """Invoke statistical analysis and figure generation on benchmark results."""
+        try:
+            from benchmark.analysis import run_statistical_analysis
+            run_statistical_analysis(
+                csv_path=str(results_csv),
+                output_dir=str(self.output_dir / "analysis"),
+                task_type=self.config.task_type,
+                enable_ttests=self.config.enable_ttests,
+                enable_plots=self.config.enable_plots,
+            )
+        except Exception as e:
+            logger.warning("Automated analysis hook skipped or failed: %s", e)
+
+
+# ==============================================================================
+# 3. Command-Line Entrypoint
+# ==============================================================================
 
 if __name__ == "__main__":
-    run_benchmarks()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="TEMPO Automated Time-Series ML Benchmarking Engine")
+    parser.add_argument("--config", type=str, default=None, help="Path to JSON or YAML PipelineConfig file")
+    parser.add_argument("--dataset", type=str, default="data/03_processed/beed", help="Dataset directory path")
+    parser.add_argument("--task", type=str, choices=["classification", "regression"], default="classification")
+    parser.add_argument("--cache", type=str, choices=["memory", "parquet", "hdf5", "none"], default="memory")
+    parser.add_argument("--dry-run", action="store_true", help="Run quick dry-run test with minimal extractors")
+
+    args = parser.parse_args()
+
+    if args.config:
+        if args.config.endswith((".yaml", ".yml")):
+            cfg = PipelineConfig.from_yaml(args.config)
+        else:
+            cfg = PipelineConfig.from_json(args.config)
+    else:
+        cfg = PipelineConfig(
+            dataset_paths=[args.dataset] if os.path.exists(args.dataset) else [],
+            task_type=args.task,
+            cache_backend=args.cache,
+            extractors=["polars_statistics"] if args.dry-run else ["numba_efficient", "tsfresh_minimal", "polars_statistics"],
+            selectors=[None, "select_k_best"] if args.dry-run else [None, "fdr", "select_k_best"],
+            n_splits=2 if args.dry-run else 5,
+        )
+
+    runner = BakeoffRunner(cfg)
+    print("Starting TEMPO Benchmarking Run...")
+    df_res = runner.run()
+    print("\nBenchmark Run Complete. Summary Results:\n")
+    print(df_res)

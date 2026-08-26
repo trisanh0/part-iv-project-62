@@ -1,5 +1,5 @@
 """TEMPO experiment and bake-off benchmark suites."""
 
-from tempo.experiments.TM26u8a__extractor_selector_bakeoff import run_bakeoff_experiment
+from tempo.experiments.threshold_sweep import run_threshold_grid_sweep
 
-__all__ = ["run_bakeoff_experiment"]
+__all__ = ["run_threshold_grid_sweep"]

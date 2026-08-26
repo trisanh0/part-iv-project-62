@@ -43,6 +43,10 @@ Thumbs.db
 .agents/teamwork_preview_*
 .agents/ORIGINAL_REQUEST.md
 
+# Scratch & local benchmark outputs
+scratch/
+benchmark_results/
+
 # Package build artifacts
 build/
 dist/
