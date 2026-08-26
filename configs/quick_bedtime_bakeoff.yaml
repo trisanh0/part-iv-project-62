@@ -1,0 +1,38 @@
+# TEMPO Quick Bedtime Bakeoff Configuration
+# Fast, multi-extractor, multi-selector comparison with full telemetry and statistical analysis.
+
+dataset_paths:
+  - "data/03_processed/beed"
+  - "data/03_processed/pred-maintenance"
+
+task_type: "classification"
+
+extractors:
+  - "numba_efficient"
+  - "polars_statistics"
+  - "tsfresh_minimal"
+
+selectors:
+  - null                   # Raw unselected baseline
+  - "select_k_best"        # Top-20 ANOVA F-test
+  - name: "subsampled"     # Two-stage subsampled selection (20% sample)
+    sample_ratio: 0.20
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+
+n_splits: 5
+seeds:
+  - 42
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/bedtime_run"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "bedtime_run.log"

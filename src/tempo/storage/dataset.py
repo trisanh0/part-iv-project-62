@@ -245,7 +245,12 @@ def load_dataset(
     Returns:
         Tuple of (df_ts, df_targets) as Polars DataFrames.
     """
-    ds_processed_dir = os.path.join(processed_dir, name)
+    # If name is already a valid directory with parquet files, use it directly
+    if os.path.exists(os.path.join(name, "time_series.parquet")):
+        ds_processed_dir = name
+    else:
+        ds_processed_dir = os.path.join(processed_dir, name)
+
     ts_path = os.path.join(ds_processed_dir, "time_series.parquet")
     target_path = os.path.join(ds_processed_dir, "targets.parquet")
 
