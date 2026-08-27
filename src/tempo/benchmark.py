@@ -192,6 +192,7 @@ class BakeoffRunner:
             logger.info("Cache hit for extractor '%s' on dataset '%s'", ext_name, dataset_name)
             t0 = time.perf_counter()
             features = self.feature_store.load(dataset_name, ext_name, params)
+            features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0)
             load_time = time.perf_counter() - t0
             dummy_stats = ResourceStats(
                 start_ram_mb=0.0,
@@ -251,6 +252,9 @@ class BakeoffRunner:
 
         stats = tracker.stats or ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
         
+        # Robust NaN and Inf handling across all feature spaces
+        features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+
         # Save to persistent feature store
         self.feature_store.save(
             features=features,
@@ -322,25 +326,48 @@ class BakeoffRunner:
                 X_test_sel = X_test
 
         stats = tracker.stats or ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
+        
+        # Fallback if 0 features survived selection
+        if X_train_sel.shape[1] == 0:
+            logger.warning("No features survived selector '%s'; falling back to unselected features.", sel_name)
+            X_train_sel = X_train
+            X_test_sel = X_test
+
+        # Ensure clean finite outputs
+        X_train_sel = X_train_sel.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        X_test_sel = X_test_sel.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        
         n_selected = X_train_sel.shape[1]
         return X_train_sel, X_test_sel, stats, n_initial, n_selected
 
     def _get_model(self, model_spec: Union[str, Dict[str, Any]]) -> Any:
         """Instantiate scikit-learn compatible estimator based on task type."""
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.impute import SimpleImputer
+
         model_name = model_spec if isinstance(model_spec, str) else model_spec.get("name", "random_forest")
         
         if self.config.task_type == "classification":
             if model_name == "random_forest":
                 return RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
             elif model_name == "logistic_regression":
-                return LogisticRegression(max_iter=1000, random_state=42)
+                return make_pipeline(
+                    SimpleImputer(strategy="constant", fill_value=0.0),
+                    StandardScaler(with_mean=False),
+                    LogisticRegression(max_iter=2000, random_state=42),
+                )
             else:
                 return RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
         else:
             if model_name == "random_forest":
                 return RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
             elif model_name == "ridge":
-                return Ridge(random_state=42)
+                return make_pipeline(
+                    SimpleImputer(strategy="constant", fill_value=0.0),
+                    StandardScaler(with_mean=False),
+                    Ridge(random_state=42),
+                )
             else:
                 return RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
 

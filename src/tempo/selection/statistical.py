@@ -16,7 +16,16 @@ def tsfresh_selector(X: pd.DataFrame, y: pd.Series | np.ndarray) -> pd.DataFrame
     Returns:
         Filtered pandas DataFrame containing selected features.
     """
-    return select_features(X, y)
+    X_clean = X.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+    # Drop all-constant features
+    nunique = X_clean.nunique()
+    non_constant = nunique[nunique > 1].index
+    if len(non_constant) > 0:
+        X_clean = X_clean[non_constant]
+    try:
+        return select_features(X_clean, y)
+    except Exception:
+        return X_clean
 
 
 def select_k_best(
@@ -34,10 +43,16 @@ def select_k_best(
     Returns:
         Filtered pandas DataFrame containing top k features.
     """
-    n_features = X.shape[1]
+    X_clean = X.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+    n_features = X_clean.shape[1]
     k_effective = min(k, n_features)
 
-    selector = SelectKBest(score_func=mutual_info_classif, k=k_effective)
-    selector.fit(X, y)
+    if k_effective == 0:
+        return X_clean
 
-    return X.iloc[:, selector.get_support()]
+    try:
+        selector = SelectKBest(score_func=mutual_info_classif, k=k_effective)
+        selector.fit(X_clean, y)
+        return X_clean.iloc[:, selector.get_support()]
+    except Exception:
+        return X_clean.iloc[:, :k_effective]

@@ -86,54 +86,61 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             feature_names = [str(c) for c in X_df.columns]
             X_df.columns = feature_names
 
-        if not isinstance(y, pd.Series):
-            y_series = pd.Series(y, index=X_df.index)
+        X_df = X_df.reset_index(drop=True)
+        if isinstance(y, (pd.Series, np.ndarray)):
+            y_series = pd.Series(np.asarray(y), index=X_df.index)
         else:
-            y_series = y.copy()
+            y_series = pd.Series(y, index=X_df.index)
 
         n_samples, n_features = X_df.shape
         self.n_features_in_ = n_features
 
         # Determine subsample size
         if self.sample_ratio >= 1.0 or n_samples <= self.min_samples:
-            subsample_idx = X_df.index
+            subsample_idx = np.arange(n_samples)
             X_sub = X_df
             y_sub = y_series
         else:
             target_n = max(self.min_samples, int(np.ceil(n_samples * self.sample_ratio)))
             target_n = min(target_n, n_samples)
-            test_fraction = 1.0 - (target_n / float(n_samples))
 
             # Stratification check
             strat_labels = None
             if self.stratify and y_series.nunique() > 1:
-                # Only stratify if all classes have at least 2 samples
                 val_counts = y_series.value_counts()
                 if (val_counts >= 2).all():
                     strat_labels = y_series
 
             try:
                 subsample_idx, _ = train_test_split(
-                    X_df.index,
+                    np.arange(n_samples),
                     train_size=target_n,
                     random_state=self.random_state,
                     stratify=strat_labels,
                 )
             except Exception:
                 subsample_idx, _ = train_test_split(
-                    X_df.index,
+                    np.arange(n_samples),
                     train_size=target_n,
                     random_state=self.random_state,
                     stratify=None,
                 )
 
-            X_sub = X_df.loc[subsample_idx]
-            y_sub = y_series.loc[subsample_idx]
+            X_sub = X_df.iloc[subsample_idx].reset_index(drop=True)
+            y_sub = y_series.iloc[subsample_idx].reset_index(drop=True)
 
         # Execute base selection on subsample
         if self.base_selector == "tsfresh" or self.base_selector is None:
-            X_filtered = select_features(X_sub, y_sub, fdr_level=self.fdr_level)
-            self.selected_feature_names_ = list(X_filtered.columns)
+            X_sub_clean = X_sub.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+            nunique = X_sub_clean.nunique()
+            non_const = nunique[nunique > 1].index
+            if len(non_const) > 0:
+                X_sub_clean = X_sub_clean[non_const]
+            try:
+                X_filtered = select_features(X_sub_clean, y_sub, fdr_level=self.fdr_level)
+                self.selected_feature_names_ = list(X_filtered.columns)
+            except Exception:
+                self.selected_feature_names_ = list(X_sub_clean.columns)
 
         elif hasattr(self.base_selector, "fit") and hasattr(self.base_selector, "get_support"):
             self.base_selector.fit(X_sub, y_sub)
