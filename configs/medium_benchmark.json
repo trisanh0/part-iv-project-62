@@ -1,0 +1,53 @@
+{
+  "dataset_paths": [
+    "data/03_processed/beed",
+    "data/03_processed/pred-maintenance"
+  ],
+  "task_type": "classification",
+  "extractors": [
+    {
+      "name": "numba_efficient",
+      "fft_coefficients": 25
+    },
+    {
+      "name": "tsfresh_efficient",
+      "fft_coefficients": 25
+    },
+    {
+      "name": "tsfresh_minimal"
+    },
+    {
+      "name": "polars_statistics"
+    },
+    {
+      "name": "tsfel"
+    }
+  ],
+  "selectors": [
+    null,
+    "select_k_best",
+    "fdr",
+    {
+      "name": "subsampled",
+      "sample_ratio": 0.2,
+      "base_selector": "tsfresh"
+    }
+  ],
+  "models": [
+    "random_forest",
+    "logistic_regression"
+  ],
+  "n_splits": 5,
+  "seeds": [
+    42
+  ],
+  "cache_backend": "parquet",
+  "cache_dir": "data/03_processed/feature_store",
+  "output_dir": "benchmark_results/medium_benchmark",
+  "enable_telemetry": true,
+  "telemetry_interval": 0.05,
+  "enable_ttests": true,
+  "enable_plots": true,
+  "enable_logging": true,
+  "log_file": "medium_benchmark.log"
+}

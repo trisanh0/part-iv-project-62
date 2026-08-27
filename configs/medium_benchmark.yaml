@@ -1,0 +1,44 @@
+# TEMPO Comprehensive 10-Minute Benchmark Configuration
+# Evaluates 5 Extractors x 4 Selectors x 2 Models across 2 Datasets with 5-Fold CV
+
+dataset_paths:
+  - "data/03_processed/beed"
+  - "data/03_processed/pred-maintenance"
+
+task_type: "classification"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "tsfresh_efficient"
+    fft_coefficients: 25
+  - name: "tsfresh_minimal"
+  - name: "polars_statistics"
+  - name: "tsfel"
+
+selectors:
+  - null                   # Raw full features
+  - "select_k_best"        # Top-20 ANOVA F-test
+  - "fdr"                  # Full TSFresh FDR hypothesis test (q=0.05)
+  - name: "subsampled"     # Two-stage subsampled selection (20% sample)
+    sample_ratio: 0.20
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+  - "logistic_regression"
+
+n_splits: 5
+seeds:
+  - 42
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/medium_benchmark"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "medium_benchmark.log"
