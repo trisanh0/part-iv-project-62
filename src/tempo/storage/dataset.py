@@ -1,6 +1,7 @@
 """Dataset standardisation, zero-copy tensor conversion, and schema validation for TEMPO."""
 
 import os
+from pathlib import Path
 from typing import List, Optional, Tuple, Union
 import polars as pl
 import numpy as np
@@ -230,6 +231,234 @@ def to_numpy_tensor(
     return tensor
 
 
+def convert_uci_har(
+    raw_dir: str,
+    output_dir: str,
+    rag_prefix: Optional[str] = None,
+) -> None:
+    """Standardize UCI Human Activity Recognition (HAR) inertial signals.
+
+    Args:
+        raw_dir: Directory containing raw 'UCI HAR Dataset' folder or zip.
+        output_dir: Output directory path.
+        rag_prefix: Optional Contexere RAG prefix identifier.
+    """
+    base = Path(raw_dir)
+    if (base / "UCI HAR Dataset").exists():
+        base = base / "UCI HAR Dataset"
+    elif (base / "har" / "UCI HAR Dataset").exists():
+        base = base / "har" / "UCI HAR Dataset"
+    elif (base / "UCI HAR Dataset.zip").exists():
+        import zipfile
+        with zipfile.ZipFile(base / "UCI HAR Dataset.zip", "r") as z:
+            z.extractall(base)
+        base = base / "UCI HAR Dataset"
+
+    signal_names = [
+        "body_acc_x", "body_acc_y", "body_acc_z",
+        "body_gyro_x", "body_gyro_y", "body_gyro_z",
+        "total_acc_x", "total_acc_y", "total_acc_z"
+    ]
+
+    all_signals = []
+    all_targets = []
+
+    for split in ["train", "test"]:
+        split_dir = base / split
+        y_path = split_dir / f"y_{split}.txt"
+        y = np.loadtxt(y_path, dtype=int)
+        all_targets.append(y)
+
+        channels = []
+        for sig in signal_names:
+            sig_file = split_dir / "Inertial Signals" / f"{sig}_{split}.txt"
+            arr = np.loadtxt(sig_file)
+            channels.append(arr)
+
+        tensor_split = np.stack(channels, axis=-1)
+        all_signals.append(tensor_split)
+
+    full_tensor = np.concatenate(all_signals, axis=0)
+    full_y = np.concatenate(all_targets, axis=0)
+
+    n_sequences, seq_len, n_channels = full_tensor.shape
+    seq_ids = np.repeat(np.arange(n_sequences, dtype=np.int32), seq_len)
+    steps = np.tile(np.arange(seq_len, dtype=np.int32), n_sequences)
+    flat_signals = full_tensor.reshape(-1, n_channels)
+
+    data_dict = {"sequence_id": seq_ids, "step": steps}
+    for i, sig_name in enumerate(signal_names):
+        data_dict[sig_name] = flat_signals[:, i].astype(np.float32)
+
+    df_ts = pl.DataFrame(data_dict)
+    df_targets = pl.DataFrame({
+        "sequence_id": np.arange(n_sequences, dtype=np.int32),
+        "target": full_y.astype(np.int32)
+    })
+
+    os.makedirs(output_dir, exist_ok=True)
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="har_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="har_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+
+def convert_appliances_energy(
+    raw_path: str,
+    output_dir: str,
+    window_size: int = 144,
+    stride: int = 72,
+    rag_prefix: Optional[str] = None,
+) -> None:
+    """Standardize and segment UCI Appliances Energy Prediction dataset."""
+    import pandas as pd
+    df_pd = pd.read_csv(raw_path)
+    n_rows = len(df_pd)
+
+    feature_cols = [
+        "lights", "T1", "RH_1", "T2", "RH_2", "T3", "RH_3", "T4", "RH_4",
+        "T5", "RH_5", "T6", "RH_6", "T7", "RH_7", "T8", "RH_8", "T9", "RH_9",
+        "T_out", "Press_mm_hg", "RH_out", "Windspeed", "Visibility", "Tdewpoint"
+    ]
+
+    for c in ["Appliances"] + feature_cols:
+        df_pd[c] = pd.to_numeric(df_pd[c].astype(str).str.strip(), errors="coerce").fillna(0.0)
+
+    df_proc = pl.DataFrame({
+        "time": np.arange(n_rows, dtype=np.int32),
+        "target": df_pd["Appliances"].to_numpy(dtype=np.float32),
+    })
+    for c in feature_cols:
+        df_proc = df_proc.with_columns(pl.Series(c, df_pd[c].to_numpy(dtype=np.float32)))
+
+    df_ts, df_targets = segment_time_series(
+        df_proc,
+        window_size=window_size,
+        stride=stride,
+        time_col="time",
+        feature_cols=feature_cols,
+        label_col="target",
+        label_strategy="last",
+    )
+
+    os.makedirs(output_dir, exist_ok=True)
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="appliances_energy_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="appliances_energy_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+
+def convert_beijing_pm25(
+    raw_path: str,
+    output_dir: str,
+    window_size: int = 24,
+    stride: int = 12,
+    rag_prefix: Optional[str] = None,
+) -> None:
+    """Standardize and segment UCI Beijing PM2.5 dataset."""
+    import pandas as pd
+    df_pd = pd.read_csv(raw_path)
+    df_pd["pm2.5"] = df_pd["pm2.5"].ffill().bfill().fillna(0.0)
+
+    cbwd_dummies = pd.get_dummies(df_pd["cbwd"], prefix="cbwd", dtype=float)
+    df_pd = pd.concat([df_pd, cbwd_dummies], axis=1)
+
+    feature_cols = ["DEWP", "TEMP", "PRES", "Iws", "Is", "Ir"] + list(cbwd_dummies.columns)
+    df_proc = pl.DataFrame({
+        "time": np.arange(len(df_pd), dtype=np.int32),
+        "target": df_pd["pm2.5"].to_numpy(dtype=np.float32),
+    })
+    for c in feature_cols:
+        df_proc = df_proc.with_columns(pl.Series(c, df_pd[c].to_numpy(dtype=np.float32)))
+
+    df_ts, df_targets = segment_time_series(
+        df_proc,
+        window_size=window_size,
+        stride=stride,
+        time_col="time",
+        feature_cols=feature_cols,
+        label_col="target",
+        label_strategy="last",
+    )
+
+    os.makedirs(output_dir, exist_ok=True)
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="beijing_pm25_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="beijing_pm25_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+
+def convert_gas_sensor_drift(
+    raw_dir: str,
+    output_dir: str,
+    rag_prefix: Optional[str] = None,
+) -> None:
+    """Standardize UCI Gas Sensor Array Drift dataset."""
+    dataset_dir = Path(raw_dir)
+    if (dataset_dir / "Dataset").exists():
+        dataset_dir = dataset_dir / "Dataset"
+    elif (dataset_dir / "gas-sensor-drift" / "Dataset").exists():
+        dataset_dir = dataset_dir / "gas-sensor-drift" / "Dataset"
+
+    all_features = []
+    all_labels = []
+
+    for batch_num in range(1, 11):
+        batch_file = dataset_dir / f"batch{batch_num}.dat"
+        if not batch_file.exists():
+            continue
+        with open(batch_file, "r") as f:
+            for line in f:
+                parts = line.strip().split()
+                if not parts:
+                    continue
+                label = int(parts[0].split(";")[0])
+                feat_vec = np.zeros(128, dtype=np.float32)
+                for item in parts[1:]:
+                    if ":" in item:
+                        idx_str, val_str = item.split(":", 1)
+                        idx = int(idx_str) - 1
+                        if 0 <= idx < 128:
+                            feat_vec[idx] = float(val_str)
+                all_features.append(feat_vec)
+                all_labels.append(label)
+
+    arr_features = np.array(all_features, dtype=np.float32)
+    arr_labels = np.array(all_labels, dtype=np.int32)
+    n_samples = arr_features.shape[0]
+    seq_len = 8
+    n_channels = 16
+    tensor_gas = arr_features.reshape(n_samples, seq_len, n_channels)
+
+    seq_ids = np.repeat(np.arange(n_samples, dtype=np.int32), seq_len)
+    steps = np.tile(np.arange(seq_len, dtype=np.int32), n_samples)
+    flat_data = tensor_gas.reshape(-1, n_channels)
+
+    data_dict = {"sequence_id": seq_ids, "step": steps}
+    for ch in range(n_channels):
+        data_dict[f"sensor_{ch}"] = flat_data[:, ch]
+
+    df_ts = pl.DataFrame(data_dict)
+    df_targets = pl.DataFrame({
+        "sequence_id": np.arange(n_samples, dtype=np.int32),
+        "target": arr_labels
+    })
+
+    os.makedirs(output_dir, exist_ok=True)
+    if rag_prefix:
+        save_dataframe(df_ts, prefix=rag_prefix, keyword="gas_sensor_drift_time_series", output_dir=output_dir)
+        save_dataframe(df_targets, prefix=rag_prefix, keyword="gas_sensor_drift_targets", output_dir=output_dir)
+    else:
+        df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+        df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+
 def load_dataset(
     name: str,
     raw_dir: str = "data/01_raw",
@@ -238,32 +467,71 @@ def load_dataset(
     """Load or auto-convert standardized TEMPO dataset.
 
     Args:
-        name: Name identifier of dataset ('simulated', 'beed', 'pred-maintenance').
+        name: Name identifier of dataset.
         raw_dir: Base directory path for raw datasets.
         processed_dir: Base directory path for standardized Parquet datasets.
 
     Returns:
         Tuple of (df_ts, df_targets) as Polars DataFrames.
     """
-    # If name is already a valid directory with parquet files, use it directly
-    if os.path.exists(os.path.join(name, "time_series.parquet")):
+    path_obj = Path(name)
+    if len(path_obj.parts) > 1 or os.path.exists(os.path.join(name, "time_series.parquet")):
         ds_processed_dir = name
+        base_name = path_obj.name
     else:
         ds_processed_dir = os.path.join(processed_dir, name)
+        base_name = name
 
     ts_path = os.path.join(ds_processed_dir, "time_series.parquet")
     target_path = os.path.join(ds_processed_dir, "targets.parquet")
 
     if not (os.path.exists(ts_path) and os.path.exists(target_path)):
         os.makedirs(ds_processed_dir, exist_ok=True)
-        if name == "simulated":
+        if base_name in ("simulated", "synthetic"):
             generate_simulated_dataset(output_dir=ds_processed_dir)
-        elif name == "beed":
+        elif base_name == "beed":
             raw_file = os.path.join(raw_dir, "beed", "BEED_Data.csv")
+            if not os.path.exists(raw_file):
+                raise FileNotFoundError(
+                    f"BEED raw file not found at '{raw_file}' and no processed files at '{ds_processed_dir}'. "
+                    "To run TEMPO without local raw datasets, use dataset 'simulated' or download pre-processed Parquet files."
+                )
             convert_beed(raw_file, output_dir=ds_processed_dir)
-        elif name in ("pred-maintenance", "predictive_maintenance"):
+        elif base_name in ("pred-maintenance", "predictive_maintenance"):
             raw_file = os.path.join(raw_dir, "pred-maintenance", "ai4i2020.csv")
+            if not os.path.exists(raw_file):
+                raise FileNotFoundError(
+                    f"Predictive Maintenance raw file not found at '{raw_file}' and no processed files at '{ds_processed_dir}'."
+                )
             convert_predictive_maintenance(raw_file, output_dir=ds_processed_dir)
+        elif base_name in ("har", "uci-har"):
+            raw_path = os.path.join(raw_dir, "har")
+            if not os.path.exists(raw_path):
+                raise FileNotFoundError(
+                    f"UCI HAR raw directory not found at '{raw_path}' and no processed files at '{ds_processed_dir}'."
+                )
+            convert_uci_har(raw_dir=raw_path, output_dir=ds_processed_dir)
+        elif base_name in ("appliances-energy", "appliances_energy"):
+            raw_file = os.path.join(raw_dir, "appliances-energy", "energydata_complete.csv")
+            if not os.path.exists(raw_file):
+                raise FileNotFoundError(
+                    f"Appliances Energy raw file not found at '{raw_file}' and no processed files at '{ds_processed_dir}'."
+                )
+            convert_appliances_energy(raw_file, output_dir=ds_processed_dir)
+        elif base_name in ("beijing-pm25", "beijing_pm25"):
+            raw_file = os.path.join(raw_dir, "beijing-pm25", "PRSA_data_2010.1.1-2014.12.31.csv")
+            if not os.path.exists(raw_file):
+                raise FileNotFoundError(
+                    f"Beijing PM2.5 raw file not found at '{raw_file}' and no processed files at '{ds_processed_dir}'."
+                )
+            convert_beijing_pm25(raw_file, output_dir=ds_processed_dir)
+        elif base_name in ("gas-sensor-drift", "gas_sensor_drift"):
+            raw_path = os.path.join(raw_dir, "gas-sensor-drift")
+            if not os.path.exists(raw_path):
+                raise FileNotFoundError(
+                    f"Gas Sensor Drift raw directory not found at '{raw_path}' and no processed files at '{ds_processed_dir}'."
+                )
+            convert_gas_sensor_drift(raw_dir=raw_path, output_dir=ds_processed_dir)
         else:
             raise ValueError(f"Unknown dataset name '{name}' and no processed files found at {ds_processed_dir}")
 

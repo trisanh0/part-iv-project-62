@@ -28,6 +28,7 @@ from sklearn.model_selection import KFold, StratifiedKFold
 
 from tempo.extraction import (
     numba_efficient_extractor,
+    numpy_statistical_extractor,
     polars_statistical_extractor,
     tsfel_extractor,
     tsfresh_extractor,
@@ -35,6 +36,7 @@ from tempo.extraction import (
 from tempo.selection import (
     SubsampledFeatureSelector,
     boruta_selector,
+    mutual_info_selector,
     select_k_best,
     tsfresh_selector,
 )
@@ -43,6 +45,7 @@ from tempo.storage.feature_store import BackendType, FeatureStore
 from tempo.telemetry import ResourceStats, ResourceTracker
 
 logger = logging.getLogger("tempo.benchmark")
+
 
 
 # ==============================================================================
@@ -192,7 +195,7 @@ class BakeoffRunner:
             logger.info("Cache hit for extractor '%s' on dataset '%s'", ext_name, dataset_name)
             t0 = time.perf_counter()
             features = self.feature_store.load(dataset_name, ext_name, params)
-            features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+            features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0).reset_index(drop=True)
             load_time = time.perf_counter() - t0
             dummy_stats = ResourceStats(
                 start_ram_mb=0.0,
@@ -209,9 +212,16 @@ class BakeoffRunner:
         # Feature Extraction Execution with Telemetry
         gc.collect()
         tracker = ResourceTracker(interval=self.config.telemetry_interval)
-        
+
         with tracker:
-            if ext_name == "polars_statistics" or ext_name == "statistics":
+            if ext_name in ("numpy_statistical", "numpy"):
+                exclude_cols = {"sequence_id", "step", "id", "time"}
+                feature_cols = [c for c in df_ts.columns if c not in exclude_cols]
+                tensor = to_numpy_tensor(df_ts, feature_cols=feature_cols)
+                features = numpy_statistical_extractor(tensor, feature_names=feature_cols)
+
+
+            elif ext_name == "polars_statistics" or ext_name == "statistics":
                 df_feat_pl = polars_statistical_extractor(df_ts)
                 exclude_cols = {"sequence_id", "id", "step", "time"}
                 feat_cols = [c for c in df_feat_pl.columns if c not in exclude_cols]
@@ -246,6 +256,8 @@ class BakeoffRunner:
                 features = tsfresh_extractor(
                     df_pandas, parameter_set=param_set, fft_coefficients=fft_val
                 )
+                if hasattr(features, "sort_index"):
+                    features = features.sort_index()
 
             else:
                 raise ValueError(f"Unsupported extractor identifier: {ext_name}")
@@ -253,7 +265,7 @@ class BakeoffRunner:
         stats = tracker.stats or ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
         
         # Robust NaN and Inf handling across all feature spaces
-        features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0).reset_index(drop=True)
 
         # Save to persistent feature store
         self.feature_store.save(
@@ -270,13 +282,14 @@ class BakeoffRunner:
         y_train: pd.Series,
         X_test: pd.DataFrame,
         selector: Optional[Union[str, Dict[str, Any], SelectorConfig]],
-    ) -> Tuple[pd.DataFrame, pd.DataFrame, ResourceStats, int, int]:
+    ) -> Tuple[pd.DataFrame, pd.DataFrame, ResourceStats, int, int, List[str]]:
         """Apply feature selector to train/test splits with hardware telemetry."""
         n_initial = X_train.shape[1]
+        all_cols = list(X_train.columns)
 
         if selector is None or selector == "none" or selector == "None":
             dummy_stats = ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
-            return X_train, X_test, dummy_stats, n_initial, n_initial
+            return X_train, X_test, dummy_stats, n_initial, n_initial, all_cols
 
         sel_name = selector.name if isinstance(selector, SelectorConfig) else (
             selector.get("name") if isinstance(selector, dict) else str(selector)
@@ -294,11 +307,19 @@ class BakeoffRunner:
                 selected_cols = list(X_train_sel.columns)
                 X_test_sel = X_test[selected_cols]
 
-            elif sel_name == "select_k_best":
+            elif sel_name in ("select_k_best", "select_k_best_anova", "anova"):
                 k_val = 20
                 if isinstance(selector, (dict, SelectorConfig)):
                     k_val = getattr(selector, "k", selector.get("k", 20) if isinstance(selector, dict) else 20)
                 X_train_sel = select_k_best(X_train, y_train, k=k_val)
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols]
+
+            elif sel_name in ("mutual_info", "select_k_best_mutual_info", "mi"):
+                k_val = 25
+                if isinstance(selector, (dict, SelectorConfig)):
+                    k_val = getattr(selector, "k", selector.get("k", 25) if isinstance(selector, dict) else 25)
+                X_train_sel = mutual_info_selector(X_train, y_train, k=k_val)
                 selected_cols = list(X_train_sel.columns)
                 X_test_sel = X_test[selected_cols]
 
@@ -307,7 +328,7 @@ class BakeoffRunner:
                 selected_cols = list(X_train_sel.columns)
                 X_test_sel = X_test[selected_cols]
 
-            elif sel_name == "subsampled":
+            elif sel_name in ("subsampled", "subsampled_fdr"):
                 ratio = 0.10
                 base_sel = "tsfresh"
                 if isinstance(selector, (dict, SelectorConfig)):
@@ -319,11 +340,13 @@ class BakeoffRunner:
                     sample_ratio=ratio,
                 )
                 X_train_sel = sub_sel.fit_transform(X_train, y_train)
+                selected_cols = sub_sel.selected_feature_names_ or list(X_train_sel.columns)
                 X_test_sel = sub_sel.transform(X_test)
             else:
                 logger.warning("Unrecognised selector '%s'; falling back to unselected features.", sel_name)
                 X_train_sel = X_train
                 X_test_sel = X_test
+                selected_cols = all_cols
 
         stats = tracker.stats or ResourceStats(0, 0, 0, 0, 0, 0, 0, 0)
         
@@ -332,13 +355,15 @@ class BakeoffRunner:
             logger.warning("No features survived selector '%s'; falling back to unselected features.", sel_name)
             X_train_sel = X_train
             X_test_sel = X_test
+            selected_cols = all_cols
 
         # Ensure clean finite outputs
         X_train_sel = X_train_sel.replace([np.inf, -np.inf], np.nan).fillna(0.0)
         X_test_sel = X_test_sel.replace([np.inf, -np.inf], np.nan).fillna(0.0)
         
         n_selected = X_train_sel.shape[1]
-        return X_train_sel, X_test_sel, stats, n_initial, n_selected
+        return X_train_sel, X_test_sel, stats, n_initial, n_selected, selected_cols
+
 
     def _get_model(self, model_spec: Union[str, Dict[str, Any]]) -> Any:
         """Instantiate scikit-learn compatible estimator based on task type."""
@@ -415,17 +440,19 @@ class BakeoffRunner:
                             fold_accs, fold_rmses, fold_maes, fold_r2s = [], [], [], []
                             fold_sel_times, fold_pred_times = [], []
                             fold_n_sel = []
+                            fold_selected_sets = []
 
                             for fold_idx, (train_idx, test_idx) in enumerate(splits):
-                                X_train_raw = X_all.iloc[train_idx]
-                                y_train_fold = y_all.iloc[train_idx]
-                                X_test_raw = X_all.iloc[test_idx]
-                                y_test_fold = y_all.iloc[test_idx]
+                                X_train_raw = X_all.iloc[train_idx].reset_index(drop=True)
+                                y_train_fold = y_all.iloc[train_idx].reset_index(drop=True)
+                                X_test_raw = X_all.iloc[test_idx].reset_index(drop=True)
+                                y_test_fold = y_all.iloc[test_idx].reset_index(drop=True)
 
                                 # Stage 3: Feature Selection
-                                X_tr_sel, X_te_sel, sel_stats, n_init, n_sel = self._select_features(
+                                X_tr_sel, X_te_sel, sel_stats, n_init, n_sel, sel_cols = self._select_features(
                                     X_train_raw, y_train_fold, X_test_raw, selector
                                 )
+                                fold_selected_sets.append(set(sel_cols))
 
                                 # Stage 4: Model Training & Inference
                                 model = self._get_model(model_spec)
@@ -446,6 +473,20 @@ class BakeoffRunner:
                                 fold_sel_times.append(sel_stats.duration_seconds)
                                 fold_pred_times.append(pred_time)
                                 fold_n_sel.append(n_sel)
+
+                            # Calculate Jaccard Selection Stability across folds
+                            if len(fold_selected_sets) > 1:
+                                jaccard_list = []
+                                for i in range(len(fold_selected_sets)):
+                                    for j in range(i + 1, len(fold_selected_sets)):
+                                        u = len(fold_selected_sets[i].union(fold_selected_sets[j]))
+                                        if u > 0:
+                                            jaccard_list.append(len(fold_selected_sets[i].intersection(fold_selected_sets[j])) / u)
+                                        else:
+                                            jaccard_list.append(1.0)
+                                jaccard_stability = round(float(np.mean(jaccard_list)), 4)
+                            else:
+                                jaccard_stability = 1.0
 
                             # Consolidated Run Summary Record
                             total_time = ext_stats.duration_seconds + float(np.sum(fold_sel_times)) + float(np.sum(fold_pred_times))
@@ -473,8 +514,10 @@ class BakeoffRunner:
                                 "N Extracted Features": n_init,
                                 "N Selected Features": round(float(np.mean(fold_n_sel)), 1),
                                 "Feature Reduction (%)": round((1.0 - (float(np.mean(fold_n_sel)) / float(max(1, n_init)))) * 100.0, 2),
+                                "Selection Stability (Jaccard)": jaccard_stability,
                                 "Total Time (s)": round(total_time, 4),
                             }
+
 
                             if self.config.task_type == "classification":
                                 record["Accuracy"] = round(float(np.mean(fold_accs)), 4)
@@ -507,7 +550,7 @@ class BakeoffRunner:
     def _trigger_analysis(self, results_csv: Path) -> None:
         """Invoke statistical analysis and figure generation on benchmark results."""
         try:
-            from benchmark.analysis import run_statistical_analysis
+            from tempo.analysis import run_statistical_analysis
             run_statistical_analysis(
                 csv_path=str(results_csv),
                 output_dir=str(self.output_dir / "analysis"),
@@ -545,9 +588,9 @@ if __name__ == "__main__":
             dataset_paths=[args.dataset] if os.path.exists(args.dataset) else [],
             task_type=args.task,
             cache_backend=args.cache,
-            extractors=["polars_statistics"] if args.dry-run else ["numba_efficient", "tsfresh_minimal", "polars_statistics"],
-            selectors=[None, "select_k_best"] if args.dry-run else [None, "fdr", "select_k_best"],
-            n_splits=2 if args.dry-run else 5,
+            extractors=["polars_statistics"] if args.dry_run else ["numba_efficient", "tsfresh_minimal", "polars_statistics"],
+            selectors=[None, "select_k_best"] if args.dry_run else [None, "fdr", "select_k_best"],
+            n_splits=2 if args.dry_run else 5,
         )
 
     runner = BakeoffRunner(cfg)
