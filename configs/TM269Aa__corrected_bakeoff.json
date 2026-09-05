@@ -1,0 +1,61 @@
+{
+  "dataset_paths": [
+    "data/03_processed/beed",
+    "data/03_processed/pred-maintenance",
+    "data/03_processed/har",
+    "data/03_processed/gas-sensor-drift"
+  ],
+  "task_type": "classification",
+  "extractors": [
+    {
+      "name": "polars_statistics"
+    },
+    {
+      "name": "numba_efficient",
+      "fft_coefficients": 25
+    },
+    {
+      "name": "tsfresh_efficient",
+      "fft_coefficients": 25
+    },
+    {
+      "name": "tsfel"
+    }
+  ],
+  "selectors": [
+    null,
+    {
+      "name": "select_k_best",
+      "k": 50
+    },
+    "fdr",
+    {
+      "name": "subsampled",
+      "sample_ratio": 0.2,
+      "base_selector": "tsfresh"
+    },
+    {
+      "name": "boruta",
+      "n_estimators": 50
+    }
+  ],
+  "models": [
+    "random_forest",
+    "logistic_regression"
+  ],
+  "n_splits": 5,
+  "seeds": [
+    42,
+    101,
+    2024
+  ],
+  "cache_backend": "parquet",
+  "cache_dir": "data/03_processed/feature_store_v2",
+  "output_dir": "benchmark_results/TM269Aa__corrected_bakeoff",
+  "enable_telemetry": true,
+  "telemetry_interval": 0.05,
+  "enable_ttests": true,
+  "enable_plots": true,
+  "enable_logging": true,
+  "log_file": "corrected_bakeoff.log"
+}
