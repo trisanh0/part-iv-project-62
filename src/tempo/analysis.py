@@ -57,6 +57,10 @@ def metric_direction(metric: str) -> Literal["higher", "lower"]:
         "MAE",
         "N Extracted Features",
         "N Selected Features",
+        "fit_time_seconds",
+        "inference_latency_ms",
+        "Fit Time (s)",
+        "Inference Latency (ms)",
     }
     return "lower" if metric in lower_is_better else "higher"
 
@@ -68,7 +72,11 @@ def compute_summary_statistics(
 ) -> pd.DataFrame:
     """Compute mean, std, median, min, max across grouped dimensions."""
     valid_metrics = [m for m in metrics if m in df.columns]
-    summary = df.groupby(group_cols)[valid_metrics].agg(["mean", "std", "median", "min", "max"])
+    df_grouped = df.copy()
+    for col in group_cols:
+        if col in df_grouped.columns:
+            df_grouped[col] = df_grouped[col].fillna("None").astype(str)
+    summary = df_grouped.groupby(group_cols, dropna=False)[valid_metrics].agg(["mean", "std", "median", "min", "max"])
     return summary
 
 
@@ -77,6 +85,7 @@ def pairwise_ttests(
     group_col: str,
     metric: str,
     alpha: float = 0.05,
+    pair_keys: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """Perform pairwise paired Student's t-tests with Benjamini-Hochberg FDR correction.
     
@@ -85,6 +94,9 @@ def pairwise_ttests(
         group_col: Column to group by ('Extractor', 'Selector', or 'Combination').
         metric: Target evaluation metric column name.
         alpha: Significance threshold (default 0.05).
+        pair_keys: Optional explicit pairing key columns. If None, dynamically includes
+            ["Dataset", "Seed", "Fold", "Task", "Selector", "Model", "Extractor"]
+            (excluding group_col) to eliminate Cartesian pseudo-replication.
         
     Returns:
         DataFrame containing pairwise comparisons, p-values, corrected p-values, and effect sizes.
@@ -92,21 +104,47 @@ def pairwise_ttests(
     if metric not in df.columns or group_col not in df.columns:
         return pd.DataFrame()
 
-    groups = [g for g in df[group_col].unique() if pd.notna(g)]
+    df_eval = df.copy()
+    for col in ["Extractor", "Selector", "Model"]:
+        if col in df_eval.columns:
+            df_eval[col] = df_eval[col].fillna("None").astype(str)
+
+    groups = [g for g in df_eval[group_col].unique() if pd.notna(g)]
     if len(groups) < 2:
         return pd.DataFrame()
 
     results = []
     direction = metric_direction(metric)
 
-    # Required pairing key to ensure matched pairs across seeds/folds
-    pair_keys = [c for c in ["Dataset", "Seed", "Fold"] if c in df.columns]
-    if not pair_keys:
-        pair_keys = ["Dataset"] if "Dataset" in df.columns else []
+    # Exclude cached loads if analyzing extraction duration, RAM, or Total Time
+    if "is_cached" in df_eval.columns and ("Extraction" in metric or "Total Time" in metric):
+        df_eval = df_eval[df_eval["is_cached"] != True]
+
+    # Required pairing key to ensure matched pairs across conditions without Cartesian pseudo-replication
+    if pair_keys is None:
+        candidate_keys = ["Dataset", "Seed", "Fold", "Task", "Selector", "Model", "Extractor"]
+        exclude_cols = {group_col}
+        if group_col == "Extractor":
+            exclude_cols.add("Combination")
+        elif group_col == "Selector":
+            exclude_cols.add("Combination")
+        elif group_col == "Combination":
+            exclude_cols.update({"Extractor", "Selector", "Combination"})
+        elif group_col == "Model":
+            exclude_cols.add("Combination")
+
+        pair_keys = [c for c in candidate_keys if c in df_eval.columns and c not in exclude_cols]
+        if not pair_keys:
+            pair_keys = [c for c in ["Dataset", "Seed", "Fold"] if c in df_eval.columns and c not in exclude_cols]
+
+    # Deduplicate on pair_keys + group_col to guarantee strict 1:1 pair matching
+    eval_cols = [group_col] + pair_keys
+    if all(c in df_eval.columns for c in eval_cols):
+        df_eval = df_eval.drop_duplicates(subset=eval_cols, keep="last")
 
     for g1, g2 in combinations(groups, 2):
-        df_g1 = df[df[group_col] == g1]
-        df_g2 = df[df[group_col] == g2]
+        df_g1 = df_eval[df_eval[group_col] == g1].dropna(subset=[metric])
+        df_g2 = df_eval[df_eval[group_col] == g2].dropna(subset=[metric])
 
         if pair_keys:
             merged = pd.merge(df_g1, df_g2, on=pair_keys, suffixes=("_1", "_2"))
@@ -229,65 +267,110 @@ def run_statistical_analysis(
     out_path.mkdir(parents=True, exist_ok=True)
 
     df = pd.read_csv(csv_path)
+    for col in ["Extractor", "Selector", "Model"]:
+        if col in df.columns:
+            df[col] = df[col].fillna("None").astype(str)
+
     if "Extractor" in df.columns and "Selector" in df.columns:
         df["Combination"] = df["Extractor"].astype(str) + " + " + df["Selector"].astype(str)
+
 
     # Standard metric sets
     common_metrics = [
         "Extraction Time (s)",
         "Selection Time (s)",
+        "fit_time_seconds",
+        "inference_latency_ms",
+        "Fit Time (s)",
+        "Inference Latency (ms)",
         "Prediction Time (s)",
         "Total Time (s)",
         "Extraction Peak RAM (MB)",
         "N Extracted Features",
         "N Selected Features",
+        "Feature Reduction (%)",
+        "Selection Stability (Jaccard)",
     ]
-    perf_metrics = ["Accuracy"] if task_type == "classification" else ["RMSE", "MAE", "R2"]
-    all_metrics = [m for m in common_metrics + perf_metrics if m in df.columns]
 
     outputs: Dict[str, pd.DataFrame] = {}
 
-    # 1. Summary Statistics
-    summary_df = compute_summary_statistics(df, group_cols=["Extractor", "Selector"], metrics=all_metrics)
-    summary_df.to_csv(out_path / "summary_statistics.csv")
-    outputs["summary"] = summary_df
+    # Separate classification and regression summaries so NaN metrics are not averaged
+    tasks = [t for t in df["Task"].dropna().unique()] if "Task" in df.columns else [task_type]
+    if not tasks:
+        tasks = [task_type]
 
-    # 2. Pairwise t-tests
-    if enable_ttests:
-        for group in ["Extractor", "Selector", "Combination"]:
-            if group not in df.columns:
-                continue
-            for metric in all_metrics:
-                ttest_res = pairwise_ttests(df, group_col=group, metric=metric)
-                if not ttest_res.empty:
+    for tsk in tasks:
+        df_task = df[df["Task"] == tsk] if "Task" in df.columns else df.copy()
+        perf_metrics = ["Accuracy"] if tsk == "classification" else ["RMSE", "MAE", "R2"]
+        task_metrics = [m for m in common_metrics + perf_metrics if m in df_task.columns]
+
+        # Exclude cached loads from extraction runtime, hardware, and total time calculations
+        df_task_clean = df_task.copy()
+        if "is_cached" in df_task_clean.columns:
+            ext_cols = [
+                "Extraction Time (s)",
+                "Extraction Peak RAM (MB)",
+                "Extraction Peak RAM Increase (MB)",
+                "Extraction Avg CPU (%)",
+                "Extraction Peak CPU (%)",
+                "Extraction Peak GPU (%)",
+                "Extraction Peak GPU RAM (MB)",
+                "Total Time (s)",
+            ]
+            for ec in ext_cols:
+                if ec in df_task_clean.columns:
+                    df_task_clean.loc[df_task_clean["is_cached"] == True, ec] = np.nan
+
+        # 1. Summary Statistics
+        summary_task = compute_summary_statistics(
+            df_task_clean, group_cols=["Extractor", "Selector"], metrics=task_metrics
+        )
+        task_suffix = f"_{tsk}" if len(tasks) > 1 or "Task" in df.columns else ""
+        summary_task.to_csv(out_path / f"summary_statistics{task_suffix}.csv")
+        outputs[f"summary{task_suffix}"] = summary_task
+
+        # 2. Pairwise t-tests
+        if enable_ttests:
+            for group in ["Extractor", "Selector", "Combination"]:
+                if group not in df_task_clean.columns:
+                    continue
+                for metric in task_metrics:
+                    ttest_res = pairwise_ttests(df_task_clean, group_col=group, metric=metric)
+                    if not ttest_res.empty:
+                        clean_metric = metric.lower().replace(" ", "_").replace("(", "").replace(")", "")
+                        fname = f"{group.lower()}_{clean_metric}{task_suffix}_ttests.csv"
+                        ttest_res.to_csv(out_path / fname, index=False)
+                        outputs[f"ttest_{group}_{clean_metric}{task_suffix}"] = ttest_res
+
+        # 3. Boxplots
+        if enable_plots:
+            for group in ["Extractor", "Selector"]:
+                if group not in df_task_clean.columns:
+                    continue
+                for metric in task_metrics:
                     clean_metric = metric.lower().replace(" ", "_").replace("(", "").replace(")", "")
-                    fname = f"{group.lower()}_{clean_metric}_ttests.csv"
-                    ttest_res.to_csv(out_path / fname, index=False)
-                    outputs[f"ttest_{group}_{clean_metric}"] = ttest_res
-
-    # 3. Boxplots
-    if enable_plots:
-        for group in ["Extractor", "Selector"]:
-            if group not in df.columns:
-                continue
-            for metric in all_metrics:
-                clean_metric = metric.lower().replace(" ", "_").replace("(", "").replace(")", "")
-                plot_metric_boxplot(
-                    df,
-                    metric=metric,
-                    group_col=group,
-                    output_path=out_path / f"{clean_metric}_by_{group.lower()}.png",
-                    log_scale=False,
-                )
-                if "RAM" in metric or "Time" in metric:
                     plot_metric_boxplot(
-                        df,
+                        df_task_clean,
                         metric=metric,
                         group_col=group,
-                        output_path=out_path / f"{clean_metric}_by_{group.lower()}_log.png",
-                        log_scale=True,
-                        title=f"{metric} (Log Scale) by {group}",
+                        output_path=out_path / f"{clean_metric}{task_suffix}_by_{group.lower()}.png",
+                        log_scale=False,
                     )
+                    if "RAM" in metric or "Time" in metric:
+                        plot_metric_boxplot(
+                            df_task_clean,
+                            metric=metric,
+                            group_col=group,
+                            output_path=out_path / f"{clean_metric}{task_suffix}_by_{group.lower()}_log.png",
+                            log_scale=True,
+                            title=f"{metric} (Log Scale) by {group}",
+                        )
+
+    if "summary" not in outputs:
+        primary = outputs.get(f"summary_{task_type}", list(outputs.values())[0])
+        primary.to_csv(out_path / "summary_statistics.csv")
+        outputs["summary"] = primary
 
     logger.info("Statistical analysis complete. Artifacts saved to: %s", out_path)
     return outputs
+

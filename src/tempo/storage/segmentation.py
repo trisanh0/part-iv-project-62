@@ -8,28 +8,33 @@ import numpy as np
 def segment_time_series(
     df: pl.DataFrame,
     window_size: int,
-    stride: int,
+    stride: Optional[int] = None,
     time_col: str = "time",
     feature_cols: Optional[List[str]] = None,
     label_col: Optional[str] = None,
     label_strategy: str = "majority_vote",
+    group_col: Optional[str] = None,
 ) -> Tuple[pl.DataFrame, Optional[pl.DataFrame]]:
     """Segment continuous time-series DataFrame into discrete windowed sequences.
 
     Args:
         df: Input Polars DataFrame containing raw continuous temporal data.
         window_size: Number of temporal steps per window segment.
-        stride: Step stride offset between consecutive sliding windows.
+        stride: Step stride offset between consecutive sliding windows. If None,
+            defaults to window_size (strictly non-overlapping windows to eliminate data leakage).
         time_col: Column name identifying temporal order.
         feature_cols: List of signal feature column names to segment.
-        label_col: Optional column name containing target classification labels.
-        label_strategy: Target label aggregation strategy ('majority_vote', 'last', 'any_positive').
+        label_col: Optional column name containing target classification labels or continuous values.
+        label_strategy: Target label aggregation strategy ('majority_vote', 'last', 'mean', 'any_positive').
+        group_col: Optional column name containing subject/entity grouping metadata.
 
     Returns:
         Tuple of (df_ts, df_targets), where df_ts is keyed by ('sequence_id', 'step').
     """
     if window_size <= 0:
         raise ValueError(f"window_size must be positive, got {window_size}")
+    if stride is None:
+        stride = window_size
     if stride <= 0:
         raise ValueError(f"stride must be positive, got {stride}")
 
@@ -37,6 +42,8 @@ def segment_time_series(
         exclude_cols = {time_col}
         if label_col:
             exclude_cols.add(label_col)
+        if group_col:
+            exclude_cols.add(group_col)
         feature_cols = [c for c in df.columns if c not in exclude_cols]
 
     n_rows = df.height
@@ -51,9 +58,14 @@ def segment_time_series(
     # Process signal values into structured sequence windows
     feature_matrices = {c: df[c].to_numpy() for c in feature_cols}
     if label_col and label_col in df.columns:
-        label_array = df[label_col].to_numpy()
+        label_series = df[label_col]
+        is_continuous = label_series.dtype.is_float()
+        label_array = label_series.to_numpy()
     else:
         label_array = None
+        is_continuous = False
+
+    group_array = df[group_col].to_numpy() if group_col and group_col in df.columns else None
 
     for i in range(n_windows):
         start_idx = i * stride
@@ -72,24 +84,46 @@ def segment_time_series(
             window_labels = label_array[start_idx:end_idx]
             if label_strategy == "last":
                 target_val = window_labels[-1]
+            elif label_strategy == "mean":
+                target_val = float(np.nanmean(window_labels))
             elif label_strategy == "any_positive":
                 target_val = 1 if np.any(window_labels > 0) else 0
             elif label_strategy == "majority_vote":
-                vals, counts = np.unique(window_labels, return_counts=True)
-                target_val = vals[np.argmax(counts)]
+                if is_continuous:
+                    target_val = float(np.nanmean(window_labels))
+                else:
+                    vals, counts = np.unique(window_labels, return_counts=True)
+                    target_val = vals[np.argmax(counts)]
             else:
                 raise ValueError(f"Unknown label_strategy: {label_strategy}")
 
-            target_records.append({"sequence_id": i, "target": int(target_val)})
+            target_entry = {
+                "sequence_id": i,
+                "target": float(target_val) if is_continuous else int(target_val),
+            }
+            if group_array is not None:
+                target_entry["group"] = group_array[start_idx:end_idx][-1]
+                if group_col and group_col != "group":
+                    target_entry[group_col] = group_array[start_idx:end_idx][-1]
+
+            target_records.append(target_entry)
 
     df_ts = pl.concat(ts_frames)
 
     if target_records:
-        df_targets = pl.DataFrame(target_records).with_columns([
+        df_targets = pl.DataFrame(target_records)
+        target_cast = pl.Float64 if is_continuous else pl.Int32
+        casts = [
             pl.col("sequence_id").cast(pl.Int32),
-            pl.col("target").cast(pl.Int32),
-        ])
+            pl.col("target").cast(target_cast),
+        ]
+        if "group" in df_targets.columns:
+            casts.append(pl.col("group"))
+        if group_col and group_col in df_targets.columns and group_col != "group":
+            casts.append(pl.col(group_col))
+        df_targets = df_targets.with_columns(casts)
     else:
         df_targets = None
 
     return df_ts, df_targets
+

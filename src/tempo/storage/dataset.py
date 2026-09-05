@@ -76,7 +76,7 @@ def convert_predictive_maintenance(
     raw_path: str,
     output_dir: str,
     window_size: int = 200,
-    stride: int = 50,
+    stride: Optional[int] = None,
     label_strategy: str = "last",
     rag_prefix: Optional[str] = None,
 ) -> None:
@@ -86,12 +86,15 @@ def convert_predictive_maintenance(
         raw_path: File path of raw source CSV.
         output_dir: Output directory path.
         window_size: Length of each sliding window segment.
-        stride: Stride offset between consecutive windows.
+        stride: Stride offset between consecutive windows. Defaults to window_size (non-overlapping).
         label_strategy: Target label aggregation strategy ('last', 'any_positive', 'majority_vote').
         rag_prefix: Optional Contexere RAG prefix identifier.
     """
     if not os.path.exists(raw_path):
         raise FileNotFoundError(f"Raw file not found: {raw_path}")
+
+    if stride is None:
+        stride = window_size
 
     df = pl.read_csv(raw_path)
     leak_cols = ["TWF", "HDF", "PWF", "OSF", "RNF"]
@@ -133,7 +136,7 @@ def convert_beed(
     raw_path: str,
     output_dir: str,
     window_size: int = 200,
-    stride: int = 50,
+    stride: Optional[int] = None,
     label_strategy: str = "majority_vote",
     rag_prefix: Optional[str] = None,
 ) -> None:
@@ -143,12 +146,15 @@ def convert_beed(
         raw_path: File path of raw source CSV.
         output_dir: Output directory path.
         window_size: Length of each sliding window segment.
-        stride: Stride offset between consecutive windows.
+        stride: Stride offset between consecutive windows. Defaults to window_size (non-overlapping).
         label_strategy: Target label aggregation strategy.
         rag_prefix: Optional Contexere RAG prefix identifier.
     """
     if not os.path.exists(raw_path):
         raise FileNotFoundError(f"Raw file not found: {raw_path}")
+
+    if stride is None:
+        stride = window_size
 
     df = pl.read_csv(raw_path)
     n_rows = df.height
@@ -238,6 +244,8 @@ def convert_uci_har(
 ) -> None:
     """Standardize UCI Human Activity Recognition (HAR) inertial signals.
 
+    Preserves subject/entity metadata in targets to prevent cross-subject leakage in CV.
+
     Args:
         raw_dir: Directory containing raw 'UCI HAR Dataset' folder or zip.
         output_dir: Output directory path.
@@ -262,12 +270,18 @@ def convert_uci_har(
 
     all_signals = []
     all_targets = []
+    all_subjects = []
 
     for split in ["train", "test"]:
         split_dir = base / split
         y_path = split_dir / f"y_{split}.txt"
         y = np.loadtxt(y_path, dtype=int)
         all_targets.append(y)
+
+        subject_path = split_dir / f"subject_{split}.txt"
+        if subject_path.exists():
+            subjects = np.loadtxt(subject_path, dtype=int)
+            all_subjects.append(subjects)
 
         channels = []
         for sig in signal_names:
@@ -280,6 +294,7 @@ def convert_uci_har(
 
     full_tensor = np.concatenate(all_signals, axis=0)
     full_y = np.concatenate(all_targets, axis=0)
+    full_subjects = np.concatenate(all_subjects, axis=0) if all_subjects else None
 
     n_sequences, seq_len, n_channels = full_tensor.shape
     seq_ids = np.repeat(np.arange(n_sequences, dtype=np.int32), seq_len)
@@ -291,10 +306,16 @@ def convert_uci_har(
         data_dict[sig_name] = flat_signals[:, i].astype(np.float32)
 
     df_ts = pl.DataFrame(data_dict)
-    df_targets = pl.DataFrame({
+    
+    target_dict = {
         "sequence_id": np.arange(n_sequences, dtype=np.int32),
-        "target": full_y.astype(np.int32)
-    })
+        "target": full_y.astype(np.int32),
+    }
+    if full_subjects is not None:
+        target_dict["subject_id"] = full_subjects.astype(np.int32)
+        target_dict["group"] = full_subjects.astype(np.int32)
+
+    df_targets = pl.DataFrame(target_dict)
 
     os.makedirs(output_dir, exist_ok=True)
     if rag_prefix:
@@ -305,17 +326,23 @@ def convert_uci_har(
         df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
 
 
+convert_har = convert_uci_har
+
+
 def convert_appliances_energy(
     raw_path: str,
     output_dir: str,
     window_size: int = 144,
-    stride: int = 72,
+    stride: Optional[int] = None,
     rag_prefix: Optional[str] = None,
 ) -> None:
     """Standardize and segment UCI Appliances Energy Prediction dataset."""
     import pandas as pd
     df_pd = pd.read_csv(raw_path)
     n_rows = len(df_pd)
+
+    if stride is None:
+        stride = window_size
 
     feature_cols = [
         "lights", "T1", "RH_1", "T2", "RH_2", "T3", "RH_3", "T4", "RH_4",
@@ -356,13 +383,16 @@ def convert_beijing_pm25(
     raw_path: str,
     output_dir: str,
     window_size: int = 24,
-    stride: int = 12,
+    stride: Optional[int] = None,
     rag_prefix: Optional[str] = None,
 ) -> None:
     """Standardize and segment UCI Beijing PM2.5 dataset."""
     import pandas as pd
     df_pd = pd.read_csv(raw_path)
     df_pd["pm2.5"] = df_pd["pm2.5"].ffill().bfill().fillna(0.0)
+
+    if stride is None:
+        stride = window_size
 
     cbwd_dummies = pd.get_dummies(df_pd["cbwd"], prefix="cbwd", dtype=float)
     df_pd = pd.concat([df_pd, cbwd_dummies], axis=1)
@@ -394,6 +424,7 @@ def convert_beijing_pm25(
         df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
 
 
+
 def convert_gas_sensor_drift(
     raw_dir: str,
     output_dir: str,
@@ -408,6 +439,7 @@ def convert_gas_sensor_drift(
 
     all_features = []
     all_labels = []
+    all_batches = []
 
     for batch_num in range(1, 11):
         batch_file = dataset_dir / f"batch{batch_num}.dat"
@@ -428,9 +460,11 @@ def convert_gas_sensor_drift(
                             feat_vec[idx] = float(val_str)
                 all_features.append(feat_vec)
                 all_labels.append(label)
+                all_batches.append(batch_num)
 
     arr_features = np.array(all_features, dtype=np.float32)
     arr_labels = np.array(all_labels, dtype=np.int32)
+    arr_batches = np.array(all_batches, dtype=np.int32)
     n_samples = arr_features.shape[0]
     seq_len = 8
     n_channels = 16
@@ -447,7 +481,9 @@ def convert_gas_sensor_drift(
     df_ts = pl.DataFrame(data_dict)
     df_targets = pl.DataFrame({
         "sequence_id": np.arange(n_samples, dtype=np.int32),
-        "target": arr_labels
+        "target": arr_labels,
+        "batch": arr_batches,
+        "group": arr_batches,
     })
 
     os.makedirs(output_dir, exist_ok=True)

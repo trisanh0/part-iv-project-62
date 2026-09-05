@@ -7,6 +7,7 @@ fits statistical significance filters (FDR hypothesis tests / Boruta / SelectKBe
 and applies the surviving feature mask across the entire dataset.
 """
 
+import inspect
 import logging
 import time
 from typing import Any, Callable, Dict, List, Optional, Sequence, Union
@@ -16,6 +17,9 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
 from tsfresh import select_features
+
+from tempo.selection.statistical import select_k_best, mutual_info_selector
+from tempo.selection.wrappers import boruta_selector
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +40,7 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
         random_state: Optional[int] = 42,
         stratify: bool = True,
         min_samples: int = 20,
+        task_type: str = "classification",
     ):
         """Initialise the subsampled feature selector.
         
@@ -46,6 +51,7 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             random_state: Seed for reproducible subsampling.
             stratify: Whether to preserve class label proportions in subsampling.
             min_samples: Minimum absolute number of rows required in subsample.
+            task_type: Problem type ('classification' or 'regression').
         """
         self.base_selector = base_selector
         self.sample_ratio = sample_ratio
@@ -53,13 +59,16 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
         self.random_state = random_state
         self.stratify = stratify
         self.min_samples = min_samples
+        self.task_type = task_type
 
         # Fitted attributes
         self.selected_feature_names_: Optional[List[str]] = None
+        self.survived_features_: List[str] = []
         self.support_mask_: Optional[np.ndarray] = None
         self.n_features_in_: int = 0
         self.n_features_out_: int = 0
-        self.telemetry_: Dict[str, float] = {}
+        self.fallback_triggered_: bool = False
+        self.telemetry_: Dict[str, Any] = {}
 
     def fit(
         self,
@@ -104,9 +113,9 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             target_n = max(self.min_samples, int(np.ceil(n_samples * self.sample_ratio)))
             target_n = min(target_n, n_samples)
 
-            # Stratification check
+            # Stratification check (only applicable for classification with multi-class representation)
             strat_labels = None
-            if self.stratify and y_series.nunique() > 1:
+            if self.stratify and self.task_type == "classification" and y_series.nunique() > 1:
                 val_counts = y_series.value_counts()
                 if (val_counts >= 2).all():
                     strat_labels = y_series
@@ -137,34 +146,67 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             if len(non_const) > 0:
                 X_sub_clean = X_sub_clean[non_const]
             try:
-                X_filtered = select_features(X_sub_clean, y_sub, fdr_level=self.fdr_level)
-                self.selected_feature_names_ = list(X_filtered.columns)
+                ml_task = "regression" if self.task_type == "regression" else "auto"
+                X_filtered = select_features(X_sub_clean, y_sub, fdr_level=self.fdr_level, ml_task=ml_task)
+                survived = list(X_filtered.columns)
             except Exception:
-                self.selected_feature_names_ = list(X_sub_clean.columns)
+                survived = []
+
+        elif self.base_selector in ("select_k_best", "select_k_best_anova", "anova"):
+            df_sel = select_k_best(X_sub, y_sub, task_type=self.task_type)
+            survived = list(df_sel.columns)
+
+        elif self.base_selector in ("mutual_info", "mi"):
+            df_sel = mutual_info_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state)
+            survived = list(df_sel.columns)
+
+        elif self.base_selector == "boruta":
+            df_sel = boruta_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state or 42)
+            survived = list(df_sel.columns)
 
         elif hasattr(self.base_selector, "fit") and hasattr(self.base_selector, "get_support"):
             self.base_selector.fit(X_sub, y_sub)
             supp = self.base_selector.get_support()
-            self.selected_feature_names_ = [f for f, s in zip(feature_names, supp) if s]
+            survived = [f for f, s in zip(feature_names, supp) if s]
 
         elif callable(self.base_selector):
-            res = self.base_selector(X_sub, y_sub)
-            if isinstance(res, pd.DataFrame):
-                self.selected_feature_names_ = list(res.columns)
-            elif isinstance(res, (list, np.ndarray)):
-                self.selected_feature_names_ = [str(f) for f in res]
+            sig = inspect.signature(self.base_selector)
+            if "task_type" in sig.parameters:
+                res = self.base_selector(X_sub, y_sub, task_type=self.task_type)
             else:
-                self.selected_feature_names_ = feature_names
+                res = self.base_selector(X_sub, y_sub)
+            if isinstance(res, pd.DataFrame):
+                survived = list(res.columns)
+            elif isinstance(res, (list, np.ndarray)):
+                survived = [str(f) for f in res]
+            else:
+                survived = feature_names
         else:
-            self.selected_feature_names_ = feature_names
+            survived = feature_names
 
-        # Fallback if no features selected (retain all to prevent downstream crash)
-        if not self.selected_feature_names_:
-            logger.warning("No features survived selection; falling back to full feature space.")
-            self.selected_feature_names_ = feature_names
+        # Track surviving features honestly before fallback
+        raw_survived = len(survived)
+        self.fallback_triggered_ = (raw_survived == 0)
+
+        if self.fallback_triggered_:
+            logger.warning(
+                "No features survived selection; fallback triggered, retaining full feature space (%d features).",
+                n_features,
+            )
+            # Retain all features in transform to prevent downstream crash
+            self.survived_features_ = []
+            self.selected_feature_names_ = list(feature_names)
+            self.n_features_out_ = 0
+            reduction_pct = 100.0
+        else:
+            self.survived_features_ = list(survived)
+            self.selected_feature_names_ = list(survived)
+            self.n_features_out_ = raw_survived
+            reduction_pct = round(
+                (1.0 - (self.n_features_out_ / float(n_features))) * 100.0, 2
+            )
 
         self.support_mask_ = np.array([f in self.selected_feature_names_ for f in feature_names])
-        self.n_features_out_ = len(self.selected_feature_names_)
 
         fit_time = time.perf_counter() - t0
         self.telemetry_ = {
@@ -174,14 +216,14 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             "sample_ratio_actual": round(len(X_sub) / float(n_samples), 4),
             "n_initial_features": n_features,
             "n_selected_features": self.n_features_out_,
-            "feature_reduction_pct": round(
-                (1.0 - (self.n_features_out_ / float(n_features))) * 100.0, 2
-            ),
+            "fallback_triggered": self.fallback_triggered_,
+            "feature_reduction_pct": reduction_pct,
         }
         logger.info(
-            "Subsampled selection complete: %d -> %d features in %.4fs (subsample: %d/%d rows)",
+            "Subsampled selection complete: %d -> %d features (fallback=%s) in %.4fs (subsample: %d/%d rows)",
             n_features,
             self.n_features_out_,
+            self.fallback_triggered_,
             fit_time,
             len(X_sub),
             n_samples,
@@ -223,6 +265,7 @@ def evaluate_subsampling_sweep(
     sample_ratios: Sequence[float] = (0.05, 0.10, 0.20, 0.50, 1.0),
     fdr_level: float = 0.05,
     random_state: int = 42,
+    task_type: str = "classification",
 ) -> pd.DataFrame:
     """Benchmark feature selection latency and feature reduction across sample ratios.
     
@@ -232,6 +275,7 @@ def evaluate_subsampling_sweep(
         sample_ratios: Sequence of sample ratios to evaluate.
         fdr_level: FDR alpha level.
         random_state: Seed for reproducibility.
+        task_type: Target problem type ('classification' or 'regression').
         
     Returns:
         DataFrame containing telemetry summary for each sample ratio.
@@ -244,6 +288,7 @@ def evaluate_subsampling_sweep(
             sample_ratio=ratio,
             fdr_level=fdr_level,
             random_state=random_state,
+            task_type=task_type,
         )
         selector.fit(X, y)
         telemetry = selector.telemetry_
@@ -255,7 +300,9 @@ def evaluate_subsampling_sweep(
             "Fit Time (s)": telemetry["fit_time_sec"],
             "Initial Features": telemetry["n_initial_features"],
             "Selected Features": telemetry["n_selected_features"],
+            "Fallback Triggered": telemetry["fallback_triggered"],
             "Feature Reduction (%)": telemetry["feature_reduction_pct"],
         })
 
     return pd.DataFrame(records)
+
