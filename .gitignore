@@ -22,6 +22,10 @@ __pycache__/
 .ipynb_checkpoints/
 .pytest_cache/
 
+# IDE configs
+.vscode/
+.idea/
+
 # Obsidian configs
 docs/.obsidian/workspace.json
 docs/.obsidian/workspace-mobile.json
