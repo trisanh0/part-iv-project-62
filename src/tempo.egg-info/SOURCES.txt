@@ -1,5 +1,0 @@
-pyproject.toml
-src/tempo.egg-info/PKG-INFO
-src/tempo.egg-info/SOURCES.txt
-src/tempo.egg-info/dependency_links.txt
-src/tempo.egg-info/top_level.txt
