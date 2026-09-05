@@ -1,0 +1,61 @@
+# TEMPO Multi-Domain Classification Bakeoff Configuration for Andreas / Supervisor Meeting
+# Document ID: TM268Ua
+# Evaluates:
+# 1. Fourier Truncation (FFT 10, 25, 50) in Numba vs TSFresh
+# 2. Two-Stage Subsampled FDR Selection (10%, 20%, 50% vs 100% full FDR vs SelectKBest vs Baseline)
+# 3. Engine Speedups (Numba JIT vs Polars Rust vs CPython TSFresh)
+# 4. Multi-Seed Bakeoff Evaluation (5-Fold CV x 2 Seeds = 10 Folds per combination)
+
+dataset_paths:
+  - "data/03_processed/beed"
+  - "data/03_processed/pred-maintenance"
+  - "data/03_processed/har"
+  - "data/03_processed/gas-sensor-drift"
+
+task_type: "classification"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 10
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "numba_efficient"
+    fft_coefficients: 50
+  - name: "tsfresh_efficient"
+    fft_coefficients: 25
+  - name: "tsfresh_minimal"
+  - name: "polars_statistics"
+
+selectors:
+  - null                   # Raw baseline unselected features
+  - "select_k_best"        # Top-20 ANOVA F-test
+  - "fdr"                  # Full TSFresh FDR hypothesis test (q=0.05)
+  - name: "subsampled"     # Two-stage subsampled selection (10% sample)
+    sample_ratio: 0.10
+    base_selector: "tsfresh"
+  - name: "subsampled"     # Two-stage subsampled selection (20% sample)
+    sample_ratio: 0.20
+    base_selector: "tsfresh"
+  - name: "subsampled"     # Two-stage subsampled selection (50% sample)
+    sample_ratio: 0.50
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+  - "logistic_regression"
+
+n_splits: 5
+seeds:
+  - 42
+  - 123
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/TM268Ua__andreas_meeting_bakeoff"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "TM268Ua__andreas_meeting_bakeoff.log"
