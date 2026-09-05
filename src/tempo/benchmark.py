@@ -43,7 +43,7 @@ from tempo.selection import (
 )
 from tempo.storage import load_dataset, to_numpy_tensor
 from tempo.storage.feature_store import BackendType, FeatureStore
-from tempo.telemetry import ResourceStats, ResourceTracker
+from tempo.telemetry import ResourceStats, ResourceTracker, log_system_info
 
 logger = logging.getLogger("tempo.benchmark")
 
@@ -152,6 +152,7 @@ class BakeoffRunner:
             backend=config.cache_backend,
         )
         self._setup_logging()
+        self._log_environment()
 
     def _setup_logging(self) -> None:
         """Configure structured execution logging."""
@@ -168,6 +169,15 @@ class BakeoffRunner:
         logger.addHandler(handler)
         logger.setLevel(logging.INFO)
         logger.info("TEMPO Benchmark Runner initialised. Task: %s", self.config.task_type)
+
+    def _log_environment(self) -> None:
+        """Capture and record environment and system metadata to environment.json."""
+        try:
+            env_file = self.output_dir / "environment.json"
+            log_system_info(env_file)
+            logger.info("Recorded runtime environment metadata to %s", env_file)
+        except Exception as e:
+            logger.warning("Failed to record environment metadata: %s", e)
 
     def _extract_features(
         self,

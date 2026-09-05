@@ -7,11 +7,13 @@ allocation across multi-threaded and multi-process time-series pipelines.
 """
 
 from dataclasses import dataclass
+import json
 import logging
 import os
+from pathlib import Path
 import threading
 import time
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import psutil
@@ -217,3 +219,125 @@ class ResourceTracker:
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.stats = self.monitor.stop()
+
+
+def get_system_info() -> Dict[str, Any]:
+    """Capture comprehensive system, hardware, and environment metadata.
+
+    Returns:
+        Structured dictionary containing OS, CPU, RAM, GPU, Python, Git, and package metadata.
+    """
+    import importlib.metadata
+    import platform
+    import subprocess
+    import sys
+    from datetime import datetime, timezone
+
+    info: Dict[str, Any] = {
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "os": {
+            "system": platform.system(),
+            "release": platform.release(),
+            "version": platform.version(),
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+        },
+        "python": {
+            "version": platform.python_version(),
+            "implementation": platform.python_implementation(),
+            "compiler": platform.python_compiler(),
+            "executable": sys.executable,
+        },
+        "hardware": {
+            "cpu_count_logical": psutil.cpu_count(logical=True),
+            "cpu_count_physical": psutil.cpu_count(logical=False),
+            "total_ram_gb": round(psutil.virtual_memory().total / (1024**3), 2),
+            "available_ram_gb": round(psutil.virtual_memory().available / (1024**3), 2),
+        },
+    }
+
+    try:
+        freq = psutil.cpu_freq()
+        if freq is not None:
+            info["hardware"]["cpu_freq_current_mhz"] = freq.current
+    except Exception:
+        pass
+
+    try:
+        import pynvml
+        pynvml.nvmlInit()
+        device_count = pynvml.nvmlDeviceGetCount()
+        devices = []
+        for i in range(device_count):
+            handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+            name = pynvml.nvmlDeviceGetName(handle)
+            if isinstance(name, bytes):
+                name = name.decode("utf-8")
+            devices.append(name)
+        info["hardware"]["gpu_available"] = True
+        info["hardware"]["gpu_devices"] = devices
+    except Exception:
+        info["hardware"]["gpu_available"] = False
+        info["hardware"]["gpu_devices"] = []
+
+    try:
+        commit_hash = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+        branch_name = subprocess.check_output(
+            ["git", "branch", "--show-current"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+        status_out = subprocess.check_output(
+            ["git", "status", "--porcelain"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+        info["git"] = {
+            "commit": commit_hash,
+            "branch": branch_name,
+            "is_dirty": bool(status_out),
+        }
+    except Exception as e:
+        info["git"] = {"error": str(e)}
+
+    packages_to_check = [
+        "numpy",
+        "scipy",
+        "pandas",
+        "polars",
+        "numba",
+        "scikit-learn",
+        "tsfresh",
+        "tsfel",
+        "boruta",
+        "psutil",
+        "pyarrow",
+        "h5py",
+        "matplotlib",
+    ]
+    package_versions: Dict[str, str] = {}
+    for pkg in packages_to_check:
+        try:
+            package_versions[pkg] = importlib.metadata.version(pkg)
+        except Exception:
+            pass
+    info["packages"] = package_versions
+
+    return info
+
+
+def log_system_info(output_path: Union[str, Path]) -> Dict[str, Any]:
+    """Capture system and environment info and save as JSON.
+
+    Args:
+        output_path: Path to target environment.json file.
+
+    Returns:
+        The captured system info dictionary.
+    """
+    out_file = Path(output_path)
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    info = get_system_info()
+    with open(out_file, "w", encoding="utf-8") as f:
+        json.dump(info, f, indent=2)
+    logger.info("Saved environment metadata to %s", out_file)
+    return info
+

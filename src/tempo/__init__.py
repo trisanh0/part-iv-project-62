@@ -12,10 +12,17 @@ from tempo.export import (
     save_figure,
     save_dataframe,
 )
+from tempo.telemetry import (
+    get_system_info,
+    log_system_info,
+)
 
 __all__ = [
     "generate_rag_filename",
     "save_figure",
     "save_dataframe",
+    "get_system_info",
+    "log_system_info",
 ]
+
 
