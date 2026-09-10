@@ -1068,37 +1068,54 @@ def generate_simulated_dataset(
 
 
 def generate_simulated_forecasting_dataset(
-    n_series=1000,
+    n_series=100,
+    series_len=200,
     history_len=100,
     forecast_horizon=20,
     test_size=0.2,
     seed=42,
 ):
     """
-    Generate a synthetic dataset for direct multi-step forecasting.
+    Generate a genuinely chronological, windowed forecasting dataset.
 
-    Each sample is a history window of length ``history_len`` and its target
-    is the following ``forecast_horizon`` values.  The data combines
-    seasonality, trend, autoregressive dynamics, heteroscedastic noise and
-    occasional shocks so that extractors/selectors have meaningful temporal
-    structure to exploit.
+    For every independent time series, the first ``1-test_size`` fraction is
+    the historical/training period and the final ``test_size`` fraction is the
+    future/testing period. Sliding windows are then created as:
+
+        X[t] = values[t : t + history_len]
+        y[t] = values[t + history_len : t + history_len + forecast_horizon]
+
+    Training targets never come from the future test region, and every test
+    target is strictly in the held-out future region. Test histories may use
+    the final observations immediately before the forecast origin, which is
+    exactly the information a real forecaster would have available.
 
     Returns
     -------
     Dataset
-        X has shape (n_samples, history_len)
-        y has shape (n_samples, forecast_horizon)
+        X has shape (n_windows, history_len) and y has shape
+        (n_windows, forecast_horizon).
     """
+    if not 0 < test_size < 1:
+        raise ValueError("test_size must be between 0 and 1")
+    if series_len <= history_len + forecast_horizon:
+        raise ValueError("series_len must exceed history_len + forecast_horizon")
+
     rng = np.random.default_rng(seed)
+    split = int(series_len * (1.0 - test_size))
 
-    total_len = history_len + forecast_horizon
-    X = np.zeros((n_series, history_len), dtype=np.float32)
-    y = np.zeros((n_series, forecast_horizon), dtype=np.float32)
+    if split <= history_len:
+        raise ValueError("Training period must be longer than history_len")
+    if series_len - split < forecast_horizon:
+        raise ValueError("Testing period must contain at least forecast_horizon points")
 
-    for i in range(n_series):
-        t = np.arange(total_len, dtype=np.float32)
+    X_train, y_train = [], []
+    X_test, y_test = [], []
 
-        # Latent dynamics vary between series.
+    for _ in range(n_series):
+        t = np.arange(series_len, dtype=np.float32)
+
+        # Latent dynamics vary between independent series.
         period = rng.uniform(18.0, 45.0)
         amplitude = rng.uniform(0.5, 2.0)
         phase = rng.uniform(0.0, 2.0 * np.pi)
@@ -1109,21 +1126,18 @@ def generate_simulated_forecasting_dataset(
         seasonal = amplitude * np.sin(2.0 * np.pi * t / period + phase)
         trend = trend_slope * t
 
-        # AR(1)-like stochastic component.
-        ar = np.zeros(total_len, dtype=np.float32)
-        innovations = rng.normal(0.0, noise_std, size=total_len)
-        for j in range(1, total_len):
+        ar = np.zeros(series_len, dtype=np.float32)
+        innovations = rng.normal(0.0, noise_std, size=series_len)
+        for j in range(1, series_len):
             ar[j] = ar_strength * ar[j - 1] + innovations[j]
 
-        # A slowly varying amplitude makes the future distribution less
-        # trivial than a fixed sinusoid.
         modulation = 1.0 + 0.15 * np.sin(2.0 * np.pi * t / 80.0)
 
-        # Occasional shocks persist for a few timesteps.
-        shock = np.zeros(total_len, dtype=np.float32)
+        shock = np.zeros(series_len, dtype=np.float32)
+        possible_starts = np.arange(10, series_len - 3)
         for start_shock in rng.choice(
-            np.arange(10, total_len - 3),
-            size=rng.integers(0, 3),
+            possible_starts,
+            size=rng.integers(0, min(3, len(possible_starts)) + 1),
             replace=False,
         ):
             magnitude = rng.normal(0.0, 1.0)
@@ -1133,21 +1147,31 @@ def generate_simulated_forecasting_dataset(
 
         series = modulation * seasonal + trend + ar + shock
 
-        X[i] = series[:history_len]
-        y[i] = series[history_len:]
+        # Rolling windows whose targets are wholly inside the training period.
+        train_last_start = split - history_len - forecast_horizon
+        for start in range(train_last_start + 1):
+            X_train.append(series[start:start + history_len])
+            y_train.append(
+                series[start + history_len:start + history_len + forecast_horizon]
+            )
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=test_size,
-        random_state=seed,
-    )
+        # Rolling windows whose forecast targets are wholly in the held-out
+        # future. The history is allowed to cross the train/test boundary,
+        # because those observations are known at the forecast origin.
+        test_first_start = max(0, split - history_len)
+        test_last_start = series_len - history_len - forecast_horizon
+        for start in range(test_first_start, test_last_start + 1):
+            forecast_start = start + history_len
+            if forecast_start < split:
+                continue
+            X_test.append(series[start:start + history_len])
+            y_test.append(series[forecast_start:forecast_start + forecast_horizon])
 
     return Dataset(
-        X_train,
-        X_test,
-        y_train,
-        y_test,
+        np.asarray(X_train, dtype=np.float32),
+        np.asarray(X_test, dtype=np.float32),
+        np.asarray(y_train, dtype=np.float32),
+        np.asarray(y_test, dtype=np.float32),
     )
 
 
@@ -1156,11 +1180,90 @@ def load_parquet_dataset(
     target_path,
     test_size=0.2,
     seed=42,
+    data_type="regression",
+    history_len=100,
+    forecast_horizon=20,
 ):
     """
-    Load a TEMPO-standardised dataset and convert it to the
-    benchmark Dataset format.
+    Load a TEMPO-standardised dataset.
+
+    For forecasting, the split is chronological *within each series* and
+    sliding windows are created after the split. Training targets are wholly
+    inside the historical/training region, while every test target is wholly
+    inside the held-out future region.
+
+    Forecasting currently uses the target series itself as the input history.
+    This is intentional: future target values are unknown at prediction time,
+    so the benchmark must not accidentally use future values as predictors.
     """
+
+    if data_type == "forecasting":
+        ts = pl.read_parquet(ts_path)
+        targets = pl.read_parquet(target_path)
+
+        if "id" not in ts.columns or "time" not in ts.columns:
+            raise ValueError("Time-series parquet must contain 'id' and 'time' columns")
+        if "id" not in targets.columns or "target" not in targets.columns:
+            raise ValueError("Target parquet must contain 'id' and 'target' columns")
+        if not 0 < test_size < 1:
+            raise ValueError("test_size must be between 0 and 1")
+
+        X_train, y_train, X_test, y_test = [], [], [], []
+
+        ids = ts["id"].unique().sort().to_list()
+        for sample_id in ids:
+            sample = ts.filter(pl.col("id") == sample_id).sort("time")
+            target_table = targets.filter(pl.col("id") == sample_id)
+            if "time" in target_table.columns:
+                target_table = target_table.sort("time")
+            target = (
+                target_table.select("target")
+                            .to_numpy()
+                            .ravel()
+            )
+
+            if len(target) != sample.height:
+                raise ValueError(
+                    f"Series {sample_id} has {sample.height} time points but "
+                    f"{len(target)} target values. They must align."
+                )
+
+            series_len = len(target)
+            split = int(series_len * (1.0 - test_size))
+            if split <= history_len:
+                raise ValueError(
+                    f"Series {sample_id} training period is too short for history_len={history_len}"
+                )
+            if series_len - split < forecast_horizon:
+                raise ValueError(
+                    f"Series {sample_id} future period is too short for "
+                    f"forecast_horizon={forecast_horizon}"
+                )
+
+            train_last_start = split - history_len - forecast_horizon
+            for start in range(train_last_start + 1):
+                X_train.append(target[start:start + history_len])
+                y_train.append(
+                    target[start + history_len:start + history_len + forecast_horizon]
+                )
+
+            test_first_start = max(0, split - history_len)
+            test_last_start = series_len - history_len - forecast_horizon
+            for start in range(test_first_start, test_last_start + 1):
+                forecast_start = start + history_len
+                if forecast_start < split:
+                    continue
+                X_test.append(target[start:start + history_len])
+                y_test.append(target[forecast_start:forecast_start + forecast_horizon])
+
+        return Dataset(
+            np.asarray(X_train, dtype=np.float32),
+            np.asarray(X_test, dtype=np.float32),
+            np.asarray(y_train, dtype=np.float32),
+            np.asarray(y_test, dtype=np.float32),
+        )
+
+    # Existing classification/regression loader.
 
     ts = pl.read_parquet(ts_path)
     targets = pl.read_parquet(target_path)
@@ -1202,12 +1305,15 @@ def load_parquet_dataset(
     X = np.asarray(X)
     y = np.asarray(y)
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
+    split_kwargs = dict(
         test_size=test_size,
         random_state=seed,
-        stratify=y,
+    )
+    if data_type == "classification":
+        split_kwargs["stratify"] = y
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, **split_kwargs
     )
 
     return Dataset(
@@ -1221,7 +1327,7 @@ def load_parquet_dataset(
 
 if __name__ == "__main__":
     warnings.filterwarnings('ignore')
-    NO_SEEDS = 3
+    NO_SEEDS = 2
     DATA_TYPE = "forecasting"
 
     ############################################################
@@ -1242,11 +1348,11 @@ if __name__ == "__main__":
 
     extractors = [
 
-    Extractor(
-        name="Statistics",
-        function=statistical,
-        representation="numpy"
-    ),
+    # Extractor(
+    #     name="Statistics",
+    #     function=statistical,
+    #     representation="numpy"
+    # ),
 
     Extractor(
         name="TSFresh-Minimal",
@@ -1255,13 +1361,13 @@ if __name__ == "__main__":
         parameter_set="minimal",
     ),
 
-    Extractor(
-        name="TSFresh-Efficient-10FFT",
-        function=tsfresh_extractor,
-        representation="long",
-        parameter_set="efficient",
-        fft_coefficients=10,
-    ),
+    # Extractor(
+    #     name="TSFresh-Efficient-10FFT",
+    #     function=tsfresh_extractor,
+    #     representation="long",
+    #     parameter_set="efficient",
+    #     fft_coefficients=10,
+    # ),
 
     # Extractor(
     #     name="TSFresh-Efficient-25FFT",
@@ -1287,13 +1393,13 @@ if __name__ == "__main__":
     #     fft_coefficients=75,
     # ),
 
-    # Extractor(
-    #     name="TSFresh-Efficient-100FFT",
-    #     function=tsfresh_extractor,
-    #     representation="long",
-    #     parameter_set="efficient",
-    #     fft_coefficients=100,
-    # ),
+    Extractor(
+        name="TSFresh-Efficient-100FFT",
+        function=tsfresh_extractor,
+        representation="long",
+        parameter_set="efficient",
+        fft_coefficients=100,
+    ),
 
     # Extractor(
     #     name="TSFresh-Comprehensive-10FFT",
@@ -1327,13 +1433,13 @@ if __name__ == "__main__":
     #     fft_coefficients=75,
     # ),
 
-    # Extractor(
-    #     name="TSFresh-Comprehensive-100FFT",
-    #     function=tsfresh_extractor,
-    #     representation="long",
-    #     parameter_set="comprehensive",
-    #     fft_coefficients=100,
-    # ),
+    Extractor(
+        name="TSFresh-Comprehensive-100FFT",
+        function=tsfresh_extractor,
+        representation="long",
+        parameter_set="comprehensive",
+        fft_coefficients=100,
+    ),
 
     # Extractor(
     # name="TSFEL",
@@ -1357,12 +1463,12 @@ if __name__ == "__main__":
         data_type = DATA_TYPE
     ),
 
-    Selector(
-        name="SelectKBest",
-        function=select_k_best,
-        representation="pandas",
-        data_type = DATA_TYPE
-    ),
+    # Selector(
+    #     name="SelectKBest",
+    #     function=select_k_best,
+    #     representation="pandas",
+    #     data_type = DATA_TYPE
+    # ),
 
     # Selector(
     # name="Boruta",
@@ -1415,11 +1521,26 @@ if __name__ == "__main__":
             "Synthetic Forecasting":
                 lambda seed:
                     generate_simulated_forecasting_dataset(
-                        n_series=1000,
+                        n_series=100,
+                        series_len=200,
                         history_len=100,
                         forecast_horizon=20,
+                        test_size=0.2,
                         seed=seed,
                     ),
+
+            # Example real-data forecasting dataset:
+            # "My Real Dataset":
+            #     lambda seed:
+            #         load_parquet_dataset(
+            #             "datasets/my_data/time_series.parquet",
+            #             "datasets/my_data/targets.parquet",
+            #             test_size=0.2,
+            #             seed=seed,
+            #             data_type="forecasting",
+            #             history_len=100,
+            #             forecast_horizon=20,
+            #         ),
         }
 
     else:
@@ -1457,6 +1578,10 @@ if __name__ == "__main__":
                         f"Running: "
                         f"{extractor_name} + {selector_name}"
                     )
+
+                    if DATA_TYPE == "forecasting":
+                        original_test_history = np.asarray(dataset.data_test.data).copy()
+                        original_test_targets = np.asarray(dataset.y_test.data).copy()
 
                     results = run(
                         dataset=dataset,
@@ -1547,10 +1672,21 @@ if __name__ == "__main__":
                             # Store complete forecast outputs for downstream
                             # visualisation. JSON preserves the (samples,
                             # forecast_horizon) structure inside the CSV.
-                            "True Values": json.dumps(np.asarray(dataset.y_test.data).tolist()),
-                            "Predictions": json.dumps(np.asarray(results["forecast"]).tolist()),
-                            "Prediction Lower": json.dumps(np.asarray(results["forecast_lower"]).tolist()),
-                            "Prediction Upper": json.dumps(np.asarray(results["forecast_upper"]).tolist()),
+                            "History Values": json.dumps(
+                                original_test_history.tolist()
+                            ),
+                            "True Values": json.dumps(
+                                original_test_targets.tolist()
+                            ),
+                            "Predictions": json.dumps(
+                                np.asarray(results["forecast"]).tolist()
+                            ),
+                            "Prediction Lower": json.dumps(
+                                np.asarray(results["forecast_lower"]).tolist()
+                            ),
+                            "Prediction Upper": json.dumps(
+                                np.asarray(results["forecast_upper"]).tolist()
+                            ),
 
                             "Total Time": results["total_time"]
                         })
