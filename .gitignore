@@ -51,6 +51,9 @@ Thumbs.db
 scratch/
 benchmark_results/
 
+# Report draft (local only)
+report/
+
 # Package build artifacts
 build/
 dist/
