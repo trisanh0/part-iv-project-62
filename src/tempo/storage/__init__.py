@@ -2,6 +2,7 @@
 
 from tempo.storage.dataset import (
     generate_simulated_dataset,
+    generate_simulated_forecasting_dataset,
     convert_predictive_maintenance,
     convert_beed,
     convert_uci_har,
@@ -13,10 +14,15 @@ from tempo.storage.dataset import (
     load_dataset,
     validate_export,
 )
-from tempo.storage.segmentation import segment_time_series
+from tempo.storage.segmentation import (
+    segment_time_series,
+    segment_forecasting_series,
+    to_forecasting_tensors,
+)
 
 __all__ = [
     "generate_simulated_dataset",
+    "generate_simulated_forecasting_dataset",
     "convert_predictive_maintenance",
     "convert_beed",
     "convert_uci_har",
@@ -28,4 +34,6 @@ __all__ = [
     "load_dataset",
     "validate_export",
     "segment_time_series",
+    "segment_forecasting_series",
+    "to_forecasting_tensors",
 ]

@@ -7,7 +7,7 @@ import polars as pl
 import numpy as np
 
 from tempo.export import save_dataframe
-from tempo.storage.segmentation import segment_time_series
+from tempo.storage.segmentation import segment_time_series, segment_forecasting_series
 
 
 def generate_simulated_dataset(
@@ -70,6 +70,121 @@ def generate_simulated_dataset(
     else:
         df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
         df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+
+def generate_simulated_forecasting_dataset(
+    output_dir: Optional[str] = None,
+    n_series: int = 100,
+    series_len: int = 200,
+    history_len: int = 100,
+    forecast_horizon: int = 20,
+    test_size: float = 0.2,
+    seed: int = 42,
+    rag_prefix: Optional[str] = None,
+) -> Tuple[pl.DataFrame, pl.DataFrame]:
+    """Generate synthetic time-series forecasting dataset with causal chronological integrity.
+
+    Synthesizes independent non-stationary signals combining multi-harmonic seasonalities,
+    linear trends, autoregressive AR(1) dynamics, low-frequency amplitude modulations,
+    and localized shock disturbances. Sliding windows are generated strictly respecting
+    causal temporal boundaries to eliminate future lookahead bias.
+
+    Args:
+        output_dir: Optional directory path where Parquet files will be written.
+        n_series: Number of independent time-series signals to synthesize.
+        series_len: Total temporal length of each continuous raw series.
+        history_len: Length of the historical observation window W.
+        forecast_horizon: Length of the future forecast horizon H.
+        test_size: Fraction of each series held out for future evaluation (0 < test_size < 1).
+        seed: Random state seed for reproducibility.
+        rag_prefix: Optional Contexere RAG prefix identifier (e.g. 'TM').
+
+    Returns:
+        Tuple of (df_ts, df_targets) conforming to TEMPO standardized format.
+    """
+    if not (0.0 < test_size < 1.0):
+        raise ValueError(f"test_size must be between 0 and 1, got {test_size}")
+    if series_len <= history_len + forecast_horizon:
+        raise ValueError(
+            f"series_len ({series_len}) must exceed history_len + forecast_horizon ({history_len + forecast_horizon})"
+        )
+
+    split = int(series_len * (1.0 - test_size))
+    min_train_len = history_len + forecast_horizon
+    if split < min_train_len:
+        raise ValueError(
+            f"Training period ({split}) must be at least history_len + forecast_horizon ({min_train_len})"
+        )
+    if series_len - split < forecast_horizon:
+        raise ValueError(
+            f"Testing period ({series_len - split}) must contain at least forecast_horizon ({forecast_horizon}) points"
+        )
+
+    rng = np.random.default_rng(seed)
+    raw_df_parts = []
+
+    for sid in range(n_series):
+        t = np.arange(series_len, dtype=np.float32)
+
+        period = rng.uniform(18.0, 45.0)
+        amplitude = rng.uniform(0.5, 2.0)
+        phase = rng.uniform(0.0, 2.0 * np.pi)
+        trend_slope = rng.uniform(-0.015, 0.015)
+        ar_strength = rng.uniform(0.45, 0.90)
+        noise_std = rng.uniform(0.05, 0.25)
+
+        seasonal = amplitude * np.sin(2.0 * np.pi * t / period + phase)
+        trend = trend_slope * t
+
+        ar = np.zeros(series_len, dtype=np.float32)
+        innovations = rng.normal(0.0, noise_std, size=series_len)
+        for j in range(1, series_len):
+            ar[j] = ar_strength * ar[j - 1] + innovations[j]
+
+        modulation = 1.0 + 0.15 * np.sin(2.0 * np.pi * t / 80.0)
+
+        shock = np.zeros(series_len, dtype=np.float32)
+        possible_starts = np.arange(10, series_len - 3)
+        n_shocks = rng.integers(0, min(3, len(possible_starts)) + 1)
+        if len(possible_starts) > 0 and n_shocks > 0:
+            for start_shock in rng.choice(possible_starts, size=n_shocks, replace=False):
+                magnitude = rng.normal(0.0, 1.0)
+                shock[start_shock:start_shock + 3] += magnitude * np.array([1.0, 0.6, 0.3], dtype=np.float32)
+
+        series = (modulation * seasonal + trend + ar + shock).astype(np.float32)
+
+        raw_df_parts.append(
+            pl.DataFrame({
+                "series_id": np.full(series_len, sid, dtype=np.int32),
+                "time": np.arange(series_len, dtype=np.int32),
+                "value": series,
+            })
+        )
+
+    df_raw = pl.concat(raw_df_parts)
+
+    df_ts, df_targets = segment_forecasting_series(
+        df=df_raw,
+        history_len=history_len,
+        forecast_horizon=forecast_horizon,
+        stride=1,
+        time_col="time",
+        feature_cols=["value"],
+        target_col="value",
+        group_col="series_id",
+        test_size=test_size,
+    )
+
+    if output_dir is not None:
+        os.makedirs(output_dir, exist_ok=True)
+        if rag_prefix:
+            save_dataframe(df_ts, prefix=rag_prefix, keyword="simulated_forecasting_time_series", output_dir=output_dir)
+            save_dataframe(df_targets, prefix=rag_prefix, keyword="simulated_forecasting_targets", output_dir=output_dir)
+        else:
+            df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+            df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+    return df_ts, df_targets
 
 
 def convert_predictive_maintenance(
@@ -525,6 +640,8 @@ def load_dataset(
         os.makedirs(ds_processed_dir, exist_ok=True)
         if base_name in ("simulated", "synthetic"):
             generate_simulated_dataset(output_dir=ds_processed_dir)
+        elif base_name in ("simulated_forecasting", "synthetic_forecasting", "forecasting"):
+            generate_simulated_forecasting_dataset(output_dir=ds_processed_dir)
         elif base_name == "beed":
             raw_file = os.path.join(raw_dir, "beed", "BEED_Data.csv")
             if not os.path.exists(raw_file):
@@ -600,7 +717,9 @@ def validate_export(export_dir: str) -> bool:
         return False
 
     has_target_id = "sequence_id" in df_target.columns or "id" in df_target.columns
-    has_target_col = "target" in df_target.columns
+    has_target_col = "target" in df_target.columns or any(
+        c.startswith("target_") and c[7:].isdigit() for c in df_target.columns
+    )
     if not (has_target_id and has_target_col):
         return False
 
