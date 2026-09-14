@@ -99,6 +99,7 @@ class PipelineConfig:
     enable_plots: bool = True
     enable_logging: bool = True
     log_file: Optional[str] = "tempo_benchmark.log"
+    resume: bool = True
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert configuration to dictionary."""
@@ -348,7 +349,18 @@ class BakeoffRunner:
                 X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
 
             elif sel_name == "boruta":
-                X_train_sel = boruta_selector(X_train, y_train, task_type=self.config.task_type)
+                n_est = 50
+                m_iter = 20
+                if isinstance(selector, (dict, SelectorConfig)):
+                    n_est = getattr(selector, "n_estimators", selector.get("n_estimators", 50) if isinstance(selector, dict) else 50)
+                    m_iter = getattr(selector, "max_iter", selector.get("max_iter", 20) if isinstance(selector, dict) else 20)
+                X_train_sel = boruta_selector(
+                    X_train,
+                    y_train,
+                    n_estimators=n_est,
+                    max_iter=m_iter,
+                    task_type=self.config.task_type,
+                )
                 selected_cols = list(X_train_sel.columns)
                 X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
 
@@ -431,13 +443,37 @@ class BakeoffRunner:
             else:
                 return RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
 
-    def run(self) -> pd.DataFrame:
+    def run(self, resume: Optional[bool] = None) -> pd.DataFrame:
         """Execute the full 5-stage benchmark suite across datasets, extractors, and selectors."""
         results: List[Dict[str, Any]] = []
 
         if not self.config.dataset_paths:
             logger.warning("No datasets configured in PipelineConfig.")
             return pd.DataFrame()
+
+        should_resume = self.config.resume if resume is None else resume
+        checkpoint_path = self.output_dir / "benchmark_results_checkpoint.csv"
+        completed_combos = set()
+        if should_resume and checkpoint_path.exists():
+            try:
+                df_existing = pd.read_csv(checkpoint_path)
+                results = df_existing.to_dict(orient="records")
+                for r in results:
+                    key = (
+                        str(r.get("Dataset")),
+                        str(r.get("Extractor")),
+                        str(r.get("Selector")),
+                        str(r.get("Model")),
+                        int(r.get("Seed", 42)),
+                    )
+                    completed_combos.add(key)
+                logger.info(
+                    "Resuming from existing checkpoint at %s (%d completed combinations loaded).",
+                    checkpoint_path,
+                    len(completed_combos),
+                )
+            except Exception as e:
+                logger.warning("Could not read existing checkpoint file (%s); starting fresh.", e)
 
         for ds_path in self.config.dataset_paths:
             ds_name = Path(ds_path).name
@@ -514,6 +550,13 @@ class BakeoffRunner:
 
                         for model_spec in self.config.models:
                             model_name = model_spec if isinstance(model_spec, str) else model_spec.get("name", "model")
+                            combo_key = (ds_name, ext_name, sel_name, model_name, int(seed))
+                            if combo_key in completed_combos:
+                                logger.info(
+                                    "Resuming: skipping completed [%s | %s | %s | %s | seed %s]",
+                                    *combo_key,
+                                )
+                                continue
 
                             fold_accs, fold_rmses, fold_maes, fold_r2s = [], [], [], []
                             fold_sel_times = []
@@ -653,6 +696,12 @@ class BakeoffRunner:
                                 record["R2"] = round(float(np.mean(fold_r2s)), 4)
 
                             results.append(record)
+                            completed_combos.add(combo_key)
+                            try:
+                                pd.DataFrame(results).to_csv(checkpoint_path, index=False)
+                            except Exception as e:
+                                logger.warning("Failed to update checkpoint CSV: %s", e)
+
                             logger.info(
                                 "Evaluated: [%s | %s | %s | %s] -> Score: %s (Fit: %.3fs, Infer: %.2fms, Total: %.2fs)",
                                 ds_name, ext_name, sel_name, model_name,
@@ -660,18 +709,19 @@ class BakeoffRunner:
                                 mean_fit_sec, mean_infer_ms, total_time,
                             )
 
-
         df_results = pd.DataFrame(results)
         
-        # Save output CSV
+        # Save output CSV and canonical file
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         out_csv = self.output_dir / f"benchmark_results_{timestamp}.csv"
         df_results.to_csv(out_csv, index=False)
-        logger.info("Saved benchmark telemetry to: %s", out_csv)
+        canonical_csv = self.output_dir / "benchmark_results.csv"
+        df_results.to_csv(canonical_csv, index=False)
+        logger.info("Saved benchmark telemetry to: %s and %s", out_csv, canonical_csv)
 
         # Trigger analysis if enabled
         if self.config.enable_ttests or self.config.enable_plots:
-            self._trigger_analysis(out_csv)
+            self._trigger_analysis(canonical_csv)
 
         return df_results
 

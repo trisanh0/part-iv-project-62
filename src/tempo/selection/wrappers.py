@@ -1,7 +1,7 @@
 """Wrapper-based feature selection methods."""
 
 import logging
-from typing import Literal, Union
+from typing import Literal, Optional, Union
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
@@ -19,7 +19,9 @@ except ImportError:
 def boruta_selector(
     X: pd.DataFrame,
     y: Union[pd.Series, np.ndarray],
-    n_estimators: int = 200,
+    n_estimators: int = 50,
+    max_iter: int = 20,
+    max_samples: Optional[int] = 1000,
     random_state: int = 42,
     task_type: Literal["classification", "regression"] = "classification",
 ) -> pd.DataFrame:
@@ -29,6 +31,8 @@ def boruta_selector(
         X: Feature matrix as pandas DataFrame.
         y: Target classification labels or continuous regression targets.
         n_estimators: Number of decision trees.
+        max_iter: Maximum number of Boruta iterations (default: 20).
+        max_samples: Maximum number of samples to use during shadow ranking (default: 1000).
         random_state: Seed for reproducibility.
         task_type: Target problem type ('classification' or 'regression').
 
@@ -43,6 +47,16 @@ def boruta_selector(
         return X_clean.iloc[:, 0:0]
 
     y_arr = np.asarray(y)
+
+    # Subsample rows if dataset is large to maintain tractable runtime
+    if max_samples is not None and len(X_clean) > max_samples:
+        rng = np.random.RandomState(random_state)
+        indices = rng.choice(len(X_clean), size=max_samples, replace=False)
+        X_fit = X_clean.iloc[indices].values
+        y_fit = y_arr[indices]
+    else:
+        X_fit = X_clean.values
+        y_fit = y_arr
 
     if task_type == "regression":
         rf = RandomForestRegressor(
@@ -59,12 +73,13 @@ def boruta_selector(
 
     selector = BorutaPy(
         estimator=rf,
-        n_estimators="auto",
+        n_estimators=n_estimators,
+        max_iter=max_iter,
         random_state=random_state,
     )
 
     try:
-        selector.fit(X_clean.values, y_arr)
+        selector.fit(X_fit, y_fit)
         selected_columns = X_clean.columns[selector.support_]
 
         if len(selected_columns) == 0:

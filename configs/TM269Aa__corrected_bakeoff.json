@@ -36,7 +36,8 @@
     },
     {
       "name": "boruta",
-      "n_estimators": 50
+      "n_estimators": 30,
+      "max_iter": 15
     }
   ],
   "models": [

@@ -143,8 +143,8 @@ class TestBenchmark(unittest.TestCase):
             self.assertFalse(df_res1["is_cached"].iloc[0])
             self.assertFalse(np.isnan(df_res1["Extraction Time (s)"].iloc[0]))
 
-            # Second run: cached
-            df_res2 = runner.run()
+            # Second run: cached (without resuming completed combo)
+            df_res2 = runner.run(resume=False)
             self.assertTrue(df_res2["is_cached"].iloc[0])
             # Extraction Time and RAM must be NaN when cached to avoid polluting benchmarks
             self.assertTrue(np.isnan(df_res2["Extraction Time (s)"].iloc[0]))
