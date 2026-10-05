@@ -18,8 +18,8 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
 from tsfresh import select_features
 
-from tempo.selection.statistical import select_k_best, mutual_info_selector
-from tempo.selection.wrappers import boruta_selector
+from tempo.selection.statistical import select_k_best, mutual_info_selector, variance_threshold_selector, l1_selector
+from tempo.selection.wrappers import boruta_selector, tree_importance_selector
 
 logger = logging.getLogger(__name__)
 
@@ -162,6 +162,22 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
 
         elif self.base_selector == "boruta":
             df_sel = boruta_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state or 42)
+            survived = list(df_sel.columns)
+
+        elif self.base_selector in ("variance_threshold", "variance", "zero_variance"):
+            df_sel = variance_threshold_selector(X_sub)
+            survived = list(df_sel.columns)
+
+        elif self.base_selector in ("l1", "lasso"):
+            df_sel = l1_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state or 42)
+            survived = list(df_sel.columns)
+
+        elif self.base_selector in ("extra_trees", "extratrees"):
+            df_sel = tree_importance_selector(X_sub, y_sub, model_type="extra_trees", task_type=self.task_type, random_state=self.random_state or 42)
+            survived = list(df_sel.columns)
+
+        elif self.base_selector in ("random_forest", "rf_importance", "randomforest"):
+            df_sel = tree_importance_selector(X_sub, y_sub, model_type="random_forest", task_type=self.task_type, random_state=self.random_state or 42)
             survived = list(df_sel.columns)
 
         elif hasattr(self.base_selector, "fit") and hasattr(self.base_selector, "get_support"):

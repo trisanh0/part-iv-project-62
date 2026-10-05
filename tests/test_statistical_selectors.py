@@ -1,6 +1,7 @@
 """Unit tests for statistical and wrapper feature selectors."""
 
 import unittest
+import os
 import numpy as np
 import pandas as pd
 from tempo.selection import (
@@ -133,6 +134,158 @@ class TestStatisticalSelectors(unittest.TestCase):
         res = tsfresh_selector(X_const, y, task_type="classification")
         self.assertEqual(res.shape, (20, 0))
 
+    def test_variance_threshold_selector(self):
+        """Verify variance_threshold_selector drops constant features and operates unsupervised."""
+        from tempo.selection import variance_threshold_selector
+
+        X_with_const = self.X.copy()
+        X_with_const["const_col"] = 5.0  # Zero variance
+        res = variance_threshold_selector(X_with_const, threshold=0.0)
+        self.assertNotIn("const_col", res.columns)
+        self.assertEqual(res.shape[1], self.X.shape[1])
+
+        # Test all-constant fallback
+        X_all_const = pd.DataFrame(np.ones((20, 4)), columns=[f"c_{i}" for i in range(4)])
+        res_empty = variance_threshold_selector(X_all_const, threshold=0.0)
+        self.assertEqual(res_empty.shape, (20, 0))
+
+        # Test empty DataFrame
+        res_zero = variance_threshold_selector(self.X.iloc[:, :0])
+        self.assertEqual(res_zero.shape, (len(self.X), 0))
+
+    def test_l1_selector_classification_and_regression(self):
+        """Verify l1_selector supports classification, regression, and collapsed targets."""
+        from tempo.selection import l1_selector
+
+        # Classification
+        res_cls = l1_selector(self.X, self.y_cls, C=0.5, task_type="classification", random_state=42)
+        self.assertIsInstance(res_cls, pd.DataFrame)
+        self.assertEqual(res_cls.shape[0], len(self.X))
+        self.assertGreater(res_cls.shape[1], 0)
+
+        # Regression
+        res_reg = l1_selector(self.X, self.y_reg, alpha=0.05, task_type="regression", random_state=42)
+        self.assertIsInstance(res_reg, pd.DataFrame)
+        self.assertEqual(res_reg.shape[0], len(self.X))
+        self.assertGreater(res_reg.shape[1], 0)
+
+        # Multi-horizon collapsed forecasting 2D array
+        y_multi = np.tile(self.y_reg.to_numpy()[:, None], (1, 5))
+        y_collapsed = np.mean(y_multi, axis=1)
+        res_fc = l1_selector(self.X, y_collapsed, alpha=0.05, task_type="regression", random_state=42)
+        self.assertEqual(res_fc.shape[0], len(self.X))
+        self.assertGreater(res_fc.shape[1], 0)
+
+        # Empty features
+        res_empty = l1_selector(self.X.iloc[:, :0], self.y_cls, task_type="classification")
+        self.assertEqual(res_empty.shape, (len(self.X), 0))
+
+    def test_tree_importance_selector(self):
+        """Verify tree_importance_selector supports ExtraTrees and RandomForest across tasks."""
+        from tempo.selection import tree_importance_selector
+
+        # ExtraTrees Classification
+        res_et_cls = tree_importance_selector(
+            self.X, self.y_cls, model_type="extra_trees", n_estimators=10, threshold="median", task_type="classification", random_state=42
+        )
+        self.assertIsInstance(res_et_cls, pd.DataFrame)
+        self.assertEqual(res_et_cls.shape[0], len(self.X))
+        self.assertGreater(res_et_cls.shape[1], 0)
+
+        # ExtraTrees Regression
+        res_et_reg = tree_importance_selector(
+            self.X, self.y_reg, model_type="extra_trees", n_estimators=10, threshold="median", task_type="regression", random_state=42
+        )
+        self.assertIsInstance(res_et_reg, pd.DataFrame)
+        self.assertEqual(res_et_reg.shape[0], len(self.X))
+
+        # RandomForest Classification
+        res_rf_cls = tree_importance_selector(
+            self.X, self.y_cls, model_type="random_forest", n_estimators=10, threshold="median", task_type="classification", random_state=42
+        )
+        self.assertIsInstance(res_rf_cls, pd.DataFrame)
+        self.assertEqual(res_rf_cls.shape[0], len(self.X))
+
+        # RandomForest Regression with collapsed 2D targets
+        y_multi = np.tile(self.y_reg.to_numpy()[:, None], (1, 4))
+        y_collapsed = np.mean(y_multi, axis=1)
+        res_rf_reg = tree_importance_selector(
+            self.X, y_collapsed, model_type="random_forest", n_estimators=10, threshold="median", task_type="regression", random_state=42
+        )
+        self.assertIsInstance(res_rf_reg, pd.DataFrame)
+        self.assertEqual(res_rf_reg.shape[0], len(self.X))
+
+        # Empty input
+        res_empty = tree_importance_selector(self.X.iloc[:, :0], self.y_cls, model_type="extra_trees")
+        self.assertEqual(res_empty.shape, (len(self.X), 0))
+
+    def test_analysis_plots(self):
+        """Verify publication-grade Critical Difference and tau scatter plots."""
+        import tempfile
+        from tempo.analysis import plot_critical_difference_diagram, plot_tau_estimation_scatter
+
+        # CD Diagram
+        df_bench = pd.DataFrame({
+            "Dataset": ["DS_A", "DS_A", "DS_B", "DS_B", "DS_C", "DS_C"],
+            "Extractor": ["Ext_1", "Ext_2", "Ext_1", "Ext_2", "Ext_1", "Ext_2"],
+            "Accuracy": [0.85, 0.90, 0.78, 0.82, 0.91, 0.93],
+        })
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_cd = f"{tmpdir}/cd_test.png"
+            fig_cd = plot_critical_difference_diagram(
+                df_bench,
+                metric="Accuracy",
+                group_col="Extractor",
+                dataset_col="Dataset",
+                output_path=out_cd,
+            )
+            self.assertIsNotNone(fig_cd)
+            self.assertTrue(os.path.exists(out_cd))
+
+            # Tau Scatter Plot
+            y_true = np.array([3.5, 3.75, 4.0, 4.25, 4.5])
+            y_pred = np.array([3.52, 3.74, 4.02, 4.23, 4.48])
+            out_tau = f"{tmpdir}/tau_test.png"
+            fig_tau = plot_tau_estimation_scatter(y_true, y_pred, output_path=out_tau)
+            self.assertIsNotNone(fig_tau)
+            self.assertTrue(os.path.exists(out_tau))
+
+            # Edge case: CD diagram with 0 common datasets (all NaN after dropna)
+            df_no_overlap = pd.DataFrame({
+                "Dataset": ["DS_A", "DS_A", "DS_B", "DS_B"],
+                "Extractor": ["Ext_1", "Ext_2", "Ext_1", "Ext_2"],
+                "Accuracy": [np.nan, 0.85, 0.78, np.nan],
+            })
+            fig_empty = plot_critical_difference_diagram(df_no_overlap, metric="Accuracy", group_col="Extractor")
+            self.assertIsNone(fig_empty)
+
+            # Edge case: CD diagram with fewer than 2 methods
+            df_one_method = pd.DataFrame({
+                "Dataset": ["DS_A", "DS_B"],
+                "Extractor": ["Ext_1", "Ext_1"],
+                "Accuracy": [0.85, 0.90],
+            })
+            fig_one = plot_critical_difference_diagram(df_one_method, metric="Accuracy", group_col="Extractor")
+            self.assertIsNone(fig_one)
+
+            # Edge case: Tau scatter with mismatched lengths
+            fig_mismatch = plot_tau_estimation_scatter(y_true[:3], y_pred)
+            self.assertIsNone(fig_mismatch)
+
+    def test_subsampled_selector_with_new_string_selectors(self):
+        """Verify SubsampledFeatureSelector dispatches string selectors for variance, l1, and trees."""
+        for sel_name in ["variance_threshold", "l1", "extra_trees", "random_forest"]:
+            selector = SubsampledFeatureSelector(
+                base_selector=sel_name,
+                sample_ratio=1.0,
+                task_type="classification",
+                random_state=42,
+            )
+            selector.fit(self.X, self.y_cls)
+            self.assertFalse(selector.fallback_triggered_)
+            self.assertGreater(len(selector.survived_features_), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
+

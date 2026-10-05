@@ -94,3 +94,94 @@ def boruta_selector(
         return X_clean.iloc[:, 0:0]
 
 
+def tree_importance_selector(
+    X: pd.DataFrame,
+    y: Union[pd.Series, np.ndarray],
+    model_type: Literal["extra_trees", "random_forest"] = "extra_trees",
+    n_estimators: int = 50,
+    threshold: Union[str, float] = "median",
+    task_type: Literal["classification", "regression"] = "classification",
+    random_state: int = 42,
+) -> pd.DataFrame:
+    """Filter features using tree-based importance metrics via SelectFromModel.
+
+    Supports ExtraTrees and RandomForest ensembles for both classification and regression.
+
+    Args:
+        X: Feature matrix as pandas DataFrame.
+        y: Target classification labels or continuous regression targets.
+        model_type: Tree ensemble type ('extra_trees' or 'random_forest').
+        n_estimators: Number of decision trees in ensemble.
+        threshold: Threshold criterion for SelectFromModel (e.g. 'median', 'mean', or float).
+        task_type: Target problem type ('classification' or 'regression').
+        random_state: Random state seed for reproducibility.
+
+    Returns:
+        Filtered pandas DataFrame containing selected features.
+    """
+    X_clean = X.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+    if X_clean.shape[1] == 0 or X_clean.shape[0] == 0 or y is None:
+        return X_clean.iloc[:, 0:0]
+
+    y_arr = np.asarray(y)
+    if y_arr.size == 0:
+        return X_clean.iloc[:, 0:0]
+    if y_arr.ndim > 1:
+        y_arr = y_arr.ravel()
+
+    if task_type == "classification" and len(np.unique(y_arr)) < 2:
+        logger.warning("Tree importance classification requires at least 2 distinct classes; returning empty feature set.")
+        return X_clean.iloc[:, 0:0]
+
+    try:
+        from sklearn.ensemble import (
+            ExtraTreesClassifier,
+            ExtraTreesRegressor,
+            RandomForestClassifier,
+            RandomForestRegressor,
+        )
+        from sklearn.feature_selection import SelectFromModel
+
+        m_type = str(model_type).lower().replace("-", "_")
+        if m_type in ("extra_trees", "extratrees"):
+            if task_type == "regression":
+                estimator = ExtraTreesRegressor(
+                    n_estimators=n_estimators,
+                    random_state=random_state,
+                    n_jobs=-1,
+                )
+            else:
+                estimator = ExtraTreesClassifier(
+                    n_estimators=n_estimators,
+                    random_state=random_state,
+                    n_jobs=-1,
+                )
+        elif m_type in ("random_forest", "randomforest"):
+            if task_type == "regression":
+                estimator = RandomForestRegressor(
+                    n_estimators=n_estimators,
+                    random_state=random_state,
+                    n_jobs=-1,
+                )
+            else:
+                estimator = RandomForestClassifier(
+                    n_estimators=n_estimators,
+                    random_state=random_state,
+                    n_jobs=-1,
+                )
+        else:
+            raise ValueError(f"Unsupported model_type '{model_type}'. Must be 'extra_trees' or 'random_forest'.")
+
+        selector = SelectFromModel(estimator=estimator, threshold=threshold)
+        selector.fit(X_clean, y_arr)
+
+        return X_clean.iloc[:, selector.get_support()]
+    except Exception as e:
+        logger.warning(
+            "Tree importance selection encountered an error (%s); returning empty feature set to trigger honest fallback.",
+            e,
+        )
+        return X_clean.iloc[:, 0:0]
+
+
+
