@@ -186,7 +186,63 @@ class TestStorage(unittest.TestCase):
             self.assertEqual(targets["batch"].to_list(), [1, 1, 2, 2])
             self.assertEqual(targets["group"].to_list(), [1, 1, 2, 2])
 
+    def test_generate_drift_bifurcation_dataset(self):
+        """Verify drift-bifurcation simulation dataset generation and SDF schema compliance."""
+        from tempo.storage import generate_drift_bifurcation_dataset
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ds_dir = os.path.join(tmpdir, "drift_bifurcation")
+            df_ts, df_targets = generate_drift_bifurcation_dataset(
+                output_dir=ds_dir,
+                n_tau_values=3,
+                n_series_per_tau=4,
+                series_len=50,
+                tau_min=3.5,
+                tau_max=4.5,
+                seed=42,
+            )
+
+            # File verification
+            self.assertTrue(os.path.exists(os.path.join(ds_dir, "time_series.parquet")))
+            self.assertTrue(os.path.exists(os.path.join(ds_dir, "targets.parquet")))
+            self.assertTrue(validate_export(ds_dir))
+
+            # Shape verification: 3 * 4 = 12 series
+            self.assertEqual(df_targets.height, 12)
+            self.assertEqual(df_ts.height, 12 * 50)
+
+            # Column verification
+            for col in ["sequence_id", "step", "velocity", "velocity_x", "velocity_y"]:
+                self.assertIn(col, df_ts.columns)
+
+            for col in ["sequence_id", "target", "tau_value", "label", "deterministic_velocity"]:
+                self.assertIn(col, df_targets.columns)
+
+            # Values check
+            self.assertEqual(df_targets["sequence_id"].to_list(), list(range(12)))
+            tau_values = df_targets["tau_value"].to_list()
+            self.assertTrue(all(3.5 <= t <= 4.5 for t in tau_values))
+
+            # Auto-loader integration: load by name from processed_dir
+            df_ts_loaded, df_tgt_loaded = load_dataset("drift_bifurcation", processed_dir=tmpdir)
+            self.assertEqual(df_ts_loaded.height, 12 * 50)
+            self.assertEqual(df_tgt_loaded.height, 12)
+
+            # Auto-loader integration: load directly by path
+            df_ts_path, df_tgt_path = load_dataset(ds_dir)
+            self.assertEqual(df_ts_path.height, 12 * 50)
+            self.assertEqual(df_tgt_path.height, 12)
+
+            # Parameter validation checks
+            with self.assertRaises(ValueError):
+                generate_drift_bifurcation_dataset(tau_min=5.0, tau_max=3.0)
+            with self.assertRaises(ValueError):
+                generate_drift_bifurcation_dataset(series_len=0)
+            with self.assertRaises(ValueError):
+                generate_drift_bifurcation_dataset(n_series_per_tau=-1)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

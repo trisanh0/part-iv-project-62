@@ -3,6 +3,7 @@
 from tempo.storage.dataset import (
     generate_simulated_dataset,
     generate_simulated_forecasting_dataset,
+    generate_drift_bifurcation_dataset,
     convert_predictive_maintenance,
     convert_beed,
     convert_uci_har,
@@ -23,6 +24,7 @@ from tempo.storage.segmentation import (
 __all__ = [
     "generate_simulated_dataset",
     "generate_simulated_forecasting_dataset",
+    "generate_drift_bifurcation_dataset",
     "convert_predictive_maintenance",
     "convert_beed",
     "convert_uci_har",
