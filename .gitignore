@@ -49,7 +49,9 @@ Thumbs.db
 
 # Scratch & local benchmark outputs
 scratch/
-benchmark_results/
+benchmark_results/*
+!benchmark_results/TM26a5a__overnight_classification/
+!benchmark_results/TM26a6a__overnight_regression/
 
 # Report draft (local only)
 report/

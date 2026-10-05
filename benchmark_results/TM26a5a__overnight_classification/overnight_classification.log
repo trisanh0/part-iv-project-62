@@ -1,0 +1,654 @@
+2026-10-05 23:51:48 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: classification
+2026-10-05 23:51:48 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a5a__overnight_classification/environment.json
+2026-10-05 23:51:48 [INFO] tempo.benchmark: Loading dataset: beed
+2026-10-05 23:51:48 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beed'
+2026-10-05 23:51:49 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | random_forest] -> Score: 0.9873 (Fit: 0.081s, Infer: 0.61ms, Total: 0.50s)
+2026-10-05 23:51:49 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | logistic_regression] -> Score: 0.981 (Fit: 0.066s, Infer: 0.18ms, Total: 0.36s)
+2026-10-05 23:51:50 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | variance_threshold | random_forest] -> Score: 0.9873 (Fit: 0.078s, Infer: 0.59ms, Total: 0.59s)
+2026-10-05 23:51:51 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.981 (Fit: 0.054s, Infer: 0.18ms, Total: 0.40s)
+2026-10-05 23:51:52 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | random_forest] -> Score: 0.9679 (Fit: 0.066s, Infer: 0.45ms, Total: 0.50s)
+2026-10-05 23:51:53 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | logistic_regression] -> Score: 0.8653 (Fit: 0.005s, Infer: 0.02ms, Total: 0.12s)
+2026-10-05 23:52:07 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | l1 | random_forest] -> Score: 0.9873 (Fit: 0.070s, Infer: 0.48ms, Total: 13.61s)
+2026-10-05 23:52:21 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | l1 | logistic_regression] -> Score: 0.981 (Fit: 0.015s, Infer: 0.06ms, Total: 13.20s)
+2026-10-05 23:52:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:22 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | tree_importance | random_forest] -> Score: 0.9873 (Fit: 0.081s, Infer: 0.61ms, Total: 0.56s)
+2026-10-05 23:52:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:52:23 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | tree_importance | logistic_regression] -> Score: 0.981 (Fit: 0.058s, Infer: 0.17ms, Total: 0.38s)
+2026-10-05 23:52:47 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | random_forest] -> Score: 0.9873 (Fit: 0.069s, Infer: 0.51ms, Total: 23.77s)
+2026-10-05 23:53:10 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | logistic_regression] -> Score: 0.9808 (Fit: 0.027s, Infer: 0.07ms, Total: 22.22s)
+2026-10-05 23:53:10 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beed'
+2026-10-05 23:53:10 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | random_forest] -> Score: 0.9619 (Fit: 0.069s, Infer: 0.45ms, Total: 0.42s)
+2026-10-05 23:53:10 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | logistic_regression] -> Score: 0.9427 (Fit: 0.005s, Infer: 0.02ms, Total: 0.03s)
+2026-10-05 23:53:11 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | variance_threshold | random_forest] -> Score: 0.9619 (Fit: 0.069s, Infer: 0.44ms, Total: 0.48s)
+2026-10-05 23:53:12 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | variance_threshold | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 0.11s)
+2026-10-05 23:53:13 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | random_forest] -> Score: 0.9429 (Fit: 0.067s, Infer: 0.42ms, Total: 0.47s)
+2026-10-05 23:53:13 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9107 (Fit: 0.004s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:53:15 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | l1 | random_forest] -> Score: 0.9746 (Fit: 0.065s, Infer: 0.43ms, Total: 0.84s)
+2026-10-05 23:53:16 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | l1 | logistic_regression] -> Score: 0.9238 (Fit: 0.004s, Infer: 0.02ms, Total: 0.47s)
+2026-10-05 23:53:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:17 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | tree_importance | random_forest] -> Score: 0.9619 (Fit: 0.068s, Infer: 0.45ms, Total: 0.47s)
+2026-10-05 23:53:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:17 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | tree_importance | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 0.09s)
+2026-10-05 23:53:34 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | random_forest] -> Score: 0.9681 (Fit: 0.074s, Infer: 0.47ms, Total: 16.46s)
+2026-10-05 23:53:52 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | logistic_regression] -> Score: 0.955 (Fit: 0.007s, Infer: 0.03ms, Total: 17.30s)
+2026-10-05 23:53:52 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beed'
+2026-10-05 23:53:52 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | random_forest] -> Score: 0.9619 (Fit: 0.064s, Infer: 0.45ms, Total: 0.39s)
+2026-10-05 23:53:52 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | logistic_regression] -> Score: 0.9427 (Fit: 0.005s, Infer: 0.03ms, Total: 0.03s)
+2026-10-05 23:53:53 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | variance_threshold | random_forest] -> Score: 0.9619 (Fit: 0.068s, Infer: 0.44ms, Total: 0.48s)
+2026-10-05 23:53:54 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | variance_threshold | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:53:55 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best | random_forest] -> Score: 0.9429 (Fit: 0.066s, Infer: 0.45ms, Total: 0.48s)
+2026-10-05 23:53:56 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best | logistic_regression] -> Score: 0.9107 (Fit: 0.004s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:53:57 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | l1 | random_forest] -> Score: 0.9746 (Fit: 0.067s, Infer: 0.45ms, Total: 0.85s)
+2026-10-05 23:53:58 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | l1 | logistic_regression] -> Score: 0.9238 (Fit: 0.005s, Infer: 0.03ms, Total: 0.48s)
+2026-10-05 23:53:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | tree_importance | random_forest] -> Score: 0.9619 (Fit: 0.070s, Infer: 0.48ms, Total: 0.50s)
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:53:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:00 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | tree_importance | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:54:16 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled | random_forest] -> Score: 0.9681 (Fit: 0.068s, Infer: 0.46ms, Total: 16.00s)
+2026-10-05 23:54:32 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled | logistic_regression] -> Score: 0.955 (Fit: 0.007s, Infer: 0.03ms, Total: 15.61s)
+2026-10-05 23:54:32 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beed'
+2026-10-05 23:54:32 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | random_forest] -> Score: 0.9554 (Fit: 0.074s, Infer: 0.46ms, Total: 0.44s)
+2026-10-05 23:54:33 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | logistic_regression] -> Score: 0.9427 (Fit: 0.110s, Infer: 0.03ms, Total: 0.56s)
+2026-10-05 23:54:34 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.9617 (Fit: 0.077s, Infer: 0.46ms, Total: 0.53s)
+2026-10-05 23:54:35 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | variance_threshold | logistic_regression] -> Score: 0.9427 (Fit: 0.009s, Infer: 0.03ms, Total: 0.12s)
+2026-10-05 23:54:36 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9365 (Fit: 0.066s, Infer: 0.45ms, Total: 0.48s)
+2026-10-05 23:54:36 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9109 (Fit: 0.004s, Infer: 0.02ms, Total: 0.10s)
+2026-10-05 23:54:38 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | l1 | random_forest] -> Score: 0.9429 (Fit: 0.067s, Infer: 0.44ms, Total: 1.25s)
+2026-10-05 23:54:39 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | l1 | logistic_regression] -> Score: 0.9429 (Fit: 0.005s, Infer: 0.03ms, Total: 0.88s)
+2026-10-05 23:54:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:40 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.9554 (Fit: 0.067s, Infer: 0.44ms, Total: 0.47s)
+2026-10-05 23:54:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:54:41 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | tree_importance | logistic_regression] -> Score: 0.9427 (Fit: 0.111s, Infer: 0.03ms, Total: 0.62s)
+2026-10-05 23:54:58 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9556 (Fit: 0.065s, Infer: 0.43ms, Total: 16.06s)
+2026-10-05 23:55:19 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9615 (Fit: 0.010s, Infer: 0.04ms, Total: 21.10s)
+2026-10-05 23:55:19 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beed'
+2026-10-05 23:55:20 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | random_forest] -> Score: 0.9871 (Fit: 0.080s, Infer: 0.61ms, Total: 0.49s)
+2026-10-05 23:55:20 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | logistic_regression] -> Score: 0.9935 (Fit: 0.058s, Infer: 0.17ms, Total: 0.32s)
+2026-10-05 23:55:21 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | variance_threshold | random_forest] -> Score: 0.9871 (Fit: 0.075s, Infer: 0.60ms, Total: 0.60s)
+2026-10-05 23:55:22 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.9935 (Fit: 0.057s, Infer: 0.18ms, Total: 0.43s)
+2026-10-05 23:55:23 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | random_forest] -> Score: 0.9808 (Fit: 0.063s, Infer: 0.45ms, Total: 0.49s)
+2026-10-05 23:55:24 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | logistic_regression] -> Score: 0.8982 (Fit: 0.004s, Infer: 0.02ms, Total: 0.12s)
+2026-10-05 23:55:38 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | l1 | random_forest] -> Score: 0.9935 (Fit: 0.071s, Infer: 0.47ms, Total: 13.77s)
+2026-10-05 23:55:53 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | l1 | logistic_regression] -> Score: 0.9871 (Fit: 0.016s, Infer: 0.06ms, Total: 14.18s)
+2026-10-05 23:55:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:54 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | tree_importance | random_forest] -> Score: 0.9871 (Fit: 0.081s, Infer: 0.57ms, Total: 0.56s)
+2026-10-05 23:55:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:55:55 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | tree_importance | logistic_regression] -> Score: 0.9935 (Fit: 0.059s, Infer: 0.18ms, Total: 0.38s)
+2026-10-05 23:56:19 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | random_forest] -> Score: 0.9871 (Fit: 0.073s, Infer: 0.50ms, Total: 23.94s)
+2026-10-05 23:56:45 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | logistic_regression] -> Score: 0.9935 (Fit: 0.029s, Infer: 0.07ms, Total: 25.23s)
+2026-10-05 23:56:45 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beed'
+2026-10-05 23:56:45 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | random_forest] -> Score: 0.9873 (Fit: 0.066s, Infer: 0.45ms, Total: 0.40s)
+2026-10-05 23:56:45 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | logistic_regression] -> Score: 0.9552 (Fit: 0.005s, Infer: 0.03ms, Total: 0.03s)
+2026-10-05 23:56:46 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | variance_threshold | random_forest] -> Score: 0.9873 (Fit: 0.066s, Infer: 0.45ms, Total: 0.47s)
+2026-10-05 23:56:47 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | variance_threshold | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:56:48 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | random_forest] -> Score: 0.9681 (Fit: 0.070s, Infer: 0.44ms, Total: 0.49s)
+2026-10-05 23:56:49 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9109 (Fit: 0.004s, Infer: 0.02ms, Total: 0.10s)
+2026-10-05 23:56:50 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | l1 | random_forest] -> Score: 0.9873 (Fit: 0.067s, Infer: 0.43ms, Total: 0.85s)
+2026-10-05 23:56:51 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | l1 | logistic_regression] -> Score: 0.9488 (Fit: 0.004s, Infer: 0.02ms, Total: 0.48s)
+2026-10-05 23:56:51 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:51 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:51 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:51 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:52 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:52 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | tree_importance | random_forest] -> Score: 0.9873 (Fit: 0.073s, Infer: 0.47ms, Total: 0.50s)
+2026-10-05 23:56:52 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:52 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:52 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:52 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:52 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:56:53 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | tree_importance | logistic_regression] -> Score: 0.9552 (Fit: 0.007s, Infer: 0.04ms, Total: 0.10s)
+2026-10-05 23:57:10 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | random_forest] -> Score: 0.9808 (Fit: 0.066s, Infer: 0.45ms, Total: 16.81s)
+2026-10-05 23:57:26 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | logistic_regression] -> Score: 0.9552 (Fit: 0.007s, Infer: 0.03ms, Total: 15.98s)
+2026-10-05 23:57:26 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beed'
+2026-10-05 23:57:27 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | random_forest] -> Score: 0.9873 (Fit: 0.068s, Infer: 0.45ms, Total: 0.41s)
+2026-10-05 23:57:27 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | logistic_regression] -> Score: 0.9552 (Fit: 0.005s, Infer: 0.02ms, Total: 0.03s)
+2026-10-05 23:57:28 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | variance_threshold | random_forest] -> Score: 0.9873 (Fit: 0.066s, Infer: 0.44ms, Total: 0.46s)
+2026-10-05 23:57:28 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | variance_threshold | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:57:29 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best | random_forest] -> Score: 0.9681 (Fit: 0.068s, Infer: 0.44ms, Total: 0.48s)
+2026-10-05 23:57:30 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best | logistic_regression] -> Score: 0.9109 (Fit: 0.004s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:57:31 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | l1 | random_forest] -> Score: 0.9873 (Fit: 0.077s, Infer: 0.61ms, Total: 0.97s)
+2026-10-05 23:57:32 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | l1 | logistic_regression] -> Score: 0.9488 (Fit: 0.005s, Infer: 0.03ms, Total: 0.51s)
+2026-10-05 23:57:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:33 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | tree_importance | random_forest] -> Score: 0.9873 (Fit: 0.079s, Infer: 0.47ms, Total: 0.53s)
+2026-10-05 23:57:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:57:34 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | tree_importance | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.03ms, Total: 0.09s)
+2026-10-05 23:57:52 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled | random_forest] -> Score: 0.9808 (Fit: 0.078s, Infer: 0.47ms, Total: 17.25s)
+2026-10-05 23:58:09 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled | logistic_regression] -> Score: 0.9552 (Fit: 0.007s, Infer: 0.03ms, Total: 17.04s)
+2026-10-05 23:58:09 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beed'
+2026-10-05 23:58:10 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | random_forest] -> Score: 0.9683 (Fit: 0.065s, Infer: 0.44ms, Total: 0.39s)
+2026-10-05 23:58:10 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | logistic_regression] -> Score: 0.9617 (Fit: 0.098s, Infer: 0.03ms, Total: 0.49s)
+2026-10-05 23:58:11 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.9808 (Fit: 0.075s, Infer: 0.46ms, Total: 0.52s)
+2026-10-05 23:58:12 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | variance_threshold | logistic_regression] -> Score: 0.9617 (Fit: 0.009s, Infer: 0.04ms, Total: 0.13s)
+2026-10-05 23:58:13 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9619 (Fit: 0.067s, Infer: 0.45ms, Total: 0.49s)
+2026-10-05 23:58:14 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.93 (Fit: 0.004s, Infer: 0.03ms, Total: 0.10s)
+2026-10-05 23:58:15 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | l1 | random_forest] -> Score: 0.9621 (Fit: 0.071s, Infer: 0.44ms, Total: 1.29s)
+2026-10-05 23:58:16 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | l1 | logistic_regression] -> Score: 0.9552 (Fit: 0.005s, Infer: 0.02ms, Total: 0.88s)
+2026-10-05 23:58:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:17 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.9683 (Fit: 0.066s, Infer: 0.46ms, Total: 0.46s)
+2026-10-05 23:58:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:19 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | tree_importance | logistic_regression] -> Score: 0.9617 (Fit: 0.101s, Infer: 0.03ms, Total: 0.57s)
+2026-10-05 23:58:36 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9746 (Fit: 0.070s, Infer: 0.48ms, Total: 17.37s)
+2026-10-05 23:58:53 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9617 (Fit: 0.009s, Infer: 0.03ms, Total: 16.70s)
+2026-10-05 23:58:53 [INFO] tempo.benchmark: Loading dataset: pred-maintenance-w100-cls
+2026-10-05 23:58:53 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'pred-maintenance-w100-cls'
+2026-10-05 23:58:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | None | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.40ms, Total: 0.43s)
+2026-10-05 23:58:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | None | logistic_regression] -> Score: 0.9497 (Fit: 0.021s, Infer: 0.06ms, Total: 0.12s)
+2026-10-05 23:58:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | variance_threshold | random_forest] -> Score: 0.9497 (Fit: 0.073s, Infer: 0.38ms, Total: 0.53s)
+2026-10-05 23:58:56 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.9497 (Fit: 0.025s, Infer: 0.07ms, Total: 0.22s)
+2026-10-05 23:58:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.35ms, Total: 0.50s)
+2026-10-05 23:58:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | select_k_best | logistic_regression] -> Score: 0.9496 (Fit: 0.006s, Infer: 0.02ms, Total: 0.12s)
+2026-10-05 23:58:59 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | l1 | random_forest] -> Score: 0.9497 (Fit: 0.072s, Infer: 0.35ms, Total: 0.53s)
+2026-10-05 23:58:59 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | l1 | logistic_regression] -> Score: 0.9497 (Fit: 0.006s, Infer: 0.02ms, Total: 0.14s)
+2026-10-05 23:58:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:58:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:00 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.071s, Infer: 0.39ms, Total: 0.49s)
+2026-10-05 23:59:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:01 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | tree_importance | logistic_regression] -> Score: 0.9497 (Fit: 0.024s, Infer: 0.06ms, Total: 0.19s)
+2026-10-05 23:59:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:12 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:20 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-05 23:59:20 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.075s, Infer: 0.43ms, Total: 18.07s)
+2026-10-05 23:59:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:37 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-05 23:59:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | subsampled | logistic_regression] -> Score: 0.9497 (Fit: 0.024s, Infer: 0.07ms, Total: 16.84s)
+2026-10-05 23:59:37 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'pred-maintenance-w100-cls'
+2026-10-05 23:59:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | None | random_forest] -> Score: 0.9497 (Fit: 0.074s, Infer: 0.36ms, Total: 0.44s)
+2026-10-05 23:59:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | None | logistic_regression] -> Score: 0.9447 (Fit: 0.011s, Infer: 0.02ms, Total: 0.06s)
+2026-10-05 23:59:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | variance_threshold | random_forest] -> Score: 0.9497 (Fit: 0.076s, Infer: 0.37ms, Total: 0.53s)
+2026-10-05 23:59:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | variance_threshold | logistic_regression] -> Score: 0.9447 (Fit: 0.011s, Infer: 0.02ms, Total: 0.13s)
+2026-10-05 23:59:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.073s, Infer: 0.34ms, Total: 0.50s)
+2026-10-05 23:59:41 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9447 (Fit: 0.011s, Infer: 0.02ms, Total: 0.13s)
+2026-10-05 23:59:42 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | l1 | random_forest] -> Score: 0.9447 (Fit: 0.073s, Infer: 0.34ms, Total: 0.51s)
+2026-10-05 23:59:43 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | l1 | logistic_regression] -> Score: 0.9496 (Fit: 0.013s, Infer: 0.02ms, Total: 0.14s)
+2026-10-05 23:59:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:44 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.071s, Infer: 0.35ms, Total: 0.49s)
+2026-10-05 23:59:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-05 23:59:44 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | tree_importance | logistic_regression] -> Score: 0.9447 (Fit: 0.012s, Infer: 0.02ms, Total: 0.12s)
+2026-10-05 23:59:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-05 23:59:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:02 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:00:02 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.068s, Infer: 0.36ms, Total: 17.66s)
+2026-10-06 00:00:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:15 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:18 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:00:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | subsampled | logistic_regression] -> Score: 0.9447 (Fit: 0.012s, Infer: 0.02ms, Total: 15.06s)
+2026-10-06 00:00:18 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'pred-maintenance-w100-cls'
+2026-10-06 00:00:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | None | random_forest] -> Score: 0.9497 (Fit: 0.076s, Infer: 0.38ms, Total: 0.45s)
+2026-10-06 00:00:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | None | logistic_regression] -> Score: 0.9447 (Fit: 0.011s, Infer: 0.02ms, Total: 0.06s)
+2026-10-06 00:00:19 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | variance_threshold | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.35ms, Total: 0.48s)
+2026-10-06 00:00:20 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | variance_threshold | logistic_regression] -> Score: 0.9447 (Fit: 0.012s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:00:21 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.35ms, Total: 0.48s)
+2026-10-06 00:00:22 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | select_k_best | logistic_regression] -> Score: 0.9447 (Fit: 0.013s, Infer: 0.03ms, Total: 0.14s)
+2026-10-06 00:00:23 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | l1 | random_forest] -> Score: 0.9447 (Fit: 0.064s, Infer: 0.37ms, Total: 0.47s)
+2026-10-06 00:00:23 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | l1 | logistic_regression] -> Score: 0.9496 (Fit: 0.012s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:00:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:25 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.108s, Infer: 0.45ms, Total: 0.69s)
+2026-10-06 00:00:25 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:25 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:25 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:25 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:25 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:00:25 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | tree_importance | logistic_regression] -> Score: 0.9447 (Fit: 0.013s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:00:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:42 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:00:42 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.066s, Infer: 0.35ms, Total: 15.81s)
+2026-10-06 00:00:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:00:57 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:00:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | subsampled | logistic_regression] -> Score: 0.9447 (Fit: 0.012s, Infer: 0.02ms, Total: 14.86s)
+2026-10-06 00:00:57 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'pred-maintenance-w100-cls'
+2026-10-06 00:00:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | None | random_forest] -> Score: 0.9497 (Fit: 0.064s, Infer: 0.34ms, Total: 0.39s)
+2026-10-06 00:00:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | None | logistic_regression] -> Score: 0.9296 (Fit: 0.017s, Infer: 0.02ms, Total: 0.09s)
+2026-10-06 00:00:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.9447 (Fit: 0.066s, Infer: 0.36ms, Total: 0.47s)
+2026-10-06 00:00:59 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | variance_threshold | logistic_regression] -> Score: 0.9297 (Fit: 0.016s, Infer: 0.02ms, Total: 0.15s)
+2026-10-06 00:01:00 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.068s, Infer: 0.34ms, Total: 0.47s)
+2026-10-06 00:01:01 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9397 (Fit: 0.022s, Infer: 0.02ms, Total: 0.18s)
+2026-10-06 00:01:02 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | l1 | random_forest] -> Score: 0.9497 (Fit: 0.066s, Infer: 0.35ms, Total: 0.47s)
+2026-10-06 00:01:02 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | l1 | logistic_regression] -> Score: 0.9396 (Fit: 0.014s, Infer: 0.02ms, Total: 0.14s)
+2026-10-06 00:01:02 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:03 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.066s, Infer: 0.36ms, Total: 0.46s)
+2026-10-06 00:01:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:04 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:04 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:04 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:04 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | tree_importance | logistic_regression] -> Score: 0.9296 (Fit: 0.018s, Infer: 0.02ms, Total: 0.16s)
+2026-10-06 00:01:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:20 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:01:20 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.35ms, Total: 15.23s)
+2026-10-06 00:01:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:35 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:01:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9296 (Fit: 0.019s, Infer: 0.02ms, Total: 14.98s)
+2026-10-06 00:01:35 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'pred-maintenance-w100-cls'
+2026-10-06 00:01:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | None | random_forest] -> Score: 0.9497 (Fit: 0.072s, Infer: 0.38ms, Total: 0.44s)
+2026-10-06 00:01:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | None | logistic_regression] -> Score: 0.9497 (Fit: 0.021s, Infer: 0.06ms, Total: 0.12s)
+2026-10-06 00:01:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | variance_threshold | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.38ms, Total: 0.50s)
+2026-10-06 00:01:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.9497 (Fit: 0.023s, Infer: 0.06ms, Total: 0.21s)
+2026-10-06 00:01:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.066s, Infer: 0.35ms, Total: 0.48s)
+2026-10-06 00:01:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | select_k_best | logistic_regression] -> Score: 0.9547 (Fit: 0.006s, Infer: 0.02ms, Total: 0.11s)
+2026-10-06 00:01:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | l1 | random_forest] -> Score: 0.9497 (Fit: 0.066s, Infer: 0.34ms, Total: 0.49s)
+2026-10-06 00:01:41 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | l1 | logistic_regression] -> Score: 0.9497 (Fit: 0.005s, Infer: 0.02ms, Total: 0.12s)
+2026-10-06 00:01:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.068s, Infer: 0.41ms, Total: 0.48s)
+2026-10-06 00:01:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:01:42 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | tree_importance | logistic_regression] -> Score: 0.9497 (Fit: 0.023s, Infer: 0.06ms, Total: 0.19s)
+2026-10-06 00:01:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:56 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:01:59 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:01:59 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.070s, Infer: 0.40ms, Total: 16.36s)
+2026-10-06 00:02:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:12 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:16 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:02:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numba_efficient | subsampled | logistic_regression] -> Score: 0.9497 (Fit: 0.023s, Infer: 0.06ms, Total: 15.94s)
+2026-10-06 00:02:16 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'pred-maintenance-w100-cls'
+2026-10-06 00:02:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | None | random_forest] -> Score: 0.9497 (Fit: 0.065s, Infer: 0.35ms, Total: 0.39s)
+2026-10-06 00:02:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | None | logistic_regression] -> Score: 0.9247 (Fit: 0.012s, Infer: 0.02ms, Total: 0.06s)
+2026-10-06 00:02:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | variance_threshold | random_forest] -> Score: 0.9497 (Fit: 0.068s, Infer: 0.34ms, Total: 0.47s)
+2026-10-06 00:02:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | variance_threshold | logistic_regression] -> Score: 0.9247 (Fit: 0.013s, Infer: 0.02ms, Total: 0.16s)
+2026-10-06 00:02:19 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.073s, Infer: 0.36ms, Total: 0.50s)
+2026-10-06 00:02:19 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9247 (Fit: 0.011s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:02:20 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | l1 | random_forest] -> Score: 0.9497 (Fit: 0.073s, Infer: 0.36ms, Total: 0.51s)
+2026-10-06 00:02:21 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | l1 | logistic_regression] -> Score: 0.9297 (Fit: 0.009s, Infer: 0.02ms, Total: 0.12s)
+2026-10-06 00:02:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:22 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.35ms, Total: 0.48s)
+2026-10-06 00:02:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:23 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | tree_importance | logistic_regression] -> Score: 0.9247 (Fit: 0.014s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:02:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:39 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:02:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.067s, Infer: 0.34ms, Total: 15.44s)
+2026-10-06 00:02:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:02:54 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:02:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | polars_statistics | subsampled | logistic_regression] -> Score: 0.9247 (Fit: 0.013s, Infer: 0.02ms, Total: 14.85s)
+2026-10-06 00:02:54 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'pred-maintenance-w100-cls'
+2026-10-06 00:02:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | None | random_forest] -> Score: 0.9497 (Fit: 0.066s, Infer: 0.36ms, Total: 0.40s)
+2026-10-06 00:02:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | None | logistic_regression] -> Score: 0.9247 (Fit: 0.010s, Infer: 0.01ms, Total: 0.05s)
+2026-10-06 00:02:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | variance_threshold | random_forest] -> Score: 0.9497 (Fit: 0.065s, Infer: 0.36ms, Total: 0.46s)
+2026-10-06 00:02:56 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | variance_threshold | logistic_regression] -> Score: 0.9247 (Fit: 0.011s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:02:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.067s, Infer: 0.36ms, Total: 0.48s)
+2026-10-06 00:02:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | select_k_best | logistic_regression] -> Score: 0.9247 (Fit: 0.012s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:02:59 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | l1 | random_forest] -> Score: 0.9497 (Fit: 0.064s, Infer: 0.35ms, Total: 0.46s)
+2026-10-06 00:02:59 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | l1 | logistic_regression] -> Score: 0.9297 (Fit: 0.008s, Infer: 0.02ms, Total: 0.11s)
+2026-10-06 00:02:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:02:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:00 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.069s, Infer: 0.36ms, Total: 0.48s)
+2026-10-06 00:03:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:01 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | tree_importance | logistic_regression] -> Score: 0.9247 (Fit: 0.012s, Infer: 0.02ms, Total: 0.12s)
+2026-10-06 00:03:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:17 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:03:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.067s, Infer: 0.33ms, Total: 15.35s)
+2026-10-06 00:03:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:32 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:03:32 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | numpy_statistical | subsampled | logistic_regression] -> Score: 0.9247 (Fit: 0.012s, Infer: 0.02ms, Total: 14.93s)
+2026-10-06 00:03:32 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'pred-maintenance-w100-cls'
+2026-10-06 00:03:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | None | random_forest] -> Score: 0.9497 (Fit: 0.065s, Infer: 0.36ms, Total: 0.40s)
+2026-10-06 00:03:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | None | logistic_regression] -> Score: 0.9197 (Fit: 0.017s, Infer: 0.02ms, Total: 0.09s)
+2026-10-06 00:03:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.9547 (Fit: 0.067s, Infer: 0.34ms, Total: 0.47s)
+2026-10-06 00:03:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | variance_threshold | logistic_regression] -> Score: 0.9247 (Fit: 0.017s, Infer: 0.02ms, Total: 0.16s)
+2026-10-06 00:03:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9497 (Fit: 0.065s, Infer: 0.34ms, Total: 0.46s)
+2026-10-06 00:03:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9247 (Fit: 0.013s, Infer: 0.02ms, Total: 0.14s)
+2026-10-06 00:03:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | l1 | random_forest] -> Score: 0.9497 (Fit: 0.073s, Infer: 0.34ms, Total: 0.50s)
+2026-10-06 00:03:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | l1 | logistic_regression] -> Score: 0.9247 (Fit: 0.011s, Infer: 0.02ms, Total: 0.13s)
+2026-10-06 00:03:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.9497 (Fit: 0.065s, Infer: 0.34ms, Total: 0.46s)
+2026-10-06 00:03:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:03:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | tree_importance | logistic_regression] -> Score: 0.9197 (Fit: 0.018s, Infer: 0.02ms, Total: 0.16s)
+2026-10-06 00:03:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:03:55 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:03:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9497 (Fit: 0.068s, Infer: 0.35ms, Total: 15.39s)
+2026-10-06 00:03:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:04:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:04:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:04:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:04:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 00:04:11 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 00:04:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-cls | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9197 (Fit: 0.019s, Infer: 0.02ms, Total: 14.93s)
+2026-10-06 00:04:11 [INFO] tempo.benchmark: Loading dataset: har
+2026-10-06 00:04:11 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'har'
+2026-10-06 00:04:23 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | random_forest] -> Score: 0.9755 (Fit: 2.438s, Infer: 0.01ms, Total: 12.29s)
+2026-10-06 00:04:48 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | logistic_regression] -> Score: 0.9642 (Fit: 4.919s, Infer: 0.01ms, Total: 24.67s)
+2026-10-06 00:05:01 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | variance_threshold | random_forest] -> Score: 0.9762 (Fit: 2.415s, Infer: 0.01ms, Total: 12.52s)
+2026-10-06 00:05:23 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.964 (Fit: 4.400s, Infer: 0.01ms, Total: 22.39s)
+2026-10-06 00:05:26 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | random_forest] -> Score: 0.8644 (Fit: 0.372s, Infer: 0.01ms, Total: 2.28s)
+2026-10-06 00:05:29 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | logistic_regression] -> Score: 0.8187 (Fit: 0.529s, Infer: 0.00ms, Total: 2.94s)
+2026-10-06 00:17:45 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | l1 | random_forest] -> Score: 0.9768 (Fit: 2.254s, Infer: 0.01ms, Total: 735.27s)
+2026-10-06 00:30:22 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | l1 | logistic_regression] -> Score: 0.9651 (Fit: 3.640s, Infer: 0.01ms, Total: 756.65s)
+2026-10-06 00:30:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:25 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:28 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:36 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | tree_importance | random_forest] -> Score: 0.9755 (Fit: 2.520s, Infer: 0.01ms, Total: 12.78s)
+2026-10-06 00:30:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:51 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:30:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:31:01 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | tree_importance | logistic_regression] -> Score: 0.9642 (Fit: 4.965s, Infer: 0.01ms, Total: 24.97s)
+2026-10-06 00:31:33 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | random_forest] -> Score: 0.9804 (Fit: 1.620s, Infer: 0.01ms, Total: 30.75s)
+2026-10-06 00:32:08 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | logistic_regression] -> Score: 0.9757 (Fit: 2.617s, Infer: 0.00ms, Total: 34.98s)
+2026-10-06 00:32:08 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'har'
+2026-10-06 00:32:10 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | random_forest] -> Score: 0.9667 (Fit: 0.440s, Infer: 0.01ms, Total: 2.31s)
+2026-10-06 00:32:13 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | logistic_regression] -> Score: 0.9139 (Fit: 0.421s, Infer: 0.00ms, Total: 2.11s)
+2026-10-06 00:32:15 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | variance_threshold | random_forest] -> Score: 0.9667 (Fit: 0.437s, Infer: 0.01ms, Total: 2.35s)
+2026-10-06 00:32:18 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | variance_threshold | logistic_regression] -> Score: 0.9139 (Fit: 0.418s, Infer: 0.00ms, Total: 2.17s)
+2026-10-06 00:32:21 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | random_forest] -> Score: 0.9625 (Fit: 0.356s, Infer: 0.01ms, Total: 1.97s)
+2026-10-06 00:32:23 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | logistic_regression] -> Score: 0.8943 (Fit: 0.406s, Infer: 0.00ms, Total: 2.12s)
+2026-10-06 00:32:49 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | l1 | random_forest] -> Score: 0.9667 (Fit: 0.427s, Infer: 0.01ms, Total: 25.71s)
+2026-10-06 00:33:15 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | l1 | logistic_regression] -> Score: 0.9139 (Fit: 0.424s, Infer: 0.00ms, Total: 25.57s)
+2026-10-06 00:33:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:18 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | tree_importance | random_forest] -> Score: 0.9667 (Fit: 0.426s, Infer: 0.01ms, Total: 2.29s)
+2026-10-06 00:33:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:33:21 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | tree_importance | logistic_regression] -> Score: 0.9139 (Fit: 0.421s, Infer: 0.00ms, Total: 2.17s)
+2026-10-06 00:33:39 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | random_forest] -> Score: 0.969 (Fit: 0.429s, Infer: 0.01ms, Total: 17.96s)
+2026-10-06 00:33:57 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | logistic_regression] -> Score: 0.9128 (Fit: 0.437s, Infer: 0.00ms, Total: 17.49s)
+2026-10-06 00:33:57 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'har'
+2026-10-06 00:33:59 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | None | random_forest] -> Score: 0.9667 (Fit: 0.433s, Infer: 0.01ms, Total: 2.27s)
+2026-10-06 00:34:02 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | None | logistic_regression] -> Score: 0.9138 (Fit: 0.461s, Infer: 0.00ms, Total: 2.31s)
+2026-10-06 00:34:05 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | variance_threshold | random_forest] -> Score: 0.9667 (Fit: 0.443s, Infer: 0.01ms, Total: 2.41s)
+2026-10-06 00:34:08 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | variance_threshold | logistic_regression] -> Score: 0.9138 (Fit: 0.473s, Infer: 0.00ms, Total: 2.45s)
+2026-10-06 00:34:10 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | select_k_best | random_forest] -> Score: 0.9625 (Fit: 0.355s, Infer: 0.01ms, Total: 1.96s)
+2026-10-06 00:34:13 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | select_k_best | logistic_regression] -> Score: 0.8945 (Fit: 0.401s, Infer: 0.00ms, Total: 2.09s)
+2026-10-06 00:34:39 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | l1 | random_forest] -> Score: 0.9667 (Fit: 0.432s, Infer: 0.01ms, Total: 25.94s)
+2026-10-06 00:35:05 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | l1 | logistic_regression] -> Score: 0.9138 (Fit: 0.463s, Infer: 0.00ms, Total: 25.95s)
+2026-10-06 00:35:06 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:06 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:07 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:07 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:08 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:08 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | tree_importance | random_forest] -> Score: 0.9667 (Fit: 0.437s, Infer: 0.01ms, Total: 2.36s)
+2026-10-06 00:35:08 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:09 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:10 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:10 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:11 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:35:11 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | tree_importance | logistic_regression] -> Score: 0.9138 (Fit: 0.472s, Infer: 0.00ms, Total: 2.42s)
+2026-10-06 00:35:30 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | subsampled | random_forest] -> Score: 0.9692 (Fit: 0.426s, Infer: 0.01ms, Total: 18.01s)
+2026-10-06 00:35:48 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | subsampled | logistic_regression] -> Score: 0.9126 (Fit: 0.475s, Infer: 0.00ms, Total: 17.59s)
+2026-10-06 00:35:48 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'har'
+2026-10-06 00:35:51 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | random_forest] -> Score: 0.9694 (Fit: 0.562s, Infer: 0.01ms, Total: 2.91s)
+2026-10-06 00:35:59 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | logistic_regression] -> Score: 0.928 (Fit: 1.713s, Infer: 0.00ms, Total: 8.57s)
+2026-10-06 00:36:03 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.9689 (Fit: 0.625s, Infer: 0.01ms, Total: 3.34s)
+2026-10-06 00:36:08 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | variance_threshold | logistic_regression] -> Score: 0.9342 (Fit: 0.840s, Infer: 0.00ms, Total: 4.30s)
+2026-10-06 00:36:10 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.938 (Fit: 0.351s, Infer: 0.01ms, Total: 1.95s)
+2026-10-06 00:36:13 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.8854 (Fit: 0.489s, Infer: 0.00ms, Total: 2.54s)
+2026-10-06 00:37:04 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | l1 | random_forest] -> Score: 0.9689 (Fit: 0.625s, Infer: 0.01ms, Total: 50.07s)
+2026-10-06 00:37:55 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | l1 | logistic_regression] -> Score: 0.9342 (Fit: 0.846s, Infer: 0.00ms, Total: 50.92s)
+2026-10-06 00:37:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:37:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:37:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:37:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:37:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:37:59 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.9694 (Fit: 0.556s, Infer: 0.01ms, Total: 2.94s)
+2026-10-06 00:37:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:38:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:38:02 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:38:04 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:38:06 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 00:38:08 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | tree_importance | logistic_regression] -> Score: 0.928 (Fit: 1.728s, Infer: 0.00ms, Total: 8.71s)
+2026-10-06 00:38:27 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9708 (Fit: 0.546s, Infer: 0.01ms, Total: 18.78s)
+2026-10-06 00:38:47 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.932 (Fit: 0.872s, Infer: 0.00ms, Total: 19.78s)
+2026-10-06 00:38:47 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'har'
+2026-10-06 00:39:00 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | random_forest] -> Score: 0.9757 (Fit: 2.540s, Infer: 0.01ms, Total: 12.83s)
+2026-10-06 00:39:24 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | logistic_regression] -> Score: 0.9652 (Fit: 4.747s, Infer: 0.01ms, Total: 23.81s)
+2026-10-06 00:39:37 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | variance_threshold | random_forest] -> Score: 0.9778 (Fit: 2.500s, Infer: 0.01ms, Total: 12.94s)
+2026-10-06 00:40:01 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.965 (Fit: 4.634s, Infer: 0.01ms, Total: 23.55s)
+2026-10-06 00:40:04 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | random_forest] -> Score: 0.8659 (Fit: 0.394s, Infer: 0.01ms, Total: 2.45s)
+2026-10-06 00:40:07 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | logistic_regression] -> Score: 0.82 (Fit: 0.515s, Infer: 0.00ms, Total: 2.91s)
+2026-10-06 00:52:25 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | l1 | random_forest] -> Score: 0.9786 (Fit: 2.347s, Infer: 0.01ms, Total: 737.27s)
+2026-10-06 01:04:48 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | l1 | logistic_regression] -> Score: 0.9653 (Fit: 3.598s, Infer: 0.01ms, Total: 742.50s)
+2026-10-06 01:04:48 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:04:51 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:04:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:04:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:04:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:05:02 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | tree_importance | random_forest] -> Score: 0.9757 (Fit: 2.545s, Infer: 0.01ms, Total: 12.92s)
+2026-10-06 01:05:02 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:05:07 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:05:12 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:05:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:05:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:05:26 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | tree_importance | logistic_regression] -> Score: 0.9652 (Fit: 4.736s, Infer: 0.01ms, Total: 23.82s)
+2026-10-06 01:05:58 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | random_forest] -> Score: 0.9809 (Fit: 1.599s, Infer: 0.01ms, Total: 30.90s)
+2026-10-06 01:06:34 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | logistic_regression] -> Score: 0.9781 (Fit: 2.741s, Infer: 0.00ms, Total: 35.75s)
+2026-10-06 01:06:34 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'har'
+2026-10-06 01:06:36 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | random_forest] -> Score: 0.9668 (Fit: 0.425s, Infer: 0.01ms, Total: 2.22s)
+2026-10-06 01:06:39 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | logistic_regression] -> Score: 0.915 (Fit: 0.452s, Infer: 0.00ms, Total: 2.27s)
+2026-10-06 01:06:42 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | variance_threshold | random_forest] -> Score: 0.9668 (Fit: 0.425s, Infer: 0.01ms, Total: 2.31s)
+2026-10-06 01:06:44 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | variance_threshold | logistic_regression] -> Score: 0.915 (Fit: 0.452s, Infer: 0.00ms, Total: 2.35s)
+2026-10-06 01:06:47 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | random_forest] -> Score: 0.958 (Fit: 0.357s, Infer: 0.01ms, Total: 1.97s)
+2026-10-06 01:06:50 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | logistic_regression] -> Score: 0.8962 (Fit: 0.416s, Infer: 0.00ms, Total: 2.17s)
+2026-10-06 01:07:16 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | l1 | random_forest] -> Score: 0.9668 (Fit: 0.447s, Infer: 0.01ms, Total: 26.01s)
+2026-10-06 01:07:42 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | l1 | logistic_regression] -> Score: 0.915 (Fit: 0.455s, Infer: 0.00ms, Total: 25.89s)
+2026-10-06 01:07:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:45 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:45 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | tree_importance | random_forest] -> Score: 0.9668 (Fit: 0.433s, Infer: 0.01ms, Total: 2.35s)
+2026-10-06 01:07:45 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:47 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:47 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:07:48 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | tree_importance | logistic_regression] -> Score: 0.915 (Fit: 0.447s, Infer: 0.00ms, Total: 2.30s)
+2026-10-06 01:08:06 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | random_forest] -> Score: 0.9688 (Fit: 0.427s, Infer: 0.01ms, Total: 17.65s)
+2026-10-06 01:08:24 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | logistic_regression] -> Score: 0.9142 (Fit: 0.429s, Infer: 0.00ms, Total: 17.31s)
+2026-10-06 01:08:24 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'har'
+2026-10-06 01:08:26 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | None | random_forest] -> Score: 0.9669 (Fit: 0.434s, Infer: 0.01ms, Total: 2.27s)
+2026-10-06 01:08:28 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | None | logistic_regression] -> Score: 0.9149 (Fit: 0.463s, Infer: 0.00ms, Total: 2.32s)
+2026-10-06 01:08:31 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | variance_threshold | random_forest] -> Score: 0.9669 (Fit: 0.428s, Infer: 0.01ms, Total: 2.37s)
+2026-10-06 01:08:34 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | variance_threshold | logistic_regression] -> Score: 0.9149 (Fit: 0.486s, Infer: 0.00ms, Total: 2.52s)
+2026-10-06 01:08:37 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | select_k_best | random_forest] -> Score: 0.958 (Fit: 0.361s, Infer: 0.01ms, Total: 1.99s)
+2026-10-06 01:08:39 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | select_k_best | logistic_regression] -> Score: 0.8961 (Fit: 0.408s, Infer: 0.00ms, Total: 2.13s)
+2026-10-06 01:09:06 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | l1 | random_forest] -> Score: 0.9669 (Fit: 0.427s, Infer: 0.01ms, Total: 25.91s)
+2026-10-06 01:09:32 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | l1 | logistic_regression] -> Score: 0.9149 (Fit: 0.465s, Infer: 0.00ms, Total: 26.00s)
+2026-10-06 01:09:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:35 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | tree_importance | random_forest] -> Score: 0.9669 (Fit: 0.421s, Infer: 0.01ms, Total: 2.28s)
+2026-10-06 01:09:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:09:38 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | tree_importance | logistic_regression] -> Score: 0.9149 (Fit: 0.469s, Infer: 0.00ms, Total: 2.41s)
+2026-10-06 01:09:56 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | subsampled | random_forest] -> Score: 0.9697 (Fit: 0.425s, Infer: 0.01ms, Total: 17.78s)
+2026-10-06 01:10:14 [INFO] tempo.benchmark: Evaluated: [har | numpy_statistical | subsampled | logistic_regression] -> Score: 0.9144 (Fit: 0.501s, Infer: 0.00ms, Total: 17.73s)
+2026-10-06 01:10:14 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'har'
+2026-10-06 01:10:17 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | random_forest] -> Score: 0.9702 (Fit: 0.573s, Infer: 0.01ms, Total: 3.00s)
+2026-10-06 01:10:26 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | logistic_regression] -> Score: 0.9278 (Fit: 1.719s, Infer: 0.00ms, Total: 8.60s)
+2026-10-06 01:10:30 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.9679 (Fit: 0.604s, Infer: 0.01ms, Total: 3.23s)
+2026-10-06 01:10:34 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | variance_threshold | logistic_regression] -> Score: 0.9335 (Fit: 0.706s, Infer: 0.00ms, Total: 3.64s)
+2026-10-06 01:10:36 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9382 (Fit: 0.350s, Infer: 0.01ms, Total: 1.97s)
+2026-10-06 01:10:39 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.8868 (Fit: 0.464s, Infer: 0.00ms, Total: 2.42s)
+2026-10-06 01:11:30 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | l1 | random_forest] -> Score: 0.9679 (Fit: 0.598s, Infer: 0.01ms, Total: 49.93s)
+2026-10-06 01:12:20 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | l1 | logistic_regression] -> Score: 0.9335 (Fit: 0.718s, Infer: 0.00ms, Total: 50.37s)
+2026-10-06 01:12:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:24 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.9702 (Fit: 0.578s, Infer: 0.01ms, Total: 3.04s)
+2026-10-06 01:12:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:26 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:28 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:12:33 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | tree_importance | logistic_regression] -> Score: 0.9278 (Fit: 1.719s, Infer: 0.00ms, Total: 8.67s)
+2026-10-06 01:12:52 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9725 (Fit: 0.560s, Infer: 0.01ms, Total: 18.65s)
+2026-10-06 01:13:12 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9314 (Fit: 0.828s, Infer: 0.00ms, Total: 19.53s)
+2026-10-06 01:13:12 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a5a__overnight_classification/benchmark_results_20261006_011312.csv and benchmark_results/TM26a5a__overnight_classification/benchmark_results.csv

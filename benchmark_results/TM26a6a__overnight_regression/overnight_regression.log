@@ -1,0 +1,962 @@
+2026-10-06 01:23:45 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-06 01:23:45 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a6a__overnight_regression/environment.json
+2026-10-06 01:23:45 [INFO] tempo.benchmark: Loading dataset: drift-bifurcation-reg
+2026-10-06 01:23:48 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | None | random_forest] -> Score: 0.2828 (Fit: 0.240s, Infer: 0.38ms, Total: 2.89s)
+2026-10-06 01:23:48 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | None | ridge] -> Score: -0.6026 (Fit: 0.005s, Infer: 0.04ms, Total: 1.65s)
+2026-10-06 01:23:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | variance_threshold | random_forest] -> Score: 0.284 (Fit: 0.210s, Infer: 0.37ms, Total: 2.82s)
+2026-10-06 01:23:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | variance_threshold | ridge] -> Score: -0.6026 (Fit: 0.004s, Infer: 0.04ms, Total: 1.73s)
+2026-10-06 01:23:51 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | select_k_best | random_forest] -> Score: 0.2779 (Fit: 0.067s, Infer: 0.33ms, Total: 2.10s)
+2026-10-06 01:23:52 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | select_k_best | ridge] -> Score: 0.3299 (Fit: 0.002s, Infer: 0.01ms, Total: 1.71s)
+2026-10-06 01:23:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | l1 | random_forest] -> Score: 0.2773 (Fit: 0.052s, Infer: 0.33ms, Total: 2.03s)
+2026-10-06 01:23:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | l1 | ridge] -> Score: 0.3665 (Fit: 0.002s, Infer: 0.01ms, Total: 1.71s)
+2026-10-06 01:23:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:55 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | tree_importance | random_forest] -> Score: 0.2828 (Fit: 0.206s, Infer: 0.45ms, Total: 2.80s)
+2026-10-06 01:23:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:23:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | tree_importance | ridge] -> Score: -0.6026 (Fit: 0.004s, Infer: 0.04ms, Total: 1.71s)
+2026-10-06 01:24:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:14 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:24:14 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | subsampled | random_forest] -> Score: 0.2828 (Fit: 0.206s, Infer: 0.39ms, Total: 18.70s)
+2026-10-06 01:24:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:30 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:24:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | subsampled | ridge] -> Score: -0.6026 (Fit: 0.005s, Infer: 0.04ms, Total: 17.42s)
+2026-10-06 01:24:30 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'drift-bifurcation-reg'
+2026-10-06 01:24:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | None | random_forest] -> Score: 0.227 (Fit: 0.057s, Infer: 0.37ms, Total: 0.36s)
+2026-10-06 01:24:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | None | ridge] -> Score: 0.2976 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:24:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | variance_threshold | random_forest] -> Score: 0.2318 (Fit: 0.054s, Infer: 0.36ms, Total: 0.42s)
+2026-10-06 01:24:32 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | variance_threshold | ridge] -> Score: 0.2976 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:24:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | select_k_best | random_forest] -> Score: 0.227 (Fit: 0.051s, Infer: 0.34ms, Total: 0.37s)
+2026-10-06 01:24:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | select_k_best | ridge] -> Score: 0.2976 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:24:35 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | l1 | random_forest] -> Score: 0.0574 (Fit: 0.058s, Infer: 0.34ms, Total: 0.43s)
+2026-10-06 01:24:35 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | l1 | ridge] -> Score: 0.3322 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:24:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:36 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | tree_importance | random_forest] -> Score: 0.227 (Fit: 0.050s, Infer: 0.33ms, Total: 0.38s)
+2026-10-06 01:24:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:24:37 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | tree_importance | ridge] -> Score: 0.2976 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:24:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:50 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | subsampled | random_forest] -> Score: 0.2128 (Fit: 0.054s, Infer: 0.34ms, Total: 15.26s)
+2026-10-06 01:24:56 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:24:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:08 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | subsampled | ridge] -> Score: 0.3187 (Fit: 0.002s, Infer: 0.01ms, Total: 14.98s)
+2026-10-06 01:25:09 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | None | random_forest] -> Score: 0.227 (Fit: 0.051s, Infer: 0.35ms, Total: 0.35s)
+2026-10-06 01:25:09 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | None | ridge] -> Score: 0.2976 (Fit: 0.001s, Infer: 0.01ms, Total: 0.03s)
+2026-10-06 01:25:10 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | variance_threshold | random_forest] -> Score: 0.2318 (Fit: 0.051s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:25:10 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | variance_threshold | ridge] -> Score: 0.2976 (Fit: 0.002s, Infer: 0.01ms, Total: 0.11s)
+2026-10-06 01:25:11 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | select_k_best | random_forest] -> Score: 0.227 (Fit: 0.063s, Infer: 0.36ms, Total: 0.46s)
+2026-10-06 01:25:12 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | select_k_best | ridge] -> Score: 0.2976 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:25:13 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | l1 | random_forest] -> Score: 0.0574 (Fit: 0.055s, Infer: 0.34ms, Total: 0.45s)
+2026-10-06 01:25:14 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | l1 | ridge] -> Score: 0.3322 (Fit: 0.002s, Infer: 0.01ms, Total: 0.11s)
+2026-10-06 01:25:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | tree_importance | random_forest] -> Score: 0.227 (Fit: 0.055s, Infer: 0.35ms, Total: 0.46s)
+2026-10-06 01:25:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:15 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | tree_importance | ridge] -> Score: 0.2976 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:25:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:32 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | subsampled | random_forest] -> Score: 0.2128 (Fit: 0.056s, Infer: 0.35ms, Total: 16.15s)
+2026-10-06 01:25:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:25:48 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | subsampled | ridge] -> Score: 0.3187 (Fit: 0.002s, Infer: 0.01ms, Total: 15.20s)
+2026-10-06 01:25:51 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | None | random_forest] -> Score: 0.2446 (Fit: 0.058s, Infer: 0.37ms, Total: 3.42s)
+2026-10-06 01:25:51 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | None | ridge] -> Score: 0.2753 (Fit: 0.002s, Infer: 0.01ms, Total: 3.07s)
+2026-10-06 01:25:52 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.2478 (Fit: 0.059s, Infer: 0.36ms, Total: 3.51s)
+2026-10-06 01:25:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.2753 (Fit: 0.002s, Infer: 0.01ms, Total: 3.14s)
+2026-10-06 01:25:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.2508 (Fit: 0.059s, Infer: 0.34ms, Total: 3.50s)
+2026-10-06 01:25:55 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | select_k_best | ridge] -> Score: 0.2743 (Fit: 0.002s, Infer: 0.01ms, Total: 3.14s)
+2026-10-06 01:25:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | l1 | random_forest] -> Score: 0.0524 (Fit: 0.055s, Infer: 0.34ms, Total: 3.48s)
+2026-10-06 01:25:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | l1 | ridge] -> Score: 0.3278 (Fit: 0.002s, Infer: 0.01ms, Total: 3.15s)
+2026-10-06 01:25:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.2446 (Fit: 0.067s, Infer: 0.36ms, Total: 3.52s)
+2026-10-06 01:25:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:25:58 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | tree_importance | ridge] -> Score: 0.2753 (Fit: 0.002s, Infer: 0.01ms, Total: 3.14s)
+2026-10-06 01:26:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:14 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | subsampled | random_forest] -> Score: 0.2246 (Fit: 0.057s, Infer: 0.35ms, Total: 18.64s)
+2026-10-06 01:26:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | subsampled | ridge] -> Score: 0.3046 (Fit: 0.002s, Infer: 0.01ms, Total: 18.08s)
+2026-10-06 01:26:30 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'drift-bifurcation-reg'
+2026-10-06 01:26:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | None | random_forest] -> Score: 0.3166 (Fit: 0.200s, Infer: 0.36ms, Total: 1.07s)
+2026-10-06 01:26:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | None | ridge] -> Score: -0.4293 (Fit: 0.004s, Infer: 0.03ms, Total: 0.03s)
+2026-10-06 01:26:32 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | variance_threshold | random_forest] -> Score: 0.3251 (Fit: 0.203s, Infer: 0.38ms, Total: 1.18s)
+2026-10-06 01:26:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | variance_threshold | ridge] -> Score: -0.4293 (Fit: 0.004s, Infer: 0.04ms, Total: 0.11s)
+2026-10-06 01:26:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | select_k_best | random_forest] -> Score: 0.3083 (Fit: 0.053s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:26:35 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | select_k_best | ridge] -> Score: 0.3469 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:26:36 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | l1 | random_forest] -> Score: 0.2396 (Fit: 0.057s, Infer: 0.35ms, Total: 0.44s)
+2026-10-06 01:26:37 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | l1 | ridge] -> Score: 0.3437 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:26:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:38 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | tree_importance | random_forest] -> Score: 0.3166 (Fit: 0.196s, Infer: 0.37ms, Total: 1.12s)
+2026-10-06 01:26:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:26:39 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | tree_importance | ridge] -> Score: -0.4293 (Fit: 0.004s, Infer: 0.04ms, Total: 0.09s)
+2026-10-06 01:26:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:26:55 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | subsampled | random_forest] -> Score: 0.3055 (Fit: 0.166s, Infer: 0.38ms, Total: 15.97s)
+2026-10-06 01:26:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:11 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numba_efficient | subsampled | ridge] -> Score: -0.3254 (Fit: 0.004s, Infer: 0.04ms, Total: 15.05s)
+2026-10-06 01:27:11 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'drift-bifurcation-reg'
+2026-10-06 01:27:11 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | None | random_forest] -> Score: 0.2071 (Fit: 0.055s, Infer: 0.35ms, Total: 0.34s)
+2026-10-06 01:27:11 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | None | ridge] -> Score: 0.2821 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:27:12 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | variance_threshold | random_forest] -> Score: 0.2115 (Fit: 0.054s, Infer: 0.36ms, Total: 0.42s)
+2026-10-06 01:27:13 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | variance_threshold | ridge] -> Score: 0.2821 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:27:14 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | select_k_best | random_forest] -> Score: 0.2071 (Fit: 0.050s, Infer: 0.36ms, Total: 0.37s)
+2026-10-06 01:27:15 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | select_k_best | ridge] -> Score: 0.2821 (Fit: 0.002s, Infer: 0.01ms, Total: 0.06s)
+2026-10-06 01:27:16 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | l1 | random_forest] -> Score: 0.0901 (Fit: 0.055s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:27:16 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | l1 | ridge] -> Score: 0.3322 (Fit: 0.001s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:27:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:17 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | tree_importance | random_forest] -> Score: 0.2071 (Fit: 0.056s, Infer: 0.35ms, Total: 0.41s)
+2026-10-06 01:27:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:18 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | tree_importance | ridge] -> Score: 0.2821 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:27:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | subsampled | random_forest] -> Score: 0.2167 (Fit: 0.055s, Infer: 0.34ms, Total: 15.17s)
+2026-10-06 01:27:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:27:49 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | polars_statistics | subsampled | ridge] -> Score: 0.2973 (Fit: 0.002s, Infer: 0.01ms, Total: 14.91s)
+2026-10-06 01:27:49 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'drift-bifurcation-reg'
+2026-10-06 01:27:49 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | None | random_forest] -> Score: 0.2071 (Fit: 0.053s, Infer: 0.34ms, Total: 0.33s)
+2026-10-06 01:27:49 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | None | ridge] -> Score: 0.2821 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:27:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | variance_threshold | random_forest] -> Score: 0.2115 (Fit: 0.053s, Infer: 0.35ms, Total: 0.41s)
+2026-10-06 01:27:51 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | variance_threshold | ridge] -> Score: 0.2821 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:27:52 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | select_k_best | random_forest] -> Score: 0.2071 (Fit: 0.060s, Infer: 0.36ms, Total: 0.41s)
+2026-10-06 01:27:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | select_k_best | ridge] -> Score: 0.2821 (Fit: 0.002s, Infer: 0.01ms, Total: 0.06s)
+2026-10-06 01:27:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | l1 | random_forest] -> Score: 0.0901 (Fit: 0.051s, Infer: 0.36ms, Total: 0.41s)
+2026-10-06 01:27:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | l1 | ridge] -> Score: 0.3322 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:27:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:55 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | tree_importance | random_forest] -> Score: 0.2071 (Fit: 0.053s, Infer: 0.35ms, Total: 0.40s)
+2026-10-06 01:27:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:27:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | tree_importance | ridge] -> Score: 0.2821 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:27:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:12 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | subsampled | random_forest] -> Score: 0.2167 (Fit: 0.052s, Infer: 0.35ms, Total: 15.24s)
+2026-10-06 01:28:15 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:27 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | numpy_statistical | subsampled | ridge] -> Score: 0.2973 (Fit: 0.002s, Infer: 0.01ms, Total: 14.87s)
+2026-10-06 01:28:27 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'drift-bifurcation-reg'
+2026-10-06 01:28:28 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | None | random_forest] -> Score: 0.2137 (Fit: 0.064s, Infer: 0.35ms, Total: 0.39s)
+2026-10-06 01:28:28 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | None | ridge] -> Score: 0.2583 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:28:29 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.2137 (Fit: 0.060s, Infer: 0.35ms, Total: 0.45s)
+2026-10-06 01:28:29 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.2583 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:28:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.2098 (Fit: 0.054s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:28:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | select_k_best | ridge] -> Score: 0.2605 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:28:32 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | l1 | random_forest] -> Score: 0.1624 (Fit: 0.053s, Infer: 0.34ms, Total: 0.41s)
+2026-10-06 01:28:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | l1 | ridge] -> Score: 0.3434 (Fit: 0.001s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:28:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.2137 (Fit: 0.053s, Infer: 0.33ms, Total: 0.40s)
+2026-10-06 01:28:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:28:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | tree_importance | ridge] -> Score: 0.2583 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:28:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | subsampled | random_forest] -> Score: 0.2235 (Fit: 0.057s, Infer: 0.33ms, Total: 15.51s)
+2026-10-06 01:28:53 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:28:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:29:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:29:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:29:06 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg | tsfresh_minimal | subsampled | ridge] -> Score: 0.2771 (Fit: 0.002s, Infer: 0.01ms, Total: 15.05s)
+2026-10-06 01:29:06 [INFO] tempo.benchmark: Loading dataset: pred-maintenance-w100-reg
+2026-10-06 01:29:06 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:29:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | random_forest] -> Score: 0.9863 (Fit: 0.402s, Infer: 0.40ms, Total: 2.09s)
+2026-10-06 01:29:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | ridge] -> Score: 0.8286 (Fit: 0.007s, Infer: 0.06ms, Total: 0.05s)
+2026-10-06 01:29:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | variance_threshold | random_forest] -> Score: 0.9863 (Fit: 0.384s, Infer: 0.39ms, Total: 2.09s)
+2026-10-06 01:29:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | variance_threshold | ridge] -> Score: 0.8286 (Fit: 0.007s, Infer: 0.06ms, Total: 0.14s)
+2026-10-06 01:29:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | select_k_best | random_forest] -> Score: 0.9909 (Fit: 0.051s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:29:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | select_k_best | ridge] -> Score: 0.9959 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:29:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | l1 | random_forest] -> Score: 0.9864 (Fit: 0.083s, Infer: 0.36ms, Total: 0.66s)
+2026-10-06 01:29:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | l1 | ridge] -> Score: 0.9896 (Fit: 0.003s, Infer: 0.02ms, Total: 0.19s)
+2026-10-06 01:29:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | tree_importance | random_forest] -> Score: 0.9863 (Fit: 0.393s, Infer: 0.38ms, Total: 2.10s)
+2026-10-06 01:29:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | tree_importance | ridge] -> Score: 0.8286 (Fit: 0.007s, Infer: 0.06ms, Total: 0.11s)
+2026-10-06 01:29:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | subsampled | random_forest] -> Score: 0.9869 (Fit: 0.054s, Infer: 0.35ms, Total: 15.85s)
+2026-10-06 01:29:50 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | subsampled | ridge] -> Score: 0.9909 (Fit: 0.002s, Infer: 0.01ms, Total: 15.13s)
+2026-10-06 01:29:50 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:29:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | random_forest] -> Score: 0.7614 (Fit: 0.056s, Infer: 0.36ms, Total: 0.35s)
+2026-10-06 01:29:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | ridge] -> Score: 0.597 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:29:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | variance_threshold | random_forest] -> Score: 0.7639 (Fit: 0.058s, Infer: 0.35ms, Total: 0.44s)
+2026-10-06 01:29:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | variance_threshold | ridge] -> Score: 0.597 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:29:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | select_k_best | random_forest] -> Score: 0.7572 (Fit: 0.051s, Infer: 0.36ms, Total: 0.40s)
+2026-10-06 01:29:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | select_k_best | ridge] -> Score: 0.5999 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:29:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | l1 | random_forest] -> Score: 0.7537 (Fit: 0.059s, Infer: 0.35ms, Total: 0.44s)
+2026-10-06 01:29:56 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | l1 | ridge] -> Score: 0.5984 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:29:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | tree_importance | random_forest] -> Score: 0.7614 (Fit: 0.063s, Infer: 0.36ms, Total: 0.45s)
+2026-10-06 01:29:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:29:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | tree_importance | ridge] -> Score: 0.597 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:30:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | subsampled | random_forest] -> Score: 0.7606 (Fit: 0.056s, Infer: 0.33ms, Total: 15.38s)
+2026-10-06 01:30:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:29 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | subsampled | ridge] -> Score: 0.5757 (Fit: 0.002s, Infer: 0.01ms, Total: 14.93s)
+2026-10-06 01:30:29 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:30:29 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | random_forest] -> Score: 0.7614 (Fit: 0.055s, Infer: 0.36ms, Total: 0.35s)
+2026-10-06 01:30:29 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | ridge] -> Score: 0.597 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:30:30 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | variance_threshold | random_forest] -> Score: 0.7639 (Fit: 0.054s, Infer: 0.34ms, Total: 0.41s)
+2026-10-06 01:30:31 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | variance_threshold | ridge] -> Score: 0.597 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:30:32 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | select_k_best | random_forest] -> Score: 0.7572 (Fit: 0.054s, Infer: 0.34ms, Total: 0.44s)
+2026-10-06 01:30:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | select_k_best | ridge] -> Score: 0.5999 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:30:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | l1 | random_forest] -> Score: 0.7537 (Fit: 0.055s, Infer: 0.36ms, Total: 0.43s)
+2026-10-06 01:30:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | l1 | ridge] -> Score: 0.5984 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:30:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | tree_importance | random_forest] -> Score: 0.7614 (Fit: 0.055s, Infer: 0.34ms, Total: 0.41s)
+2026-10-06 01:30:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:30:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | tree_importance | ridge] -> Score: 0.597 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:30:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | subsampled | random_forest] -> Score: 0.7606 (Fit: 0.056s, Infer: 0.36ms, Total: 15.45s)
+2026-10-06 01:30:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:30:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:07 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | subsampled | ridge] -> Score: 0.5757 (Fit: 0.004s, Infer: 0.04ms, Total: 14.92s)
+2026-10-06 01:31:07 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:31:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | random_forest] -> Score: 0.7156 (Fit: 0.064s, Infer: 0.37ms, Total: 0.39s)
+2026-10-06 01:31:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | ridge] -> Score: 0.5905 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:31:09 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.7137 (Fit: 0.064s, Infer: 0.35ms, Total: 0.47s)
+2026-10-06 01:31:10 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.5905 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:31:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.7422 (Fit: 0.059s, Infer: 0.35ms, Total: 0.44s)
+2026-10-06 01:31:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best | ridge] -> Score: 0.6114 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:31:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | l1 | random_forest] -> Score: 0.6807 (Fit: 0.058s, Infer: 0.35ms, Total: 0.46s)
+2026-10-06 01:31:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | l1 | ridge] -> Score: 0.5955 (Fit: 0.002s, Infer: 0.01ms, Total: 0.11s)
+2026-10-06 01:31:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.7156 (Fit: 0.064s, Infer: 0.33ms, Total: 0.45s)
+2026-10-06 01:31:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | tree_importance | ridge] -> Score: 0.5905 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:31:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:31 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled | random_forest] -> Score: 0.6988 (Fit: 0.061s, Infer: 0.35ms, Total: 15.32s)
+2026-10-06 01:31:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:31:46 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled | ridge] -> Score: 0.5892 (Fit: 0.002s, Infer: 0.02ms, Total: 14.91s)
+2026-10-06 01:31:46 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:31:48 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | random_forest] -> Score: 0.9873 (Fit: 0.366s, Infer: 0.39ms, Total: 1.91s)
+2026-10-06 01:31:48 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | ridge] -> Score: 0.8326 (Fit: 0.006s, Infer: 0.06ms, Total: 0.04s)
+2026-10-06 01:31:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | variance_threshold | random_forest] -> Score: 0.9871 (Fit: 0.366s, Infer: 0.38ms, Total: 2.01s)
+2026-10-06 01:31:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | variance_threshold | ridge] -> Score: 0.8326 (Fit: 0.007s, Infer: 0.06ms, Total: 0.14s)
+2026-10-06 01:31:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | select_k_best | random_forest] -> Score: 0.9921 (Fit: 0.054s, Infer: 0.36ms, Total: 0.43s)
+2026-10-06 01:31:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | select_k_best | ridge] -> Score: 0.9953 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:31:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | l1 | random_forest] -> Score: 0.9864 (Fit: 0.082s, Infer: 0.36ms, Total: 0.65s)
+2026-10-06 01:31:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | l1 | ridge] -> Score: 0.9884 (Fit: 0.002s, Infer: 0.02ms, Total: 0.19s)
+2026-10-06 01:31:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | tree_importance | random_forest] -> Score: 0.9873 (Fit: 0.374s, Infer: 0.40ms, Total: 2.01s)
+2026-10-06 01:31:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:31:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | tree_importance | ridge] -> Score: 0.8326 (Fit: 0.007s, Infer: 0.06ms, Total: 0.11s)
+2026-10-06 01:32:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | subsampled | random_forest] -> Score: 0.9905 (Fit: 0.053s, Infer: 0.35ms, Total: 15.79s)
+2026-10-06 01:32:30 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | subsampled | ridge] -> Score: 0.9917 (Fit: 0.002s, Infer: 0.01ms, Total: 15.23s)
+2026-10-06 01:32:30 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:32:31 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | random_forest] -> Score: 0.7112 (Fit: 0.059s, Infer: 0.35ms, Total: 0.36s)
+2026-10-06 01:32:31 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | ridge] -> Score: 0.6085 (Fit: 0.001s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:32:32 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | variance_threshold | random_forest] -> Score: 0.7143 (Fit: 0.054s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:32:32 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | variance_threshold | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:32:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | select_k_best | random_forest] -> Score: 0.7203 (Fit: 0.059s, Infer: 0.37ms, Total: 0.45s)
+2026-10-06 01:32:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | select_k_best | ridge] -> Score: 0.611 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:32:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | l1 | random_forest] -> Score: 0.7296 (Fit: 0.051s, Infer: 0.35ms, Total: 0.40s)
+2026-10-06 01:32:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | l1 | ridge] -> Score: 0.6089 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:32:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | tree_importance | random_forest] -> Score: 0.7112 (Fit: 0.061s, Infer: 0.35ms, Total: 0.44s)
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:32:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | tree_importance | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:32:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:32:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:32:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:32:50 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:32:53 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:32:53 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:32:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | subsampled | random_forest] -> Score: 0.7112 (Fit: 0.063s, Infer: 0.48ms, Total: 15.28s)
+2026-10-06 01:32:56 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:32:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:09 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:33:09 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | subsampled | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 14.99s)
+2026-10-06 01:33:09 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:33:09 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | random_forest] -> Score: 0.7112 (Fit: 0.054s, Infer: 0.35ms, Total: 0.34s)
+2026-10-06 01:33:09 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:33:10 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | variance_threshold | random_forest] -> Score: 0.7143 (Fit: 0.055s, Infer: 0.36ms, Total: 0.43s)
+2026-10-06 01:33:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | variance_threshold | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:33:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | select_k_best | random_forest] -> Score: 0.7203 (Fit: 0.054s, Infer: 0.36ms, Total: 0.42s)
+2026-10-06 01:33:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | select_k_best | ridge] -> Score: 0.611 (Fit: 0.003s, Infer: 0.06ms, Total: 0.11s)
+2026-10-06 01:33:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | l1 | random_forest] -> Score: 0.7296 (Fit: 0.054s, Infer: 0.35ms, Total: 0.42s)
+2026-10-06 01:33:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | l1 | ridge] -> Score: 0.6089 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:33:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | tree_importance | random_forest] -> Score: 0.7112 (Fit: 0.051s, Infer: 0.35ms, Total: 0.39s)
+2026-10-06 01:33:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | tree_importance | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:33:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:32 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:33:32 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | subsampled | random_forest] -> Score: 0.7112 (Fit: 0.059s, Infer: 0.35ms, Total: 15.33s)
+2026-10-06 01:33:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:33:47 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:33:47 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | subsampled | ridge] -> Score: 0.6085 (Fit: 0.002s, Infer: 0.01ms, Total: 15.02s)
+2026-10-06 01:33:47 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'pred-maintenance-w100-reg'
+2026-10-06 01:33:48 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | random_forest] -> Score: 0.7047 (Fit: 0.063s, Infer: 0.34ms, Total: 0.38s)
+2026-10-06 01:33:48 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | ridge] -> Score: 0.603 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:33:49 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.6942 (Fit: 0.060s, Infer: 0.35ms, Total: 0.48s)
+2026-10-06 01:33:50 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.603 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:33:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.7117 (Fit: 0.053s, Infer: 0.36ms, Total: 0.42s)
+2026-10-06 01:33:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best | ridge] -> Score: 0.6205 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:33:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | l1 | random_forest] -> Score: 0.6974 (Fit: 0.054s, Infer: 0.34ms, Total: 0.43s)
+2026-10-06 01:33:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | l1 | ridge] -> Score: 0.6058 (Fit: 0.002s, Infer: 0.01ms, Total: 0.11s)
+2026-10-06 01:33:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:53 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.7047 (Fit: 0.067s, Infer: 0.37ms, Total: 0.46s)
+2026-10-06 01:33:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:55 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:33:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | tree_importance | ridge] -> Score: 0.603 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-06 01:33:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:11 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:34:11 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled | random_forest] -> Score: 0.7047 (Fit: 0.064s, Infer: 0.36ms, Total: 15.54s)
+2026-10-06 01:34:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:34:26 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:34:26 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled | ridge] -> Score: 0.603 (Fit: 0.003s, Infer: 0.02ms, Total: 15.04s)
+2026-10-06 01:34:26 [INFO] tempo.benchmark: Loading dataset: appliances-energy
+2026-10-06 01:34:26 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'appliances-energy'
+2026-10-06 01:34:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: -0.0151 (Fit: 3.567s, Infer: 0.38ms, Total: 17.94s)
+2026-10-06 01:34:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: -0.3796 (Fit: 0.026s, Infer: 0.15ms, Total: 0.17s)
+2026-10-06 01:35:03 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | random_forest] -> Score: -0.0134 (Fit: 3.577s, Infer: 0.39ms, Total: 18.13s)
+2026-10-06 01:35:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | ridge] -> Score: -0.3796 (Fit: 0.025s, Infer: 0.15ms, Total: 0.31s)
+2026-10-06 01:35:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | random_forest] -> Score: -0.2357 (Fit: 0.063s, Infer: 0.25ms, Total: 0.51s)
+2026-10-06 01:35:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | ridge] -> Score: -0.0748 (Fit: 0.002s, Infer: 0.01ms, Total: 0.14s)
+2026-10-06 01:35:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | random_forest] -> Score: -0.0801 (Fit: 0.299s, Infer: 0.34ms, Total: 2.65s)
+2026-10-06 01:35:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | ridge] -> Score: -0.7783 (Fit: 0.003s, Infer: 0.02ms, Total: 1.06s)
+2026-10-06 01:35:11 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:26 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | random_forest] -> Score: -0.0151 (Fit: 3.597s, Infer: 0.38ms, Total: 18.15s)
+2026-10-06 01:35:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:30 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:35:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | ridge] -> Score: -0.3796 (Fit: 0.025s, Infer: 0.15ms, Total: 0.23s)
+2026-10-06 01:35:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:35:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:35:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:35:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:06 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:36:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | random_forest] -> Score: -0.0151 (Fit: 3.513s, Infer: 0.39ms, Total: 34.94s)
+2026-10-06 01:36:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:23 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:36:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | ridge] -> Score: -0.3796 (Fit: 0.027s, Infer: 0.15ms, Total: 17.17s)
+2026-10-06 01:36:23 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'appliances-energy'
+2026-10-06 01:36:24 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: -0.2628 (Fit: 0.172s, Infer: 0.26ms, Total: 0.93s)
+2026-10-06 01:36:24 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:36:26 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | random_forest] -> Score: -0.2643 (Fit: 0.169s, Infer: 0.26ms, Total: 1.00s)
+2026-10-06 01:36:27 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:36:28 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | random_forest] -> Score: -0.2788 (Fit: 0.064s, Infer: 0.26ms, Total: 0.47s)
+2026-10-06 01:36:29 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | ridge] -> Score: -0.1056 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:36:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | random_forest] -> Score: -0.2744 (Fit: 0.154s, Infer: 0.26ms, Total: 0.98s)
+2026-10-06 01:36:31 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | ridge] -> Score: -0.5609 (Fit: 0.002s, Infer: 0.01ms, Total: 0.15s)
+2026-10-06 01:36:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | random_forest] -> Score: -0.2628 (Fit: 0.165s, Infer: 0.24ms, Total: 0.95s)
+2026-10-06 01:36:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:36:33 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:36:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:49 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:36:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | random_forest] -> Score: -0.2628 (Fit: 0.169s, Infer: 0.27ms, Total: 15.88s)
+2026-10-06 01:36:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:36:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:05 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:37:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 14.91s)
+2026-10-06 01:37:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | random_forest] -> Score: -0.2628 (Fit: 0.178s, Infer: 0.26ms, Total: 0.99s)
+2026-10-06 01:37:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 0.04s)
+2026-10-06 01:37:08 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | random_forest] -> Score: -0.2643 (Fit: 0.173s, Infer: 0.26ms, Total: 1.04s)
+2026-10-06 01:37:08 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 0.12s)
+2026-10-06 01:37:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | random_forest] -> Score: -0.2788 (Fit: 0.063s, Infer: 0.26ms, Total: 0.49s)
+2026-10-06 01:37:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | ridge] -> Score: -0.1056 (Fit: 0.002s, Infer: 0.01ms, Total: 0.11s)
+2026-10-06 01:37:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | random_forest] -> Score: -0.2744 (Fit: 0.149s, Infer: 0.27ms, Total: 0.98s)
+2026-10-06 01:37:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | ridge] -> Score: -0.5609 (Fit: 0.002s, Infer: 0.01ms, Total: 0.17s)
+2026-10-06 01:37:12 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | random_forest] -> Score: -0.2628 (Fit: 0.177s, Infer: 0.26ms, Total: 1.04s)
+2026-10-06 01:37:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:37:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:31 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:37:31 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | random_forest] -> Score: -0.2628 (Fit: 0.172s, Infer: 0.27ms, Total: 16.42s)
+2026-10-06 01:37:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:37:47 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:37:47 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 15.23s)
+2026-10-06 01:37:47 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'appliances-energy'
+2026-10-06 01:37:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: -0.2291 (Fit: 0.289s, Infer: 0.27ms, Total: 1.52s)
+2026-10-06 01:37:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: -0.8099 (Fit: 0.003s, Infer: 0.02ms, Total: 0.02s)
+2026-10-06 01:37:51 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | random_forest] -> Score: -0.2488 (Fit: 0.296s, Infer: 0.25ms, Total: 1.64s)
+2026-10-06 01:37:52 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | ridge] -> Score: -0.8099 (Fit: 0.003s, Infer: 0.02ms, Total: 0.10s)
+2026-10-06 01:37:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | random_forest] -> Score: -0.2839 (Fit: 0.064s, Infer: 0.27ms, Total: 0.48s)
+2026-10-06 01:37:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | ridge] -> Score: -0.1123 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:37:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | random_forest] -> Score: -0.2481 (Fit: 0.202s, Infer: 0.26ms, Total: 1.26s)
+2026-10-06 01:37:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | ridge] -> Score: -0.7595 (Fit: 0.003s, Infer: 0.02ms, Total: 0.20s)
+2026-10-06 01:37:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:56 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:57 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | random_forest] -> Score: -0.2291 (Fit: 0.301s, Infer: 0.27ms, Total: 1.64s)
+2026-10-06 01:37:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:58 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:37:59 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | ridge] -> Score: -0.8099 (Fit: 0.005s, Infer: 0.05ms, Total: 0.10s)
+2026-10-06 01:38:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:12 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:16 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:38:16 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | random_forest] -> Score: -0.2291 (Fit: 0.297s, Infer: 0.26ms, Total: 16.92s)
+2026-10-06 01:38:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:38:32 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:38:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | ridge] -> Score: -0.8099 (Fit: 0.004s, Infer: 0.02ms, Total: 15.08s)
+2026-10-06 01:38:32 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'appliances-energy'
+2026-10-06 01:38:50 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: 0.041 (Fit: 3.551s, Infer: 0.38ms, Total: 17.86s)
+2026-10-06 01:38:50 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: -0.332 (Fit: 0.026s, Infer: 0.16ms, Total: 0.17s)
+2026-10-06 01:39:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | random_forest] -> Score: 0.0239 (Fit: 3.561s, Infer: 0.39ms, Total: 18.05s)
+2026-10-06 01:39:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | ridge] -> Score: -0.332 (Fit: 0.025s, Infer: 0.16ms, Total: 0.31s)
+2026-10-06 01:39:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | random_forest] -> Score: -0.1148 (Fit: 0.063s, Infer: 0.26ms, Total: 0.51s)
+2026-10-06 01:39:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | ridge] -> Score: -0.0528 (Fit: 0.002s, Infer: 0.01ms, Total: 0.14s)
+2026-10-06 01:39:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | random_forest] -> Score: 0.0236 (Fit: 0.310s, Infer: 0.27ms, Total: 2.66s)
+2026-10-06 01:39:16 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | ridge] -> Score: -0.621 (Fit: 0.003s, Infer: 0.02ms, Total: 1.07s)
+2026-10-06 01:39:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:27 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:35 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | random_forest] -> Score: 0.041 (Fit: 3.597s, Infer: 0.38ms, Total: 18.15s)
+2026-10-06 01:39:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:39:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | ridge] -> Score: -0.332 (Fit: 0.025s, Infer: 0.15ms, Total: 0.23s)
+2026-10-06 01:39:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:39:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:39:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:11 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:40:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | random_forest] -> Score: 0.041 (Fit: 3.538s, Infer: 0.38ms, Total: 35.08s)
+2026-10-06 01:40:15 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:29 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:40:29 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | ridge] -> Score: -0.332 (Fit: 0.027s, Infer: 0.15ms, Total: 17.24s)
+2026-10-06 01:40:29 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'appliances-energy'
+2026-10-06 01:40:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: -0.3228 (Fit: 0.167s, Infer: 0.26ms, Total: 0.90s)
+2026-10-06 01:40:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:40:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | random_forest] -> Score: -0.3118 (Fit: 0.164s, Infer: 0.26ms, Total: 0.98s)
+2026-10-06 01:40:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:40:33 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | random_forest] -> Score: -0.2935 (Fit: 0.064s, Infer: 0.25ms, Total: 0.47s)
+2026-10-06 01:40:34 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | ridge] -> Score: -0.15 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:40:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | random_forest] -> Score: -0.3126 (Fit: 0.141s, Infer: 0.26ms, Total: 0.91s)
+2026-10-06 01:40:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | ridge] -> Score: -0.462 (Fit: 0.002s, Infer: 0.01ms, Total: 0.15s)
+2026-10-06 01:40:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:38 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | random_forest] -> Score: -0.3228 (Fit: 0.167s, Infer: 0.26ms, Total: 0.97s)
+2026-10-06 01:40:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:40:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:40:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:40:55 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:40:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | random_forest] -> Score: -0.3228 (Fit: 0.181s, Infer: 0.25ms, Total: 15.95s)
+2026-10-06 01:40:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:10 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:41:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | ridge] -> Score: -0.4794 (Fit: 0.003s, Infer: 0.01ms, Total: 14.92s)
+2026-10-06 01:41:10 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'appliances-energy'
+2026-10-06 01:41:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | random_forest] -> Score: -0.3228 (Fit: 0.165s, Infer: 0.27ms, Total: 0.90s)
+2026-10-06 01:41:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-06 01:41:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | random_forest] -> Score: -0.3118 (Fit: 0.175s, Infer: 0.38ms, Total: 1.06s)
+2026-10-06 01:41:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:41:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | random_forest] -> Score: -0.2935 (Fit: 0.063s, Infer: 0.25ms, Total: 0.47s)
+2026-10-06 01:41:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | ridge] -> Score: -0.15 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-06 01:41:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | random_forest] -> Score: -0.3125 (Fit: 0.145s, Infer: 0.26ms, Total: 0.93s)
+2026-10-06 01:41:18 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | ridge] -> Score: -0.462 (Fit: 0.002s, Infer: 0.01ms, Total: 0.14s)
+2026-10-06 01:41:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:19 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | random_forest] -> Score: -0.3228 (Fit: 0.168s, Infer: 0.26ms, Total: 0.97s)
+2026-10-06 01:41:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:41:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-06 01:41:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:36 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:41:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | random_forest] -> Score: -0.3228 (Fit: 0.166s, Infer: 0.26ms, Total: 15.73s)
+2026-10-06 01:41:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:41:52 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:41:52 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | ridge] -> Score: -0.4794 (Fit: 0.003s, Infer: 0.01ms, Total: 14.89s)
+2026-10-06 01:41:52 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'appliances-energy'
+2026-10-06 01:41:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: -0.285 (Fit: 0.284s, Infer: 0.27ms, Total: 1.49s)
+2026-10-06 01:41:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: -0.7105 (Fit: 0.003s, Infer: 0.02ms, Total: 0.02s)
+2026-10-06 01:41:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | random_forest] -> Score: -0.3068 (Fit: 0.288s, Infer: 0.27ms, Total: 1.60s)
+2026-10-06 01:41:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | ridge] -> Score: -0.7105 (Fit: 0.003s, Infer: 0.02ms, Total: 0.11s)
+2026-10-06 01:41:57 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | random_forest] -> Score: -0.2739 (Fit: 0.064s, Infer: 0.26ms, Total: 0.47s)
+2026-10-06 01:41:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | ridge] -> Score: -0.175 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-06 01:42:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | random_forest] -> Score: -0.2872 (Fit: 0.187s, Infer: 0.25ms, Total: 1.19s)
+2026-10-06 01:42:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | ridge] -> Score: -0.6729 (Fit: 0.003s, Infer: 0.01ms, Total: 0.20s)
+2026-10-06 01:42:00 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:01 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:02 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:02 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:02 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | random_forest] -> Score: -0.285 (Fit: 0.289s, Infer: 0.27ms, Total: 1.58s)
+2026-10-06 01:42:02 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:42:03 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | ridge] -> Score: -0.7105 (Fit: 0.003s, Infer: 0.02ms, Total: 0.09s)
+2026-10-06 01:42:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:20 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:42:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | random_forest] -> Score: -0.285 (Fit: 0.289s, Infer: 0.27ms, Total: 16.49s)
+2026-10-06 01:42:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-06 01:42:35 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-06 01:42:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | ridge] -> Score: -0.7105 (Fit: 0.004s, Infer: 0.02ms, Total: 14.85s)
+2026-10-06 01:42:36 [INFO] tempo.benchmark: Loading dataset: beijing-pm25
+2026-10-06 01:42:36 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beijing-pm25'
+2026-10-06 01:43:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | random_forest] -> Score: 0.4844 (Fit: 13.802s, Infer: 0.03ms, Total: 69.11s)
+2026-10-06 01:43:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | ridge] -> Score: -0.0763 (Fit: 0.078s, Infer: 0.01ms, Total: 0.43s)
+2026-10-06 01:44:54 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | random_forest] -> Score: 0.4848 (Fit: 13.573s, Infer: 0.02ms, Total: 68.13s)
+2026-10-06 01:44:55 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | ridge] -> Score: -0.0763 (Fit: 0.042s, Infer: 0.01ms, Total: 0.42s)
+2026-10-06 01:44:57 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | random_forest] -> Score: 0.2806 (Fit: 0.300s, Infer: 0.02ms, Total: 1.72s)
+2026-10-06 01:44:58 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | ridge] -> Score: 0.2849 (Fit: 0.002s, Infer: 0.00ms, Total: 0.15s)
+2026-10-06 01:45:49 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | random_forest] -> Score: 0.4707 (Fit: 8.433s, Infer: 0.02ms, Total: 50.89s)
+2026-10-06 01:45:59 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | ridge] -> Score: 0.2469 (Fit: 0.023s, Infer: 0.00ms, Total: 8.81s)
+2026-10-06 01:45:59 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:46:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:46:27 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:46:41 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:46:54 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:47:08 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | random_forest] -> Score: 0.4844 (Fit: 13.762s, Infer: 0.03ms, Total: 68.99s)
+2026-10-06 01:47:08 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:47:09 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:47:09 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:47:09 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:47:09 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:47:09 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | ridge] -> Score: -0.0763 (Fit: 0.084s, Infer: 0.01ms, Total: 0.52s)
+2026-10-06 01:47:48 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | random_forest] -> Score: 0.442 (Fit: 4.299s, Infer: 0.02ms, Total: 38.03s)
+2026-10-06 01:48:04 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | ridge] -> Score: 0.3845 (Fit: 0.012s, Infer: 0.00ms, Total: 15.69s)
+2026-10-06 01:48:04 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beijing-pm25'
+2026-10-06 01:48:07 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | random_forest] -> Score: 0.443 (Fit: 0.605s, Infer: 0.02ms, Total: 3.11s)
+2026-10-06 01:48:07 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-06 01:48:11 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | random_forest] -> Score: 0.4419 (Fit: 0.596s, Infer: 0.03ms, Total: 3.16s)
+2026-10-06 01:48:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:48:14 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | random_forest] -> Score: 0.4002 (Fit: 0.346s, Infer: 0.02ms, Total: 1.88s)
+2026-10-06 01:48:15 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | ridge] -> Score: 0.2846 (Fit: 0.002s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:48:19 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | random_forest] -> Score: 0.4408 (Fit: 0.474s, Infer: 0.02ms, Total: 2.91s)
+2026-10-06 01:48:20 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | ridge] -> Score: 0.3768 (Fit: 0.003s, Infer: 0.00ms, Total: 0.48s)
+2026-10-06 01:48:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:21 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:22 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:23 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:24 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | random_forest] -> Score: 0.443 (Fit: 0.609s, Infer: 0.02ms, Total: 3.19s)
+2026-10-06 01:48:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:24 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:48:24 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.08s)
+2026-10-06 01:48:41 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | random_forest] -> Score: 0.3715 (Fit: 0.309s, Infer: 0.02ms, Total: 16.61s)
+2026-10-06 01:48:57 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | ridge] -> Score: 0.2663 (Fit: 0.003s, Infer: 0.00ms, Total: 14.94s)
+2026-10-06 01:49:00 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | random_forest] -> Score: 0.4432 (Fit: 0.605s, Infer: 0.03ms, Total: 3.14s)
+2026-10-06 01:49:00 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.04s)
+2026-10-06 01:49:04 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | random_forest] -> Score: 0.4423 (Fit: 0.623s, Infer: 0.03ms, Total: 3.31s)
+2026-10-06 01:49:05 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.12s)
+2026-10-06 01:49:07 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | random_forest] -> Score: 0.3983 (Fit: 0.349s, Infer: 0.02ms, Total: 1.92s)
+2026-10-06 01:49:08 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | ridge] -> Score: 0.2846 (Fit: 0.002s, Infer: 0.00ms, Total: 0.12s)
+2026-10-06 01:49:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | random_forest] -> Score: 0.4413 (Fit: 0.494s, Infer: 0.03ms, Total: 3.08s)
+2026-10-06 01:49:13 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | ridge] -> Score: 0.3768 (Fit: 0.003s, Infer: 0.00ms, Total: 0.50s)
+2026-10-06 01:49:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:14 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | random_forest] -> Score: 0.4432 (Fit: 0.608s, Infer: 0.02ms, Total: 3.21s)
+2026-10-06 01:49:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:49:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:49:35 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | random_forest] -> Score: 0.3714 (Fit: 0.312s, Infer: 0.03ms, Total: 17.24s)
+2026-10-06 01:49:51 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | ridge] -> Score: 0.2663 (Fit: 0.003s, Infer: 0.00ms, Total: 15.18s)
+2026-10-06 01:49:51 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beijing-pm25'
+2026-10-06 01:49:56 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | random_forest] -> Score: 0.4556 (Fit: 1.044s, Infer: 0.03ms, Total: 5.32s)
+2026-10-06 01:49:56 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | ridge] -> Score: 0.3862 (Fit: 0.004s, Infer: 0.00ms, Total: 0.03s)
+2026-10-06 01:50:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.4549 (Fit: 1.068s, Infer: 0.02ms, Total: 5.51s)
+2026-10-06 01:50:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.3862 (Fit: 0.004s, Infer: 0.00ms, Total: 0.11s)
+2026-10-06 01:50:06 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.3567 (Fit: 0.363s, Infer: 0.02ms, Total: 1.98s)
+2026-10-06 01:50:07 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | ridge] -> Score: 0.2711 (Fit: 0.002s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:50:11 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | random_forest] -> Score: 0.4523 (Fit: 0.561s, Infer: 0.02ms, Total: 3.60s)
+2026-10-06 01:50:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | ridge] -> Score: 0.3841 (Fit: 0.003s, Infer: 0.00ms, Total: 0.72s)
+2026-10-06 01:50:12 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:13 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:15 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:16 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:18 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.4556 (Fit: 1.058s, Infer: 0.02ms, Total: 5.43s)
+2026-10-06 01:50:18 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:19 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:50:19 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | ridge] -> Score: 0.3862 (Fit: 0.004s, Infer: 0.00ms, Total: 0.09s)
+2026-10-06 01:50:38 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | random_forest] -> Score: 0.398 (Fit: 0.520s, Infer: 0.03ms, Total: 18.14s)
+2026-10-06 01:50:53 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | ridge] -> Score: 0.2994 (Fit: 0.003s, Infer: 0.00ms, Total: 14.89s)
+2026-10-06 01:50:53 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beijing-pm25'
+2026-10-06 01:52:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | random_forest] -> Score: 0.4859 (Fit: 13.811s, Infer: 0.03ms, Total: 69.16s)
+2026-10-06 01:52:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | ridge] -> Score: 0.1574 (Fit: 0.078s, Infer: 0.01ms, Total: 0.43s)
+2026-10-06 01:53:14 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | random_forest] -> Score: 0.4851 (Fit: 13.966s, Infer: 0.03ms, Total: 70.12s)
+2026-10-06 01:53:15 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | ridge] -> Score: 0.1574 (Fit: 0.048s, Infer: 0.01ms, Total: 0.46s)
+2026-10-06 01:53:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | random_forest] -> Score: 0.2873 (Fit: 0.302s, Infer: 0.02ms, Total: 1.72s)
+2026-10-06 01:53:18 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | ridge] -> Score: 0.2823 (Fit: 0.002s, Infer: 0.00ms, Total: 0.15s)
+2026-10-06 01:54:11 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | random_forest] -> Score: 0.4737 (Fit: 8.740s, Infer: 0.02ms, Total: 52.14s)
+2026-10-06 01:54:20 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | ridge] -> Score: 0.2212 (Fit: 0.023s, Infer: 0.00ms, Total: 8.56s)
+2026-10-06 01:54:20 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:54:34 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:54:48 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:03 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:17 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:31 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | random_forest] -> Score: 0.4859 (Fit: 14.098s, Infer: 0.03ms, Total: 70.65s)
+2026-10-06 01:55:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:31 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:32 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:55:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | ridge] -> Score: 0.1574 (Fit: 0.077s, Infer: 0.01ms, Total: 0.49s)
+2026-10-06 01:56:10 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | random_forest] -> Score: 0.4424 (Fit: 4.101s, Infer: 0.03ms, Total: 36.76s)
+2026-10-06 01:56:26 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | ridge] -> Score: 0.3784 (Fit: 0.011s, Infer: 0.00ms, Total: 15.41s)
+2026-10-06 01:56:26 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beijing-pm25'
+2026-10-06 01:56:29 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | random_forest] -> Score: 0.4402 (Fit: 0.595s, Infer: 0.03ms, Total: 3.07s)
+2026-10-06 01:56:29 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | ridge] -> Score: 0.3788 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-06 01:56:33 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | random_forest] -> Score: 0.4416 (Fit: 0.582s, Infer: 0.02ms, Total: 3.07s)
+2026-10-06 01:56:34 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | ridge] -> Score: 0.3788 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:56:36 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | random_forest] -> Score: 0.3979 (Fit: 0.364s, Infer: 0.03ms, Total: 2.01s)
+2026-10-06 01:56:37 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | ridge] -> Score: 0.2886 (Fit: 0.002s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:56:41 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | random_forest] -> Score: 0.4438 (Fit: 0.466s, Infer: 0.03ms, Total: 2.89s)
+2026-10-06 01:56:42 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | ridge] -> Score: 0.3769 (Fit: 0.003s, Infer: 0.00ms, Total: 0.47s)
+2026-10-06 01:56:42 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:43 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:44 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:45 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:46 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | random_forest] -> Score: 0.4402 (Fit: 0.587s, Infer: 0.02ms, Total: 3.07s)
+2026-10-06 01:56:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:46 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:56:46 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | ridge] -> Score: 0.3788 (Fit: 0.003s, Infer: 0.00ms, Total: 0.08s)
+2026-10-06 01:57:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | random_forest] -> Score: 0.3354 (Fit: 0.283s, Infer: 0.02ms, Total: 16.23s)
+2026-10-06 01:57:19 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | ridge] -> Score: 0.2519 (Fit: 0.003s, Infer: 0.00ms, Total: 15.00s)
+2026-10-06 01:57:19 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beijing-pm25'
+2026-10-06 01:57:22 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | random_forest] -> Score: 0.4411 (Fit: 0.607s, Infer: 0.03ms, Total: 3.14s)
+2026-10-06 01:57:22 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | ridge] -> Score: 0.3788 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-06 01:57:26 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | random_forest] -> Score: 0.4412 (Fit: 0.601s, Infer: 0.03ms, Total: 3.19s)
+2026-10-06 01:57:27 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | ridge] -> Score: 0.3788 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:57:29 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | random_forest] -> Score: 0.3988 (Fit: 0.356s, Infer: 0.03ms, Total: 1.97s)
+2026-10-06 01:57:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | ridge] -> Score: 0.2886 (Fit: 0.002s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:57:34 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | random_forest] -> Score: 0.4426 (Fit: 0.476s, Infer: 0.03ms, Total: 2.95s)
+2026-10-06 01:57:35 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | ridge] -> Score: 0.3769 (Fit: 0.002s, Infer: 0.00ms, Total: 0.46s)
+2026-10-06 01:57:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:39 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | random_forest] -> Score: 0.4411 (Fit: 0.619s, Infer: 0.02ms, Total: 3.23s)
+2026-10-06 01:57:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:39 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:57:40 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | ridge] -> Score: 0.3788 (Fit: 0.003s, Infer: 0.00ms, Total: 0.08s)
+2026-10-06 01:57:57 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | random_forest] -> Score: 0.3358 (Fit: 0.280s, Infer: 0.02ms, Total: 16.49s)
+2026-10-06 01:58:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | ridge] -> Score: 0.2519 (Fit: 0.003s, Infer: 0.00ms, Total: 14.90s)
+2026-10-06 01:58:12 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beijing-pm25'
+2026-10-06 01:58:18 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | random_forest] -> Score: 0.4472 (Fit: 1.052s, Infer: 0.03ms, Total: 5.37s)
+2026-10-06 01:58:18 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | ridge] -> Score: 0.3885 (Fit: 0.004s, Infer: 0.00ms, Total: 0.03s)
+2026-10-06 01:58:24 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.4474 (Fit: 1.046s, Infer: 0.03ms, Total: 5.43s)
+2026-10-06 01:58:25 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.3885 (Fit: 0.004s, Infer: 0.00ms, Total: 0.11s)
+2026-10-06 01:58:27 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.3607 (Fit: 0.346s, Infer: 0.03ms, Total: 1.91s)
+2026-10-06 01:58:28 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | ridge] -> Score: 0.2699 (Fit: 0.002s, Infer: 0.00ms, Total: 0.10s)
+2026-10-06 01:58:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | random_forest] -> Score: 0.4466 (Fit: 0.553s, Infer: 0.02ms, Total: 3.53s)
+2026-10-06 01:58:33 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | ridge] -> Score: 0.3882 (Fit: 0.003s, Infer: 0.00ms, Total: 0.68s)
+2026-10-06 01:58:33 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:35 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:36 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:37 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:38 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:40 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.4472 (Fit: 1.067s, Infer: 0.02ms, Total: 5.48s)
+2026-10-06 01:58:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:40 [WARNING] tempo.benchmark: Unrecognised selector 'tree_importance'; falling back to unselected features.
+2026-10-06 01:58:40 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | ridge] -> Score: 0.3885 (Fit: 0.004s, Infer: 0.00ms, Total: 0.09s)
+2026-10-06 01:58:59 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | random_forest] -> Score: 0.3773 (Fit: 0.494s, Infer: 0.02ms, Total: 17.79s)
+2026-10-06 01:59:14 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | ridge] -> Score: 0.2885 (Fit: 0.003s, Infer: 0.00ms, Total: 14.95s)
+2026-10-06 01:59:15 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a6a__overnight_regression/benchmark_results_20261006_015914.csv and benchmark_results/TM26a6a__overnight_regression/benchmark_results.csv
