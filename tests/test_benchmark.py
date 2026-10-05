@@ -308,8 +308,8 @@ class TestBenchmark(unittest.TestCase):
             df_res = runner.run()
 
             self.assertFalse(df_res.empty)
-            self.assertIn("True Values", df_res.columns)
-            self.assertIn("Predictions", df_res.columns)
+            self.assertNotIn("True Values", df_res.columns)
+            self.assertNotIn("Predictions", df_res.columns)
             self.assertIn("Tau RMSE", df_res.columns)
             self.assertIn("Tau MAE", df_res.columns)
             self.assertIn("Tau R2", df_res.columns)

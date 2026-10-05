@@ -933,13 +933,26 @@ class BakeoffRunner:
                                 if all_test_true_list and all_test_preds_list:
                                     y_true_all = np.concatenate(all_test_true_list)
                                     y_pred_all = np.concatenate(all_test_preds_list)
-                                    record["True Values"] = json.dumps(y_true_all.tolist())
-                                    record["Predictions"] = json.dumps(y_pred_all.tolist())
 
                                     if is_tau_dataset:
                                         record["Tau RMSE"] = round(float(np.sqrt(mean_squared_error(y_true_all, y_pred_all))), 4)
                                         record["Tau MAE"] = round(float(mean_absolute_error(y_true_all, y_pred_all)), 4)
                                         record["Tau R2"] = round(float(r2_score(y_true_all, y_pred_all)), 4)
+
+                                        if self.config.enable_plots:
+                                            try:
+                                                from tempo.analysis import plot_tau_estimation_scatter
+                                                analysis_dir = self.output_dir / "analysis"
+                                                analysis_dir.mkdir(parents=True, exist_ok=True)
+                                                scatter_path = analysis_dir / f"tau_estimation_scatter_{ext_name}_{sel_name}.png"
+                                                plot_tau_estimation_scatter(
+                                                    y_true_all,
+                                                    y_pred_all,
+                                                    title=f"Tau Parameter Estimation ({ext_name} | {sel_name})",
+                                                    output_path=scatter_path,
+                                                )
+                                            except Exception as e:
+                                                logger.warning("Could not generate tau estimation scatter plot: %s", e)
                             elif self.config.task_type == "forecasting":
                                 mean_rmse = float(np.mean(fold_rmses))
                                 mean_mae = float(np.mean(fold_maes))
