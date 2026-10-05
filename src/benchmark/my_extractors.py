@@ -3,9 +3,7 @@ import pandas as pd
 import getml
 import tsfel
 from copy import deepcopy
-from sktime.transformations.series.hurst import HurstExponentTransformer
 from tsfeatures import tsfeatures
-# import pycatch22
 
 from tsfresh import extract_features
 from tsfresh.feature_extraction import (
