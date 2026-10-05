@@ -1,7 +1,11 @@
 import numpy as np
 import pandas as pd
+import getml
 import tsfel
 from copy import deepcopy
+from sktime.transformations.series.hurst import HurstExponentTransformer
+from tsfeatures import tsfeatures
+# import pycatch22
 
 from tsfresh import extract_features
 from tsfresh.feature_extraction import (
@@ -109,4 +113,21 @@ def tsfel_extractor(X):
         features.append(df.iloc[0])
 
     return pd.DataFrame(features)
+
+
+def tsfeatures_extractor(X):
+    X = np.asarray(X)
+
+    n_series, n_points = X.shape
+
+    df = pd.DataFrame({
+        "unique_id": np.repeat(np.arange(n_series), n_points),
+        "ds": np.tile(np.arange(n_points), n_series),
+        "y": X.ravel()
+    })
+
+    return tsfeatures(df, freq=1)
+
+
+
 
