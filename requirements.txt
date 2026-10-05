@@ -2,17 +2,30 @@
 numpy>=1.24.0
 polars>=0.20.0
 pandas>=2.0.0
+pyarrow>=12.0.0
+h5py>=3.8.0
+
+# Acceleration and telemetry
+numba>=0.58.0
+psutil>=5.9.0
+pyyaml>=6.0
 
 # TSML frameworks
 tsfresh>=0.20.0
 # catch22>=0.2.0
 tsfel>=0.1.6
 
-# Modeling and validation
+# Modeling, selection, and validation
 scikit-learn>=1.3.0
 scipy>=1.11.0
+statsmodels>=0.14.0
+boruta>=0.3.0
 
-# Environment and notebooks
+# Plotting and visualization
+matplotlib>=3.7.0
+
+# Testing and development
+pytest>=7.0.0
 python-dotenv>=1.0.0
 jupyterlab>=4.0.0
 
