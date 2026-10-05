@@ -218,10 +218,13 @@ def l1_selector(
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             if task_type == "classification":
+                n_classes = len(np.unique(y_arr))
+                solver_name = "saga" if n_classes > 2 else "liblinear"
                 estimator = LogisticRegression(
                     penalty="l1",
-                    solver="liblinear",
+                    solver=solver_name,
                     C=C,
+                    max_iter=500,
                     random_state=random_state,
                 )
             else:

@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import List, Literal, Optional, Tuple, Union
 import polars as pl
 import numpy as np
 
@@ -199,6 +199,7 @@ def generate_drift_bifurcation_dataset(
     R: float = 3e-4,
     delta_t: float = 0.05,
     seed: int = 42,
+    target_type: Literal["regression", "classification"] = "regression",
     rag_prefix: Optional[str] = None,
 ) -> Tuple[pl.DataFrame, pl.DataFrame]:
     """Generate synthetic drift-bifurcation dataset for extrinsic parameter estimation.
@@ -290,9 +291,10 @@ def generate_drift_bifurcation_dataset(
         "velocity_y": np.concatenate(vel_y_all) if vel_y_all else np.array([], dtype=np.float32),
     })
 
+    target_arr = np.array(targets_label, dtype=np.int32) if target_type == "classification" else np.array(targets_tau, dtype=np.float32)
     df_targets = pl.DataFrame({
         "sequence_id": np.array(targets_seq_id, dtype=np.int32),
-        "target": np.array(targets_tau, dtype=np.float32),
+        "target": target_arr,
         "tau_value": np.array(targets_tau, dtype=np.float32),
         "label": np.array(targets_label, dtype=np.int32),
         "deterministic_velocity": np.array(targets_v_det, dtype=np.float32),
