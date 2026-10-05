@@ -245,7 +245,82 @@ class TestBenchmark(unittest.TestCase):
             self.assertFalse(df_res.empty)
             self.assertEqual(len(df_res), 1)
 
+    def test_benchmark_with_new_selectors(self):
+        """Verify BakeoffRunner executes cleanly with all new feature selectors."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ds_dir = Path(tmpdir) / "sim_ds"
+            generate_simulated_dataset(output_dir=str(ds_dir), n_series=10, series_len=30)
+
+            cfg = PipelineConfig(
+                dataset_paths=[str(ds_dir)],
+                task_type="classification",
+                extractors=["numpy_statistical"],
+                selectors=["variance_threshold", "l1", "extra_trees", "random_forest"],
+                models=["logistic_regression"],
+                n_splits=2,
+                cache_backend="memory",
+                cache_dir=str(Path(tmpdir) / "cache"),
+                output_dir=str(Path(tmpdir) / "out"),
+                enable_ttests=False,
+                enable_plots=False,
+                enable_logging=False,
+            )
+            runner = BakeoffRunner(cfg)
+            df_res = runner.run()
+            self.assertEqual(len(df_res), 4)
+            selectors_evaluated = set(df_res["Selector"].tolist())
+            self.assertEqual(
+                selectors_evaluated,
+                {"variance_threshold", "l1", "extra_trees", "random_forest"},
+            )
+
+    def test_benchmark_regression_tau_diagnostics(self):
+        """Verify BakeoffRunner records True Values, Predictions, and specialized tau metrics."""
+        from tempo.storage import generate_drift_bifurcation_dataset
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ds_dir = Path(tmpdir) / "driftbif_ds"
+            generate_drift_bifurcation_dataset(
+                output_dir=str(ds_dir),
+                n_tau_values=2,
+                n_series_per_tau=3,
+                series_len=40,
+                tau_min=3.5,
+                tau_max=4.5,
+                seed=42,
+            )
+
+            cfg = PipelineConfig(
+                dataset_paths=[str(ds_dir)],
+                task_type="regression",
+                extractors=["numpy_statistical"],
+                selectors=["variance_threshold"],
+                models=["ridge"],
+                n_splits=2,
+                cache_backend="memory",
+                cache_dir=str(Path(tmpdir) / "cache"),
+                output_dir=str(Path(tmpdir) / "out"),
+                enable_ttests=False,
+                enable_plots=True,
+                enable_logging=False,
+            )
+            runner = BakeoffRunner(cfg)
+            df_res = runner.run()
+
+            self.assertFalse(df_res.empty)
+            self.assertIn("True Values", df_res.columns)
+            self.assertIn("Predictions", df_res.columns)
+            self.assertIn("Tau RMSE", df_res.columns)
+            self.assertIn("Tau MAE", df_res.columns)
+            self.assertIn("Tau R2", df_res.columns)
+
+            # Check that tau estimation scatter plot was produced
+            analysis_dir = Path(tmpdir) / "out" / "analysis"
+            tau_plots = list(analysis_dir.glob("tau_estimation_scatter_*.png"))
+            self.assertGreater(len(tau_plots), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

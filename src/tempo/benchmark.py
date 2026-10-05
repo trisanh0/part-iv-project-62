@@ -37,9 +37,12 @@ from tempo.extraction import (
 from tempo.selection import (
     SubsampledFeatureSelector,
     boruta_selector,
+    l1_selector,
     mutual_info_selector,
     select_k_best,
+    tree_importance_selector,
     tsfresh_selector,
+    variance_threshold_selector,
 )
 from tempo.storage import load_dataset, to_numpy_tensor
 from tempo.storage.feature_store import BackendType, FeatureStore
@@ -384,6 +387,67 @@ class BakeoffRunner:
                 selected_cols = list(X_train_sel.columns)
                 X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
 
+            elif sel_name in ("variance_threshold", "variance", "zero_variance"):
+                thresh_val = 0.0
+                if isinstance(selector, (dict, SelectorConfig)):
+                    thresh_val = getattr(selector, "threshold", selector.get("threshold", 0.0) if isinstance(selector, dict) else 0.0)
+                X_train_sel = variance_threshold_selector(X_train, threshold=thresh_val)
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
+
+            elif sel_name in ("l1", "lasso"):
+                c_val = 1.0
+                alpha_val = 0.01
+                if isinstance(selector, (dict, SelectorConfig)):
+                    c_val = getattr(selector, "C", selector.get("C", 1.0) if isinstance(selector, dict) else 1.0)
+                    alpha_val = getattr(selector, "alpha", selector.get("alpha", 0.01) if isinstance(selector, dict) else 0.01)
+                X_train_sel = l1_selector(
+                    X_train,
+                    sel_y,
+                    C=c_val,
+                    alpha=alpha_val,
+                    task_type=sel_task_type,
+                    random_state=seed,
+                )
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
+
+            elif sel_name in ("extra_trees", "extratrees"):
+                n_est = 50
+                thresh_val = "median"
+                if isinstance(selector, (dict, SelectorConfig)):
+                    n_est = getattr(selector, "n_estimators", selector.get("n_estimators", 50) if isinstance(selector, dict) else 50)
+                    thresh_val = getattr(selector, "threshold", selector.get("threshold", "median") if isinstance(selector, dict) else "median")
+                X_train_sel = tree_importance_selector(
+                    X_train,
+                    sel_y,
+                    model_type="extra_trees",
+                    n_estimators=n_est,
+                    threshold=thresh_val,
+                    task_type=sel_task_type,
+                    random_state=seed,
+                )
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
+
+            elif sel_name in ("random_forest", "rf_importance", "randomforest"):
+                n_est = 50
+                thresh_val = "median"
+                if isinstance(selector, (dict, SelectorConfig)):
+                    n_est = getattr(selector, "n_estimators", selector.get("n_estimators", 50) if isinstance(selector, dict) else 50)
+                    thresh_val = getattr(selector, "threshold", selector.get("threshold", "median") if isinstance(selector, dict) else "median")
+                X_train_sel = tree_importance_selector(
+                    X_train,
+                    sel_y,
+                    model_type="random_forest",
+                    n_estimators=n_est,
+                    threshold=thresh_val,
+                    task_type=sel_task_type,
+                    random_state=seed,
+                )
+                selected_cols = list(X_train_sel.columns)
+                X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
+
             elif sel_name in ("subsampled", "subsampled_fdr"):
                 ratio = 0.10
                 base_sel = "tsfresh"
@@ -534,6 +598,12 @@ class BakeoffRunner:
                     group_col = cand
                     break
 
+            is_tau_dataset = (
+                "tau_value" in df_targets.columns
+                or "tau" in df_targets.columns
+                or any(k in ds_name.lower() for k in ("driftbif", "bifurcation", "tau"))
+            )
+
             for seed in self.config.seeds:
                 # Chronological / Group / Purged Cross-Validation Generator
                 use_group_cv = False
@@ -624,6 +694,8 @@ class BakeoffRunner:
                             fold_n_sel = []
                             fold_selected_sets = []
                             fold_fallback_flags = []
+                            all_test_true_list = []
+                            all_test_preds_list = []
 
                             for fold_idx, (train_idx, test_idx) in enumerate(splits):
                                 X_train_raw = X_all.iloc[train_idx].reset_index(drop=True)
@@ -665,9 +737,13 @@ class BakeoffRunner:
                                     acc = accuracy_score(y_test_fold, preds)
                                     fold_accs.append(acc)
                                 elif self.config.task_type == "regression":
-                                    fold_rmses.append(np.sqrt(mean_squared_error(y_test_fold, preds)))
-                                    fold_maes.append(mean_absolute_error(y_test_fold, preds))
-                                    fold_r2s.append(r2_score(y_test_fold, preds))
+                                    preds_arr = np.asarray(preds, dtype=np.float32).ravel()
+                                    y_te_arr = np.asarray(y_test_fold, dtype=np.float32).ravel()
+                                    fold_rmses.append(np.sqrt(mean_squared_error(y_te_arr, preds_arr)))
+                                    fold_maes.append(mean_absolute_error(y_te_arr, preds_arr))
+                                    fold_r2s.append(r2_score(y_te_arr, preds_arr))
+                                    all_test_true_list.append(y_te_arr)
+                                    all_test_preds_list.append(preds_arr)
                                 elif self.config.task_type == "forecasting":
                                     preds_arr = np.asarray(preds, dtype=np.float32)
                                     y_test_arr = np.asarray(y_test_fold, dtype=np.float32)
@@ -853,6 +929,17 @@ class BakeoffRunner:
                                 record["RMSE"] = round(float(np.mean(fold_rmses)), 4)
                                 record["MAE"] = round(float(np.mean(fold_maes)), 4)
                                 record["R2"] = round(float(np.mean(fold_r2s)), 4)
+
+                                if all_test_true_list and all_test_preds_list:
+                                    y_true_all = np.concatenate(all_test_true_list)
+                                    y_pred_all = np.concatenate(all_test_preds_list)
+                                    record["True Values"] = json.dumps(y_true_all.tolist())
+                                    record["Predictions"] = json.dumps(y_pred_all.tolist())
+
+                                    if is_tau_dataset:
+                                        record["Tau RMSE"] = round(float(np.sqrt(mean_squared_error(y_true_all, y_pred_all))), 4)
+                                        record["Tau MAE"] = round(float(mean_absolute_error(y_true_all, y_pred_all)), 4)
+                                        record["Tau R2"] = round(float(r2_score(y_true_all, y_pred_all)), 4)
                             elif self.config.task_type == "forecasting":
                                 mean_rmse = float(np.mean(fold_rmses))
                                 mean_mae = float(np.mean(fold_maes))
