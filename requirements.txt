@@ -26,6 +26,7 @@ matplotlib>=3.7.0
 
 # Testing and development
 pytest>=7.0.0
+pytest-cov>=4.0.0
 python-dotenv>=1.0.0
 jupyterlab>=4.0.0
 

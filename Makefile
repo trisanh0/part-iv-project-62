@@ -1,4 +1,4 @@
-.PHONY: create_environment rag-summary
+.PHONY: create_environment rag-summary test coverage
 
 # Locate Python version
 PYTHON := $(shell which python3.11 || which python3.12)
@@ -18,3 +18,9 @@ rag-summary:
 	else \
 		nxt --summary; \
 	fi
+
+test:
+	./.venv/bin/pytest
+
+coverage:
+	./.venv/bin/pytest --cov=tempo --cov-report=term-missing
