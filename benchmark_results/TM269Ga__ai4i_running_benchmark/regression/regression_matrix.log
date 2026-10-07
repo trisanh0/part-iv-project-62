@@ -1,0 +1,93 @@
+2026-10-07 01:15:10 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-07 01:15:10 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM269Ga__ai4i_running_benchmark/regression/environment.json
+2026-10-07 01:15:10 [INFO] tempo.benchmark: Loading dataset: pred-maintenance-w100-reg
+2026-10-07 01:15:10 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'pred-maintenance-w100-reg'
+2026-10-07 01:15:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | random_forest] -> Score: 0.9863 (Fit: 0.447s, Infer: 0.37ms, Total: 2.31s)
+2026-10-07 01:15:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | ridge] -> Score: 0.8286 (Fit: 0.007s, Infer: 0.06ms, Total: 0.05s)
+2026-10-07 01:15:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | select_k_best_anova | random_forest] -> Score: 0.9909 (Fit: 0.061s, Infer: 0.36ms, Total: 0.46s)
+2026-10-07 01:15:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | select_k_best_anova | ridge] -> Score: 0.9959 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 01:15:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | mutual_info | random_forest] -> Score: 0.9906 (Fit: 0.061s, Infer: 0.36ms, Total: 3.21s)
+2026-10-07 01:15:21 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | mutual_info | ridge] -> Score: 0.9938 (Fit: 0.002s, Infer: 0.01ms, Total: 2.82s)
+2026-10-07 01:15:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | fdr | random_forest] -> Score: 0.9903 (Fit: 0.066s, Infer: 0.34ms, Total: 17.35s)
+2026-10-07 01:15:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | fdr | ridge] -> Score: 0.9929 (Fit: 0.003s, Infer: 0.02ms, Total: 15.70s)
+2026-10-07 01:16:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | boruta | random_forest] -> Score: 0.9895 (Fit: 0.059s, Infer: 0.35ms, Total: 22.68s)
+2026-10-07 01:16:41 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | boruta | ridge] -> Score: 0.9928 (Fit: 0.002s, Infer: 0.01ms, Total: 22.18s)
+2026-10-07 01:16:57 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | subsampled_fdr | random_forest] -> Score: 0.9869 (Fit: 0.059s, Infer: 0.34ms, Total: 16.47s)
+2026-10-07 01:17:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | subsampled_fdr | ridge] -> Score: 0.9909 (Fit: 0.002s, Infer: 0.01ms, Total: 15.55s)
+2026-10-07 01:17:14 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'pred-maintenance-w100-reg'
+2026-10-07 01:17:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | random_forest] -> Score: 0.7614 (Fit: 0.066s, Infer: 0.36ms, Total: 0.40s)
+2026-10-07 01:17:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | ridge] -> Score: 0.597 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 01:17:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | select_k_best_anova | random_forest] -> Score: 0.7572 (Fit: 0.060s, Infer: 0.35ms, Total: 0.44s)
+2026-10-07 01:17:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | select_k_best_anova | ridge] -> Score: 0.5999 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-07 01:17:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | mutual_info | random_forest] -> Score: 0.7729 (Fit: 0.060s, Infer: 0.35ms, Total: 0.53s)
+2026-10-07 01:17:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | mutual_info | ridge] -> Score: 0.6042 (Fit: 0.002s, Infer: 0.01ms, Total: 0.16s)
+2026-10-07 01:17:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | fdr | random_forest] -> Score: 0.7762 (Fit: 0.061s, Infer: 0.35ms, Total: 15.49s)
+2026-10-07 01:17:49 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | fdr | ridge] -> Score: 0.6398 (Fit: 0.002s, Infer: 0.01ms, Total: 15.38s)
+2026-10-07 01:17:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | boruta | random_forest] -> Score: 0.7603 (Fit: 0.056s, Infer: 0.35ms, Total: 5.53s)
+2026-10-07 01:18:01 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | boruta | ridge] -> Score: 0.6321 (Fit: 0.002s, Infer: 0.01ms, Total: 5.18s)
+2026-10-07 01:18:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | subsampled_fdr | random_forest] -> Score: 0.7606 (Fit: 0.062s, Infer: 0.36ms, Total: 15.62s)
+2026-10-07 01:18:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:18:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | subsampled_fdr | ridge] -> Score: 0.5757 (Fit: 0.003s, Infer: 0.01ms, Total: 14.88s)
+2026-10-07 01:18:33 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'pred-maintenance-w100-reg'
+2026-10-07 01:18:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | random_forest] -> Score: 0.7614 (Fit: 0.061s, Infer: 0.36ms, Total: 0.38s)
+2026-10-07 01:18:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | ridge] -> Score: 0.597 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 01:18:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | select_k_best_anova | random_forest] -> Score: 0.7572 (Fit: 0.061s, Infer: 0.35ms, Total: 0.45s)
+2026-10-07 01:18:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | select_k_best_anova | ridge] -> Score: 0.5999 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 01:18:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | mutual_info | random_forest] -> Score: 0.7729 (Fit: 0.065s, Infer: 0.34ms, Total: 0.54s)
+2026-10-07 01:18:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | mutual_info | ridge] -> Score: 0.6042 (Fit: 0.002s, Infer: 0.01ms, Total: 0.17s)
+2026-10-07 01:18:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | fdr | random_forest] -> Score: 0.7762 (Fit: 0.059s, Infer: 0.35ms, Total: 15.22s)
+2026-10-07 01:19:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | fdr | ridge] -> Score: 0.6398 (Fit: 0.002s, Infer: 0.01ms, Total: 15.01s)
+2026-10-07 01:19:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | boruta | random_forest] -> Score: 0.7603 (Fit: 0.055s, Infer: 0.36ms, Total: 5.53s)
+2026-10-07 01:19:19 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | boruta | ridge] -> Score: 0.6321 (Fit: 0.002s, Infer: 0.01ms, Total: 5.24s)
+2026-10-07 01:19:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | subsampled_fdr | random_forest] -> Score: 0.7606 (Fit: 0.062s, Infer: 0.36ms, Total: 15.68s)
+2026-10-07 01:19:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:19:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | subsampled_fdr | ridge] -> Score: 0.5757 (Fit: 0.003s, Infer: 0.01ms, Total: 15.22s)
+2026-10-07 01:19:51 [INFO] tempo.benchmark: Cache hit for extractor 'tsfel' on dataset 'pred-maintenance-w100-reg'
+2026-10-07 01:19:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | None | random_forest] -> Score: 0.7462 (Fit: 0.096s, Infer: 0.36ms, Total: 0.55s)
+2026-10-07 01:19:52 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | None | ridge] -> Score: 0.2528 (Fit: 0.003s, Infer: 0.02ms, Total: 0.02s)
+2026-10-07 01:19:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | select_k_best_anova | random_forest] -> Score: 0.7578 (Fit: 0.059s, Infer: 0.34ms, Total: 0.43s)
+2026-10-07 01:19:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | select_k_best_anova | ridge] -> Score: 0.0974 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-07 01:19:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | mutual_info | random_forest] -> Score: 0.7424 (Fit: 0.062s, Infer: 0.35ms, Total: 0.95s)
+2026-10-07 01:19:56 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | mutual_info | ridge] -> Score: 0.3406 (Fit: 0.002s, Infer: 0.01ms, Total: 0.59s)
+2026-10-07 01:20:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | fdr | random_forest] -> Score: 0.7427 (Fit: 0.062s, Infer: 0.34ms, Total: 15.62s)
+2026-10-07 01:20:28 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | fdr | ridge] -> Score: 0.104 (Fit: 0.002s, Infer: 0.01ms, Total: 15.16s)
+2026-10-07 01:20:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | boruta | random_forest] -> Score: 0.7114 (Fit: 0.054s, Infer: 0.35ms, Total: 7.27s)
+2026-10-07 01:20:43 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | boruta | ridge] -> Score: 0.5952 (Fit: 0.002s, Infer: 0.01ms, Total: 6.88s)
+2026-10-07 01:20:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | subsampled_fdr | random_forest] -> Score: 0.4837 (Fit: 0.064s, Infer: 0.37ms, Total: 15.36s)
+2026-10-07 01:21:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | subsampled_fdr | ridge] -> Score: 0.4268 (Fit: 0.002s, Infer: 0.01ms, Total: 15.10s)
+2026-10-07 01:21:14 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'pred-maintenance-w100-reg'
+2026-10-07 01:21:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | random_forest] -> Score: 0.7156 (Fit: 0.068s, Infer: 0.35ms, Total: 0.41s)
+2026-10-07 01:21:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | ridge] -> Score: 0.5905 (Fit: 0.002s, Infer: 0.02ms, Total: 0.01s)
+2026-10-07 01:21:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best_anova | random_forest] -> Score: 0.7422 (Fit: 0.060s, Infer: 0.35ms, Total: 0.43s)
+2026-10-07 01:21:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best_anova | ridge] -> Score: 0.6114 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-07 01:21:17 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | mutual_info | random_forest] -> Score: 0.7352 (Fit: 0.059s, Infer: 0.36ms, Total: 0.58s)
+2026-10-07 01:21:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | mutual_info | ridge] -> Score: 0.6029 (Fit: 0.002s, Infer: 0.01ms, Total: 0.23s)
+2026-10-07 01:21:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | fdr | random_forest] -> Score: 0.7546 (Fit: 0.058s, Infer: 0.34ms, Total: 15.55s)
+2026-10-07 01:21:49 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | fdr | ridge] -> Score: 0.6318 (Fit: 0.002s, Infer: 0.01ms, Total: 14.90s)
+2026-10-07 01:21:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | boruta | random_forest] -> Score: 0.6557 (Fit: 0.054s, Infer: 0.35ms, Total: 5.77s)
+2026-10-07 01:22:01 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | boruta | ridge] -> Score: 0.6069 (Fit: 0.002s, Infer: 0.01ms, Total: 5.47s)
+2026-10-07 01:22:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled_fdr | random_forest] -> Score: 0.6988 (Fit: 0.066s, Infer: 0.35ms, Total: 15.71s)
+2026-10-07 01:22:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:22:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled_fdr | ridge] -> Score: 0.5892 (Fit: 0.003s, Infer: 0.01ms, Total: 15.75s)
+2026-10-07 01:22:34 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results_20261007_012234.csv and benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results.csv

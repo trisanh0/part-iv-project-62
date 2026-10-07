@@ -1,0 +1,847 @@
+2026-10-08 01:19:51 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: classification
+2026-10-08 01:19:51 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM268Ua__andreas_meeting_bakeoff/environment.json
+2026-10-08 01:19:51 [INFO] tempo.benchmark: Loading dataset: beed
+2026-10-08 01:19:54 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | random_forest] -> Score: 0.9935 (Fit: 0.079s, Infer: 0.56ms, Total: 2.20s)
+2026-10-08 01:19:54 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | logistic_regression] -> Score: 0.9746 (Fit: 0.038s, Infer: 0.12ms, Total: 1.93s)
+2026-10-08 01:19:55 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | random_forest] -> Score: 0.9554 (Fit: 0.087s, Infer: 0.49ms, Total: 2.34s)
+2026-10-08 01:19:56 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | logistic_regression] -> Score: 0.8653 (Fit: 0.005s, Infer: 0.03ms, Total: 1.87s)
+2026-10-08 01:20:17 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | random_forest] -> Score: 0.9808 (Fit: 0.076s, Infer: 0.50ms, Total: 22.36s)
+2026-10-08 01:20:39 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | logistic_regression] -> Score: 0.9746 (Fit: 0.021s, Infer: 0.08ms, Total: 22.48s)
+2026-10-08 01:21:02 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | random_forest] -> Score: 0.9873 (Fit: 0.080s, Infer: 0.49ms, Total: 24.53s)
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | logistic_regression] -> Score: 0.9746 (Fit: 0.021s, Infer: 0.06ms, Total: 25.92s)
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:21:27 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:21:53 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | None | random_forest] -> Score: 0.9873 (Fit: 0.089s, Infer: 0.87ms, Total: 24.92s)
+2026-10-08 01:21:55 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | None | logistic_regression] -> Score: 0.981 (Fit: 0.493s, Infer: 0.51ms, Total: 26.89s)
+2026-10-08 01:21:56 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.9421 (Fit: 0.067s, Infer: 0.45ms, Total: 24.93s)
+2026-10-08 01:21:57 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | select_k_best | logistic_regression] -> Score: 0.8716 (Fit: 0.004s, Infer: 0.02ms, Total: 24.55s)
+2026-10-08 01:22:35 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | fdr | random_forest] -> Score: 0.9873 (Fit: 0.081s, Infer: 0.67ms, Total: 61.37s)
+2026-10-08 01:23:15 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | fdr | logistic_regression] -> Score: 0.9746 (Fit: 0.078s, Infer: 0.27ms, Total: 64.60s)
+2026-10-08 01:23:51 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | subsampled | random_forest] -> Score: 0.9873 (Fit: 0.083s, Infer: 0.62ms, Total: 59.78s)
+2026-10-08 01:24:26 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | subsampled | logistic_regression] -> Score: 0.9746 (Fit: 0.052s, Infer: 0.18ms, Total: 58.43s)
+2026-10-08 01:24:26 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:24:26 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:24:26 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:24:26 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:24:29 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | random_forest] -> Score: 0.9554 (Fit: 0.070s, Infer: 0.52ms, Total: 3.28s)
+2026-10-08 01:24:30 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | logistic_regression] -> Score: 0.9427 (Fit: 0.110s, Infer: 0.03ms, Total: 3.41s)
+2026-10-08 01:24:31 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9304 (Fit: 0.068s, Infer: 0.53ms, Total: 3.34s)
+2026-10-08 01:24:32 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9236 (Fit: 0.004s, Infer: 0.02ms, Total: 2.95s)
+2026-10-08 01:24:47 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | random_forest] -> Score: 0.9619 (Fit: 0.074s, Infer: 0.53ms, Total: 17.52s)
+2026-10-08 01:25:02 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.9427 (Fit: 0.009s, Infer: 0.03ms, Total: 17.19s)
+2026-10-08 01:25:17 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9556 (Fit: 0.069s, Infer: 0.47ms, Total: 17.49s)
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9615 (Fit: 0.009s, Infer: 0.03ms, Total: 17.15s)
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | logistic_regression | seed 42]
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | logistic_regression | seed 42]
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | random_forest] -> Score: 0.9619 (Fit: 0.072s, Infer: 0.48ms, Total: 0.45s)
+2026-10-08 01:25:32 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | logistic_regression] -> Score: 0.9427 (Fit: 0.005s, Infer: 0.02ms, Total: 0.04s)
+2026-10-08 01:25:33 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | random_forest] -> Score: 0.9367 (Fit: 0.067s, Infer: 0.54ms, Total: 0.50s)
+2026-10-08 01:25:34 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9107 (Fit: 0.004s, Infer: 0.02ms, Total: 0.10s)
+2026-10-08 01:25:49 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | random_forest] -> Score: 0.9556 (Fit: 0.069s, Infer: 0.48ms, Total: 14.95s)
+2026-10-08 01:26:05 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 15.53s)
+2026-10-08 01:26:24 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | random_forest] -> Score: 0.9681 (Fit: 0.075s, Infer: 0.46ms, Total: 18.00s)
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | logistic_regression] -> Score: 0.955 (Fit: 0.008s, Infer: 0.03ms, Total: 15.67s)
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | logistic_regression | seed 42]
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | logistic_regression | seed 42]
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'beed' (hash=d4da6771b0e4)
+2026-10-08 01:26:40 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | random_forest] -> Score: 0.9875 (Fit: 0.070s, Infer: 0.52ms, Total: 0.43s)
+2026-10-08 01:26:41 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | logistic_regression] -> Score: 0.9748 (Fit: 0.039s, Infer: 0.11ms, Total: 0.21s)
+2026-10-08 01:26:42 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | random_forest] -> Score: 0.9748 (Fit: 0.067s, Infer: 0.45ms, Total: 0.49s)
+2026-10-08 01:26:42 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best | logistic_regression] -> Score: 0.879 (Fit: 0.005s, Infer: 0.02ms, Total: 0.12s)
+2026-10-08 01:27:10 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | random_forest] -> Score: 0.9875 (Fit: 0.077s, Infer: 0.52ms, Total: 27.21s)
+2026-10-08 01:27:35 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | logistic_regression] -> Score: 0.9746 (Fit: 0.020s, Infer: 0.08ms, Total: 24.69s)
+2026-10-08 01:27:55 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | random_forest] -> Score: 0.9875 (Fit: 0.070s, Infer: 0.48ms, Total: 18.97s)
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled | logistic_regression] -> Score: 0.9875 (Fit: 0.020s, Infer: 0.05ms, Total: 22.70s)
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'beed' (hash=d4da6771b0e4)
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'beed' (hash=d4da6771b0e4)
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | None | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | select_k_best | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | fdr | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Resuming: skipping completed [beed | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:28:18 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_efficient' (ver=v1.0.0) on dataset 'beed' (hash=d4da6771b0e4)
+2026-10-08 01:28:19 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | None | random_forest] -> Score: 0.9875 (Fit: 0.080s, Infer: 0.88ms, Total: 0.53s)
+2026-10-08 01:28:21 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | None | logistic_regression] -> Score: 0.975 (Fit: 0.466s, Infer: 0.50ms, Total: 2.41s)
+2026-10-08 01:28:22 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.9494 (Fit: 0.072s, Infer: 0.45ms, Total: 0.61s)
+2026-10-08 01:28:23 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | select_k_best | logistic_regression] -> Score: 0.8855 (Fit: 0.004s, Infer: 0.02ms, Total: 0.21s)
+2026-10-08 01:28:59 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | fdr | random_forest] -> Score: 0.9875 (Fit: 0.074s, Infer: 0.68ms, Total: 35.58s)
+2026-10-08 01:29:34 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | fdr | logistic_regression] -> Score: 0.9685 (Fit: 0.081s, Infer: 0.27ms, Total: 34.73s)
+2026-10-08 01:30:11 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | subsampled | random_forest] -> Score: 0.9875 (Fit: 0.074s, Infer: 0.61ms, Total: 35.67s)
+2026-10-08 01:30:46 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_efficient | subsampled | logistic_regression] -> Score: 0.9748 (Fit: 0.051s, Infer: 0.18ms, Total: 35.18s)
+2026-10-08 01:30:46 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:30:46 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:30:46 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:30:46 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:30:46 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' (ver=v1.0.0) on dataset 'beed' (hash=d4da6771b0e4)
+2026-10-08 01:30:47 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | random_forest] -> Score: 0.9681 (Fit: 0.064s, Infer: 0.47ms, Total: 0.39s)
+2026-10-08 01:30:47 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | logistic_regression] -> Score: 0.9558 (Fit: 0.111s, Infer: 0.03ms, Total: 0.56s)
+2026-10-08 01:30:48 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9617 (Fit: 0.066s, Infer: 0.45ms, Total: 0.47s)
+2026-10-08 01:30:49 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9044 (Fit: 0.004s, Infer: 0.02ms, Total: 0.10s)
+2026-10-08 01:31:05 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | random_forest] -> Score: 0.9681 (Fit: 0.072s, Infer: 0.47ms, Total: 14.98s)
+2026-10-08 01:31:20 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.9558 (Fit: 0.011s, Infer: 0.03ms, Total: 14.55s)
+2026-10-08 01:31:35 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9681 (Fit: 0.068s, Infer: 0.46ms, Total: 14.96s)
+2026-10-08 01:31:50 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9621 (Fit: 0.009s, Infer: 0.03ms, Total: 14.62s)
+2026-10-08 01:31:50 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | random_forest | seed 123]
+2026-10-08 01:31:50 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | logistic_regression | seed 123]
+2026-10-08 01:31:50 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | random_forest | seed 123]
+2026-10-08 01:31:50 [INFO] tempo.benchmark: Resuming: skipping completed [beed | tsfresh_minimal | subsampled | logistic_regression | seed 123]
+2026-10-08 01:31:50 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' (ver=v1.0.0) on dataset 'beed' (hash=d4da6771b0e4)
+2026-10-08 01:31:51 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | random_forest] -> Score: 0.9746 (Fit: 0.067s, Infer: 0.46ms, Total: 0.41s)
+2026-10-08 01:31:51 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | logistic_regression] -> Score: 0.9429 (Fit: 0.005s, Infer: 0.02ms, Total: 0.03s)
+2026-10-08 01:31:52 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | random_forest] -> Score: 0.9679 (Fit: 0.065s, Infer: 0.46ms, Total: 0.48s)
+2026-10-08 01:31:52 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9046 (Fit: 0.006s, Infer: 0.02ms, Total: 0.11s)
+2026-10-08 01:32:08 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | random_forest] -> Score: 0.9746 (Fit: 0.067s, Infer: 0.47ms, Total: 14.96s)
+2026-10-08 01:32:23 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | logistic_regression] -> Score: 0.9429 (Fit: 0.007s, Infer: 0.03ms, Total: 14.42s)
+2026-10-08 01:32:38 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | random_forest] -> Score: 0.9746 (Fit: 0.065s, Infer: 0.43ms, Total: 14.78s)
+2026-10-08 01:32:53 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled | logistic_regression] -> Score: 0.9429 (Fit: 0.007s, Infer: 0.03ms, Total: 14.39s)
+2026-10-08 01:32:53 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | random_forest | seed 123]
+2026-10-08 01:32:53 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | logistic_regression | seed 123]
+2026-10-08 01:32:53 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | random_forest | seed 123]
+2026-10-08 01:32:53 [INFO] tempo.benchmark: Resuming: skipping completed [beed | polars_statistics | subsampled | logistic_regression | seed 123]
+2026-10-08 01:32:53 [INFO] tempo.benchmark: Loading dataset: pred-maintenance
+2026-10-08 01:32:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | None | random_forest] -> Score: 0.9492 (Fit: 0.067s, Infer: 0.37ms, Total: 0.44s)
+2026-10-08 01:32:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | None | logistic_regression] -> Score: 0.9492 (Fit: 0.020s, Infer: 0.04ms, Total: 0.14s)
+2026-10-08 01:32:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | select_k_best | random_forest] -> Score: 0.9644 (Fit: 0.069s, Infer: 0.35ms, Total: 0.53s)
+2026-10-08 01:32:56 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | select_k_best | logistic_regression] -> Score: 0.9341 (Fit: 0.005s, Infer: 0.02ms, Total: 0.14s)
+2026-10-08 01:32:59 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:02 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:05 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:08 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:12 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:33:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | fdr | random_forest] -> Score: 0.9492 (Fit: 0.074s, Infer: 0.37ms, Total: 15.90s)
+2026-10-08 01:33:15 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:18 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:21 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:24 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:27 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:33:27 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | fdr | logistic_regression] -> Score: 0.9492 (Fit: 0.019s, Infer: 0.04ms, Total: 15.07s)
+2026-10-08 01:33:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:43 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:33:43 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | subsampled | random_forest] -> Score: 0.9492 (Fit: 0.072s, Infer: 0.38ms, Total: 15.26s)
+2026-10-08 01:33:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:33:58 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:33:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | subsampled | logistic_regression] -> Score: 0.9492 (Fit: 0.022s, Infer: 0.05ms, Total: 14.90s)
+2026-10-08 01:33:58 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:58 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:58 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:58 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:33:59 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:34:12 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | None | random_forest] -> Score: 0.9492 (Fit: 0.069s, Infer: 0.49ms, Total: 13.21s)
+2026-10-08 01:34:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | None | logistic_regression] -> Score: 0.9492 (Fit: 0.072s, Infer: 0.17ms, Total: 13.16s)
+2026-10-08 01:34:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.9542 (Fit: 0.062s, Infer: 0.36ms, Total: 13.26s)
+2026-10-08 01:34:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | select_k_best | logistic_regression] -> Score: 0.9645 (Fit: 0.004s, Infer: 0.02ms, Total: 12.91s)
+2026-10-08 01:34:19 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:22 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:26 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:30 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:35 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:34:35 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | fdr | random_forest] -> Score: 0.9492 (Fit: 0.074s, Infer: 0.47ms, Total: 32.62s)
+2026-10-08 01:34:39 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:43 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:47 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:50 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:34:54 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:34:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | fdr | logistic_regression] -> Score: 0.9492 (Fit: 0.074s, Infer: 0.15ms, Total: 31.73s)
+2026-10-08 01:34:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:14 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:35:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | subsampled | random_forest] -> Score: 0.9492 (Fit: 0.071s, Infer: 0.48ms, Total: 31.81s)
+2026-10-08 01:35:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:33 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:35:33 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | subsampled | logistic_regression] -> Score: 0.9492 (Fit: 0.076s, Infer: 0.17ms, Total: 31.47s)
+2026-10-08 01:35:33 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:35:33 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:35:33 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:35:33 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:35:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | None | random_forest] -> Score: 0.9492 (Fit: 0.065s, Infer: 0.35ms, Total: 3.34s)
+2026-10-08 01:35:37 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | None | logistic_regression] -> Score: 0.934 (Fit: 0.019s, Infer: 0.02ms, Total: 3.04s)
+2026-10-08 01:35:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.939 (Fit: 0.064s, Infer: 0.48ms, Total: 3.44s)
+2026-10-08 01:35:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9492 (Fit: 0.007s, Infer: 0.02ms, Total: 3.07s)
+2026-10-08 01:35:42 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:45 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:48 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:51 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:54 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:35:54 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:35:54 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | fdr | random_forest] -> Score: 0.9492 (Fit: 0.066s, Infer: 0.34ms, Total: 17.63s)
+2026-10-08 01:35:57 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:00 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:03 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:06 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:08 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:08 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:36:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.934 (Fit: 0.020s, Infer: 0.03ms, Total: 17.31s)
+2026-10-08 01:36:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:23 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:36:23 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9492 (Fit: 0.064s, Infer: 0.33ms, Total: 17.32s)
+2026-10-08 01:36:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:38 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:36:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.934 (Fit: 0.026s, Infer: 0.02ms, Total: 17.11s)
+2026-10-08 01:36:38 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 01:36:38 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | logistic_regression | seed 42]
+2026-10-08 01:36:38 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 01:36:38 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | logistic_regression | seed 42]
+2026-10-08 01:36:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | None | random_forest] -> Score: 0.9492 (Fit: 0.067s, Infer: 0.34ms, Total: 0.42s)
+2026-10-08 01:36:39 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | None | logistic_regression] -> Score: 0.9441 (Fit: 0.010s, Infer: 0.02ms, Total: 0.07s)
+2026-10-08 01:36:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | select_k_best | random_forest] -> Score: 0.9492 (Fit: 0.069s, Infer: 0.34ms, Total: 0.51s)
+2026-10-08 01:36:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9492 (Fit: 0.009s, Infer: 0.02ms, Total: 0.14s)
+2026-10-08 01:36:43 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:46 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:49 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:52 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:55 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:36:55 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:36:55 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | fdr | random_forest] -> Score: 0.9492 (Fit: 0.067s, Infer: 0.35ms, Total: 14.41s)
+2026-10-08 01:36:58 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:01 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:04 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:07 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:10 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:10 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:37:10 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | fdr | logistic_regression] -> Score: 0.9441 (Fit: 0.011s, Infer: 0.02ms, Total: 14.15s)
+2026-10-08 01:37:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:25 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:37:25 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | subsampled | random_forest] -> Score: 0.9492 (Fit: 0.066s, Infer: 0.36ms, Total: 14.52s)
+2026-10-08 01:37:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:40 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | subsampled | logistic_regression] -> Score: 0.9441 (Fit: 0.011s, Infer: 0.02ms, Total: 14.21s)
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | logistic_regression | seed 42]
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | logistic_regression | seed 42]
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'pred-maintenance' (hash=79e5d4ae040e)
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | None | random_forest] -> Score: 0.9544 (Fit: 0.066s, Infer: 0.37ms, Total: 0.40s)
+2026-10-08 01:37:40 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | None | logistic_regression] -> Score: 0.9492 (Fit: 0.019s, Infer: 0.04ms, Total: 0.10s)
+2026-10-08 01:37:41 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | select_k_best | random_forest] -> Score: 0.9646 (Fit: 0.067s, Infer: 0.34ms, Total: 0.48s)
+2026-10-08 01:37:42 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | select_k_best | logistic_regression] -> Score: 0.9442 (Fit: 0.006s, Infer: 0.02ms, Total: 0.12s)
+2026-10-08 01:37:48 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:51 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:54 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:58 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:37:58 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:37:58 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | fdr | random_forest] -> Score: 0.9544 (Fit: 0.068s, Infer: 0.37ms, Total: 15.34s)
+2026-10-08 01:38:04 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:07 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:10 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:13 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:13 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:38:13 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | fdr | logistic_regression] -> Score: 0.9492 (Fit: 0.018s, Infer: 0.04ms, Total: 15.02s)
+2026-10-08 01:38:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:29 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:38:29 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | subsampled | random_forest] -> Score: 0.9544 (Fit: 0.073s, Infer: 0.44ms, Total: 15.21s)
+2026-10-08 01:38:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:44 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | numba_efficient | subsampled | logistic_regression] -> Score: 0.9492 (Fit: 0.021s, Infer: 0.04ms, Total: 14.95s)
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'pred-maintenance' (hash=79e5d4ae040e)
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:44 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'pred-maintenance' (hash=79e5d4ae040e)
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | random_forest | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | None | logistic_regression | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | random_forest | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | select_k_best | logistic_regression | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | random_forest | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | fdr | logistic_regression | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_efficient' (ver=v1.0.0) on dataset 'pred-maintenance' (hash=79e5d4ae040e)
+2026-10-08 01:38:45 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | None | random_forest] -> Score: 0.9544 (Fit: 0.076s, Infer: 0.54ms, Total: 0.49s)
+2026-10-08 01:38:46 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | None | logistic_regression] -> Score: 0.9442 (Fit: 0.076s, Infer: 0.17ms, Total: 0.41s)
+2026-10-08 01:38:47 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.9645 (Fit: 0.070s, Infer: 0.42ms, Total: 0.55s)
+2026-10-08 01:38:47 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | select_k_best | logistic_regression] -> Score: 0.9492 (Fit: 0.005s, Infer: 0.02ms, Total: 0.15s)
+2026-10-08 01:38:51 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:55 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:38:59 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:03 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:06 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:07 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:39:07 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | fdr | random_forest] -> Score: 0.9544 (Fit: 0.077s, Infer: 0.53ms, Total: 18.63s)
+2026-10-08 01:39:10 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:14 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:18 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:21 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:25 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:25 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:39:25 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | fdr | logistic_regression] -> Score: 0.9442 (Fit: 0.079s, Infer: 0.17ms, Total: 18.41s)
+2026-10-08 01:39:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:44 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:39:44 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | subsampled | random_forest] -> Score: 0.9544 (Fit: 0.079s, Infer: 0.53ms, Total: 18.56s)
+2026-10-08 01:39:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:39:56 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:04 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_efficient | subsampled | logistic_regression] -> Score: 0.9442 (Fit: 0.092s, Infer: 0.17ms, Total: 18.47s)
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | random_forest | seed 123]
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' (ver=v1.0.0) on dataset 'pred-maintenance' (hash=79e5d4ae040e)
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | None | random_forest] -> Score: 0.9492 (Fit: 0.074s, Infer: 0.43ms, Total: 0.46s)
+2026-10-08 01:40:04 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | None | logistic_regression] -> Score: 0.929 (Fit: 0.016s, Infer: 0.02ms, Total: 0.08s)
+2026-10-08 01:40:05 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9492 (Fit: 0.069s, Infer: 0.43ms, Total: 0.50s)
+2026-10-08 01:40:06 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.9442 (Fit: 0.008s, Infer: 0.02ms, Total: 0.12s)
+2026-10-08 01:40:09 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:12 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:15 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:18 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:21 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:21 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:40:21 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | fdr | random_forest] -> Score: 0.9492 (Fit: 0.072s, Infer: 0.40ms, Total: 15.02s)
+2026-10-08 01:40:24 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:27 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:30 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:33 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:36 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:36 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:40:36 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.929 (Fit: 0.022s, Infer: 0.02ms, Total: 14.29s)
+2026-10-08 01:40:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:51 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:40:51 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9492 (Fit: 0.073s, Infer: 0.41ms, Total: 14.69s)
+2026-10-08 01:40:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:40:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:06 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:41:06 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.929 (Fit: 0.027s, Infer: 0.03ms, Total: 14.30s)
+2026-10-08 01:41:06 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | random_forest | seed 123]
+2026-10-08 01:41:06 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | logistic_regression | seed 123]
+2026-10-08 01:41:06 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | random_forest | seed 123]
+2026-10-08 01:41:06 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | tsfresh_minimal | subsampled | logistic_regression | seed 123]
+2026-10-08 01:41:06 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' (ver=v1.0.0) on dataset 'pred-maintenance' (hash=79e5d4ae040e)
+2026-10-08 01:41:07 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | None | random_forest] -> Score: 0.9492 (Fit: 0.069s, Infer: 0.43ms, Total: 0.43s)
+2026-10-08 01:41:07 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | None | logistic_regression] -> Score: 0.9341 (Fit: 0.011s, Infer: 0.02ms, Total: 0.06s)
+2026-10-08 01:41:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | select_k_best | random_forest] -> Score: 0.9492 (Fit: 0.069s, Infer: 0.40ms, Total: 0.50s)
+2026-10-08 01:41:09 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | select_k_best | logistic_regression] -> Score: 0.9392 (Fit: 0.010s, Infer: 0.02ms, Total: 0.13s)
+2026-10-08 01:41:11 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:15 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:18 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:21 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:24 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:24 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:41:24 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | fdr | random_forest] -> Score: 0.9492 (Fit: 0.068s, Infer: 0.41ms, Total: 14.64s)
+2026-10-08 01:41:27 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:29 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:32 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:35 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:38 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:38 [WARNING] tempo.benchmark: Fallback triggered on selector 'fdr'; setting Jaccard stability to 0.0.
+2026-10-08 01:41:38 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | fdr | logistic_regression] -> Score: 0.9341 (Fit: 0.019s, Infer: 0.02ms, Total: 14.21s)
+2026-10-08 01:41:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:50 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:53 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:53 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:41:53 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | subsampled | random_forest] -> Score: 0.9492 (Fit: 0.071s, Infer: 0.41ms, Total: 14.64s)
+2026-10-08 01:41:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:41:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:42:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:42:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:42:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 01:42:08 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 01:42:08 [INFO] tempo.benchmark: Evaluated: [pred-maintenance | polars_statistics | subsampled | logistic_regression] -> Score: 0.9341 (Fit: 0.013s, Infer: 0.02ms, Total: 14.39s)
+2026-10-08 01:42:08 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | random_forest | seed 123]
+2026-10-08 01:42:08 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | logistic_regression | seed 123]
+2026-10-08 01:42:08 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | random_forest | seed 123]
+2026-10-08 01:42:08 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance | polars_statistics | subsampled | logistic_regression | seed 123]
+2026-10-08 01:42:08 [INFO] tempo.benchmark: Loading dataset: har
+2026-10-08 01:42:18 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | random_forest] -> Score: 0.9775 (Fit: 1.676s, Infer: 0.01ms, Total: 9.28s)
+2026-10-08 01:42:34 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | logistic_regression] -> Score: 0.9726 (Fit: 3.126s, Infer: 0.00ms, Total: 16.48s)
+2026-10-08 01:42:36 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | random_forest] -> Score: 0.8385 (Fit: 0.313s, Infer: 0.01ms, Total: 2.67s)
+2026-10-08 01:42:40 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | logistic_regression] -> Score: 0.7853 (Fit: 0.564s, Infer: 0.00ms, Total: 3.84s)
+2026-10-08 01:43:13 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | fdr | random_forest] -> Score: 0.9816 (Fit: 1.399s, Infer: 0.01ms, Total: 33.13s)
+2026-10-08 01:43:51 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | fdr | logistic_regression] -> Score: 0.9755 (Fit: 2.482s, Infer: 0.00ms, Total: 38.03s)
+2026-10-08 01:44:16 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | random_forest] -> Score: 0.9822 (Fit: 1.272s, Infer: 0.01ms, Total: 25.24s)
+2026-10-08 01:44:49 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | logistic_regression] -> Score: 0.9767 (Fit: 3.045s, Infer: 0.00ms, Total: 34.18s)
+2026-10-08 01:44:49 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:49 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:49 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:49 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | random_forest | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | logistic_regression | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | logistic_regression | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | logistic_regression | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:51 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | random_forest | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | logistic_regression | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | logistic_regression | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | logistic_regression | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 01:44:54 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 01:58:26 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | None | random_forest] -> Score: 0.9773 (Fit: 3.959s, Infer: 0.02ms, Total: 809.25s)
+2026-10-08 02:03:43 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | None | logistic_regression] -> Score: 0.9745 (Fit: 63.299s, Infer: 0.03ms, Total: 1106.05s)
+2026-10-08 02:03:47 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.8278 (Fit: 0.312s, Infer: 0.01ms, Total: 793.39s)
+2026-10-08 02:03:53 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | select_k_best | logistic_regression] -> Score: 0.7952 (Fit: 0.518s, Infer: 0.00ms, Total: 794.42s)
+2026-10-08 02:05:20 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | fdr | random_forest] -> Score: 0.979 (Fit: 3.379s, Infer: 0.01ms, Total: 875.33s)
+2026-10-08 02:10:17 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | fdr | logistic_regression] -> Score: 0.9766 (Fit: 45.220s, Infer: 0.03ms, Total: 1085.02s)
+2026-10-08 02:11:07 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | subsampled | random_forest] -> Score: 0.9802 (Fit: 2.895s, Infer: 0.01ms, Total: 838.74s)
+2026-10-08 02:14:34 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | subsampled | logistic_regression] -> Score: 0.9751 (Fit: 34.318s, Infer: 0.02ms, Total: 995.43s)
+2026-10-08 02:14:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:14:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 02:14:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:14:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | logistic_regression | seed 42]
+2026-10-08 02:14:46 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | random_forest] -> Score: 0.9694 (Fit: 0.538s, Infer: 0.01ms, Total: 12.19s)
+2026-10-08 02:14:55 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | logistic_regression] -> Score: 0.928 (Fit: 1.710s, Infer: 0.00ms, Total: 17.95s)
+2026-10-08 02:14:57 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9083 (Fit: 0.313s, Infer: 0.01ms, Total: 11.12s)
+2026-10-08 02:15:00 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.7988 (Fit: 0.532s, Infer: 0.00ms, Total: 12.13s)
+2026-10-08 02:15:19 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | fdr | random_forest] -> Score: 0.9672 (Fit: 0.608s, Infer: 0.01ms, Total: 27.92s)
+2026-10-08 02:15:39 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.9341 (Fit: 0.750s, Infer: 0.00ms, Total: 28.44s)
+2026-10-08 02:15:56 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9708 (Fit: 0.525s, Infer: 0.01ms, Total: 26.53s)
+2026-10-08 02:16:16 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.932 (Fit: 0.866s, Infer: 0.00ms, Total: 28.17s)
+2026-10-08 02:16:16 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 02:16:16 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | logistic_regression | seed 42]
+2026-10-08 02:16:16 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 02:16:16 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | logistic_regression | seed 42]
+2026-10-08 02:16:18 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | random_forest] -> Score: 0.9667 (Fit: 0.413s, Infer: 0.01ms, Total: 2.27s)
+2026-10-08 02:16:20 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | logistic_regression] -> Score: 0.9139 (Fit: 0.421s, Infer: 0.00ms, Total: 2.23s)
+2026-10-08 02:16:23 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | random_forest] -> Score: 0.9406 (Fit: 0.301s, Infer: 0.01ms, Total: 1.79s)
+2026-10-08 02:16:25 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | logistic_regression] -> Score: 0.8799 (Fit: 0.365s, Infer: 0.00ms, Total: 2.02s)
+2026-10-08 02:16:42 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | fdr | random_forest] -> Score: 0.9673 (Fit: 0.418s, Infer: 0.01ms, Total: 17.14s)
+2026-10-08 02:17:00 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | fdr | logistic_regression] -> Score: 0.9138 (Fit: 0.435s, Infer: 0.00ms, Total: 17.14s)
+2026-10-08 02:17:17 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | random_forest] -> Score: 0.969 (Fit: 0.411s, Infer: 0.01ms, Total: 16.58s)
+2026-10-08 02:17:34 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | logistic_regression] -> Score: 0.9128 (Fit: 0.432s, Infer: 0.00ms, Total: 16.61s)
+2026-10-08 02:17:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 02:17:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | logistic_regression | seed 42]
+2026-10-08 02:17:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 02:17:34 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | logistic_regression | seed 42]
+2026-10-08 02:17:34 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'har' (hash=c4152832ea61)
+2026-10-08 02:17:42 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | random_forest] -> Score: 0.9784 (Fit: 1.663s, Infer: 0.01ms, Total: 8.42s)
+2026-10-08 02:17:59 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | None | logistic_regression] -> Score: 0.9708 (Fit: 3.194s, Infer: 0.00ms, Total: 16.02s)
+2026-10-08 02:18:01 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | random_forest] -> Score: 0.8361 (Fit: 0.308s, Infer: 0.01ms, Total: 1.84s)
+2026-10-08 02:18:04 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | select_k_best | logistic_regression] -> Score: 0.7852 (Fit: 0.582s, Infer: 0.00ms, Total: 3.11s)
+2026-10-08 02:18:37 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | fdr | random_forest] -> Score: 0.9798 (Fit: 1.425s, Infer: 0.01ms, Total: 31.38s)
+2026-10-08 02:19:13 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | fdr | logistic_regression] -> Score: 0.975 (Fit: 2.432s, Infer: 0.00ms, Total: 36.34s)
+2026-10-08 02:19:38 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | random_forest] -> Score: 0.9808 (Fit: 1.322s, Infer: 0.01ms, Total: 24.58s)
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Evaluated: [har | numba_efficient | subsampled | logistic_regression] -> Score: 0.978 (Fit: 2.862s, Infer: 0.00ms, Total: 32.19s)
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'har' (hash=c4152832ea61)
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'har' (hash=c4152832ea61)
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | None | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | select_k_best | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | fdr | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Resuming: skipping completed [har | numba_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:20:11 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_efficient' (ver=v1.0.0) on dataset 'har' (hash=c4152832ea61)
+2026-10-08 02:20:31 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | None | random_forest] -> Score: 0.9768 (Fit: 3.755s, Infer: 0.01ms, Total: 18.92s)
+2026-10-08 02:25:52 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | None | logistic_regression] -> Score: 0.9737 (Fit: 64.106s, Infer: 0.03ms, Total: 320.80s)
+2026-10-08 02:25:56 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.828 (Fit: 0.312s, Infer: 0.01ms, Total: 3.98s)
+2026-10-08 02:26:02 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | select_k_best | logistic_regression] -> Score: 0.7945 (Fit: 0.576s, Infer: 0.00ms, Total: 5.41s)
+2026-10-08 02:27:31 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | fdr | random_forest] -> Score: 0.9785 (Fit: 3.361s, Infer: 0.01ms, Total: 87.39s)
+2026-10-08 02:32:33 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | fdr | logistic_regression] -> Score: 0.9757 (Fit: 46.050s, Infer: 0.03ms, Total: 300.89s)
+2026-10-08 02:33:23 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | subsampled | random_forest] -> Score: 0.9796 (Fit: 2.941s, Infer: 0.01ms, Total: 49.59s)
+2026-10-08 02:36:40 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_efficient | subsampled | logistic_regression] -> Score: 0.9756 (Fit: 32.361s, Infer: 0.02ms, Total: 196.46s)
+2026-10-08 02:36:40 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:36:40 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:36:40 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | random_forest | seed 123]
+2026-10-08 02:36:40 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_efficient | subsampled | logistic_regression | seed 123]
+2026-10-08 02:36:40 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' (ver=v1.0.0) on dataset 'har' (hash=c4152832ea61)
+2026-10-08 02:36:43 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | random_forest] -> Score: 0.9678 (Fit: 0.544s, Infer: 0.01ms, Total: 2.82s)
+2026-10-08 02:36:52 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | None | logistic_regression] -> Score: 0.9276 (Fit: 1.694s, Infer: 0.00ms, Total: 8.48s)
+2026-10-08 02:36:54 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.9002 (Fit: 0.303s, Infer: 0.01ms, Total: 1.70s)
+2026-10-08 02:36:57 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | select_k_best | logistic_regression] -> Score: 0.7988 (Fit: 0.512s, Infer: 0.00ms, Total: 2.64s)
+2026-10-08 02:37:17 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | fdr | random_forest] -> Score: 0.9671 (Fit: 0.597s, Infer: 0.01ms, Total: 18.76s)
+2026-10-08 02:37:36 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.933 (Fit: 0.771s, Infer: 0.00ms, Total: 19.21s)
+2026-10-08 02:37:54 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | random_forest] -> Score: 0.9708 (Fit: 0.534s, Infer: 0.01ms, Total: 17.31s)
+2026-10-08 02:38:13 [INFO] tempo.benchmark: Evaluated: [har | tsfresh_minimal | subsampled | logistic_regression] -> Score: 0.9314 (Fit: 0.820s, Infer: 0.00ms, Total: 18.63s)
+2026-10-08 02:38:13 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | random_forest | seed 123]
+2026-10-08 02:38:13 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | logistic_regression | seed 123]
+2026-10-08 02:38:13 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | random_forest | seed 123]
+2026-10-08 02:38:13 [INFO] tempo.benchmark: Resuming: skipping completed [har | tsfresh_minimal | subsampled | logistic_regression | seed 123]
+2026-10-08 02:38:13 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' (ver=v1.0.0) on dataset 'har' (hash=c4152832ea61)
+2026-10-08 02:38:15 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | random_forest] -> Score: 0.9677 (Fit: 0.421s, Infer: 0.01ms, Total: 2.20s)
+2026-10-08 02:38:18 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | None | logistic_regression] -> Score: 0.9141 (Fit: 0.447s, Infer: 0.00ms, Total: 2.24s)
+2026-10-08 02:38:20 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | random_forest] -> Score: 0.9398 (Fit: 0.295s, Infer: 0.01ms, Total: 1.64s)
+2026-10-08 02:38:22 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | select_k_best | logistic_regression] -> Score: 0.8803 (Fit: 0.378s, Infer: 0.00ms, Total: 1.97s)
+2026-10-08 02:38:40 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | fdr | random_forest] -> Score: 0.9676 (Fit: 0.410s, Infer: 0.01ms, Total: 16.95s)
+2026-10-08 02:38:58 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | fdr | logistic_regression] -> Score: 0.9141 (Fit: 0.456s, Infer: 0.00ms, Total: 17.11s)
+2026-10-08 02:39:15 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | random_forest] -> Score: 0.9695 (Fit: 0.432s, Infer: 0.01ms, Total: 16.44s)
+2026-10-08 02:39:31 [INFO] tempo.benchmark: Evaluated: [har | polars_statistics | subsampled | logistic_regression] -> Score: 0.9133 (Fit: 0.434s, Infer: 0.00ms, Total: 16.39s)
+2026-10-08 02:39:31 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | random_forest | seed 123]
+2026-10-08 02:39:31 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | logistic_regression | seed 123]
+2026-10-08 02:39:31 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | random_forest | seed 123]
+2026-10-08 02:39:31 [INFO] tempo.benchmark: Resuming: skipping completed [har | polars_statistics | subsampled | logistic_regression | seed 123]
+2026-10-08 02:39:31 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM268Ua__andreas_meeting_bakeoff/benchmark_results_20261008_023931.csv and benchmark_results/TM268Ua__andreas_meeting_bakeoff/benchmark_results.csv
+2026-10-08 02:39:43 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-08 02:39:44 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/andreas_regression/environment.json
+2026-10-08 02:39:44 [INFO] tempo.benchmark: Loading dataset: appliances-energy
+2026-10-08 02:39:54 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: 0.0108 (Fit: 2.052s, Infer: 0.33ms, Total: 10.41s)
+2026-10-08 02:39:54 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: -0.4136 (Fit: 0.017s, Infer: 0.09ms, Total: 0.17s)
+2026-10-08 02:39:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | random_forest] -> Score: -0.1243 (Fit: 0.061s, Infer: 0.25ms, Total: 0.53s)
+2026-10-08 02:39:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | ridge] -> Score: -0.0401 (Fit: 0.002s, Infer: 0.01ms, Total: 0.16s)
+2026-10-08 02:40:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | random_forest] -> Score: -0.0215 (Fit: 0.253s, Infer: 0.25ms, Total: 16.53s)
+2026-10-08 02:40:29 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | ridge] -> Score: -1.6262 (Fit: 0.005s, Infer: 0.02ms, Total: 15.14s)
+2026-10-08 02:40:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:40:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:40:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:40:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:40:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:40:54 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:40:54 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | random_forest] -> Score: 0.0108 (Fit: 1.981s, Infer: 0.33ms, Total: 24.89s)
+2026-10-08 02:40:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:41:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:41:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:41:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:41:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:41:10 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | ridge] -> Score: -0.4136 (Fit: 0.017s, Infer: 0.09ms, Total: 15.16s)
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | None | random_forest | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | None | ridge | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | select_k_best | ridge | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | fdr | ridge | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:41:10 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | None | random_forest | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | None | ridge | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | select_k_best | ridge | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | fdr | ridge | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:41:11 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:42:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | None | random_forest] -> Score: 0.0166 (Fit: 9.353s, Infer: 0.65ms, Total: 101.61s)
+2026-10-08 02:42:54 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | None | ridge] -> Score: -2.1389 (Fit: 0.078s, Infer: 0.46ms, Total: 55.18s)
+2026-10-08 02:42:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | select_k_best | random_forest] -> Score: -0.1499 (Fit: 0.061s, Infer: 0.25ms, Total: 55.26s)
+2026-10-08 02:42:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | select_k_best | ridge] -> Score: -633.9501 (Fit: 0.002s, Infer: 0.01ms, Total: 54.89s)
+2026-10-08 02:43:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | fdr | random_forest] -> Score: -0.0584 (Fit: 1.479s, Infer: 0.31ms, Total: 83.01s)
+2026-10-08 02:43:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | fdr | ridge] -> Score: -1.7593 (Fit: 0.014s, Infer: 0.08ms, Total: 75.05s)
+2026-10-08 02:43:50 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:44:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:44:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:44:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:44:44 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:44:53 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:44:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | subsampled | random_forest] -> Score: 0.0166 (Fit: 8.948s, Infer: 0.65ms, Total: 121.17s)
+2026-10-08 02:44:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:45:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:45:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:45:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:45:15 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:45:15 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:45:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | subsampled | ridge] -> Score: -2.1389 (Fit: 0.080s, Infer: 0.47ms, Total: 76.66s)
+2026-10-08 02:45:15 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:45:15 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | tsfresh_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:45:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: -0.2291 (Fit: 0.275s, Infer: 0.26ms, Total: 4.59s)
+2026-10-08 02:45:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: -0.8099 (Fit: 0.003s, Infer: 0.02ms, Total: 3.16s)
+2026-10-08 02:45:21 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | random_forest] -> Score: -0.3135 (Fit: 0.067s, Infer: 0.26ms, Total: 3.61s)
+2026-10-08 02:45:22 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | ridge] -> Score: -0.0936 (Fit: 0.002s, Infer: 0.01ms, Total: 3.22s)
+2026-10-08 02:45:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | fdr | random_forest] -> Score: -0.2744 (Fit: 0.089s, Infer: 0.26ms, Total: 17.72s)
+2026-10-08 02:45:51 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | fdr | ridge] -> Score: -0.1698 (Fit: 0.003s, Infer: 0.01ms, Total: 17.26s)
+2026-10-08 02:45:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:45:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:07 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:46:07 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | random_forest] -> Score: -0.2291 (Fit: 0.277s, Infer: 0.26ms, Total: 18.74s)
+2026-10-08 02:46:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:46:22 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:46:22 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | ridge] -> Score: -0.8099 (Fit: 0.004s, Infer: 0.02ms, Total: 17.28s)
+2026-10-08 02:46:22 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 02:46:22 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | tsfresh_minimal | subsampled | ridge | seed 42]
+2026-10-08 02:46:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: -0.2628 (Fit: 0.165s, Infer: 0.25ms, Total: 0.95s)
+2026-10-08 02:46:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-08 02:46:24 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | random_forest] -> Score: -0.3368 (Fit: 0.062s, Infer: 0.24ms, Total: 0.49s)
+2026-10-08 02:46:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | ridge] -> Score: -0.1218 (Fit: 0.002s, Infer: 0.01ms, Total: 0.13s)
+2026-10-08 02:46:40 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | random_forest] -> Score: -0.2791 (Fit: 0.069s, Infer: 0.25ms, Total: 14.48s)
+2026-10-08 02:46:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | ridge] -> Score: -0.1149 (Fit: 0.003s, Infer: 0.01ms, Total: 14.13s)
+2026-10-08 02:46:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:10 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:47:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | random_forest] -> Score: -0.2628 (Fit: 0.172s, Infer: 0.26ms, Total: 15.04s)
+2026-10-08 02:47:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:47:25 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:47:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | ridge] -> Score: -0.557 (Fit: 0.004s, Infer: 0.01ms, Total: 14.11s)
+2026-10-08 02:47:25 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 02:47:25 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | polars_statistics | subsampled | ridge | seed 42]
+2026-10-08 02:47:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | random_forest] -> Score: -0.3259 (Fit: 0.654s, Infer: 0.28ms, Total: 16.08s)
+2026-10-08 02:47:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | ridge] -> Score: -2.9773 (Fit: 0.006s, Infer: 0.04ms, Total: 12.77s)
+2026-10-08 02:47:42 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best | random_forest] -> Score: -0.2755 (Fit: 0.062s, Infer: 0.25ms, Total: 13.18s)
+2026-10-08 02:47:43 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best | ridge] -> Score: -0.0841 (Fit: 0.002s, Infer: 0.01ms, Total: 12.82s)
+2026-10-08 02:47:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | random_forest] -> Score: -0.1581 (Fit: 0.120s, Infer: 0.25ms, Total: 27.65s)
+2026-10-08 02:48:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | ridge] -> Score: -0.3323 (Fit: 0.003s, Infer: 0.01ms, Total: 27.04s)
+2026-10-08 02:48:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:31 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:48:31 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled | random_forest] -> Score: -0.3259 (Fit: 0.665s, Infer: 0.28ms, Total: 30.35s)
+2026-10-08 02:48:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-08 02:48:46 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled'; setting Jaccard stability to 0.0.
+2026-10-08 02:48:46 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled | ridge] -> Score: -2.9773 (Fit: 0.008s, Infer: 0.04ms, Total: 27.05s)
+2026-10-08 02:48:46 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | tsfel | subsampled | random_forest | seed 42]
+2026-10-08 02:48:46 [INFO] tempo.benchmark: Resuming: skipping completed [appliances-energy | tsfel | subsampled | ridge | seed 42]
+2026-10-08 02:48:46 [INFO] tempo.benchmark: Loading dataset: beijing-pm25
+2026-10-08 02:49:42 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | random_forest] -> Score: 0.4852 (Fit: 11.018s, Infer: 0.02ms, Total: 55.33s)
+2026-10-08 02:49:42 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | ridge] -> Score: 0.2721 (Fit: 0.037s, Infer: 0.01ms, Total: 0.36s)
+2026-10-08 02:49:44 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | random_forest] -> Score: 0.2422 (Fit: 0.244s, Infer: 0.02ms, Total: 1.56s)
+2026-10-08 02:49:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | ridge] -> Score: 0.2776 (Fit: 0.003s, Infer: 0.00ms, Total: 0.27s)
+2026-10-08 02:50:36 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | fdr | random_forest] -> Score: 0.484 (Fit: 7.187s, Infer: 0.02ms, Total: 51.36s)
+2026-10-08 02:50:52 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | fdr | ridge] -> Score: 0.4007 (Fit: 0.024s, Infer: 0.01ms, Total: 15.56s)
+2026-10-08 02:51:25 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | random_forest] -> Score: 0.4472 (Fit: 3.547s, Infer: 0.03ms, Total: 32.54s)
+2026-10-08 02:51:40 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | ridge] -> Score: 0.3869 (Fit: 0.011s, Infer: 0.00ms, Total: 14.70s)
+2026-10-08 02:51:40 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:51:40 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | None | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | None | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | select_k_best | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | fdr | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | None | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | None | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | select_k_best | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | select_k_best | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | fdr | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | fdr | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | random_forest | seed 42]
+2026-10-08 02:51:41 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | numba_efficient | subsampled | ridge | seed 42]
+2026-10-08 02:59:42 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | None | random_forest] -> Score: 0.5056 (Fit: 48.184s, Infer: 0.04ms, Total: 479.68s)
+2026-10-08 02:59:44 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | None | ridge] -> Score: -3.049078811118088e+21 (Fit: 0.318s, Infer: 0.03ms, Total: 240.33s)
+2026-10-08 02:59:46 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | select_k_best | random_forest] -> Score: 0.3144 (Fit: 0.330s, Infer: 0.02ms, Total: 240.62s)
+2026-10-08 02:59:47 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | select_k_best | ridge] -> Score: 0.2995 (Fit: 0.002s, Infer: 0.00ms, Total: 238.91s)
+2026-10-08 03:02:39 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | fdr | random_forest] -> Score: 0.4983 (Fit: 29.879s, Infer: 0.04ms, Total: 409.52s)
+2026-10-08 03:03:01 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | fdr | ridge] -> Score: -178.2453 (Fit: 0.172s, Infer: 0.02ms, Total: 259.99s)
+2026-10-08 03:04:26 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | subsampled | random_forest] -> Score: 0.4826 (Fit: 13.487s, Infer: 0.03ms, Total: 322.83s)
+2026-10-08 03:04:43 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_efficient | subsampled | ridge] -> Score: -14.6281 (Fit: 0.050s, Infer: 0.01ms, Total: 255.66s)
+2026-10-08 03:04:43 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | tsfresh_efficient | subsampled | random_forest | seed 42]
+2026-10-08 03:04:43 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | tsfresh_efficient | subsampled | ridge | seed 42]
+2026-10-08 03:04:53 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | random_forest] -> Score: 0.4556 (Fit: 0.987s, Infer: 0.03ms, Total: 10.00s)
+2026-10-08 03:04:53 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | ridge] -> Score: 0.3862 (Fit: 0.005s, Infer: 0.00ms, Total: 5.00s)
+2026-10-08 03:04:56 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.2536 (Fit: 0.262s, Infer: 0.02ms, Total: 6.43s)
+2026-10-08 03:04:56 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | ridge] -> Score: 0.2383 (Fit: 0.003s, Infer: 0.00ms, Total: 5.06s)
+2026-10-08 03:05:15 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | fdr | random_forest] -> Score: 0.4542 (Fit: 0.808s, Infer: 0.03ms, Total: 23.54s)
+2026-10-08 03:05:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | fdr | ridge] -> Score: 0.3595 (Fit: 0.005s, Infer: 0.00ms, Total: 19.35s)
+2026-10-08 03:05:48 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | random_forest] -> Score: 0.398 (Fit: 0.491s, Infer: 0.02ms, Total: 21.77s)
+2026-10-08 03:06:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | ridge] -> Score: 0.2994 (Fit: 0.004s, Infer: 0.00ms, Total: 19.31s)
+2026-10-08 03:06:03 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | tsfresh_minimal | subsampled | random_forest | seed 42]
+2026-10-08 03:06:03 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | tsfresh_minimal | subsampled | ridge | seed 42]
+2026-10-08 03:06:06 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | random_forest] -> Score: 0.443 (Fit: 0.577s, Infer: 0.03ms, Total: 3.00s)
+2026-10-08 03:06:06 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | ridge] -> Score: 0.3779 (Fit: 0.003s, Infer: 0.00ms, Total: 0.04s)
+2026-10-08 03:06:08 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | random_forest] -> Score: 0.3577 (Fit: 0.283s, Infer: 0.02ms, Total: 1.58s)
+2026-10-08 03:06:09 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | ridge] -> Score: 0.2509 (Fit: 0.003s, Infer: 0.00ms, Total: 0.11s)
+2026-10-08 03:06:26 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | fdr | random_forest] -> Score: 0.4408 (Fit: 0.465s, Infer: 0.02ms, Total: 16.69s)
+2026-10-08 03:06:41 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | fdr | ridge] -> Score: 0.3407 (Fit: 0.004s, Infer: 0.00ms, Total: 14.32s)
+2026-10-08 03:06:57 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | random_forest] -> Score: 0.3715 (Fit: 0.308s, Infer: 0.03ms, Total: 15.65s)
+2026-10-08 03:07:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | ridge] -> Score: 0.2663 (Fit: 0.003s, Infer: 0.00ms, Total: 14.15s)
+2026-10-08 03:07:12 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | polars_statistics | subsampled | random_forest | seed 42]
+2026-10-08 03:07:12 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | polars_statistics | subsampled | ridge | seed 42]
+2026-10-08 03:08:29 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | None | random_forest] -> Score: 0.4555 (Fit: 2.136s, Infer: 0.02ms, Total: 77.45s)
+2026-10-08 03:08:29 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | None | ridge] -> Score: 0.3915 (Fit: 0.013s, Infer: 0.00ms, Total: 66.76s)
+2026-10-08 03:08:31 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | select_k_best | random_forest] -> Score: 0.2258 (Fit: 0.224s, Infer: 0.02ms, Total: 67.96s)
+2026-10-08 03:08:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | select_k_best | ridge] -> Score: 0.2481 (Fit: 0.003s, Infer: 0.00ms, Total: 66.78s)
+2026-10-08 03:08:55 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | fdr | random_forest] -> Score: 0.4458 (Fit: 1.597s, Infer: 0.02ms, Total: 89.70s)
+2026-10-08 03:09:11 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | fdr | ridge] -> Score: 0.3745 (Fit: 0.008s, Infer: 0.00ms, Total: 81.28s)
+2026-10-08 03:09:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | subsampled | random_forest] -> Score: 0.3976 (Fit: 0.982s, Infer: 0.02ms, Total: 85.87s)
+2026-10-08 03:09:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfel | subsampled | ridge] -> Score: 0.3214 (Fit: 0.005s, Infer: 0.00ms, Total: 80.99s)
+2026-10-08 03:09:45 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | tsfel | subsampled | random_forest | seed 42]
+2026-10-08 03:09:45 [INFO] tempo.benchmark: Resuming: skipping completed [beijing-pm25 | tsfel | subsampled | ridge | seed 42]
+2026-10-08 03:09:45 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/andreas_regression/benchmark_results_20261008_030945.csv and benchmark_results/andreas_regression/benchmark_results.csv

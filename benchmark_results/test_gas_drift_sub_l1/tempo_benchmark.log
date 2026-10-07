@@ -1,0 +1,3 @@
+2026-10-07 00:52:19 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: classification
+2026-10-07 00:52:19 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/test_gas_drift_sub_l1/environment.json
+2026-10-07 00:52:19 [INFO] tempo.benchmark: Loading dataset: gas-sensor-drift-sub

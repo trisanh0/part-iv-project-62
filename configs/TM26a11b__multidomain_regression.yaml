@@ -1,0 +1,38 @@
+cache_backend: parquet
+cache_dir: data/03_processed/feature_store
+dataset_paths:
+- data/03_processed/pred-maintenance-w100-reg
+enable_logging: true
+enable_plots: true
+enable_telemetry: true
+enable_ttests: true
+extractors:
+- fft_coefficients: 25
+  name: numba_efficient
+- name: polars_statistics
+- name: numpy_statistical
+- name: tsfel
+- name: tsfresh_minimal
+log_file: regression_matrix.log
+models:
+- random_forest
+- ridge
+n_splits: 5
+output_dir: benchmark_results/TM26a11__multidomain_unified_matrix/regression
+resume: true
+seeds:
+- 42
+- 101
+selectors:
+- null
+- k: 25
+  name: select_k_best_anova
+- k: 25
+  name: mutual_info
+- fdr
+- name: boruta
+- base_selector: tsfresh
+  name: subsampled_fdr
+  sample_ratio: 0.1
+task_type: regression
+telemetry_interval: 0.05

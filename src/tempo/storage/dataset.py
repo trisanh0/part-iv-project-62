@@ -2,12 +2,12 @@
 
 import os
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import List, Literal, Optional, Tuple, Union
 import polars as pl
 import numpy as np
 
 from tempo.export import save_dataframe
-from tempo.storage.segmentation import segment_time_series
+from tempo.storage.segmentation import segment_time_series, segment_forecasting_series
 
 
 def generate_simulated_dataset(
@@ -70,6 +70,248 @@ def generate_simulated_dataset(
     else:
         df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
         df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+
+def generate_simulated_forecasting_dataset(
+    output_dir: Optional[str] = None,
+    n_series: int = 100,
+    series_len: int = 200,
+    history_len: int = 100,
+    forecast_horizon: int = 20,
+    test_size: float = 0.2,
+    seed: int = 42,
+    rag_prefix: Optional[str] = None,
+) -> Tuple[pl.DataFrame, pl.DataFrame]:
+    """Generate synthetic time-series forecasting dataset with causal chronological integrity.
+
+    Synthesizes independent non-stationary signals combining multi-harmonic seasonalities,
+    linear trends, autoregressive AR(1) dynamics, low-frequency amplitude modulations,
+    and localized shock disturbances. Sliding windows are generated strictly respecting
+    causal temporal boundaries to eliminate future lookahead bias.
+
+    Args:
+        output_dir: Optional directory path where Parquet files will be written.
+        n_series: Number of independent time-series signals to synthesize.
+        series_len: Total temporal length of each continuous raw series.
+        history_len: Length of the historical observation window W.
+        forecast_horizon: Length of the future forecast horizon H.
+        test_size: Fraction of each series held out for future evaluation (0 < test_size < 1).
+        seed: Random state seed for reproducibility.
+        rag_prefix: Optional Contexere RAG prefix identifier (e.g. 'TM').
+
+    Returns:
+        Tuple of (df_ts, df_targets) conforming to TEMPO standardized format.
+    """
+    if not (0.0 < test_size < 1.0):
+        raise ValueError(f"test_size must be between 0 and 1, got {test_size}")
+    if series_len <= history_len + forecast_horizon:
+        raise ValueError(
+            f"series_len ({series_len}) must exceed history_len + forecast_horizon ({history_len + forecast_horizon})"
+        )
+
+    split = int(series_len * (1.0 - test_size))
+    min_train_len = history_len + forecast_horizon
+    if split < min_train_len:
+        raise ValueError(
+            f"Training period ({split}) must be at least history_len + forecast_horizon ({min_train_len})"
+        )
+    if series_len - split < forecast_horizon:
+        raise ValueError(
+            f"Testing period ({series_len - split}) must contain at least forecast_horizon ({forecast_horizon}) points"
+        )
+
+    rng = np.random.default_rng(seed)
+    raw_df_parts = []
+
+    for sid in range(n_series):
+        t = np.arange(series_len, dtype=np.float32)
+
+        period = rng.uniform(18.0, 45.0)
+        amplitude = rng.uniform(0.5, 2.0)
+        phase = rng.uniform(0.0, 2.0 * np.pi)
+        trend_slope = rng.uniform(-0.015, 0.015)
+        ar_strength = rng.uniform(0.45, 0.90)
+        noise_std = rng.uniform(0.05, 0.25)
+
+        seasonal = amplitude * np.sin(2.0 * np.pi * t / period + phase)
+        trend = trend_slope * t
+
+        ar = np.zeros(series_len, dtype=np.float32)
+        innovations = rng.normal(0.0, noise_std, size=series_len)
+        for j in range(1, series_len):
+            ar[j] = ar_strength * ar[j - 1] + innovations[j]
+
+        modulation = 1.0 + 0.15 * np.sin(2.0 * np.pi * t / 80.0)
+
+        shock = np.zeros(series_len, dtype=np.float32)
+        possible_starts = np.arange(10, series_len - 3)
+        n_shocks = rng.integers(0, min(3, len(possible_starts)) + 1)
+        if len(possible_starts) > 0 and n_shocks > 0:
+            for start_shock in rng.choice(possible_starts, size=n_shocks, replace=False):
+                magnitude = rng.normal(0.0, 1.0)
+                shock[start_shock:start_shock + 3] += magnitude * np.array([1.0, 0.6, 0.3], dtype=np.float32)
+
+        series = (modulation * seasonal + trend + ar + shock).astype(np.float32)
+
+        raw_df_parts.append(
+            pl.DataFrame({
+                "series_id": np.full(series_len, sid, dtype=np.int32),
+                "time": np.arange(series_len, dtype=np.int32),
+                "value": series,
+            })
+        )
+
+    df_raw = pl.concat(raw_df_parts)
+
+    df_ts, df_targets = segment_forecasting_series(
+        df=df_raw,
+        history_len=history_len,
+        forecast_horizon=forecast_horizon,
+        stride=1,
+        time_col="time",
+        feature_cols=["value"],
+        target_col="value",
+        group_col="series_id",
+        test_size=test_size,
+    )
+
+    if output_dir is not None:
+        os.makedirs(output_dir, exist_ok=True)
+        if rag_prefix:
+            save_dataframe(df_ts, prefix=rag_prefix, keyword="simulated_forecasting_time_series", output_dir=output_dir)
+            save_dataframe(df_targets, prefix=rag_prefix, keyword="simulated_forecasting_targets", output_dir=output_dir)
+        else:
+            df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+            df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+
+    return df_ts, df_targets
+
+
+def generate_drift_bifurcation_dataset(
+    output_dir: Optional[str] = None,
+    n_tau_values: int = 5,
+    n_series_per_tau: int = 40,
+    series_len: int = 1000,
+    tau_min: float = 3.5,
+    tau_max: float = 4.5,
+    kappa_3: float = 0.3,
+    Q: float = 1950.0,
+    R: float = 3e-4,
+    delta_t: float = 0.05,
+    seed: int = 42,
+    target_type: Literal["regression", "classification"] = "regression",
+    rag_prefix: Optional[str] = None,
+) -> Tuple[pl.DataFrame, pl.DataFrame]:
+    """Generate synthetic drift-bifurcation dataset for extrinsic parameter estimation.
+
+    Simulates the stochastic velocity of a dissipative soliton transitioning from
+    Brownian motion to active Brownian motion beyond the bifurcation point tau_c = 1 / kappa_3.
+    Wraps tsfresh.examples.driftbif_simulation.velocity.
+
+    Args:
+        output_dir: Optional directory path where Parquet files are written.
+        n_tau_values: Number of distinct tau bifurcation parameter values to sample.
+        n_series_per_tau: Number of independent time-series trajectories per tau value.
+        series_len: Temporal length (number of discrete time steps) of each sequence.
+        tau_min: Lower bound for tau parameter range.
+        tau_max: Upper bound for tau parameter range.
+        kappa_3: Inverse bifurcation point parameter (tau_c = 1.0 / kappa_3).
+        Q: Soliton shape parameter.
+        R: Stochastic noise amplitude.
+        delta_t: Temporal discretization increment.
+        seed: Random state seed for reproducible simulation.
+        rag_prefix: Optional Contexere RAG prefix identifier.
+
+    Returns:
+        Tuple of (df_ts, df_targets) as Polars DataFrames formatted to TEMPO SDF schema.
+    """
+    if tau_min > tau_max:
+        raise ValueError(f"tau_min ({tau_min}) cannot exceed tau_max ({tau_max}).")
+    if series_len <= 0:
+        raise ValueError(f"series_len ({series_len}) must be positive.")
+    if n_series_per_tau <= 0:
+        raise ValueError(f"n_series_per_tau ({n_series_per_tau}) must be positive.")
+
+    from tsfresh.examples.driftbif_simulation import velocity
+
+    rng = np.random.default_rng(seed)
+    if n_tau_values <= 1:
+        tau_values = np.array([(tau_min + tau_max) / 2.0], dtype=np.float32)
+    else:
+        tau_values = np.linspace(tau_min, tau_max, n_tau_values, dtype=np.float32)
+
+    entities = []
+    times = []
+    vel_all = []
+    vel_x_all = []
+    vel_y_all = []
+
+    targets_seq_id = []
+    targets_tau = []
+    targets_label = []
+    targets_v_det = []
+
+    seq_id = 0
+    t_steps = np.arange(series_len, dtype=np.int32)
+
+    for tau in tau_values:
+        for _ in range(n_series_per_tau):
+            sim_seed = int(rng.integers(0, 2**31 - 1))
+            ds = velocity(
+                tau=float(tau),
+                kappa_3=kappa_3,
+                Q=Q,
+                R=R,
+                delta_t=delta_t,
+                seed=sim_seed,
+            )
+            v = ds.simulate(series_len)
+            vx = v[:, 0].astype(np.float32)
+            vy = v[:, 1].astype(np.float32)
+            speed = np.sqrt(vx * vx + vy * vy).astype(np.float32)
+
+            entities.append(np.full(series_len, seq_id, dtype=np.int32))
+            times.append(t_steps)
+            vel_x_all.append(vx)
+            vel_y_all.append(vy)
+            vel_all.append(speed)
+
+            targets_seq_id.append(seq_id)
+            targets_tau.append(float(tau))
+            targets_label.append(int(ds.label))
+            targets_v_det.append(float(ds.deterministic))
+
+            seq_id += 1
+
+    df_ts = pl.DataFrame({
+        "sequence_id": np.concatenate(entities) if entities else np.array([], dtype=np.int32),
+        "step": np.concatenate(times) if times else np.array([], dtype=np.int32),
+        "velocity": np.concatenate(vel_all) if vel_all else np.array([], dtype=np.float32),
+        "velocity_x": np.concatenate(vel_x_all) if vel_x_all else np.array([], dtype=np.float32),
+        "velocity_y": np.concatenate(vel_y_all) if vel_y_all else np.array([], dtype=np.float32),
+    })
+
+    target_arr = np.array(targets_label, dtype=np.int32) if target_type == "classification" else np.array(targets_tau, dtype=np.float32)
+    df_targets = pl.DataFrame({
+        "sequence_id": np.array(targets_seq_id, dtype=np.int32),
+        "target": target_arr,
+        "tau_value": np.array(targets_tau, dtype=np.float32),
+        "label": np.array(targets_label, dtype=np.int32),
+        "deterministic_velocity": np.array(targets_v_det, dtype=np.float32),
+    })
+
+    if output_dir is not None:
+        os.makedirs(output_dir, exist_ok=True)
+        if rag_prefix:
+            save_dataframe(df_ts, prefix=rag_prefix, keyword="drift_bifurcation_time_series", output_dir=output_dir)
+            save_dataframe(df_targets, prefix=rag_prefix, keyword="drift_bifurcation_targets", output_dir=output_dir)
+        else:
+            df_ts.write_parquet(os.path.join(output_dir, "time_series.parquet"))
+            df_targets.write_parquet(os.path.join(output_dir, "targets.parquet"))
+            if not validate_export(output_dir):
+                raise ValueError(f"Generated drift-bifurcation dataset at '{output_dir}' failed SDF schema validation.")
+
+    return df_ts, df_targets
 
 
 def convert_predictive_maintenance(
@@ -525,6 +767,10 @@ def load_dataset(
         os.makedirs(ds_processed_dir, exist_ok=True)
         if base_name in ("simulated", "synthetic"):
             generate_simulated_dataset(output_dir=ds_processed_dir)
+        elif base_name in ("simulated_forecasting", "synthetic_forecasting", "forecasting"):
+            generate_simulated_forecasting_dataset(output_dir=ds_processed_dir)
+        elif base_name in ("driftbif", "drift_bifurcation", "simulated_drift_bifurcation", "driftbif_simulation"):
+            generate_drift_bifurcation_dataset(output_dir=ds_processed_dir)
         elif base_name == "beed":
             raw_file = os.path.join(raw_dir, "beed", "BEED_Data.csv")
             if not os.path.exists(raw_file):
@@ -600,7 +846,9 @@ def validate_export(export_dir: str) -> bool:
         return False
 
     has_target_id = "sequence_id" in df_target.columns or "id" in df_target.columns
-    has_target_col = "target" in df_target.columns
+    has_target_col = "target" in df_target.columns or any(
+        c.startswith("target_") and c[7:].isdigit() for c in df_target.columns
+    )
     if not (has_target_id and has_target_col):
         return False
 

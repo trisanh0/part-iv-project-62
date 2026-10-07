@@ -1,0 +1,45 @@
+{
+  "timestamp_utc": "2026-10-07T12:22:42.194173+00:00",
+  "os": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "version": "Darwin Kernel Version 27.0.0: Tue Aug 11 21:22:49 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6000",
+    "machine": "arm64",
+    "processor": "arm"
+  },
+  "python": {
+    "version": "3.11.16",
+    "implementation": "CPython",
+    "compiler": "Clang 21.0.0 (clang-2100.3.34.2)",
+    "executable": "/Users/trisanh/Documents/2026/ENGSCI 700/part-iv-project-62/.venv/bin/python"
+  },
+  "hardware": {
+    "cpu_count_logical": 8,
+    "cpu_count_physical": 8,
+    "total_ram_gb": 16.0,
+    "available_ram_gb": 3.72,
+    "cpu_freq_current_mhz": 3228,
+    "gpu_available": false,
+    "gpu_devices": []
+  },
+  "git": {
+    "commit": "3797aaed500e494b3ec32c9a3c41ee6612ad8989",
+    "branch": "feat/forecasting",
+    "is_dirty": true
+  },
+  "packages": {
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "pandas": "3.0.3",
+    "polars": "1.40.1",
+    "numba": "0.65.1",
+    "scikit-learn": "1.8.0",
+    "tsfresh": "0.21.1",
+    "tsfel": "0.2.0",
+    "boruta": "0.4.3",
+    "psutil": "7.2.2",
+    "pyarrow": "25.0.1",
+    "h5py": "3.16.0",
+    "matplotlib": "3.11.1"
+  }
+}

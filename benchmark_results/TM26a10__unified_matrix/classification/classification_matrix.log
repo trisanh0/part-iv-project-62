@@ -1,0 +1,514 @@
+2026-10-07 17:45:22 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: classification
+2026-10-07 17:45:22 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a10__unified_matrix/classification/environment.json
+2026-10-07 17:45:22 [INFO] tempo.benchmark: Loading dataset: beed
+2026-10-07 17:45:22 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beed'
+2026-10-07 17:45:23 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | random_forest] -> Score: 0.9873 (Fit: 0.081s, Infer: 0.60ms, Total: 0.50s)
+2026-10-07 17:45:23 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | logistic_regression] -> Score: 0.981 (Fit: 0.062s, Infer: 0.17ms, Total: 0.34s)
+2026-10-07 17:45:24 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best_anova | random_forest] -> Score: 0.9679 (Fit: 0.072s, Infer: 0.43ms, Total: 0.54s)
+2026-10-07 17:45:25 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best_anova | logistic_regression] -> Score: 0.8653 (Fit: 0.005s, Infer: 0.02ms, Total: 0.13s)
+2026-10-07 17:45:38 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | mutual_info | random_forest] -> Score: 0.9873 (Fit: 0.064s, Infer: 0.45ms, Total: 12.98s)
+2026-10-07 17:45:51 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | mutual_info | logistic_regression] -> Score: 0.9808 (Fit: 0.009s, Infer: 0.02ms, Total: 12.77s)
+2026-10-07 17:46:14 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | random_forest] -> Score: 0.9873 (Fit: 0.069s, Infer: 0.53ms, Total: 22.02s)
+2026-10-07 17:46:35 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | logistic_regression] -> Score: 0.9746 (Fit: 0.024s, Infer: 0.09ms, Total: 21.49s)
+2026-10-07 17:46:42 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | boruta | random_forest] -> Score: 0.9873 (Fit: 0.065s, Infer: 0.46ms, Total: 6.52s)
+2026-10-07 17:46:49 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | boruta | logistic_regression] -> Score: 0.9746 (Fit: 0.006s, Infer: 0.02ms, Total: 6.28s)
+2026-10-07 17:47:11 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled_fdr | random_forest] -> Score: 0.9873 (Fit: 0.069s, Infer: 0.49ms, Total: 21.58s)
+2026-10-07 17:47:32 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled_fdr | logistic_regression] -> Score: 0.9808 (Fit: 0.025s, Infer: 0.07ms, Total: 20.79s)
+2026-10-07 17:47:32 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beed'
+2026-10-07 17:47:33 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | random_forest] -> Score: 0.9619 (Fit: 0.069s, Infer: 0.53ms, Total: 0.43s)
+2026-10-07 17:47:33 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | logistic_regression] -> Score: 0.9427 (Fit: 0.005s, Infer: 0.02ms, Total: 0.03s)
+2026-10-07 17:47:34 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best_anova | random_forest] -> Score: 0.9429 (Fit: 0.069s, Infer: 0.52ms, Total: 0.50s)
+2026-10-07 17:47:34 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best_anova | logistic_regression] -> Score: 0.9107 (Fit: 0.003s, Infer: 0.02ms, Total: 0.09s)
+2026-10-07 17:47:36 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | mutual_info | random_forest] -> Score: 0.9425 (Fit: 0.066s, Infer: 0.53ms, Total: 0.90s)
+2026-10-07 17:47:37 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | mutual_info | logistic_regression] -> Score: 0.9171 (Fit: 0.004s, Infer: 0.02ms, Total: 0.50s)
+2026-10-07 17:47:52 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | random_forest] -> Score: 0.9556 (Fit: 0.074s, Infer: 0.53ms, Total: 14.89s)
+2026-10-07 17:48:07 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 14.51s)
+2026-10-07 17:48:14 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | boruta | random_forest] -> Score: 0.9681 (Fit: 0.073s, Infer: 0.46ms, Total: 6.52s)
+2026-10-07 17:48:20 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | boruta | logistic_regression] -> Score: 0.9365 (Fit: 0.004s, Infer: 0.02ms, Total: 6.05s)
+2026-10-07 17:48:36 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled_fdr | random_forest] -> Score: 0.9681 (Fit: 0.069s, Infer: 0.53ms, Total: 14.91s)
+2026-10-07 17:48:51 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled_fdr | logistic_regression] -> Score: 0.955 (Fit: 0.006s, Infer: 0.03ms, Total: 14.72s)
+2026-10-07 17:48:51 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beed'
+2026-10-07 17:48:51 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | random_forest] -> Score: 0.9619 (Fit: 0.069s, Infer: 0.54ms, Total: 0.43s)
+2026-10-07 17:48:51 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | logistic_regression] -> Score: 0.9427 (Fit: 0.005s, Infer: 0.03ms, Total: 0.03s)
+2026-10-07 17:48:52 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best_anova | random_forest] -> Score: 0.9429 (Fit: 0.071s, Infer: 0.54ms, Total: 0.51s)
+2026-10-07 17:48:53 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best_anova | logistic_regression] -> Score: 0.9107 (Fit: 0.004s, Infer: 0.02ms, Total: 0.09s)
+2026-10-07 17:48:54 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | mutual_info | random_forest] -> Score: 0.9425 (Fit: 0.068s, Infer: 0.50ms, Total: 0.91s)
+2026-10-07 17:48:55 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | mutual_info | logistic_regression] -> Score: 0.9171 (Fit: 0.004s, Infer: 0.02ms, Total: 0.51s)
+2026-10-07 17:49:11 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | fdr | random_forest] -> Score: 0.9556 (Fit: 0.073s, Infer: 0.53ms, Total: 14.94s)
+2026-10-07 17:49:25 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | fdr | logistic_regression] -> Score: 0.9427 (Fit: 0.006s, Infer: 0.03ms, Total: 14.44s)
+2026-10-07 17:49:32 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | boruta | random_forest] -> Score: 0.9681 (Fit: 0.066s, Infer: 0.52ms, Total: 6.49s)
+2026-10-07 17:49:39 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | boruta | logistic_regression] -> Score: 0.9365 (Fit: 0.004s, Infer: 0.02ms, Total: 6.10s)
+2026-10-07 17:49:54 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled_fdr | random_forest] -> Score: 0.9681 (Fit: 0.071s, Infer: 0.55ms, Total: 15.04s)
+2026-10-07 17:50:09 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled_fdr | logistic_regression] -> Score: 0.955 (Fit: 0.006s, Infer: 0.03ms, Total: 14.67s)
+2026-10-07 17:50:09 [INFO] tempo.benchmark: Cache hit for extractor 'tsfel' on dataset 'beed'
+2026-10-07 17:50:10 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | None | random_forest] -> Score: 0.8724 (Fit: 0.067s, Infer: 0.52ms, Total: 0.42s)
+2026-10-07 17:50:10 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | None | logistic_regression] -> Score: 0.7516 (Fit: 0.016s, Infer: 0.02ms, Total: 0.08s)
+2026-10-07 17:50:11 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | select_k_best_anova | random_forest] -> Score: 0.8659 (Fit: 0.068s, Infer: 0.53ms, Total: 0.50s)
+2026-10-07 17:50:12 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | select_k_best_anova | logistic_regression] -> Score: 0.7516 (Fit: 0.015s, Infer: 0.02ms, Total: 0.15s)
+2026-10-07 17:50:13 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | mutual_info | random_forest] -> Score: 0.8659 (Fit: 0.067s, Infer: 0.53ms, Total: 0.65s)
+2026-10-07 17:50:13 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | mutual_info | logistic_regression] -> Score: 0.7516 (Fit: 0.014s, Infer: 0.02ms, Total: 0.29s)
+2026-10-07 17:50:29 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | fdr | random_forest] -> Score: 0.8659 (Fit: 0.070s, Infer: 0.52ms, Total: 14.75s)
+2026-10-07 17:50:43 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | fdr | logistic_regression] -> Score: 0.7454 (Fit: 0.008s, Infer: 0.02ms, Total: 14.34s)
+2026-10-07 17:50:50 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | boruta | random_forest] -> Score: 0.853 (Fit: 0.068s, Infer: 0.48ms, Total: 6.34s)
+2026-10-07 17:50:57 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | boruta | logistic_regression] -> Score: 0.7252 (Fit: 0.007s, Infer: 0.02ms, Total: 6.06s)
+2026-10-07 17:51:12 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | subsampled_fdr | random_forest] -> Score: 0.8345 (Fit: 0.073s, Infer: 0.53ms, Total: 14.81s)
+2026-10-07 17:51:27 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | subsampled_fdr | logistic_regression] -> Score: 0.7254 (Fit: 0.008s, Infer: 0.02ms, Total: 14.61s)
+2026-10-07 17:51:27 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beed'
+2026-10-07 17:51:27 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | random_forest] -> Score: 0.9554 (Fit: 0.071s, Infer: 0.55ms, Total: 0.44s)
+2026-10-07 17:51:28 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | logistic_regression] -> Score: 0.9427 (Fit: 0.109s, Infer: 0.03ms, Total: 0.55s)
+2026-10-07 17:51:29 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best_anova | random_forest] -> Score: 0.9365 (Fit: 0.067s, Infer: 0.54ms, Total: 0.50s)
+2026-10-07 17:51:30 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best_anova | logistic_regression] -> Score: 0.9109 (Fit: 0.004s, Infer: 0.02ms, Total: 0.10s)
+2026-10-07 17:51:31 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | mutual_info | random_forest] -> Score: 0.9361 (Fit: 0.069s, Infer: 0.49ms, Total: 1.33s)
+2026-10-07 17:51:33 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | mutual_info | logistic_regression] -> Score: 0.9109 (Fit: 0.004s, Infer: 0.02ms, Total: 0.92s)
+2026-10-07 17:51:48 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | random_forest] -> Score: 0.9619 (Fit: 0.074s, Infer: 0.53ms, Total: 15.41s)
+2026-10-07 17:52:04 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.9427 (Fit: 0.009s, Infer: 0.03ms, Total: 15.00s)
+2026-10-07 17:52:11 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | boruta | random_forest] -> Score: 0.9429 (Fit: 0.070s, Infer: 0.53ms, Total: 6.49s)
+2026-10-07 17:52:17 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | boruta | logistic_regression] -> Score: 0.949 (Fit: 0.004s, Infer: 0.02ms, Total: 6.24s)
+2026-10-07 17:52:33 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled_fdr | random_forest] -> Score: 0.9556 (Fit: 0.074s, Infer: 0.54ms, Total: 15.19s)
+2026-10-07 17:52:48 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled_fdr | logistic_regression] -> Score: 0.9615 (Fit: 0.013s, Infer: 0.03ms, Total: 14.85s)
+2026-10-07 17:52:48 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beed'
+2026-10-07 17:52:49 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | random_forest] -> Score: 0.9871 (Fit: 0.074s, Infer: 0.62ms, Total: 0.47s)
+2026-10-07 17:52:49 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | None | logistic_regression] -> Score: 0.9935 (Fit: 0.056s, Infer: 0.17ms, Total: 0.31s)
+2026-10-07 17:52:50 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best_anova | random_forest] -> Score: 0.9808 (Fit: 0.069s, Infer: 0.52ms, Total: 0.53s)
+2026-10-07 17:52:51 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | select_k_best_anova | logistic_regression] -> Score: 0.8982 (Fit: 0.003s, Infer: 0.02ms, Total: 0.12s)
+2026-10-07 17:53:04 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | mutual_info | random_forest] -> Score: 0.9806 (Fit: 0.066s, Infer: 0.52ms, Total: 13.01s)
+2026-10-07 17:53:17 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | mutual_info | logistic_regression] -> Score: 0.9806 (Fit: 0.009s, Infer: 0.02ms, Total: 12.60s)
+2026-10-07 17:53:39 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | random_forest] -> Score: 0.9871 (Fit: 0.074s, Infer: 0.53ms, Total: 21.54s)
+2026-10-07 17:54:01 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | fdr | logistic_regression] -> Score: 0.9935 (Fit: 0.027s, Infer: 0.09ms, Total: 21.34s)
+2026-10-07 17:54:08 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | boruta | random_forest] -> Score: 0.9871 (Fit: 0.070s, Infer: 0.53ms, Total: 6.70s)
+2026-10-07 17:54:14 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | boruta | logistic_regression] -> Score: 0.9038 (Fit: 0.005s, Infer: 0.02ms, Total: 6.21s)
+2026-10-07 17:54:36 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled_fdr | random_forest] -> Score: 0.9871 (Fit: 0.071s, Infer: 0.59ms, Total: 21.52s)
+2026-10-07 17:54:58 [INFO] tempo.benchmark: Evaluated: [beed | numba_efficient | subsampled_fdr | logistic_regression] -> Score: 0.9935 (Fit: 0.027s, Infer: 0.07ms, Total: 20.85s)
+2026-10-07 17:54:58 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beed'
+2026-10-07 17:54:58 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | random_forest] -> Score: 0.9873 (Fit: 0.070s, Infer: 0.51ms, Total: 0.43s)
+2026-10-07 17:54:58 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | None | logistic_regression] -> Score: 0.9552 (Fit: 0.005s, Infer: 0.02ms, Total: 0.03s)
+2026-10-07 17:54:59 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best_anova | random_forest] -> Score: 0.9681 (Fit: 0.068s, Infer: 0.54ms, Total: 0.50s)
+2026-10-07 17:55:00 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | select_k_best_anova | logistic_regression] -> Score: 0.9109 (Fit: 0.003s, Infer: 0.02ms, Total: 0.09s)
+2026-10-07 17:55:01 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | mutual_info | random_forest] -> Score: 0.9617 (Fit: 0.069s, Infer: 0.52ms, Total: 0.91s)
+2026-10-07 17:55:02 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | mutual_info | logistic_regression] -> Score: 0.9046 (Fit: 0.004s, Infer: 0.02ms, Total: 0.50s)
+2026-10-07 17:55:17 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | random_forest] -> Score: 0.9808 (Fit: 0.072s, Infer: 0.53ms, Total: 14.87s)
+2026-10-07 17:55:33 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | fdr | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.03ms, Total: 14.75s)
+2026-10-07 17:55:39 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | boruta | random_forest] -> Score: 0.9808 (Fit: 0.070s, Infer: 0.51ms, Total: 6.44s)
+2026-10-07 17:55:46 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | boruta | logistic_regression] -> Score: 0.9552 (Fit: 0.004s, Infer: 0.02ms, Total: 6.13s)
+2026-10-07 17:56:02 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled_fdr | random_forest] -> Score: 0.9808 (Fit: 0.070s, Infer: 0.55ms, Total: 15.32s)
+2026-10-07 17:56:17 [INFO] tempo.benchmark: Evaluated: [beed | polars_statistics | subsampled_fdr | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.03ms, Total: 15.23s)
+2026-10-07 17:56:17 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beed'
+2026-10-07 17:56:18 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | random_forest] -> Score: 0.9873 (Fit: 0.073s, Infer: 0.50ms, Total: 0.44s)
+2026-10-07 17:56:18 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | None | logistic_regression] -> Score: 0.9552 (Fit: 0.005s, Infer: 0.02ms, Total: 0.03s)
+2026-10-07 17:56:19 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best_anova | random_forest] -> Score: 0.9681 (Fit: 0.068s, Infer: 0.51ms, Total: 0.49s)
+2026-10-07 17:56:20 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | select_k_best_anova | logistic_regression] -> Score: 0.9109 (Fit: 0.003s, Infer: 0.02ms, Total: 0.09s)
+2026-10-07 17:56:21 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | mutual_info | random_forest] -> Score: 0.9617 (Fit: 0.068s, Infer: 0.48ms, Total: 0.91s)
+2026-10-07 17:56:22 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | mutual_info | logistic_regression] -> Score: 0.9046 (Fit: 0.004s, Infer: 0.02ms, Total: 0.51s)
+2026-10-07 17:56:37 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | fdr | random_forest] -> Score: 0.9808 (Fit: 0.072s, Infer: 0.49ms, Total: 15.10s)
+2026-10-07 17:56:53 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | fdr | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.02ms, Total: 15.04s)
+2026-10-07 17:57:00 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | boruta | random_forest] -> Score: 0.9808 (Fit: 0.076s, Infer: 0.47ms, Total: 6.62s)
+2026-10-07 17:57:06 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | boruta | logistic_regression] -> Score: 0.9552 (Fit: 0.004s, Infer: 0.02ms, Total: 6.10s)
+2026-10-07 17:57:22 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled_fdr | random_forest] -> Score: 0.9808 (Fit: 0.073s, Infer: 0.54ms, Total: 15.24s)
+2026-10-07 17:57:37 [INFO] tempo.benchmark: Evaluated: [beed | numpy_statistical | subsampled_fdr | logistic_regression] -> Score: 0.9552 (Fit: 0.006s, Infer: 0.03ms, Total: 14.83s)
+2026-10-07 17:57:37 [INFO] tempo.benchmark: Cache hit for extractor 'tsfel' on dataset 'beed'
+2026-10-07 17:57:38 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | None | random_forest] -> Score: 0.8595 (Fit: 0.069s, Infer: 0.52ms, Total: 0.43s)
+2026-10-07 17:57:38 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | None | logistic_regression] -> Score: 0.7391 (Fit: 0.015s, Infer: 0.02ms, Total: 0.08s)
+2026-10-07 17:57:39 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | select_k_best_anova | random_forest] -> Score: 0.8786 (Fit: 0.068s, Infer: 0.51ms, Total: 0.50s)
+2026-10-07 17:57:40 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | select_k_best_anova | logistic_regression] -> Score: 0.7391 (Fit: 0.015s, Infer: 0.02ms, Total: 0.15s)
+2026-10-07 17:57:41 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | mutual_info | random_forest] -> Score: 0.8786 (Fit: 0.069s, Infer: 0.48ms, Total: 0.64s)
+2026-10-07 17:57:41 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | mutual_info | logistic_regression] -> Score: 0.7391 (Fit: 0.014s, Infer: 0.02ms, Total: 0.29s)
+2026-10-07 17:57:56 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | fdr | random_forest] -> Score: 0.8788 (Fit: 0.065s, Infer: 0.51ms, Total: 14.80s)
+2026-10-07 17:58:12 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | fdr | logistic_regression] -> Score: 0.7331 (Fit: 0.008s, Infer: 0.02ms, Total: 14.63s)
+2026-10-07 17:58:18 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | boruta | random_forest] -> Score: 0.8403 (Fit: 0.071s, Infer: 0.53ms, Total: 6.53s)
+2026-10-07 17:58:25 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | boruta | logistic_regression] -> Score: 0.7772 (Fit: 0.007s, Infer: 0.02ms, Total: 6.17s)
+2026-10-07 17:58:41 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | subsampled_fdr | random_forest] -> Score: 0.8595 (Fit: 0.075s, Infer: 0.49ms, Total: 15.19s)
+2026-10-07 17:58:56 [INFO] tempo.benchmark: Evaluated: [beed | tsfel | subsampled_fdr | logistic_regression] -> Score: 0.7708 (Fit: 0.010s, Infer: 0.02ms, Total: 14.82s)
+2026-10-07 17:58:56 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beed'
+2026-10-07 17:58:56 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | random_forest] -> Score: 0.9683 (Fit: 0.075s, Infer: 0.52ms, Total: 0.46s)
+2026-10-07 17:58:57 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | None | logistic_regression] -> Score: 0.9617 (Fit: 0.098s, Infer: 0.03ms, Total: 0.50s)
+2026-10-07 17:58:58 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best_anova | random_forest] -> Score: 0.9619 (Fit: 0.070s, Infer: 0.51ms, Total: 0.51s)
+2026-10-07 17:58:59 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | select_k_best_anova | logistic_regression] -> Score: 0.93 (Fit: 0.004s, Infer: 0.02ms, Total: 0.10s)
+2026-10-07 17:59:00 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | mutual_info | random_forest] -> Score: 0.9681 (Fit: 0.069s, Infer: 0.47ms, Total: 1.32s)
+2026-10-07 17:59:02 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | mutual_info | logistic_regression] -> Score: 0.8978 (Fit: 0.004s, Infer: 0.02ms, Total: 0.92s)
+2026-10-07 17:59:18 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | random_forest] -> Score: 0.9808 (Fit: 0.075s, Infer: 0.52ms, Total: 15.40s)
+2026-10-07 17:59:33 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | fdr | logistic_regression] -> Score: 0.9617 (Fit: 0.009s, Infer: 0.03ms, Total: 14.79s)
+2026-10-07 17:59:40 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | boruta | random_forest] -> Score: 0.9744 (Fit: 0.069s, Infer: 0.49ms, Total: 6.63s)
+2026-10-07 17:59:46 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | boruta | logistic_regression] -> Score: 0.9488 (Fit: 0.004s, Infer: 0.02ms, Total: 6.10s)
+2026-10-07 18:00:02 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled_fdr | random_forest] -> Score: 0.9746 (Fit: 0.074s, Infer: 0.56ms, Total: 15.67s)
+2026-10-07 18:00:18 [INFO] tempo.benchmark: Evaluated: [beed | tsfresh_minimal | subsampled_fdr | logistic_regression] -> Score: 0.9617 (Fit: 0.009s, Infer: 0.03ms, Total: 14.70s)
+2026-10-07 18:00:18 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a10__unified_matrix/classification/benchmark_results_20261007_180018.csv and benchmark_results/TM26a10__unified_matrix/classification/benchmark_results.csv
+2026-10-07 18:00:41 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-07 18:00:41 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a10__unified_matrix/regression/environment.json
+2026-10-07 18:00:41 [INFO] tempo.benchmark: Loading dataset: appliances-energy
+2026-10-07 18:00:41 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'appliances-energy'
+2026-10-07 18:01:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: -0.0151 (Fit: 3.743s, Infer: 0.38ms, Total: 18.82s)
+2026-10-07 18:01:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: -0.3796 (Fit: 0.026s, Infer: 0.15ms, Total: 0.17s)
+2026-10-07 18:01:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best_anova | random_forest] -> Score: -0.2357 (Fit: 0.060s, Infer: 0.25ms, Total: 0.49s)
+2026-10-07 18:01:02 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best_anova | ridge] -> Score: -0.0748 (Fit: 0.002s, Infer: 0.01ms, Total: 0.13s)
+2026-10-07 18:01:16 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | mutual_info | random_forest] -> Score: -0.2048 (Fit: 0.060s, Infer: 0.25ms, Total: 13.88s)
+2026-10-07 18:01:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | mutual_info | ridge] -> Score: 0.0505 (Fit: 0.002s, Infer: 0.01ms, Total: 13.51s)
+2026-10-07 18:01:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | random_forest] -> Score: -0.0019 (Fit: 0.270s, Infer: 0.25ms, Total: 18.63s)
+2026-10-07 18:02:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | ridge] -> Score: -1.5815 (Fit: 0.005s, Infer: 0.02ms, Total: 16.25s)
+2026-10-07 18:02:38 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:03:14 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:03:50 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:04:25 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:05:00 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:05:04 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:05:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | boruta | random_forest] -> Score: -0.0151 (Fit: 3.660s, Infer: 0.38ms, Total: 177.25s)
+2026-10-07 18:05:37 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:06:09 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:06:41 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:07:13 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:07:43 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:07:43 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:07:43 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | boruta | ridge] -> Score: -0.3796 (Fit: 0.026s, Infer: 0.15ms, Total: 158.96s)
+2026-10-07 18:07:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:07:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:20 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:08:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled_fdr | random_forest] -> Score: -0.0151 (Fit: 3.735s, Infer: 0.38ms, Total: 35.76s)
+2026-10-07 18:08:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:08:37 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:08:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled_fdr | ridge] -> Score: -0.3796 (Fit: 0.027s, Infer: 0.16ms, Total: 16.62s)
+2026-10-07 18:08:37 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'appliances-energy'
+2026-10-07 18:08:38 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: -0.2628 (Fit: 0.176s, Infer: 0.26ms, Total: 0.95s)
+2026-10-07 18:08:38 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 18:08:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best_anova | random_forest] -> Score: -0.2788 (Fit: 0.061s, Infer: 0.26ms, Total: 0.45s)
+2026-10-07 18:08:40 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best_anova | ridge] -> Score: -0.1056 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-07 18:08:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | mutual_info | random_forest] -> Score: -0.2746 (Fit: 0.063s, Infer: 0.25ms, Total: 0.90s)
+2026-10-07 18:08:42 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | mutual_info | ridge] -> Score: -0.0607 (Fit: 0.002s, Infer: 0.01ms, Total: 0.53s)
+2026-10-07 18:08:57 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | random_forest] -> Score: -0.2791 (Fit: 0.077s, Infer: 0.26ms, Total: 14.75s)
+2026-10-07 18:09:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | ridge] -> Score: -0.1149 (Fit: 0.003s, Infer: 0.01ms, Total: 14.23s)
+2026-10-07 18:09:14 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:16 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:18 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:21 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:23 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:23 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:09:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | boruta | random_forest] -> Score: -0.2628 (Fit: 0.178s, Infer: 0.26ms, Total: 10.77s)
+2026-10-07 18:09:25 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:27 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:29 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:31 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:33 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:33 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:09:33 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | boruta | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 9.69s)
+2026-10-07 18:09:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:49 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:09:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled_fdr | random_forest] -> Score: -0.2628 (Fit: 0.179s, Infer: 0.25ms, Total: 15.33s)
+2026-10-07 18:09:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:09:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:01 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:04 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:10:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled_fdr | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 14.31s)
+2026-10-07 18:10:04 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'appliances-energy'
+2026-10-07 18:10:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | random_forest] -> Score: -0.2628 (Fit: 0.175s, Infer: 0.26ms, Total: 0.95s)
+2026-10-07 18:10:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | ridge] -> Score: -0.557 (Fit: 0.004s, Infer: 0.02ms, Total: 0.02s)
+2026-10-07 18:10:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best_anova | random_forest] -> Score: -0.2788 (Fit: 0.060s, Infer: 0.26ms, Total: 0.45s)
+2026-10-07 18:10:07 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best_anova | ridge] -> Score: -0.1056 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 18:10:08 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | mutual_info | random_forest] -> Score: -0.272 (Fit: 0.061s, Infer: 0.25ms, Total: 0.89s)
+2026-10-07 18:10:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | mutual_info | ridge] -> Score: -0.0605 (Fit: 0.002s, Infer: 0.01ms, Total: 0.52s)
+2026-10-07 18:10:24 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | fdr | random_forest] -> Score: -0.2791 (Fit: 0.071s, Infer: 0.26ms, Total: 14.87s)
+2026-10-07 18:10:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | fdr | ridge] -> Score: -0.1149 (Fit: 0.003s, Infer: 0.01ms, Total: 14.61s)
+2026-10-07 18:10:42 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:44 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:46 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:48 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:51 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:51 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:10:51 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | boruta | random_forest] -> Score: -0.2628 (Fit: 0.176s, Infer: 0.26ms, Total: 10.75s)
+2026-10-07 18:10:53 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:55 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:57 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:10:59 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:01 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:01 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:11:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | boruta | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 9.84s)
+2026-10-07 18:11:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:11 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:17 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:11:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled_fdr | random_forest] -> Score: -0.2628 (Fit: 0.171s, Infer: 0.26ms, Total: 15.54s)
+2026-10-07 18:11:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:29 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:32 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:11:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled_fdr | ridge] -> Score: -0.557 (Fit: 0.003s, Infer: 0.01ms, Total: 14.49s)
+2026-10-07 18:11:32 [INFO] tempo.benchmark: Cache hit for extractor 'tsfel' on dataset 'appliances-energy'
+2026-10-07 18:11:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | random_forest] -> Score: -0.3672 (Fit: 0.059s, Infer: 0.26ms, Total: 0.37s)
+2026-10-07 18:11:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | ridge] -> Score: -0.0524 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 18:11:33 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best_anova | random_forest] -> Score: -0.3326 (Fit: 0.060s, Infer: 0.25ms, Total: 0.44s)
+2026-10-07 18:11:34 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best_anova | ridge] -> Score: -0.0524 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 18:11:35 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | mutual_info | random_forest] -> Score: -0.3752 (Fit: 0.057s, Infer: 0.25ms, Total: 0.52s)
+2026-10-07 18:11:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | mutual_info | ridge] -> Score: -0.0446 (Fit: 0.002s, Infer: 0.01ms, Total: 0.18s)
+2026-10-07 18:11:42 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:51 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:11:51 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | random_forest] -> Score: -0.1904 (Fit: 0.055s, Infer: 0.25ms, Total: 14.69s)
+2026-10-07 18:11:57 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:06 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | ridge] -> Score: 0.0018 (Fit: 0.002s, Infer: 0.01ms, Total: 14.29s)
+2026-10-07 18:12:06 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:07 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:08 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:09 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:09 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:09 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:12:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | boruta | random_forest] -> Score: -0.3672 (Fit: 0.065s, Infer: 0.25ms, Total: 3.21s)
+2026-10-07 18:12:10 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:11 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:12 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:12 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:13 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:13 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:12:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | boruta | ridge] -> Score: -0.0524 (Fit: 0.002s, Infer: 0.01ms, Total: 2.85s)
+2026-10-07 18:12:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:28 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:12:28 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled_fdr | random_forest] -> Score: -0.3672 (Fit: 0.060s, Infer: 0.26ms, Total: 14.53s)
+2026-10-07 18:12:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:12:42 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:12:42 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled_fdr | ridge] -> Score: -0.0524 (Fit: 0.002s, Infer: 0.01ms, Total: 14.16s)
+2026-10-07 18:12:42 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'appliances-energy'
+2026-10-07 18:12:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: -0.2291 (Fit: 0.305s, Infer: 0.27ms, Total: 1.60s)
+2026-10-07 18:12:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: -0.8099 (Fit: 0.003s, Infer: 0.02ms, Total: 0.02s)
+2026-10-07 18:12:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best_anova | random_forest] -> Score: -0.2839 (Fit: 0.060s, Infer: 0.25ms, Total: 0.45s)
+2026-10-07 18:12:46 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best_anova | ridge] -> Score: -0.1123 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 18:12:47 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | mutual_info | random_forest] -> Score: -0.2441 (Fit: 0.060s, Infer: 0.26ms, Total: 1.31s)
+2026-10-07 18:12:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | mutual_info | ridge] -> Score: -0.0327 (Fit: 0.002s, Infer: 0.01ms, Total: 0.95s)
+2026-10-07 18:13:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | fdr | random_forest] -> Score: -0.2744 (Fit: 0.096s, Infer: 0.26ms, Total: 14.90s)
+2026-10-07 18:13:19 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | fdr | ridge] -> Score: -0.1698 (Fit: 0.003s, Infer: 0.01ms, Total: 14.38s)
+2026-10-07 18:13:22 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:26 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:29 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:33 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:37 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:37 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:13:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | boruta | random_forest] -> Score: -0.2291 (Fit: 0.297s, Infer: 0.26ms, Total: 17.54s)
+2026-10-07 18:13:40 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:44 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:47 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:50 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:54 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:13:54 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:13:54 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | boruta | ridge] -> Score: -0.8099 (Fit: 0.004s, Infer: 0.02ms, Total: 16.06s)
+2026-10-07 18:13:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:11 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:14:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled_fdr | random_forest] -> Score: -0.2291 (Fit: 0.330s, Infer: 0.25ms, Total: 16.71s)
+2026-10-07 18:14:14 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:26 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:14:26 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:14:26 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled_fdr | ridge] -> Score: -0.8099 (Fit: 0.004s, Infer: 0.02ms, Total: 14.50s)
+2026-10-07 18:14:26 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'appliances-energy'
+2026-10-07 18:14:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: 0.041 (Fit: 3.579s, Infer: 0.38ms, Total: 18.00s)
+2026-10-07 18:14:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: -0.332 (Fit: 0.025s, Infer: 0.15ms, Total: 0.17s)
+2026-10-07 18:14:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best_anova | random_forest] -> Score: -0.1148 (Fit: 0.060s, Infer: 0.26ms, Total: 0.49s)
+2026-10-07 18:14:46 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best_anova | ridge] -> Score: -0.0528 (Fit: 0.002s, Infer: 0.01ms, Total: 0.13s)
+2026-10-07 18:15:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | mutual_info | random_forest] -> Score: -0.0296 (Fit: 0.060s, Infer: 0.24ms, Total: 13.58s)
+2026-10-07 18:15:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | mutual_info | ridge] -> Score: 0.0555 (Fit: 0.002s, Infer: 0.01ms, Total: 13.22s)
+2026-10-07 18:15:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | random_forest] -> Score: -0.0959 (Fit: 0.240s, Infer: 0.26ms, Total: 17.83s)
+2026-10-07 18:15:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | ridge] -> Score: -1.2023 (Fit: 0.004s, Infer: 0.02ms, Total: 16.56s)
+2026-10-07 18:16:20 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:16:53 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:17:28 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:18:35 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:18:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | boruta | random_forest] -> Score: -0.2154 (Fit: 2.862s, Infer: 0.36ms, Total: 169.47s)
+2026-10-07 18:19:10 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:19:41 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:20:12 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:16 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:16 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | boruta | ridge] -> Score: -0.3356 (Fit: 0.021s, Infer: 0.12ms, Total: 156.13s)
+2026-10-07 18:21:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:52 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:21:52 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled_fdr | random_forest] -> Score: 0.041 (Fit: 3.734s, Infer: 0.37ms, Total: 35.93s)
+2026-10-07 18:21:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:21:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:09 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:22:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled_fdr | ridge] -> Score: -0.332 (Fit: 0.027s, Infer: 0.16ms, Total: 16.83s)
+2026-10-07 18:22:09 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'appliances-energy'
+2026-10-07 18:22:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: -0.3228 (Fit: 0.177s, Infer: 0.26ms, Total: 0.96s)
+2026-10-07 18:22:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 18:22:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best_anova | random_forest] -> Score: -0.2935 (Fit: 0.064s, Infer: 0.26ms, Total: 0.46s)
+2026-10-07 18:22:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best_anova | ridge] -> Score: -0.15 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 18:22:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | mutual_info | random_forest] -> Score: -0.3132 (Fit: 0.060s, Infer: 0.25ms, Total: 0.88s)
+2026-10-07 18:22:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | mutual_info | ridge] -> Score: -0.1721 (Fit: 0.002s, Infer: 0.01ms, Total: 0.52s)
+2026-10-07 18:22:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | random_forest] -> Score: -0.3726 (Fit: 0.071s, Infer: 0.25ms, Total: 14.97s)
+2026-10-07 18:22:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | ridge] -> Score: -0.1829 (Fit: 0.003s, Infer: 0.01ms, Total: 14.84s)
+2026-10-07 18:22:47 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:49 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:51 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:54 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:56 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:22:56 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:22:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | boruta | random_forest] -> Score: -0.3228 (Fit: 0.179s, Infer: 0.26ms, Total: 10.67s)
+2026-10-07 18:22:58 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:00 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:02 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:04 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:06 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:06 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:23:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | boruta | ridge] -> Score: -0.4794 (Fit: 0.003s, Infer: 0.01ms, Total: 9.83s)
+2026-10-07 18:23:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:12 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:22 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:22 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:23:22 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled_fdr | random_forest] -> Score: -0.3228 (Fit: 0.170s, Infer: 0.25ms, Total: 15.24s)
+2026-10-07 18:23:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:23:37 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:23:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled_fdr | ridge] -> Score: -0.4794 (Fit: 0.003s, Infer: 0.01ms, Total: 14.25s)
+2026-10-07 18:23:37 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'appliances-energy'
+2026-10-07 18:23:38 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | random_forest] -> Score: -0.3228 (Fit: 0.173s, Infer: 0.26ms, Total: 0.94s)
+2026-10-07 18:23:38 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | ridge] -> Score: -0.4794 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 18:23:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best_anova | random_forest] -> Score: -0.2935 (Fit: 0.061s, Infer: 0.26ms, Total: 0.45s)
+2026-10-07 18:23:40 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best_anova | ridge] -> Score: -0.15 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-07 18:23:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | mutual_info | random_forest] -> Score: -0.3132 (Fit: 0.061s, Infer: 0.26ms, Total: 0.91s)
+2026-10-07 18:23:42 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | mutual_info | ridge] -> Score: -0.1721 (Fit: 0.002s, Infer: 0.01ms, Total: 0.52s)
+2026-10-07 18:23:57 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | fdr | random_forest] -> Score: -0.3726 (Fit: 0.072s, Infer: 0.26ms, Total: 14.78s)
+2026-10-07 18:24:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | fdr | ridge] -> Score: -0.1829 (Fit: 0.003s, Infer: 0.01ms, Total: 14.26s)
+2026-10-07 18:24:14 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:16 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:18 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:20 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:23 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:23 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:24:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | boruta | random_forest] -> Score: -0.3228 (Fit: 0.186s, Infer: 0.26ms, Total: 10.60s)
+2026-10-07 18:24:25 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:27 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:29 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:31 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:33 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:33 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:24:33 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | boruta | ridge] -> Score: -0.4794 (Fit: 0.003s, Infer: 0.01ms, Total: 9.73s)
+2026-10-07 18:24:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:49 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:24:49 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled_fdr | random_forest] -> Score: -0.3228 (Fit: 0.183s, Infer: 0.26ms, Total: 15.29s)
+2026-10-07 18:24:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:24:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:04 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:04 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:25:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled_fdr | ridge] -> Score: -0.4794 (Fit: 0.003s, Infer: 0.01ms, Total: 14.37s)
+2026-10-07 18:25:04 [INFO] tempo.benchmark: Cache hit for extractor 'tsfel' on dataset 'appliances-energy'
+2026-10-07 18:25:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | random_forest] -> Score: -0.4242 (Fit: 0.061s, Infer: 0.26ms, Total: 0.37s)
+2026-10-07 18:25:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | ridge] -> Score: -0.1142 (Fit: 0.002s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 18:25:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best_anova | random_forest] -> Score: -0.4305 (Fit: 0.061s, Infer: 0.26ms, Total: 0.45s)
+2026-10-07 18:25:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best_anova | ridge] -> Score: -0.1142 (Fit: 0.002s, Infer: 0.01ms, Total: 0.08s)
+2026-10-07 18:25:07 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | mutual_info | random_forest] -> Score: -0.4369 (Fit: 0.058s, Infer: 0.25ms, Total: 0.54s)
+2026-10-07 18:25:07 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | mutual_info | ridge] -> Score: -0.1194 (Fit: 0.002s, Infer: 0.01ms, Total: 0.18s)
+2026-10-07 18:25:13 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:16 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:22 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | random_forest] -> Score: -0.2642 (Fit: 0.057s, Infer: 0.26ms, Total: 14.57s)
+2026-10-07 18:25:28 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:31 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:37 [WARNING] tempo.benchmark: No features survived selector 'fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | ridge] -> Score: -0.0816 (Fit: 0.003s, Infer: 0.01ms, Total: 14.23s)
+2026-10-07 18:25:38 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:39 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:40 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:40 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:41 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:41 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:25:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | boruta | random_forest] -> Score: -0.4242 (Fit: 0.058s, Infer: 0.26ms, Total: 3.30s)
+2026-10-07 18:25:42 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:43 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:43 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:44 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:44 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:44 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:25:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | boruta | ridge] -> Score: -0.1142 (Fit: 0.002s, Infer: 0.01ms, Total: 3.05s)
+2026-10-07 18:25:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:25:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:00 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:26:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled_fdr | random_forest] -> Score: -0.4242 (Fit: 0.062s, Infer: 0.25ms, Total: 15.29s)
+2026-10-07 18:26:03 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:09 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:12 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:15 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:26:15 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:26:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled_fdr | ridge] -> Score: -0.1142 (Fit: 0.002s, Infer: 0.01ms, Total: 14.39s)
+2026-10-07 18:26:15 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'appliances-energy'
+2026-10-07 18:26:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: -0.285 (Fit: 0.293s, Infer: 0.25ms, Total: 1.54s)
+2026-10-07 18:26:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: -0.7105 (Fit: 0.003s, Infer: 0.02ms, Total: 0.02s)
+2026-10-07 18:26:18 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best_anova | random_forest] -> Score: -0.2739 (Fit: 0.061s, Infer: 0.26ms, Total: 0.45s)
+2026-10-07 18:26:19 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best_anova | ridge] -> Score: -0.175 (Fit: 0.002s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 18:26:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | mutual_info | random_forest] -> Score: -0.3207 (Fit: 0.061s, Infer: 0.26ms, Total: 1.34s)
+2026-10-07 18:26:22 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | mutual_info | ridge] -> Score: -0.1029 (Fit: 0.002s, Infer: 0.01ms, Total: 0.95s)
+2026-10-07 18:26:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | fdr | random_forest] -> Score: -0.3752 (Fit: 0.093s, Infer: 0.26ms, Total: 15.38s)
+2026-10-07 18:26:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | fdr | ridge] -> Score: -0.1911 (Fit: 0.003s, Infer: 0.01ms, Total: 14.85s)
+2026-10-07 18:26:56 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:00 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:03 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:07 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:10 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:11 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:27:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | boruta | random_forest] -> Score: -0.285 (Fit: 0.304s, Infer: 0.27ms, Total: 17.62s)
+2026-10-07 18:27:14 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:17 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:21 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:24 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:28 [WARNING] tempo.benchmark: No features survived selector 'boruta'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:28 [WARNING] tempo.benchmark: Zero features survived selector 'boruta' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:27:28 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | boruta | ridge] -> Score: -0.7105 (Fit: 0.004s, Infer: 0.02ms, Total: 16.27s)
+2026-10-07 18:27:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:38 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:41 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:45 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:45 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:27:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled_fdr | random_forest] -> Score: -0.285 (Fit: 0.303s, Infer: 0.27ms, Total: 16.82s)
+2026-10-07 18:27:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:27:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:28:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 18:28:00 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled_fdr' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 18:28:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled_fdr | ridge] -> Score: -0.7105 (Fit: 0.004s, Infer: 0.02ms, Total: 14.96s)
+2026-10-07 18:28:00 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a10__unified_matrix/regression/benchmark_results_20261007_182800.csv and benchmark_results/TM26a10__unified_matrix/regression/benchmark_results.csv
