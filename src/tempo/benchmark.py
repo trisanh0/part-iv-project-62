@@ -749,6 +749,12 @@ class BakeoffRunner:
                             )
                         )
 
+                        # Memoize feature selection per fold for this selector across models
+                        fold_selection_cache: Dict[
+                            int,
+                            Tuple[pd.DataFrame, pd.DataFrame, ResourceStats, int, int, List[str], bool],
+                        ] = {}
+
                         for model_spec in self.config.models:
                             model_name = model_spec if isinstance(model_spec, str) else model_spec.get("name", "model")
                             combo_key = (ds_name, ext_name, sel_name, model_name, int(seed))
@@ -772,19 +778,33 @@ class BakeoffRunner:
                             all_test_preds_list = []
 
                             for fold_idx, (train_idx, test_idx) in enumerate(splits):
-                                X_train_raw = X_all.iloc[train_idx].reset_index(drop=True)
                                 if isinstance(y_all, np.ndarray):
                                     y_train_fold = y_all[train_idx]
                                     y_test_fold = y_all[test_idx]
                                 else:
                                     y_train_fold = y_all.iloc[train_idx].reset_index(drop=True)
                                     y_test_fold = y_all.iloc[test_idx].reset_index(drop=True)
-                                X_test_raw = X_all.iloc[test_idx].reset_index(drop=True)
 
-                                # Stage 3: Feature Selection
-                                X_tr_sel, X_te_sel, sel_stats, n_init, n_sel, sel_cols, fallback_flag = self._select_features(
-                                    X_train_raw, y_train_fold, X_test_raw, selector, seed=seed
-                                )
+                                # Stage 3: Feature Selection (Memoized across models)
+                                if fold_idx not in fold_selection_cache:
+                                    X_train_raw = X_all.iloc[train_idx].reset_index(drop=True)
+                                    X_test_raw = X_all.iloc[test_idx].reset_index(drop=True)
+                                    fold_selection_cache[fold_idx] = self._select_features(
+                                        X_train_raw, y_train_fold, X_test_raw, selector, seed=seed
+                                    )
+
+                                (
+                                    cached_X_tr,
+                                    cached_X_te,
+                                    sel_stats,
+                                    n_init,
+                                    n_sel,
+                                    sel_cols,
+                                    fallback_flag,
+                                ) = fold_selection_cache[fold_idx]
+
+                                X_tr_sel = cached_X_tr.copy()
+                                X_te_sel = cached_X_te.copy()
                                 fold_selected_sets.append(set(sel_cols))
                                 fold_fallback_flags.append(fallback_flag)
 

@@ -415,8 +415,59 @@ class TestBenchmark(unittest.TestCase):
             with self.assertRaises(ValueError):
                 runner._extract_features(df_ts, "unsupported_extractor_xyz", "test_err")
 
+    def test_fold_selection_memoization_across_models(self):
+        """Verify feature selection is executed once per fold and memoized across multiple models."""
+        from unittest.mock import patch
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ds_dir = Path(tmpdir) / "memo_ds"
+            ds_dir.mkdir(parents=True)
+
+            n_seq = 8
+            seq_len = 10
+            df_ts = pl.DataFrame({
+                "sequence_id": np.repeat(np.arange(n_seq, dtype=np.int32), seq_len),
+                "step": np.tile(np.arange(seq_len, dtype=np.int32), n_seq),
+                "sensor": np.random.randn(n_seq * seq_len).astype(np.float32),
+            })
+            df_targets = pl.DataFrame({
+                "sequence_id": np.arange(n_seq, dtype=np.int32),
+                "target": np.array([0, 1, 0, 1, 0, 1, 0, 1], dtype=np.int32),
+            })
+            df_ts.write_parquet(ds_dir / "time_series.parquet")
+            df_targets.write_parquet(ds_dir / "targets.parquet")
+
+            cfg = PipelineConfig(
+                dataset_paths=[str(ds_dir)],
+                task_type="classification",
+                extractors=["numpy_statistical"],
+                selectors=["variance_threshold"],
+                models=["random_forest", "logistic_regression"],
+                n_splits=2,
+                cache_backend="memory",
+                cache_dir=str(Path(tmpdir) / "cache"),
+                output_dir=str(Path(tmpdir) / "out"),
+                enable_ttests=False,
+                enable_plots=False,
+                enable_logging=False,
+            )
+            runner = BakeoffRunner(cfg)
+
+            with patch.object(runner, "_select_features", wraps=runner._select_features) as spy_select:
+                df_res = runner.run()
+
+                # 2 splits x 1 selector = 2 selection calls total (NOT 2 splits x 2 models = 4)
+                self.assertEqual(spy_select.call_count, 2)
+
+            self.assertEqual(len(df_res), 2)
+            self.assertEqual(set(df_res["Model"].tolist()), {"random_forest", "logistic_regression"})
+            # Both models should share identical selection metrics
+            self.assertEqual(df_res["N Selected Features"].iloc[0], df_res["N Selected Features"].iloc[1])
+            self.assertEqual(df_res["Selection Time (s)"].iloc[0], df_res["Selection Time (s)"].iloc[1])
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
 
