@@ -72,6 +72,14 @@ class SelectorConfig:
     sample_ratio: float = 0.10
     fdr_level: float = 0.05
     k: int = 20
+    base_selector: Optional[Union[str, Callable, Any]] = "tsfresh"
+    threshold: Optional[Union[float, str]] = None
+    C: float = 1.0
+    alpha: float = 0.01
+    n_estimators: int = 50
+    max_iter: int = 20
+    min_samples: int = 20
+    stratify: bool = True
     kwargs: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -453,15 +461,45 @@ class BakeoffRunner:
             elif sel_name in ("subsampled", "subsampled_fdr"):
                 ratio = 0.10
                 base_sel = "tsfresh"
+                k_val = 20
+                fdr_val = 0.05
+                thresh_val = None
+                c_val = 1.0
+                alpha_val = 0.01
+                n_est = 50
+                m_iter = 20
+                m_samp = 20
+                strat_val = True
+                sub_kwargs = {}
                 if isinstance(selector, (dict, SelectorConfig)):
                     ratio = getattr(selector, "sample_ratio", selector.get("sample_ratio", 0.10) if isinstance(selector, dict) else 0.10)
                     base_sel = getattr(selector, "base_selector", selector.get("base_selector", "tsfresh") if isinstance(selector, dict) else "tsfresh")
+                    k_val = getattr(selector, "k", selector.get("k", 20) if isinstance(selector, dict) else 20)
+                    fdr_val = getattr(selector, "fdr_level", selector.get("fdr_level", 0.05) if isinstance(selector, dict) else 0.05)
+                    thresh_val = getattr(selector, "threshold", selector.get("threshold", None) if isinstance(selector, dict) else None)
+                    c_val = getattr(selector, "C", selector.get("C", 1.0) if isinstance(selector, dict) else 1.0)
+                    alpha_val = getattr(selector, "alpha", selector.get("alpha", 0.01) if isinstance(selector, dict) else 0.01)
+                    n_est = getattr(selector, "n_estimators", selector.get("n_estimators", 50) if isinstance(selector, dict) else 50)
+                    m_iter = getattr(selector, "max_iter", selector.get("max_iter", 20) if isinstance(selector, dict) else 20)
+                    m_samp = getattr(selector, "min_samples", selector.get("min_samples", 20) if isinstance(selector, dict) else 20)
+                    strat_val = getattr(selector, "stratify", selector.get("stratify", True) if isinstance(selector, dict) else True)
+                    sub_kwargs = getattr(selector, "kwargs", selector.get("kwargs", {}) if isinstance(selector, dict) else {})
                 
                 sub_sel = SubsampledFeatureSelector(
                     base_selector=base_sel,
                     sample_ratio=ratio,
+                    fdr_level=fdr_val,
+                    k=k_val,
+                    threshold=thresh_val,
+                    C=c_val,
+                    alpha=alpha_val,
+                    n_estimators=n_est,
+                    max_iter=m_iter,
+                    min_samples=m_samp,
+                    stratify=strat_val,
                     random_state=seed,
                     task_type=sel_task_type,
+                    **sub_kwargs,
                 )
                 X_train_sel = sub_sel.fit_transform(X_train, sel_y)
                 if sub_sel.fallback_triggered_:
@@ -488,7 +526,8 @@ class BakeoffRunner:
             )
             X_train_sel = X_train
             X_test_sel = X_test
-            n_selected = 0
+            n_selected = n_initial
+            survived_cols = all_cols
         else:
             n_selected = len(survived_cols)
 
@@ -845,9 +884,9 @@ class BakeoffRunner:
                             # Calculate Jaccard Selection Stability across folds
                             if selector is None or sel_name in ("none", "None"):
                                 jaccard_stability = 1.0
-                            elif any(fold_fallback_flags) and all(len(s) == 0 for s in fold_selected_sets):
+                            elif any(fold_fallback_flags):
                                 logger.warning(
-                                    "Zero features survived selector '%s' across all folds; setting Jaccard stability to 0.0.",
+                                    "Fallback triggered on selector '%s'; setting Jaccard stability to 0.0.",
                                     sel_name,
                                 )
                                 jaccard_stability = 0.0
@@ -885,8 +924,8 @@ class BakeoffRunner:
                             mean_infer_ms = round(float(np.mean(fold_infer_latencies_ms)), 4)
                             mean_n_sel = float(np.mean(fold_n_sel))
                             
-                            if any(fold_fallback_flags) and mean_n_sel == 0:
-                                feat_reduction_pct = 100.0
+                            if any(fold_fallback_flags):
+                                feat_reduction_pct = 0.0
                             else:
                                 feat_reduction_pct = round(
                                     (1.0 - (mean_n_sel / float(max(1, n_init)))) * 100.0, 2
