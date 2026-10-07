@@ -412,16 +412,18 @@ class BakeoffRunner:
                 selected_cols = list(X_train_sel.columns)
                 X_test_sel = X_test[selected_cols] if selected_cols else X_test.iloc[:, 0:0]
 
-            elif sel_name in ("extra_trees", "extratrees"):
+            elif sel_name in ("extra_trees", "extratrees", "tree_importance"):
                 n_est = 50
                 thresh_val = "median"
+                m_type = "extra_trees"
                 if isinstance(selector, (dict, SelectorConfig)):
                     n_est = getattr(selector, "n_estimators", selector.get("n_estimators", 50) if isinstance(selector, dict) else 50)
                     thresh_val = getattr(selector, "threshold", selector.get("threshold", "median") if isinstance(selector, dict) else "median")
+                    m_type = getattr(selector, "model_type", selector.get("model_type", "extra_trees") if isinstance(selector, dict) else "extra_trees")
                 X_train_sel = tree_importance_selector(
                     X_train,
                     sel_y,
-                    model_type="extra_trees",
+                    model_type=m_type,
                     n_estimators=n_est,
                     threshold=thresh_val,
                     task_type=sel_task_type,

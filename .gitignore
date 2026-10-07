@@ -52,8 +52,16 @@ Thumbs.db
 # Scratch & local benchmark outputs
 scratch/
 benchmark_results/*
-!benchmark_results/TM26a5a__overnight_classification/
-!benchmark_results/TM26a6a__overnight_regression/
+!benchmark_results/**/
+!benchmark_results/**/*.md
+!benchmark_results/**/environment.json
+!benchmark_results/**/summary_report.md
+!benchmark_results/**/benchmark_results.csv
+benchmark_results/**/*_checkpoint.csv
+benchmark_results/**/*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_*.csv
+benchmark_results/**/benchmark_results_raw_corrupted.csv
+benchmark_results/**/*.png
+benchmark_results/archive/
 
 # Report draft (local only)
 report/

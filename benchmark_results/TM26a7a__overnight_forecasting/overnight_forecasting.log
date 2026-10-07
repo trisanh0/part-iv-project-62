@@ -1,0 +1,377 @@
+2026-10-07 00:23:08 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: forecasting
+2026-10-07 00:23:09 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a7a__overnight_forecasting/environment.json
+2026-10-07 00:23:09 [INFO] tempo.benchmark: Loading dataset: simulated-forecasting
+2026-10-07 00:23:11 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | None | random_forest] -> Score: 0.6298 (Fit: 0.246s, Infer: 0.16ms, Total: 1.90s)
+2026-10-07 00:23:11 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | None | ridge] -> Score: 0.7573 (Fit: 0.005s, Infer: 0.01ms, Total: 1.64s)
+2026-10-07 00:23:11 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | variance_threshold | random_forest] -> Score: 0.6165 (Fit: 0.214s, Infer: 0.17ms, Total: 1.89s)
+2026-10-07 00:23:11 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | variance_threshold | ridge] -> Score: 0.7573 (Fit: 0.003s, Infer: 0.01ms, Total: 1.66s)
+2026-10-07 00:23:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | select_k_best | random_forest] -> Score: 0.9484 (Fit: 0.065s, Infer: 0.16ms, Total: 1.74s)
+2026-10-07 00:23:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | select_k_best | ridge] -> Score: 0.7805 (Fit: 0.002s, Infer: 0.00ms, Total: 1.66s)
+2026-10-07 00:23:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | l1 | random_forest] -> Score: 0.5136 (Fit: 0.072s, Infer: 0.17ms, Total: 1.74s)
+2026-10-07 00:23:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | l1 | ridge] -> Score: 0.5006 (Fit: 0.002s, Infer: 0.01ms, Total: 1.66s)
+2026-10-07 00:23:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | tree_importance | random_forest] -> Score: 0.6139 (Fit: 0.123s, Infer: 0.16ms, Total: 1.89s)
+2026-10-07 00:23:13 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | tree_importance | ridge] -> Score: 0.6421 (Fit: 0.002s, Infer: 0.01ms, Total: 1.77s)
+2026-10-07 00:23:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:16 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:16 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | subsampled | random_forest] -> Score: 0.6298 (Fit: 0.216s, Infer: 0.17ms, Total: 5.07s)
+2026-10-07 00:23:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:19 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:19 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | subsampled | ridge] -> Score: 0.7573 (Fit: 0.004s, Infer: 0.01ms, Total: 4.60s)
+2026-10-07 00:23:19 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'simulated-forecasting'
+2026-10-07 00:23:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | None | random_forest] -> Score: 1.1606 (Fit: 0.102s, Infer: 0.16ms, Total: 0.12s)
+2026-10-07 00:23:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | None | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:23:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | variance_threshold | random_forest] -> Score: 1.1606 (Fit: 0.059s, Infer: 0.16ms, Total: 0.09s)
+2026-10-07 00:23:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | variance_threshold | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:23:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | select_k_best | random_forest] -> Score: 1.1606 (Fit: 0.056s, Infer: 0.13ms, Total: 0.08s)
+2026-10-07 00:23:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | select_k_best | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 00:23:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | l1 | random_forest] -> Score: 1.2823 (Fit: 0.057s, Infer: 0.14ms, Total: 0.09s)
+2026-10-07 00:23:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | l1 | ridge] -> Score: 1.1929 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:23:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | tree_importance | random_forest] -> Score: 1.3062 (Fit: 0.057s, Infer: 0.16ms, Total: 0.16s)
+2026-10-07 00:23:22 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | tree_importance | ridge] -> Score: 1.2186 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 00:23:25 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:25 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:25 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | subsampled | random_forest] -> Score: 1.1606 (Fit: 0.058s, Infer: 0.12ms, Total: 3.13s)
+2026-10-07 00:23:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:28 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:28 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | subsampled | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 3.07s)
+2026-10-07 00:23:28 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | None | random_forest] -> Score: 1.1606 (Fit: 0.055s, Infer: 0.16ms, Total: 0.08s)
+2026-10-07 00:23:28 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | None | ridge] -> Score: 1.14 (Fit: 0.003s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:23:29 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | variance_threshold | random_forest] -> Score: 1.1606 (Fit: 0.059s, Infer: 0.14ms, Total: 0.09s)
+2026-10-07 00:23:29 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | variance_threshold | ridge] -> Score: 1.14 (Fit: 0.001s, Infer: 0.00ms, Total: 0.03s)
+2026-10-07 00:23:29 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | select_k_best | random_forest] -> Score: 1.1606 (Fit: 0.056s, Infer: 0.16ms, Total: 0.10s)
+2026-10-07 00:23:29 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | select_k_best | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:23:30 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | l1 | random_forest] -> Score: 1.2828 (Fit: 0.059s, Infer: 0.17ms, Total: 0.10s)
+2026-10-07 00:23:30 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | l1 | ridge] -> Score: 1.1929 (Fit: 0.002s, Infer: 0.00ms, Total: 0.03s)
+2026-10-07 00:23:30 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | tree_importance | random_forest] -> Score: 1.3062 (Fit: 0.060s, Infer: 0.14ms, Total: 0.15s)
+2026-10-07 00:23:30 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | tree_importance | ridge] -> Score: 1.2186 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 00:23:34 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:34 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:34 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | subsampled | random_forest] -> Score: 1.1606 (Fit: 0.057s, Infer: 0.15ms, Total: 3.02s)
+2026-10-07 00:23:37 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:37 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:37 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | subsampled | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 2.93s)
+2026-10-07 00:23:40 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | None | random_forest] -> Score: 1.2357 (Fit: 0.095s, Infer: 0.20ms, Total: 3.12s)
+2026-10-07 00:23:40 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | None | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.00ms, Total: 3.01s)
+2026-10-07 00:23:41 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | variance_threshold | random_forest] -> Score: 1.2416 (Fit: 0.055s, Infer: 0.16ms, Total: 3.09s)
+2026-10-07 00:23:41 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | variance_threshold | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.00ms, Total: 3.02s)
+2026-10-07 00:23:41 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | select_k_best | random_forest] -> Score: 1.2357 (Fit: 0.068s, Infer: 0.16ms, Total: 3.10s)
+2026-10-07 00:23:41 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | select_k_best | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.00ms, Total: 3.02s)
+2026-10-07 00:23:42 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | l1 | random_forest] -> Score: 1.3021 (Fit: 0.056s, Infer: 0.15ms, Total: 3.09s)
+2026-10-07 00:23:42 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | l1 | ridge] -> Score: 1.1984 (Fit: 0.002s, Infer: 0.00ms, Total: 3.02s)
+2026-10-07 00:23:42 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | tree_importance | random_forest] -> Score: 1.1265 (Fit: 0.061s, Infer: 0.16ms, Total: 3.15s)
+2026-10-07 00:23:43 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | tree_importance | ridge] -> Score: 1.1256 (Fit: 0.002s, Infer: 0.00ms, Total: 3.08s)
+2026-10-07 00:23:46 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:46 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:46 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | subsampled | random_forest] -> Score: 1.2357 (Fit: 0.058s, Infer: 0.15ms, Total: 6.07s)
+2026-10-07 00:23:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:49 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:49 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | subsampled | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.00ms, Total: 5.99s)
+2026-10-07 00:23:49 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'simulated-forecasting'
+2026-10-07 00:23:49 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | None | random_forest] -> Score: 0.6239 (Fit: 0.211s, Infer: 0.16ms, Total: 0.23s)
+2026-10-07 00:23:50 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | None | ridge] -> Score: 0.7573 (Fit: 0.003s, Infer: 0.01ms, Total: 0.00s)
+2026-10-07 00:23:50 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | variance_threshold | random_forest] -> Score: 0.6085 (Fit: 0.209s, Infer: 0.16ms, Total: 0.24s)
+2026-10-07 00:23:50 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | variance_threshold | ridge] -> Score: 0.7573 (Fit: 0.003s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:23:51 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | select_k_best | random_forest] -> Score: 0.9425 (Fit: 0.071s, Infer: 0.16ms, Total: 0.10s)
+2026-10-07 00:23:51 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | select_k_best | ridge] -> Score: 0.7805 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:23:51 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | l1 | random_forest] -> Score: 0.5299 (Fit: 0.076s, Infer: 0.15ms, Total: 0.11s)
+2026-10-07 00:23:52 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | l1 | ridge] -> Score: 0.5006 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:23:52 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | tree_importance | random_forest] -> Score: 0.602 (Fit: 0.122s, Infer: 0.15ms, Total: 0.27s)
+2026-10-07 00:23:52 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | tree_importance | ridge] -> Score: 0.6427 (Fit: 0.002s, Infer: 0.01ms, Total: 0.12s)
+2026-10-07 00:23:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:56 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:56 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | subsampled | random_forest] -> Score: 0.6239 (Fit: 0.215s, Infer: 0.17ms, Total: 3.22s)
+2026-10-07 00:23:59 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:23:59 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:23:59 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numba_efficient | subsampled | ridge] -> Score: 0.7573 (Fit: 0.004s, Infer: 0.01ms, Total: 3.08s)
+2026-10-07 00:23:59 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'simulated-forecasting'
+2026-10-07 00:23:59 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | None | random_forest] -> Score: 1.1681 (Fit: 0.056s, Infer: 0.15ms, Total: 0.07s)
+2026-10-07 00:23:59 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | None | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:24:00 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | variance_threshold | random_forest] -> Score: 1.1681 (Fit: 0.058s, Infer: 0.12ms, Total: 0.08s)
+2026-10-07 00:24:00 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | variance_threshold | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 00:24:01 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | select_k_best | random_forest] -> Score: 1.1681 (Fit: 0.056s, Infer: 0.16ms, Total: 0.10s)
+2026-10-07 00:24:01 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | select_k_best | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 00:24:01 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | l1 | random_forest] -> Score: 1.3051 (Fit: 0.050s, Infer: 0.16ms, Total: 0.08s)
+2026-10-07 00:24:01 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | l1 | ridge] -> Score: 1.1929 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:24:02 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | tree_importance | random_forest] -> Score: 1.3008 (Fit: 0.058s, Infer: 0.13ms, Total: 0.14s)
+2026-10-07 00:24:02 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | tree_importance | ridge] -> Score: 1.2186 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 00:24:06 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | subsampled | random_forest] -> Score: 1.3175 (Fit: 0.059s, Infer: 0.16ms, Total: 3.06s)
+2026-10-07 00:24:09 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | polars_statistics | subsampled | ridge] -> Score: 1.2186 (Fit: 0.002s, Infer: 0.01ms, Total: 3.19s)
+2026-10-07 00:24:09 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'simulated-forecasting'
+2026-10-07 00:24:09 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | None | random_forest] -> Score: 1.1681 (Fit: 0.057s, Infer: 0.16ms, Total: 0.07s)
+2026-10-07 00:24:09 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | None | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:24:10 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | variance_threshold | random_forest] -> Score: 1.1681 (Fit: 0.055s, Infer: 0.16ms, Total: 0.08s)
+2026-10-07 00:24:10 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | variance_threshold | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 00:24:10 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | select_k_best | random_forest] -> Score: 1.1681 (Fit: 0.054s, Infer: 0.16ms, Total: 0.09s)
+2026-10-07 00:24:11 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | select_k_best | ridge] -> Score: 1.14 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:24:11 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | l1 | random_forest] -> Score: 1.3055 (Fit: 0.055s, Infer: 0.15ms, Total: 0.09s)
+2026-10-07 00:24:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | l1 | ridge] -> Score: 1.1929 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:24:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | tree_importance | random_forest] -> Score: 1.3008 (Fit: 0.059s, Infer: 0.16ms, Total: 0.14s)
+2026-10-07 00:24:12 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | tree_importance | ridge] -> Score: 1.2186 (Fit: 0.002s, Infer: 0.01ms, Total: 0.07s)
+2026-10-07 00:24:16 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | subsampled | random_forest] -> Score: 1.3176 (Fit: 0.056s, Infer: 0.14ms, Total: 3.03s)
+2026-10-07 00:24:19 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | numpy_statistical | subsampled | ridge] -> Score: 1.2186 (Fit: 0.002s, Infer: 0.00ms, Total: 2.96s)
+2026-10-07 00:24:19 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'simulated-forecasting'
+2026-10-07 00:24:19 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | None | random_forest] -> Score: 1.23 (Fit: 0.057s, Infer: 0.16ms, Total: 0.07s)
+2026-10-07 00:24:19 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | None | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:24:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | variance_threshold | random_forest] -> Score: 1.2331 (Fit: 0.058s, Infer: 0.14ms, Total: 0.09s)
+2026-10-07 00:24:20 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | variance_threshold | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:24:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | select_k_best | random_forest] -> Score: 1.23 (Fit: 0.053s, Infer: 0.16ms, Total: 0.08s)
+2026-10-07 00:24:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | select_k_best | ridge] -> Score: 1.1896 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:24:21 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | l1 | random_forest] -> Score: 1.3172 (Fit: 0.058s, Infer: 0.16ms, Total: 0.09s)
+2026-10-07 00:24:22 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | l1 | ridge] -> Score: 1.1984 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:24:22 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | tree_importance | random_forest] -> Score: 1.1535 (Fit: 0.072s, Infer: 0.13ms, Total: 0.15s)
+2026-10-07 00:24:22 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | tree_importance | ridge] -> Score: 1.1256 (Fit: 0.001s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 00:24:26 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | subsampled | random_forest] -> Score: 1.299 (Fit: 0.058s, Infer: 0.12ms, Total: 3.03s)
+2026-10-07 00:24:29 [INFO] tempo.benchmark: Evaluated: [simulated-forecasting | tsfresh_minimal | subsampled | ridge] -> Score: 1.2485 (Fit: 0.002s, Infer: 0.00ms, Total: 2.97s)
+2026-10-07 00:24:29 [INFO] tempo.benchmark: Loading dataset: appliances-energy
+2026-10-07 00:24:29 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'appliances-energy'
+2026-10-07 00:24:34 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: 106.0702 (Fit: 4.108s, Infer: 0.36ms, Total: 4.13s)
+2026-10-07 00:24:34 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: 107.6235 (Fit: 0.025s, Infer: 0.15ms, Total: 0.03s)
+2026-10-07 00:24:38 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | random_forest] -> Score: 105.7225 (Fit: 3.977s, Infer: 0.44ms, Total: 4.03s)
+2026-10-07 00:24:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | ridge] -> Score: 107.6235 (Fit: 0.025s, Infer: 0.15ms, Total: 0.06s)
+2026-10-07 00:24:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | random_forest] -> Score: 95.3596 (Fit: 0.062s, Infer: 0.31ms, Total: 0.10s)
+2026-10-07 00:24:39 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | ridge] -> Score: 104.1773 (Fit: 0.002s, Infer: 0.01ms, Total: 0.03s)
+2026-10-07 00:24:40 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | random_forest] -> Score: 96.124 (Fit: 0.333s, Infer: 0.32ms, Total: 0.56s)
+2026-10-07 00:24:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | ridge] -> Score: 111.1905 (Fit: 0.003s, Infer: 0.02ms, Total: 0.20s)
+2026-10-07 00:24:44 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | random_forest] -> Score: 111.5202 (Fit: 2.098s, Infer: 0.31ms, Total: 3.06s)
+2026-10-07 00:24:45 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | ridge] -> Score: 108.6924 (Fit: 0.013s, Infer: 0.08ms, Total: 0.86s)
+2026-10-07 00:24:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:24:53 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:24:53 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | random_forest] -> Score: 106.0702 (Fit: 4.115s, Infer: 0.43ms, Total: 7.89s)
+2026-10-07 00:24:57 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:24:57 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:24:57 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | ridge] -> Score: 107.6235 (Fit: 0.030s, Infer: 0.16ms, Total: 3.60s)
+2026-10-07 00:24:57 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'appliances-energy'
+2026-10-07 00:24:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: 169.4576 (Fit: 0.194s, Infer: 0.32ms, Total: 0.21s)
+2026-10-07 00:24:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: 143.7964 (Fit: 0.002s, Infer: 0.01ms, Total: 0.00s)
+2026-10-07 00:24:59 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | random_forest] -> Score: 169.0359 (Fit: 0.206s, Infer: 0.32ms, Total: 0.24s)
+2026-10-07 00:24:59 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | ridge] -> Score: 143.7964 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:24:59 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | random_forest] -> Score: 148.7248 (Fit: 0.058s, Infer: 0.31ms, Total: 0.09s)
+2026-10-07 00:25:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | ridge] -> Score: 112.7655 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:25:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | random_forest] -> Score: 170.3351 (Fit: 0.166s, Infer: 0.32ms, Total: 0.21s)
+2026-10-07 00:25:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | ridge] -> Score: 141.922 (Fit: 0.003s, Infer: 0.01ms, Total: 0.03s)
+2026-10-07 00:25:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | random_forest] -> Score: 170.6789 (Fit: 0.116s, Infer: 0.31ms, Total: 0.23s)
+2026-10-07 00:25:02 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | ridge] -> Score: 121.0479 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-07 00:25:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:05 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | random_forest] -> Score: 169.4576 (Fit: 0.187s, Infer: 0.32ms, Total: 3.26s)
+2026-10-07 00:25:08 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:08 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | ridge] -> Score: 143.7964 (Fit: 0.004s, Infer: 0.02ms, Total: 3.08s)
+2026-10-07 00:25:09 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'appliances-energy'
+2026-10-07 00:25:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | random_forest] -> Score: 169.4576 (Fit: 0.186s, Infer: 0.31ms, Total: 0.20s)
+2026-10-07 00:25:09 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | ridge] -> Score: 143.7971 (Fit: 0.006s, Infer: 0.01ms, Total: 0.01s)
+2026-10-07 00:25:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | random_forest] -> Score: 169.0359 (Fit: 0.200s, Infer: 0.31ms, Total: 0.23s)
+2026-10-07 00:25:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | ridge] -> Score: 143.7971 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:25:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | random_forest] -> Score: 148.7248 (Fit: 0.060s, Infer: 0.23ms, Total: 0.09s)
+2026-10-07 00:25:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | ridge] -> Score: 112.7656 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:25:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | random_forest] -> Score: 170.3351 (Fit: 0.181s, Infer: 0.29ms, Total: 0.22s)
+2026-10-07 00:25:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | ridge] -> Score: 141.923 (Fit: 0.002s, Infer: 0.01ms, Total: 0.03s)
+2026-10-07 00:25:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | random_forest] -> Score: 170.6789 (Fit: 0.113s, Infer: 0.28ms, Total: 0.22s)
+2026-10-07 00:25:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | ridge] -> Score: 121.048 (Fit: 0.002s, Infer: 0.01ms, Total: 0.10s)
+2026-10-07 00:25:16 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:16 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | random_forest] -> Score: 169.4576 (Fit: 0.187s, Infer: 0.26ms, Total: 3.21s)
+2026-10-07 00:25:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:20 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | ridge] -> Score: 143.7971 (Fit: 0.003s, Infer: 0.01ms, Total: 2.96s)
+2026-10-07 00:25:20 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'appliances-energy'
+2026-10-07 00:25:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: 166.1076 (Fit: 0.320s, Infer: 0.32ms, Total: 0.34s)
+2026-10-07 00:25:21 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: 218.0726 (Fit: 0.003s, Infer: 0.02ms, Total: 0.00s)
+2026-10-07 00:25:21 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | random_forest] -> Score: 164.6482 (Fit: 0.333s, Infer: 0.26ms, Total: 0.36s)
+2026-10-07 00:25:22 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | ridge] -> Score: 218.0726 (Fit: 0.003s, Infer: 0.02ms, Total: 0.02s)
+2026-10-07 00:25:22 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | random_forest] -> Score: 143.4663 (Fit: 0.059s, Infer: 0.31ms, Total: 0.09s)
+2026-10-07 00:25:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | ridge] -> Score: 98.7904 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:25:23 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | random_forest] -> Score: 170.6488 (Fit: 0.230s, Infer: 0.29ms, Total: 0.28s)
+2026-10-07 00:25:24 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | ridge] -> Score: 213.147 (Fit: 0.003s, Infer: 0.01ms, Total: 0.04s)
+2026-10-07 00:25:24 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | random_forest] -> Score: 165.2627 (Fit: 0.201s, Infer: 0.26ms, Total: 0.38s)
+2026-10-07 00:25:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | ridge] -> Score: 190.3537 (Fit: 0.003s, Infer: 0.01ms, Total: 0.12s)
+2026-10-07 00:25:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:28 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:28 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | random_forest] -> Score: 166.1076 (Fit: 0.340s, Infer: 0.32ms, Total: 3.31s)
+2026-10-07 00:25:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:31 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | ridge] -> Score: 218.0726 (Fit: 0.004s, Infer: 0.02ms, Total: 2.95s)
+2026-10-07 00:25:32 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'appliances-energy'
+2026-10-07 00:25:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: 117.582 (Fit: 3.905s, Infer: 0.42ms, Total: 3.93s)
+2026-10-07 00:25:36 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: 107.6235 (Fit: 0.025s, Infer: 0.14ms, Total: 0.03s)
+2026-10-07 00:25:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | random_forest] -> Score: 116.0078 (Fit: 4.002s, Infer: 0.43ms, Total: 4.05s)
+2026-10-07 00:25:41 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | variance_threshold | ridge] -> Score: 107.6235 (Fit: 0.024s, Infer: 0.15ms, Total: 0.06s)
+2026-10-07 00:25:42 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | random_forest] -> Score: 94.9573 (Fit: 0.061s, Infer: 0.30ms, Total: 0.10s)
+2026-10-07 00:25:42 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best | ridge] -> Score: 104.1773 (Fit: 0.002s, Infer: 0.01ms, Total: 0.03s)
+2026-10-07 00:25:43 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | random_forest] -> Score: 96.4317 (Fit: 0.341s, Infer: 0.32ms, Total: 0.56s)
+2026-10-07 00:25:43 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | l1 | ridge] -> Score: 111.1905 (Fit: 0.004s, Infer: 0.02ms, Total: 0.21s)
+2026-10-07 00:25:47 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | random_forest] -> Score: 122.9506 (Fit: 2.070s, Infer: 0.38ms, Total: 2.88s)
+2026-10-07 00:25:48 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | tree_importance | ridge] -> Score: 112.609 (Fit: 0.013s, Infer: 0.08ms, Total: 0.81s)
+2026-10-07 00:25:52 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:25:56 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:25:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | random_forest] -> Score: 117.582 (Fit: 3.936s, Infer: 0.40ms, Total: 7.87s)
+2026-10-07 00:26:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:26:01 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:26:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled | ridge] -> Score: 107.6235 (Fit: 0.026s, Infer: 0.15ms, Total: 4.44s)
+2026-10-07 00:26:01 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'appliances-energy'
+2026-10-07 00:26:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: 161.1967 (Fit: 0.229s, Infer: 0.30ms, Total: 0.25s)
+2026-10-07 00:26:02 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: 143.7964 (Fit: 0.002s, Infer: 0.01ms, Total: 0.00s)
+2026-10-07 00:26:02 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | random_forest] -> Score: 170.4699 (Fit: 0.224s, Infer: 0.31ms, Total: 0.26s)
+2026-10-07 00:26:03 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | variance_threshold | ridge] -> Score: 143.7964 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:26:03 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | random_forest] -> Score: 149.8966 (Fit: 0.072s, Infer: 0.31ms, Total: 0.10s)
+2026-10-07 00:26:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best | ridge] -> Score: 112.7655 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:26:04 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | random_forest] -> Score: 167.769 (Fit: 0.200s, Infer: 0.24ms, Total: 0.24s)
+2026-10-07 00:26:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | l1 | ridge] -> Score: 141.922 (Fit: 0.003s, Infer: 0.01ms, Total: 0.03s)
+2026-10-07 00:26:05 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | random_forest] -> Score: 156.5732 (Fit: 0.129s, Infer: 0.29ms, Total: 0.24s)
+2026-10-07 00:26:06 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | tree_importance | ridge] -> Score: 154.1322 (Fit: 0.002s, Infer: 0.01ms, Total: 0.11s)
+2026-10-07 00:26:10 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | random_forest] -> Score: 109.586 (Fit: 0.095s, Infer: 0.32ms, Total: 3.74s)
+2026-10-07 00:26:13 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled | ridge] -> Score: 98.2488 (Fit: 0.002s, Infer: 0.01ms, Total: 3.03s)
+2026-10-07 00:26:13 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'appliances-energy'
+2026-10-07 00:26:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | random_forest] -> Score: 161.1967 (Fit: 0.193s, Infer: 0.31ms, Total: 0.21s)
+2026-10-07 00:26:14 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | None | ridge] -> Score: 143.7971 (Fit: 0.003s, Infer: 0.01ms, Total: 0.00s)
+2026-10-07 00:26:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | random_forest] -> Score: 170.4699 (Fit: 0.194s, Infer: 0.26ms, Total: 0.22s)
+2026-10-07 00:26:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | variance_threshold | ridge] -> Score: 143.7971 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:26:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | random_forest] -> Score: 149.8966 (Fit: 0.077s, Infer: 0.26ms, Total: 0.11s)
+2026-10-07 00:26:16 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | select_k_best | ridge] -> Score: 112.7656 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:26:16 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | random_forest] -> Score: 167.769 (Fit: 0.157s, Infer: 0.31ms, Total: 0.20s)
+2026-10-07 00:26:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | l1 | ridge] -> Score: 141.923 (Fit: 0.002s, Infer: 0.01ms, Total: 0.03s)
+2026-10-07 00:26:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | random_forest] -> Score: 156.5732 (Fit: 0.121s, Infer: 0.30ms, Total: 0.23s)
+2026-10-07 00:26:18 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | tree_importance | ridge] -> Score: 154.1318 (Fit: 0.002s, Infer: 0.01ms, Total: 0.12s)
+2026-10-07 00:26:21 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | random_forest] -> Score: 109.586 (Fit: 0.057s, Infer: 0.31ms, Total: 3.08s)
+2026-10-07 00:26:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numpy_statistical | subsampled | ridge] -> Score: 98.2489 (Fit: 0.002s, Infer: 0.01ms, Total: 2.97s)
+2026-10-07 00:26:25 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'appliances-energy'
+2026-10-07 00:26:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | random_forest] -> Score: 159.4213 (Fit: 0.348s, Infer: 0.32ms, Total: 0.37s)
+2026-10-07 00:26:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | None | ridge] -> Score: 218.0726 (Fit: 0.004s, Infer: 0.02ms, Total: 0.00s)
+2026-10-07 00:26:26 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | random_forest] -> Score: 162.9151 (Fit: 0.342s, Infer: 0.28ms, Total: 0.37s)
+2026-10-07 00:26:27 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | variance_threshold | ridge] -> Score: 218.0726 (Fit: 0.004s, Infer: 0.02ms, Total: 0.02s)
+2026-10-07 00:26:27 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | random_forest] -> Score: 156.4876 (Fit: 0.066s, Infer: 0.32ms, Total: 0.10s)
+2026-10-07 00:26:27 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | select_k_best | ridge] -> Score: 98.7904 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-07 00:26:28 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | random_forest] -> Score: 157.4512 (Fit: 0.236s, Infer: 0.32ms, Total: 0.29s)
+2026-10-07 00:26:28 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | l1 | ridge] -> Score: 213.147 (Fit: 0.003s, Infer: 0.01ms, Total: 0.04s)
+2026-10-07 00:26:29 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | random_forest] -> Score: 169.6081 (Fit: 0.186s, Infer: 0.31ms, Total: 0.33s)
+2026-10-07 00:26:30 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | tree_importance | ridge] -> Score: 192.8979 (Fit: 0.002s, Infer: 0.01ms, Total: 0.13s)
+2026-10-07 00:26:33 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:26:33 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:26:33 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | random_forest] -> Score: 159.4213 (Fit: 0.348s, Infer: 0.32ms, Total: 3.39s)
+2026-10-07 00:26:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:26:36 [WARNING] tempo.benchmark: Zero features survived selector 'subsampled' across all folds; setting Jaccard stability to 0.0.
+2026-10-07 00:26:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_minimal | subsampled | ridge] -> Score: 218.0726 (Fit: 0.004s, Infer: 0.02ms, Total: 2.96s)
+2026-10-07 00:26:37 [INFO] tempo.benchmark: Loading dataset: beijing-pm25
+2026-10-07 00:26:37 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beijing-pm25'
+2026-10-07 00:26:52 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | random_forest] -> Score: 67.3635 (Fit: 14.820s, Infer: 0.03ms, Total: 14.84s)
+2026-10-07 00:26:52 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | ridge] -> Score: 104.6476 (Fit: 0.087s, Infer: 0.01ms, Total: 0.10s)
+2026-10-07 00:27:07 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | random_forest] -> Score: 67.5249 (Fit: 14.615s, Infer: 0.03ms, Total: 14.67s)
+2026-10-07 00:27:08 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | ridge] -> Score: 104.6476 (Fit: 0.051s, Infer: 0.01ms, Total: 0.10s)
+2026-10-07 00:27:09 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | random_forest] -> Score: 81.7403 (Fit: 0.323s, Infer: 0.02ms, Total: 0.37s)
+2026-10-07 00:27:09 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | ridge] -> Score: 81.8446 (Fit: 0.002s, Infer: 0.00ms, Total: 0.03s)
+2026-10-07 00:27:20 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | random_forest] -> Score: 68.8931 (Fit: 9.116s, Infer: 0.02ms, Total: 10.91s)
+2026-10-07 00:27:23 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | ridge] -> Score: 82.6514 (Fit: 0.025s, Infer: 0.01ms, Total: 1.77s)
+2026-10-07 00:27:40 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | random_forest] -> Score: 67.4465 (Fit: 13.479s, Infer: 0.03ms, Total: 17.36s)
+2026-10-07 00:27:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | ridge] -> Score: 76.7981 (Fit: 0.037s, Infer: 0.01ms, Total: 4.15s)
+2026-10-07 00:27:55 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | random_forest] -> Score: 70.8085 (Fit: 5.422s, Infer: 0.04ms, Total: 9.16s)
+2026-10-07 00:27:58 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | ridge] -> Score: 74.9847 (Fit: 0.013s, Infer: 0.00ms, Total: 3.18s)
+2026-10-07 00:27:58 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beijing-pm25'
+2026-10-07 00:27:59 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | random_forest] -> Score: 71.5855 (Fit: 0.656s, Infer: 0.02ms, Total: 0.67s)
+2026-10-07 00:27:59 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | ridge] -> Score: 75.3976 (Fit: 0.003s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:28:01 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | random_forest] -> Score: 71.8764 (Fit: 0.706s, Infer: 0.02ms, Total: 0.74s)
+2026-10-07 00:28:01 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | ridge] -> Score: 75.3976 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:28:02 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | random_forest] -> Score: 74.8977 (Fit: 0.372s, Infer: 0.02ms, Total: 0.40s)
+2026-10-07 00:28:02 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | ridge] -> Score: 81.1182 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:28:03 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | random_forest] -> Score: 71.5034 (Fit: 0.511s, Infer: 0.02ms, Total: 0.62s)
+2026-10-07 00:28:04 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | ridge] -> Score: 75.401 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-07 00:28:05 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | random_forest] -> Score: 71.7258 (Fit: 0.503s, Infer: 0.02ms, Total: 0.76s)
+2026-10-07 00:28:06 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | ridge] -> Score: 77.1022 (Fit: 0.002s, Infer: 0.00ms, Total: 0.21s)
+2026-10-07 00:28:10 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | random_forest] -> Score: 74.3272 (Fit: 0.388s, Infer: 0.02ms, Total: 3.73s)
+2026-10-07 00:28:13 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | ridge] -> Score: 81.6416 (Fit: 0.003s, Infer: 0.00ms, Total: 3.02s)
+2026-10-07 00:28:13 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beijing-pm25'
+2026-10-07 00:28:14 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | random_forest] -> Score: 71.5527 (Fit: 0.649s, Infer: 0.02ms, Total: 0.67s)
+2026-10-07 00:28:14 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | ridge] -> Score: 75.3976 (Fit: 0.003s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:28:16 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | random_forest] -> Score: 72.0312 (Fit: 0.666s, Infer: 0.02ms, Total: 0.70s)
+2026-10-07 00:28:16 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | ridge] -> Score: 75.3977 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:28:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | random_forest] -> Score: 74.8684 (Fit: 0.364s, Infer: 0.02ms, Total: 0.39s)
+2026-10-07 00:28:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | ridge] -> Score: 81.1182 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:28:18 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | random_forest] -> Score: 71.6482 (Fit: 0.463s, Infer: 0.02ms, Total: 0.57s)
+2026-10-07 00:28:19 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | ridge] -> Score: 75.4011 (Fit: 0.003s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 00:28:20 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | random_forest] -> Score: 71.3312 (Fit: 0.456s, Infer: 0.04ms, Total: 0.70s)
+2026-10-07 00:28:21 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | ridge] -> Score: 77.2551 (Fit: 0.002s, Infer: 0.00ms, Total: 0.27s)
+2026-10-07 00:28:25 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | random_forest] -> Score: 74.5537 (Fit: 0.346s, Infer: 0.02ms, Total: 3.51s)
+2026-10-07 00:28:28 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | ridge] -> Score: 81.6414 (Fit: 0.003s, Infer: 0.00ms, Total: 2.93s)
+2026-10-07 00:28:28 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beijing-pm25'
+2026-10-07 00:28:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | random_forest] -> Score: 72.1678 (Fit: 1.117s, Infer: 0.02ms, Total: 1.13s)
+2026-10-07 00:28:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | ridge] -> Score: 74.5312 (Fit: 0.005s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 00:28:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | random_forest] -> Score: 72.5194 (Fit: 1.145s, Infer: 0.02ms, Total: 1.17s)
+2026-10-07 00:28:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | ridge] -> Score: 74.5312 (Fit: 0.004s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:28:33 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | random_forest] -> Score: 85.4629 (Fit: 0.352s, Infer: 0.02ms, Total: 0.38s)
+2026-10-07 00:28:33 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | ridge] -> Score: 84.8101 (Fit: 0.002s, Infer: 0.00ms, Total: 0.04s)
+2026-10-07 00:28:34 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | random_forest] -> Score: 73.224 (Fit: 0.598s, Infer: 0.02ms, Total: 0.74s)
+2026-10-07 00:28:35 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | ridge] -> Score: 74.5424 (Fit: 0.003s, Infer: 0.00ms, Total: 0.14s)
+2026-10-07 00:28:37 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | random_forest] -> Score: 72.6161 (Fit: 0.933s, Infer: 0.02ms, Total: 1.31s)
+2026-10-07 00:28:38 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | ridge] -> Score: 75.4124 (Fit: 0.003s, Infer: 0.00ms, Total: 0.35s)
+2026-10-07 00:28:42 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | random_forest] -> Score: 74.2398 (Fit: 0.636s, Infer: 0.02ms, Total: 4.11s)
+2026-10-07 00:28:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | ridge] -> Score: 79.2906 (Fit: 0.003s, Infer: 0.00ms, Total: 2.92s)
+2026-10-07 00:28:45 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'beijing-pm25'
+2026-10-07 00:29:01 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | random_forest] -> Score: 67.8385 (Fit: 15.135s, Infer: 0.03ms, Total: 15.16s)
+2026-10-07 00:29:02 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | None | ridge] -> Score: 104.6476 (Fit: 0.085s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 00:29:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | random_forest] -> Score: 67.9464 (Fit: 14.616s, Infer: 0.02ms, Total: 14.67s)
+2026-10-07 00:29:17 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | variance_threshold | ridge] -> Score: 104.6476 (Fit: 0.044s, Infer: 0.01ms, Total: 0.09s)
+2026-10-07 00:29:18 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | random_forest] -> Score: 81.5695 (Fit: 0.357s, Infer: 0.02ms, Total: 0.40s)
+2026-10-07 00:29:19 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | select_k_best | ridge] -> Score: 81.8446 (Fit: 0.002s, Infer: 0.00ms, Total: 0.03s)
+2026-10-07 00:29:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | random_forest] -> Score: 68.6119 (Fit: 8.843s, Infer: 0.02ms, Total: 10.60s)
+2026-10-07 00:29:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | l1 | ridge] -> Score: 82.6514 (Fit: 0.027s, Infer: 0.00ms, Total: 1.81s)
+2026-10-07 00:29:50 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | random_forest] -> Score: 67.498 (Fit: 13.322s, Infer: 0.02ms, Total: 17.29s)
+2026-10-07 00:29:54 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | tree_importance | ridge] -> Score: 76.8923 (Fit: 0.036s, Infer: 0.01ms, Total: 4.11s)
+2026-10-07 00:30:04 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | random_forest] -> Score: 69.4704 (Fit: 4.842s, Infer: 0.02ms, Total: 8.82s)
+2026-10-07 00:30:08 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numba_efficient | subsampled | ridge] -> Score: 74.3574 (Fit: 0.014s, Infer: 0.00ms, Total: 3.28s)
+2026-10-07 00:30:08 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'beijing-pm25'
+2026-10-07 00:30:09 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | random_forest] -> Score: 71.2467 (Fit: 0.616s, Infer: 0.02ms, Total: 0.63s)
+2026-10-07 00:30:09 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | None | ridge] -> Score: 75.3976 (Fit: 0.003s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:30:10 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | random_forest] -> Score: 71.2428 (Fit: 0.630s, Infer: 0.02ms, Total: 0.66s)
+2026-10-07 00:30:11 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | variance_threshold | ridge] -> Score: 75.3976 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:30:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | random_forest] -> Score: 75.881 (Fit: 0.372s, Infer: 0.02ms, Total: 0.40s)
+2026-10-07 00:30:12 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | select_k_best | ridge] -> Score: 81.1182 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:30:13 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | random_forest] -> Score: 72.1886 (Fit: 0.506s, Infer: 0.02ms, Total: 0.61s)
+2026-10-07 00:30:14 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | l1 | ridge] -> Score: 75.401 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-07 00:30:15 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | random_forest] -> Score: 71.9502 (Fit: 0.485s, Infer: 0.02ms, Total: 0.73s)
+2026-10-07 00:30:16 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | tree_importance | ridge] -> Score: 77.0881 (Fit: 0.002s, Infer: 0.00ms, Total: 0.22s)
+2026-10-07 00:30:20 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | random_forest] -> Score: 75.4285 (Fit: 0.370s, Infer: 0.02ms, Total: 3.52s)
+2026-10-07 00:30:23 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | polars_statistics | subsampled | ridge] -> Score: 81.1073 (Fit: 0.004s, Infer: 0.00ms, Total: 3.10s)
+2026-10-07 00:30:23 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'beijing-pm25'
+2026-10-07 00:30:24 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | random_forest] -> Score: 71.294 (Fit: 0.731s, Infer: 0.04ms, Total: 0.76s)
+2026-10-07 00:30:25 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | None | ridge] -> Score: 75.3976 (Fit: 0.003s, Infer: 0.00ms, Total: 0.00s)
+2026-10-07 00:30:26 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | random_forest] -> Score: 71.3271 (Fit: 0.751s, Infer: 0.02ms, Total: 0.78s)
+2026-10-07 00:30:27 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | variance_threshold | ridge] -> Score: 75.3977 (Fit: 0.003s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:30:28 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | random_forest] -> Score: 75.6648 (Fit: 0.358s, Infer: 0.02ms, Total: 0.39s)
+2026-10-07 00:30:28 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | select_k_best | ridge] -> Score: 81.1182 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:30:29 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | random_forest] -> Score: 72.2336 (Fit: 0.494s, Infer: 0.04ms, Total: 0.62s)
+2026-10-07 00:30:30 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | l1 | ridge] -> Score: 75.4011 (Fit: 0.003s, Infer: 0.00ms, Total: 0.10s)
+2026-10-07 00:30:31 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | random_forest] -> Score: 71.9144 (Fit: 0.512s, Infer: 0.02ms, Total: 0.75s)
+2026-10-07 00:30:32 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | tree_importance | ridge] -> Score: 77.088 (Fit: 0.003s, Infer: 0.00ms, Total: 0.22s)
+2026-10-07 00:30:36 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | random_forest] -> Score: 75.5055 (Fit: 0.358s, Infer: 0.02ms, Total: 3.62s)
+2026-10-07 00:30:39 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | numpy_statistical | subsampled | ridge] -> Score: 81.1073 (Fit: 0.003s, Infer: 0.00ms, Total: 2.97s)
+2026-10-07 00:30:39 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'beijing-pm25'
+2026-10-07 00:30:41 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | random_forest] -> Score: 71.7841 (Fit: 1.113s, Infer: 0.02ms, Total: 1.13s)
+2026-10-07 00:30:41 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | None | ridge] -> Score: 74.5312 (Fit: 0.006s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 00:30:43 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | random_forest] -> Score: 71.7507 (Fit: 1.165s, Infer: 0.02ms, Total: 1.20s)
+2026-10-07 00:30:44 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | variance_threshold | ridge] -> Score: 74.5312 (Fit: 0.004s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:30:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | random_forest] -> Score: 85.3141 (Fit: 0.373s, Infer: 0.04ms, Total: 0.42s)
+2026-10-07 00:30:45 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | select_k_best | ridge] -> Score: 84.8101 (Fit: 0.002s, Infer: 0.00ms, Total: 0.02s)
+2026-10-07 00:30:46 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | random_forest] -> Score: 71.8154 (Fit: 0.589s, Infer: 0.04ms, Total: 0.75s)
+2026-10-07 00:30:47 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | l1 | ridge] -> Score: 74.5424 (Fit: 0.003s, Infer: 0.00ms, Total: 0.16s)
+2026-10-07 00:30:49 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | random_forest] -> Score: 71.8526 (Fit: 0.900s, Infer: 0.02ms, Total: 1.27s)
+2026-10-07 00:30:50 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | tree_importance | ridge] -> Score: 75.4124 (Fit: 0.003s, Infer: 0.00ms, Total: 0.35s)
+2026-10-07 00:30:54 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | random_forest] -> Score: 73.8957 (Fit: 0.636s, Infer: 0.02ms, Total: 3.89s)
+2026-10-07 00:30:58 [INFO] tempo.benchmark: Evaluated: [beijing-pm25 | tsfresh_minimal | subsampled | ridge] -> Score: 79.0841 (Fit: 0.004s, Infer: 0.00ms, Total: 3.05s)
+2026-10-07 00:30:59 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a7a__overnight_forecasting/benchmark_results_20261007_003058.csv and benchmark_results/TM26a7a__overnight_forecasting/benchmark_results.csv
+2026-10-07 00:32:41 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: classification
+2026-10-07 00:32:41 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a7b__overnight_classification/environment.json
+2026-10-07 00:32:41 [INFO] tempo.benchmark: Loading dataset: drift-bifurcation-cls
+2026-10-07 00:32:42 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | None | random_forest] -> Score: 0.755 (Fit: 0.069s, Infer: 0.35ms, Total: 0.47s)
+2026-10-07 00:32:42 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | None | logistic_regression] -> Score: 0.72 (Fit: 0.026s, Infer: 0.04ms, Total: 0.19s)
+2026-10-07 00:32:43 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | variance_threshold | random_forest] -> Score: 0.735 (Fit: 0.075s, Infer: 0.35ms, Total: 0.58s)
+2026-10-07 00:32:44 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | variance_threshold | logistic_regression] -> Score: 0.72 (Fit: 0.022s, Infer: 0.04ms, Total: 0.25s)
+2026-10-07 00:32:45 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | select_k_best | random_forest] -> Score: 0.765 (Fit: 0.062s, Infer: 0.34ms, Total: 0.51s)
+2026-10-07 00:32:46 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | select_k_best | logistic_regression] -> Score: 0.755 (Fit: 0.004s, Infer: 0.02ms, Total: 0.15s)
+2026-10-07 00:32:47 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | l1 | random_forest] -> Score: 0.76 (Fit: 0.065s, Infer: 0.33ms, Total: 0.54s)
+2026-10-07 00:32:48 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | l1 | logistic_regression] -> Score: 0.71 (Fit: 0.007s, Infer: 0.02ms, Total: 0.19s)
+2026-10-07 00:32:49 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | tree_importance | random_forest] -> Score: 0.765 (Fit: 0.070s, Infer: 0.36ms, Total: 0.87s)
+2026-10-07 00:32:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | tree_importance | logistic_regression] -> Score: 0.735 (Fit: 0.010s, Infer: 0.03ms, Total: 0.51s)
+2026-10-07 00:33:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:33:09 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | subsampled | random_forest] -> Score: 0.69 (Fit: 0.069s, Infer: 0.33ms, Total: 18.25s)
+2026-10-07 00:33:19 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 00:33:26 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-cls | numba_efficient | subsampled | logistic_regression] -> Score: 0.74 (Fit: 0.010s, Infer: 0.02ms, Total: 16.30s)
+2026-10-07 00:33:26 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'drift-bifurcation-cls'

@@ -1,0 +1,58 @@
+# TEMPO Overnight Empirical Multi-Horizon Time-Series Forecasting Bakeoff
+# Document ID: TM26a7a
+# Evaluates Extractor and Selector Efficiency on Multi-Horizon Forecasting and Quantile Fan Profiles
+
+dataset_paths:
+  - "data/03_processed/simulated-forecasting"
+  - "data/03_processed/appliances-energy"
+  - "data/03_processed/beijing-pm25"
+
+task_type: "forecasting"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "polars_statistics"
+  - name: "numpy_statistical"
+  - name: "tsfresh_minimal"
+
+selectors:
+  - null                              # Raw baseline unselected features
+  - name: "variance_threshold"       # Zero-variance filter
+    threshold: 0.0
+  - name: "select_k_best"             # F-regression selection (k=25)
+    k: 25
+  - name: "l1"                        # Lasso / L1 regularised regression
+    alpha: 0.1
+  - name: "tree_importance"           # ExtraTrees regressor importance
+    model_type: "extra_trees"
+    n_estimators: 50
+  - name: "subsampled"                # Two-Stage Subsampled FDR Selection (10% sample)
+    sample_ratio: 0.10
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+  - "ridge"
+
+forecast_horizon: 10
+history_len: 100
+forecast_lower: 0.05
+forecast_upper: 0.95
+test_size: 0.2
+
+seeds:
+  - 42
+  - 101
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/TM26a7a__overnight_forecasting"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "overnight_forecasting.log"
+resume: true

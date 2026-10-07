@@ -1,0 +1,188 @@
+2026-10-07 01:24:34 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-07 01:24:34 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a9a__langevin_tau_recovery_1k/environment.json
+2026-10-07 01:24:34 [INFO] tempo.benchmark: Loading dataset: drift-bifurcation-reg-1k
+2026-10-07 01:24:47 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | None | random_forest] -> Score: 0.1851 (Fit: 1.982s, Infer: 0.08ms, Total: 11.62s)
+2026-10-07 01:24:47 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | None | ridge] -> Score: -0.3023 (Fit: 0.008s, Infer: 0.01ms, Total: 1.67s)
+2026-10-07 01:24:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | variance_threshold | random_forest] -> Score: 0.1859 (Fit: 1.893s, Infer: 0.08ms, Total: 11.24s)
+2026-10-07 01:24:58 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | variance_threshold | ridge] -> Score: -0.3023 (Fit: 0.008s, Infer: 0.01ms, Total: 1.75s)
+2026-10-07 01:25:00 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | select_k_best | random_forest] -> Score: 0.1281 (Fit: 0.115s, Infer: 0.08ms, Total: 2.35s)
+2026-10-07 01:25:01 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | select_k_best | ridge] -> Score: 0.2178 (Fit: 0.002s, Infer: 0.00ms, Total: 1.71s)
+2026-10-07 01:25:02 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | l1 | random_forest] -> Score: 0.0161 (Fit: 0.061s, Infer: 0.07ms, Total: 2.08s)
+2026-10-07 01:25:03 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | l1 | ridge] -> Score: 0.2047 (Fit: 0.002s, Infer: 0.00ms, Total: 1.71s)
+2026-10-07 01:25:11 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | tree_importance | random_forest] -> Score: 0.1952 (Fit: 1.051s, Infer: 0.07ms, Total: 9.38s)
+2026-10-07 01:25:15 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | tree_importance | ridge] -> Score: -0.0268 (Fit: 0.004s, Infer: 0.01ms, Total: 4.02s)
+2026-10-07 01:25:32 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:25:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | subsampled | random_forest] -> Score: 0.154 (Fit: 0.520s, Infer: 0.07ms, Total: 20.37s)
+2026-10-07 01:25:50 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:25:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | subsampled | ridge] -> Score: 0.0856 (Fit: 0.004s, Infer: 0.00ms, Total: 16.78s)
+2026-10-07 01:25:51 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | None | random_forest] -> Score: 0.1059 (Fit: 0.104s, Infer: 0.07ms, Total: 0.62s)
+2026-10-07 01:25:51 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | None | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.03s)
+2026-10-07 01:25:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | variance_threshold | random_forest] -> Score: 0.1057 (Fit: 0.106s, Infer: 0.07ms, Total: 0.68s)
+2026-10-07 01:25:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | variance_threshold | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 01:25:55 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | select_k_best | random_forest] -> Score: 0.1059 (Fit: 0.104s, Infer: 0.07ms, Total: 0.67s)
+2026-10-07 01:25:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | select_k_best | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 01:25:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | l1 | random_forest] -> Score: 0.0575 (Fit: 0.062s, Infer: 0.07ms, Total: 0.47s)
+2026-10-07 01:25:58 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | l1 | ridge] -> Score: 0.1651 (Fit: 0.002s, Infer: 0.00ms, Total: 0.10s)
+2026-10-07 01:26:00 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | tree_importance | random_forest] -> Score: 0.117 (Fit: 0.081s, Infer: 0.07ms, Total: 0.89s)
+2026-10-07 01:26:01 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | tree_importance | ridge] -> Score: 0.1773 (Fit: 0.002s, Infer: 0.00ms, Total: 0.42s)
+2026-10-07 01:26:17 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | subsampled | random_forest] -> Score: 0.0817 (Fit: 0.071s, Infer: 0.07ms, Total: 15.53s)
+2026-10-07 01:26:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | subsampled | ridge] -> Score: 0.1769 (Fit: 0.002s, Infer: 0.00ms, Total: 14.98s)
+2026-10-07 01:26:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | None | random_forest] -> Score: 0.1059 (Fit: 0.114s, Infer: 0.07ms, Total: 0.66s)
+2026-10-07 01:26:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | None | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.03s)
+2026-10-07 01:26:36 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | variance_threshold | random_forest] -> Score: 0.1057 (Fit: 0.100s, Infer: 0.07ms, Total: 0.65s)
+2026-10-07 01:26:37 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | variance_threshold | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 01:26:38 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | select_k_best | random_forest] -> Score: 0.1059 (Fit: 0.105s, Infer: 0.07ms, Total: 0.67s)
+2026-10-07 01:26:39 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | select_k_best | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 01:26:41 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | l1 | random_forest] -> Score: 0.0575 (Fit: 0.063s, Infer: 0.07ms, Total: 0.47s)
+2026-10-07 01:26:42 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | l1 | ridge] -> Score: 0.1651 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 01:26:43 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | tree_importance | random_forest] -> Score: 0.117 (Fit: 0.077s, Infer: 0.07ms, Total: 0.89s)
+2026-10-07 01:26:45 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | tree_importance | ridge] -> Score: 0.1773 (Fit: 0.002s, Infer: 0.00ms, Total: 0.40s)
+2026-10-07 01:27:02 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | subsampled | random_forest] -> Score: 0.0816 (Fit: 0.080s, Infer: 0.07ms, Total: 16.24s)
+2026-10-07 01:27:18 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | subsampled | ridge] -> Score: 0.1769 (Fit: 0.003s, Infer: 0.00ms, Total: 15.12s)
+2026-10-07 01:27:22 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | None | random_forest] -> Score: 0.1047 (Fit: 0.150s, Infer: 0.07ms, Total: 4.17s)
+2026-10-07 01:27:22 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | None | ridge] -> Score: 0.1623 (Fit: 0.002s, Infer: 0.00ms, Total: 3.37s)
+2026-10-07 01:27:24 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.1037 (Fit: 0.160s, Infer: 0.07ms, Total: 4.29s)
+2026-10-07 01:27:25 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.1623 (Fit: 0.002s, Infer: 0.00ms, Total: 3.44s)
+2026-10-07 01:27:27 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.1124 (Fit: 0.107s, Infer: 0.07ms, Total: 4.03s)
+2026-10-07 01:27:28 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | select_k_best | ridge] -> Score: 0.1706 (Fit: 0.002s, Infer: 0.00ms, Total: 3.43s)
+2026-10-07 01:27:29 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | l1 | random_forest] -> Score: -0.1099 (Fit: 0.062s, Infer: 0.07ms, Total: 3.80s)
+2026-10-07 01:27:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | l1 | ridge] -> Score: 0.1711 (Fit: 0.002s, Infer: 0.00ms, Total: 3.43s)
+2026-10-07 01:27:32 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.1014 (Fit: 0.107s, Infer: 0.07ms, Total: 4.41s)
+2026-10-07 01:27:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | tree_importance | ridge] -> Score: 0.1704 (Fit: 0.002s, Infer: 0.00ms, Total: 3.78s)
+2026-10-07 01:27:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | subsampled | random_forest] -> Score: 0.0874 (Fit: 0.087s, Infer: 0.07ms, Total: 19.17s)
+2026-10-07 01:28:06 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | subsampled | ridge] -> Score: 0.1698 (Fit: 0.003s, Infer: 0.00ms, Total: 18.58s)
+2026-10-07 01:28:06 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:28:16 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | None | random_forest] -> Score: 0.189 (Fit: 1.918s, Infer: 0.07ms, Total: 9.66s)
+2026-10-07 01:28:16 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | None | ridge] -> Score: -0.3421 (Fit: 0.008s, Infer: 0.01ms, Total: 0.05s)
+2026-10-07 01:28:27 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | variance_threshold | random_forest] -> Score: 0.1903 (Fit: 1.881s, Infer: 0.07ms, Total: 9.56s)
+2026-10-07 01:28:28 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | variance_threshold | ridge] -> Score: -0.3421 (Fit: 0.008s, Infer: 0.01ms, Total: 0.13s)
+2026-10-07 01:28:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | select_k_best | random_forest] -> Score: 0.1318 (Fit: 0.109s, Infer: 0.07ms, Total: 0.68s)
+2026-10-07 01:28:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | select_k_best | ridge] -> Score: 0.2231 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:28:32 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | l1 | random_forest] -> Score: 0.0525 (Fit: 0.064s, Infer: 0.07ms, Total: 0.47s)
+2026-10-07 01:28:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | l1 | ridge] -> Score: 0.2201 (Fit: 0.002s, Infer: 0.00ms, Total: 0.09s)
+2026-10-07 01:28:41 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | tree_importance | random_forest] -> Score: 0.1922 (Fit: 0.992s, Infer: 0.07ms, Total: 7.30s)
+2026-10-07 01:28:44 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | tree_importance | ridge] -> Score: -0.1036 (Fit: 0.004s, Infer: 0.01ms, Total: 2.28s)
+2026-10-07 01:28:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:29:04 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | subsampled | random_forest] -> Score: 0.1949 (Fit: 0.569s, Infer: 0.07ms, Total: 18.96s)
+2026-10-07 01:29:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:29:20 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | subsampled | ridge] -> Score: 0.0713 (Fit: 0.004s, Infer: 0.00ms, Total: 15.30s)
+2026-10-07 01:29:20 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:29:21 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | None | random_forest] -> Score: 0.1021 (Fit: 0.104s, Infer: 0.07ms, Total: 0.59s)
+2026-10-07 01:29:21 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | None | ridge] -> Score: 0.168 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 01:29:23 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | variance_threshold | random_forest] -> Score: 0.106 (Fit: 0.108s, Infer: 0.08ms, Total: 0.69s)
+2026-10-07 01:29:24 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | variance_threshold | ridge] -> Score: 0.168 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:29:26 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | select_k_best | random_forest] -> Score: 0.1021 (Fit: 0.107s, Infer: 0.07ms, Total: 0.67s)
+2026-10-07 01:29:27 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | select_k_best | ridge] -> Score: 0.168 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:29:28 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | l1 | random_forest] -> Score: 0.1013 (Fit: 0.063s, Infer: 0.07ms, Total: 0.45s)
+2026-10-07 01:29:29 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | l1 | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:29:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | tree_importance | random_forest] -> Score: 0.1073 (Fit: 0.077s, Infer: 0.07ms, Total: 0.83s)
+2026-10-07 01:29:33 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | tree_importance | ridge] -> Score: 0.178 (Fit: 0.002s, Infer: 0.00ms, Total: 0.42s)
+2026-10-07 01:29:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:29:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | subsampled | random_forest] -> Score: 0.0899 (Fit: 0.083s, Infer: 0.07ms, Total: 16.94s)
+2026-10-07 01:29:54 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:30:07 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | subsampled | ridge] -> Score: 0.1804 (Fit: 0.002s, Infer: 0.00ms, Total: 15.14s)
+2026-10-07 01:30:07 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:30:07 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | None | random_forest] -> Score: 0.1021 (Fit: 0.113s, Infer: 0.07ms, Total: 0.63s)
+2026-10-07 01:30:08 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | None | ridge] -> Score: 0.168 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 01:30:09 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | variance_threshold | random_forest] -> Score: 0.106 (Fit: 0.108s, Infer: 0.07ms, Total: 0.67s)
+2026-10-07 01:30:10 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | variance_threshold | ridge] -> Score: 0.168 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:30:12 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | select_k_best | random_forest] -> Score: 0.1021 (Fit: 0.108s, Infer: 0.07ms, Total: 0.67s)
+2026-10-07 01:30:13 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | select_k_best | ridge] -> Score: 0.168 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:30:15 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | l1 | random_forest] -> Score: 0.1013 (Fit: 0.063s, Infer: 0.07ms, Total: 0.45s)
+2026-10-07 01:30:16 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | l1 | ridge] -> Score: 0.173 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:30:18 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | tree_importance | random_forest] -> Score: 0.1073 (Fit: 0.076s, Infer: 0.07ms, Total: 0.84s)
+2026-10-07 01:30:19 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | tree_importance | ridge] -> Score: 0.178 (Fit: 0.002s, Infer: 0.00ms, Total: 0.38s)
+2026-10-07 01:30:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:30:36 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | subsampled | random_forest] -> Score: 0.0899 (Fit: 0.086s, Infer: 0.07ms, Total: 16.01s)
+2026-10-07 01:30:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:30:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | subsampled | ridge] -> Score: 0.1804 (Fit: 0.003s, Infer: 0.00ms, Total: 15.69s)
+2026-10-07 01:30:53 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:30:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | None | random_forest] -> Score: 0.1086 (Fit: 0.156s, Infer: 0.07ms, Total: 0.85s)
+2026-10-07 01:30:54 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | None | ridge] -> Score: 0.1602 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 01:30:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.1115 (Fit: 0.149s, Infer: 0.08ms, Total: 0.89s)
+2026-10-07 01:30:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.1602 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:30:59 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.1078 (Fit: 0.106s, Infer: 0.07ms, Total: 0.66s)
+2026-10-07 01:31:00 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | select_k_best | ridge] -> Score: 0.1706 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:31:01 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | l1 | random_forest] -> Score: -0.1328 (Fit: 0.060s, Infer: 0.07ms, Total: 0.43s)
+2026-10-07 01:31:03 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | l1 | ridge] -> Score: 0.1818 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:31:05 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.1121 (Fit: 0.107s, Infer: 0.07ms, Total: 1.02s)
+2026-10-07 01:31:06 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | tree_importance | ridge] -> Score: 0.1693 (Fit: 0.002s, Infer: 0.00ms, Total: 0.45s)
+2026-10-07 01:31:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:31:23 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | subsampled | random_forest] -> Score: 0.0993 (Fit: 0.101s, Infer: 0.07ms, Total: 16.26s)
+2026-10-07 01:31:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:31:40 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | subsampled | ridge] -> Score: 0.1733 (Fit: 0.003s, Infer: 0.00ms, Total: 15.21s)
+2026-10-07 01:31:40 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:31:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | None | random_forest] -> Score: 0.1932 (Fit: 1.933s, Infer: 0.07ms, Total: 9.74s)
+2026-10-07 01:31:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | None | ridge] -> Score: -0.3764 (Fit: 0.009s, Infer: 0.01ms, Total: 0.05s)
+2026-10-07 01:32:01 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | variance_threshold | random_forest] -> Score: 0.1939 (Fit: 1.911s, Infer: 0.08ms, Total: 9.70s)
+2026-10-07 01:32:02 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | variance_threshold | ridge] -> Score: -0.3764 (Fit: 0.008s, Infer: 0.01ms, Total: 0.12s)
+2026-10-07 01:32:04 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | select_k_best | random_forest] -> Score: 0.1312 (Fit: 0.110s, Infer: 0.07ms, Total: 0.68s)
+2026-10-07 01:32:05 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | select_k_best | ridge] -> Score: 0.2294 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:32:06 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | l1 | random_forest] -> Score: 0.0697 (Fit: 0.061s, Infer: 0.07ms, Total: 0.45s)
+2026-10-07 01:32:08 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | l1 | ridge] -> Score: 0.2202 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:32:16 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | tree_importance | random_forest] -> Score: 0.1975 (Fit: 1.020s, Infer: 0.07ms, Total: 7.39s)
+2026-10-07 01:32:19 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | tree_importance | ridge] -> Score: -0.0518 (Fit: 0.005s, Infer: 0.01ms, Total: 2.34s)
+2026-10-07 01:32:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:32:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:32:40 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | subsampled | random_forest] -> Score: 0.1629 (Fit: 0.815s, Infer: 0.07ms, Total: 19.75s)
+2026-10-07 01:32:50 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:32:53 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:32:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numba_efficient | subsampled | ridge] -> Score: -0.0232 (Fit: 0.006s, Infer: 0.01ms, Total: 15.18s)
+2026-10-07 01:32:57 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:32:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | None | random_forest] -> Score: 0.0934 (Fit: 0.101s, Infer: 0.07ms, Total: 0.57s)
+2026-10-07 01:32:57 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | None | ridge] -> Score: 0.1811 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 01:32:59 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | variance_threshold | random_forest] -> Score: 0.0969 (Fit: 0.103s, Infer: 0.07ms, Total: 0.64s)
+2026-10-07 01:33:00 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | variance_threshold | ridge] -> Score: 0.1811 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:33:02 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | select_k_best | random_forest] -> Score: 0.0934 (Fit: 0.108s, Infer: 0.08ms, Total: 0.68s)
+2026-10-07 01:33:03 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | select_k_best | ridge] -> Score: 0.1811 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:33:05 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | l1 | random_forest] -> Score: 0.0771 (Fit: 0.062s, Infer: 0.07ms, Total: 0.44s)
+2026-10-07 01:33:06 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | l1 | ridge] -> Score: 0.1749 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:33:08 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | tree_importance | random_forest] -> Score: 0.1028 (Fit: 0.082s, Infer: 0.07ms, Total: 0.85s)
+2026-10-07 01:33:10 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | tree_importance | ridge] -> Score: 0.1856 (Fit: 0.002s, Infer: 0.00ms, Total: 0.39s)
+2026-10-07 01:33:13 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:33:20 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:33:23 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:33:27 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | subsampled | random_forest] -> Score: 0.0896 (Fit: 0.089s, Infer: 0.07ms, Total: 16.14s)
+2026-10-07 01:33:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:33:36 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:33:39 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:33:43 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | polars_statistics | subsampled | ridge] -> Score: 0.1761 (Fit: 0.002s, Infer: 0.00ms, Total: 14.84s)
+2026-10-07 01:33:43 [INFO] tempo.benchmark: Cache hit for extractor 'numpy_statistical' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:33:44 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | None | random_forest] -> Score: 0.0934 (Fit: 0.105s, Infer: 0.07ms, Total: 0.60s)
+2026-10-07 01:33:44 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | None | ridge] -> Score: 0.1811 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 01:33:46 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | variance_threshold | random_forest] -> Score: 0.0969 (Fit: 0.103s, Infer: 0.07ms, Total: 0.64s)
+2026-10-07 01:33:47 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | variance_threshold | ridge] -> Score: 0.1811 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:33:49 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | select_k_best | random_forest] -> Score: 0.0934 (Fit: 0.099s, Infer: 0.07ms, Total: 0.62s)
+2026-10-07 01:33:50 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | select_k_best | ridge] -> Score: 0.1811 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:33:52 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | l1 | random_forest] -> Score: 0.0772 (Fit: 0.061s, Infer: 0.07ms, Total: 0.44s)
+2026-10-07 01:33:53 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | l1 | ridge] -> Score: 0.1749 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:33:55 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | tree_importance | random_forest] -> Score: 0.1028 (Fit: 0.087s, Infer: 0.07ms, Total: 0.87s)
+2026-10-07 01:33:56 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | tree_importance | ridge] -> Score: 0.1856 (Fit: 0.002s, Infer: 0.00ms, Total: 0.43s)
+2026-10-07 01:34:00 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:07 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:10 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:14 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | subsampled | random_forest] -> Score: 0.0896 (Fit: 0.092s, Infer: 0.07ms, Total: 16.41s)
+2026-10-07 01:34:17 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:30 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | numpy_statistical | subsampled | ridge] -> Score: 0.1761 (Fit: 0.003s, Infer: 0.00ms, Total: 15.01s)
+2026-10-07 01:34:30 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_minimal' on dataset 'drift-bifurcation-reg-1k'
+2026-10-07 01:34:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | None | random_forest] -> Score: 0.1138 (Fit: 0.157s, Infer: 0.07ms, Total: 0.85s)
+2026-10-07 01:34:31 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | None | ridge] -> Score: 0.1729 (Fit: 0.002s, Infer: 0.00ms, Total: 0.01s)
+2026-10-07 01:34:34 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | variance_threshold | random_forest] -> Score: 0.1139 (Fit: 0.155s, Infer: 0.07ms, Total: 0.91s)
+2026-10-07 01:34:35 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | variance_threshold | ridge] -> Score: 0.1729 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:34:37 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | select_k_best | random_forest] -> Score: 0.0912 (Fit: 0.106s, Infer: 0.07ms, Total: 0.66s)
+2026-10-07 01:34:38 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | select_k_best | ridge] -> Score: 0.1766 (Fit: 0.002s, Infer: 0.00ms, Total: 0.07s)
+2026-10-07 01:34:40 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | l1 | random_forest] -> Score: -0.1202 (Fit: 0.061s, Infer: 0.07ms, Total: 0.45s)
+2026-10-07 01:34:41 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | l1 | ridge] -> Score: 0.1802 (Fit: 0.002s, Infer: 0.00ms, Total: 0.08s)
+2026-10-07 01:34:43 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | tree_importance | random_forest] -> Score: 0.1021 (Fit: 0.101s, Infer: 0.07ms, Total: 1.03s)
+2026-10-07 01:34:45 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | tree_importance | ridge] -> Score: 0.1805 (Fit: 0.002s, Infer: 0.00ms, Total: 0.44s)
+2026-10-07 01:34:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:34:58 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:35:02 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | subsampled | random_forest] -> Score: 0.0857 (Fit: 0.131s, Infer: 0.07ms, Total: 16.17s)
+2026-10-07 01:35:05 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:35:12 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:35:15 [WARNING] tempo.benchmark: No features survived selector 'subsampled'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-07 01:35:18 [INFO] tempo.benchmark: Evaluated: [drift-bifurcation-reg-1k | tsfresh_minimal | subsampled | ridge] -> Score: 0.1777 (Fit: 0.003s, Infer: 0.00ms, Total: 15.13s)
+2026-10-07 01:35:18 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a9a__langevin_tau_recovery_1k/benchmark_results_20261007_013518.csv and benchmark_results/TM26a9a__langevin_tau_recovery_1k/benchmark_results.csv

@@ -224,12 +224,15 @@ def l1_selector(
                     penalty="l1",
                     solver=solver_name,
                     C=C,
-                    max_iter=500,
+                    max_iter=100,
+                    tol=1e-2,
                     random_state=random_state,
                 )
             else:
                 estimator = Lasso(
                     alpha=alpha,
+                    max_iter=500,
+                    tol=1e-3,
                     random_state=random_state,
                 )
 
