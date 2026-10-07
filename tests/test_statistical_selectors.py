@@ -9,6 +9,9 @@ from tempo.selection import (
     mutual_info_selector,
     boruta_selector,
     tsfresh_selector,
+    variance_threshold_selector,
+    l1_selector,
+    tree_importance_selector,
     SubsampledFeatureSelector,
 )
 
@@ -88,15 +91,17 @@ class TestStatisticalSelectors(unittest.TestCase):
         )
         selector.fit(self.X, self.y_cls)
 
-        # Fallback must be flagged
+        # Fallback must be flagged with honest feature accounting
         self.assertTrue(selector.fallback_triggered_)
-        self.assertEqual(selector.n_features_out_, 0)
-        self.assertEqual(selector.telemetry_["n_selected_features"], 0)
-        self.assertEqual(selector.telemetry_["feature_reduction_pct"], 100.0)
+        self.assertEqual(selector.n_features_out_, self.X.shape[1])
+        self.assertEqual(selector.telemetry_["n_selected_features"], self.X.shape[1])
+        self.assertEqual(selector.telemetry_["n_survived_features"], 0)
+        self.assertEqual(selector.telemetry_["feature_reduction_pct"], 0.0)
 
         # Transform still returns full matrix to prevent downstream crash
         X_trans = selector.transform(self.X)
         self.assertEqual(X_trans.shape[1], self.X.shape[1])
+        self.assertEqual(X_trans.shape[1], selector.n_features_out_)
 
     def test_boruta_selector_empty_feature_space(self):
         """Verify boruta_selector handles empty feature space without crashing."""
@@ -284,6 +289,200 @@ class TestStatisticalSelectors(unittest.TestCase):
             selector.fit(self.X, self.y_cls)
             self.assertFalse(selector.fallback_triggered_)
             self.assertGreater(len(selector.survived_features_), 0)
+
+    def test_subsampled_selector_hyperparameter_propagation(self):
+        """Verify SubsampledFeatureSelector propagates custom hyperparameters (k, threshold, C) to base selectors."""
+        # 1. Custom k=5 for select_k_best on 15 features
+        selector_k5 = SubsampledFeatureSelector(
+            base_selector="select_k_best",
+            k=5,
+            sample_ratio=1.0,
+            task_type="classification",
+        )
+        selector_k5.fit(self.X, self.y_cls)
+        self.assertFalse(selector_k5.fallback_triggered_)
+        self.assertEqual(selector_k5.n_features_out_, 5)
+        self.assertEqual(selector_k5.transform(self.X).shape[1], 5)
+
+        # 2. Custom k=8 via base_params dict
+        selector_dict = SubsampledFeatureSelector(
+            base_selector="select_k_best",
+            base_params={"k": 8},
+            sample_ratio=1.0,
+            task_type="classification",
+        )
+        selector_dict.fit(self.X, self.y_cls)
+        self.assertEqual(selector_dict.n_features_out_, 8)
+
+        # 3. Custom k=3 via kwargs
+        selector_kw = SubsampledFeatureSelector(
+            base_selector="mutual_info",
+            sample_ratio=1.0,
+            task_type="classification",
+            k=3,
+        )
+        selector_kw.fit(self.X, self.y_cls)
+        self.assertEqual(selector_kw.n_features_out_, 3)
+
+    def test_subsampled_selector_imbalanced_data(self):
+        """Verify SubsampledFeatureSelector preserves minority class representation in imbalanced classification."""
+        n_samples = 199
+        n_minority = 9
+        y_imbalanced = np.zeros(n_samples, dtype=int)
+        y_imbalanced[:n_minority] = 1
+        X_imb = pd.DataFrame(np.random.randn(n_samples, 10), columns=[f"f_{i}" for i in range(10)])
+
+        selector = SubsampledFeatureSelector(
+            base_selector="select_k_best",
+            sample_ratio=0.10,
+            min_samples=20,
+            k=4,
+            random_state=42,
+            stratify=True,
+            task_type="classification",
+        )
+        selector.fit(X_imb, pd.Series(y_imbalanced))
+        # Must execute cleanly without exception and preserve minority representation
+        self.assertFalse(selector.fallback_triggered_)
+        self.assertEqual(selector.n_features_out_, 4)
+
+
+class TestSelectorsNumericalRobustness(unittest.TestCase):
+    def test_selectors_all_nan_and_inf_sanitization(self):
+        """Verify selectors sanitize all-NaN and Inf matrices and return valid DataFrames."""
+        n_samples = 20
+        n_features = 5
+        X_nan_inf = pd.DataFrame(
+            np.full((n_samples, n_features), np.nan),
+            columns=[f"col_{i}" for i in range(n_features)],
+        )
+        X_nan_inf.iloc[:10, :2] = np.inf
+        X_nan_inf.iloc[10:, :2] = -np.inf
+        y = pd.Series(np.random.randint(0, 2, size=n_samples))
+
+        # 1. variance_threshold_selector: constant features after zero-fill -> 0 features
+        res_vt = variance_threshold_selector(X_nan_inf)
+        self.assertIsInstance(res_vt, pd.DataFrame)
+        self.assertEqual(res_vt.shape, (n_samples, 0))
+
+        # 2. tsfresh_selector: constant features dropped -> 0 features
+        res_tf = tsfresh_selector(X_nan_inf, y)
+        self.assertIsInstance(res_tf, pd.DataFrame)
+        self.assertEqual(res_tf.shape, (n_samples, 0))
+
+        # Test tsfresh regression task type
+        X_reg = pd.DataFrame(np.random.randn(n_samples, 3), columns=["r1", "r2", "r3"])
+        y_reg = pd.Series(np.random.randn(n_samples))
+        res_tf_reg = tsfresh_selector(X_reg, y_reg, task_type="regression")
+        self.assertIsInstance(res_tf_reg, pd.DataFrame)
+        self.assertEqual(len(res_tf_reg), n_samples)
+
+        # 3. l1_selector: zero variance yields 0 features; empty target returns empty DataFrame
+        res_l1 = l1_selector(X_nan_inf, y, task_type="classification")
+        self.assertIsInstance(res_l1, pd.DataFrame)
+        self.assertEqual(res_l1.shape, (n_samples, 0))
+
+        res_l1_empty = l1_selector(X_reg, np.array([]), task_type="regression")
+        self.assertEqual(res_l1_empty.shape, (n_samples, 0))
+
+        # 4. select_k_best and mutual_info: fallback to top k features
+        res_kb = select_k_best(X_nan_inf, y, k=2)
+        self.assertIsInstance(res_kb, pd.DataFrame)
+        self.assertEqual(len(res_kb), n_samples)
+
+        res_mi = mutual_info_selector(X_nan_inf, y, k=2)
+        self.assertIsInstance(res_mi, pd.DataFrame)
+        self.assertEqual(len(res_mi), n_samples)
+
+        # 5. tree_importance_selector: executes without crash on sanitized inputs
+        res_ti = tree_importance_selector(X_nan_inf, y, model_type="extra_trees", n_estimators=5)
+        self.assertIsInstance(res_ti, pd.DataFrame)
+        self.assertEqual(len(res_ti), n_samples)
+
+        # 6. boruta_selector: zero-variance yields 0 features
+        res_bo = boruta_selector(X_nan_inf, y, n_estimators=5)
+        self.assertIsInstance(res_bo, pd.DataFrame)
+        self.assertEqual(res_bo.shape, (n_samples, 0))
+
+
+    def test_selectors_empty_feature_space(self):
+        """Verify selectors return empty DataFrame with preserved index on P=0."""
+        n_samples = 15
+        X_empty = pd.DataFrame(index=pd.RangeIndex(n_samples))
+        y = pd.Series(np.random.randint(0, 2, size=n_samples))
+
+        for sel_func in [
+            lambda X: variance_threshold_selector(X),
+            lambda X: tsfresh_selector(X, y),
+            lambda X: l1_selector(X, y),
+            lambda X: select_k_best(X, y, k=5),
+            lambda X: tree_importance_selector(X, y, n_estimators=5),
+            lambda X: mutual_info_selector(X, y, k=5),
+            lambda X: boruta_selector(X, y, n_estimators=5),
+        ]:
+            res = sel_func(X_empty)
+            self.assertIsInstance(res, pd.DataFrame)
+            self.assertEqual(res.shape, (n_samples, 0))
+            self.assertEqual(list(res.index), list(X_empty.index))
+
+    def test_selectors_single_class_target(self):
+        """Verify l1_selector and tree_importance_selector handle single-class target without crash."""
+        n_samples = 20
+        X = pd.DataFrame(np.random.randn(n_samples, 6), columns=[f"f_{i}" for i in range(6)])
+        y_single_class = pd.Series(np.zeros(n_samples, dtype=int))
+
+        # l1_selector logs warning and returns empty DataFrame
+        res_l1 = l1_selector(X, y_single_class, task_type="classification")
+        self.assertEqual(res_l1.shape, (n_samples, 0))
+
+        # tree_importance_selector logs warning and returns empty DataFrame
+        res_ti = tree_importance_selector(X, y_single_class, task_type="classification", n_estimators=5)
+        self.assertEqual(res_ti.shape, (n_samples, 0))
+
+    def test_l1_selector_multiclass_saga(self):
+        """Verify l1_selector dispatches to SAGA solver when target contains >2 classes."""
+        n_samples = 30
+        X = pd.DataFrame(np.random.randn(n_samples, 8), columns=[f"f_{i}" for i in range(8)])
+        y_multiclass = pd.Series(np.random.choice([0, 1, 2], size=n_samples))
+
+        res_saga = l1_selector(X, y_multiclass, task_type="classification", C=1.0, random_state=42)
+        self.assertIsInstance(res_saga, pd.DataFrame)
+        self.assertEqual(len(res_saga), n_samples)
+
+        # 2D target array unraveling branch
+        res_saga_2d = l1_selector(X, y_multiclass.to_numpy()[:, None], task_type="classification", C=1.0, random_state=42)
+        self.assertEqual(len(res_saga_2d), n_samples)
+
+
+    def test_subsampled_selector_pathological_inputs(self):
+        """Verify SubsampledFeatureSelector triggers honest fallback telemetry under pathological inputs."""
+        n_samples = 30
+        n_features = 8
+        X_const = pd.DataFrame(
+            np.ones((n_samples, n_features)),
+            columns=[f"const_{i}" for i in range(n_features)],
+        )
+        y = pd.Series(np.random.choice([0, 1], size=n_samples))
+
+        selector = SubsampledFeatureSelector(
+            base_selector="variance_threshold",
+            sample_ratio=0.5,
+            min_samples=10,
+            random_state=42,
+        )
+        selector.fit(X_const, y)
+
+        self.assertTrue(selector.fallback_triggered_)
+        self.assertEqual(selector.n_features_out_, n_features)
+        self.assertTrue(selector.telemetry_["fallback_triggered"])
+        self.assertEqual(selector.telemetry_["n_survived_features"], 0)
+        self.assertEqual(selector.telemetry_["n_selected_features"], n_features)
+        self.assertEqual(selector.telemetry_["feature_reduction_pct"], 0.0)
+
+        # transform returns unreduced feature matrix matching n_features_out_
+        X_trans = selector.transform(X_const)
+        self.assertEqual(X_trans.shape, X_const.shape)
+        self.assertEqual(X_trans.shape[1], selector.n_features_out_)
 
 
 if __name__ == "__main__":

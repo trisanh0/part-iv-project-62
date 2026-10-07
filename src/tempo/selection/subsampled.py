@@ -41,6 +41,14 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
         stratify: bool = True,
         min_samples: int = 20,
         task_type: str = "classification",
+        k: int = 20,
+        threshold: Optional[Union[float, str]] = None,
+        C: float = 1.0,
+        alpha: float = 0.01,
+        n_estimators: int = 50,
+        max_iter: int = 20,
+        base_params: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ):
         """Initialise the subsampled feature selector.
         
@@ -52,6 +60,14 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             stratify: Whether to preserve class label proportions in subsampling.
             min_samples: Minimum absolute number of rows required in subsample.
             task_type: Problem type ('classification' or 'regression').
+            k: Top-k features for SelectKBest / Mutual Info selectors.
+            threshold: Variance or importance cutoff threshold.
+            C: Inverse regularization strength for L1 logistic regression.
+            alpha: Regularization strength for Lasso / L1 regression.
+            n_estimators: Number of trees for tree-based or Boruta selectors.
+            max_iter: Maximum iterations for Boruta selector.
+            base_params: Explicit parameter dictionary forwarded to base selector.
+            **kwargs: Additional parameters forwarded to base selector.
         """
         self.base_selector = base_selector
         self.sample_ratio = sample_ratio
@@ -60,6 +76,14 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
         self.stratify = stratify
         self.min_samples = min_samples
         self.task_type = task_type
+        self.k = k
+        self.threshold = threshold
+        self.C = C
+        self.alpha = alpha
+        self.n_estimators = n_estimators
+        self.max_iter = max_iter
+        self.base_params = base_params or {}
+        self.kwargs = kwargs
 
         # Fitted attributes
         self.selected_feature_names_: Optional[List[str]] = None
@@ -111,7 +135,6 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             y_sub = y_series
         else:
             target_n = max(self.min_samples, int(np.ceil(n_samples * self.sample_ratio)))
-            target_n = min(target_n, n_samples)
 
             # Stratification check (only applicable for classification with multi-class representation)
             strat_labels = None
@@ -119,6 +142,11 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
                 val_counts = y_series.value_counts()
                 if (val_counts >= 2).all():
                     strat_labels = y_series
+                    min_class_count = int(val_counts.min())
+                    # Ensure subsample retains at least 2 samples per class
+                    target_n = max(target_n, int(np.ceil(2.0 * n_samples / float(min_class_count))))
+
+            target_n = min(target_n, n_samples)
 
             try:
                 subsample_idx, _ = train_test_split(
@@ -138,6 +166,20 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             X_sub = X_df.iloc[subsample_idx].reset_index(drop=True)
             y_sub = y_series.iloc[subsample_idx].reset_index(drop=True)
 
+        # Merge hyperparameters: self defaults < self.base_params < self.kwargs
+        resolved_params: Dict[str, Any] = {
+            "k": self.k,
+            "threshold": self.threshold,
+            "C": self.C,
+            "alpha": self.alpha,
+            "n_estimators": self.n_estimators,
+            "max_iter": self.max_iter,
+            "fdr_level": self.fdr_level,
+            "random_state": self.random_state,
+        }
+        resolved_params.update(self.base_params)
+        resolved_params.update(self.kwargs)
+
         # Execute base selection on subsample
         if self.base_selector == "tsfresh" or self.base_selector is None:
             X_sub_clean = X_sub.replace([np.inf, -np.inf], np.nan).fillna(0.0)
@@ -147,37 +189,92 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
                 X_sub_clean = X_sub_clean[non_const]
             try:
                 ml_task = "regression" if self.task_type == "regression" else "auto"
-                X_filtered = select_features(X_sub_clean, y_sub, fdr_level=self.fdr_level, ml_task=ml_task)
+                fdr = float(resolved_params.get("fdr_level", self.fdr_level))
+                X_filtered = select_features(X_sub_clean, y_sub, fdr_level=fdr, ml_task=ml_task)
                 survived = list(X_filtered.columns)
             except Exception:
                 survived = []
 
         elif self.base_selector in ("select_k_best", "select_k_best_anova", "anova"):
-            df_sel = select_k_best(X_sub, y_sub, task_type=self.task_type)
+            k_val = int(resolved_params.get("k", self.k))
+            score_func = resolved_params.get("score_func", None)
+            df_sel = select_k_best(X_sub, y_sub, k=k_val, score_func=score_func, task_type=self.task_type)
             survived = list(df_sel.columns)
 
         elif self.base_selector in ("mutual_info", "mi"):
-            df_sel = mutual_info_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state)
+            k_val = int(resolved_params.get("k", self.k))
+            rs = resolved_params.get("random_state", self.random_state)
+            df_sel = mutual_info_selector(X_sub, y_sub, k=k_val, task_type=self.task_type, random_state=rs)
             survived = list(df_sel.columns)
 
         elif self.base_selector == "boruta":
-            df_sel = boruta_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state or 42)
+            n_est = int(resolved_params.get("n_estimators", self.n_estimators))
+            m_iter = int(resolved_params.get("max_iter", self.max_iter))
+            m_samp = resolved_params.get("max_samples", 0.7)
+            rs = resolved_params.get("random_state", self.random_state or 42)
+            df_sel = boruta_selector(
+                X_sub,
+                y_sub,
+                n_estimators=n_est,
+                max_iter=m_iter,
+                max_samples=m_samp,
+                task_type=self.task_type,
+                random_state=rs,
+            )
             survived = list(df_sel.columns)
 
         elif self.base_selector in ("variance_threshold", "variance", "zero_variance"):
-            df_sel = variance_threshold_selector(X_sub)
+            thresh_param = resolved_params.get("threshold")
+            thresh = 0.0 if thresh_param is None else float(thresh_param)
+            df_sel = variance_threshold_selector(X_sub, threshold=thresh)
             survived = list(df_sel.columns)
 
         elif self.base_selector in ("l1", "lasso"):
-            df_sel = l1_selector(X_sub, y_sub, task_type=self.task_type, random_state=self.random_state or 42)
+            c_val = float(resolved_params.get("C", self.C))
+            a_val = float(resolved_params.get("alpha", self.alpha))
+            rs = resolved_params.get("random_state", self.random_state or 42)
+            df_sel = l1_selector(
+                X_sub,
+                y_sub,
+                C=c_val,
+                alpha=a_val,
+                task_type=self.task_type,
+                random_state=rs,
+            )
             survived = list(df_sel.columns)
 
         elif self.base_selector in ("extra_trees", "extratrees"):
-            df_sel = tree_importance_selector(X_sub, y_sub, model_type="extra_trees", task_type=self.task_type, random_state=self.random_state or 42)
+            n_est = int(resolved_params.get("n_estimators", self.n_estimators))
+            thresh = resolved_params.get("threshold")
+            if thresh is None:
+                thresh = "median"
+            rs = resolved_params.get("random_state", self.random_state or 42)
+            df_sel = tree_importance_selector(
+                X_sub,
+                y_sub,
+                model_type="extra_trees",
+                n_estimators=n_est,
+                threshold=thresh,
+                task_type=self.task_type,
+                random_state=rs,
+            )
             survived = list(df_sel.columns)
 
         elif self.base_selector in ("random_forest", "rf_importance", "randomforest"):
-            df_sel = tree_importance_selector(X_sub, y_sub, model_type="random_forest", task_type=self.task_type, random_state=self.random_state or 42)
+            n_est = int(resolved_params.get("n_estimators", self.n_estimators))
+            thresh = resolved_params.get("threshold")
+            if thresh is None:
+                thresh = "median"
+            rs = resolved_params.get("random_state", self.random_state or 42)
+            df_sel = tree_importance_selector(
+                X_sub,
+                y_sub,
+                model_type="random_forest",
+                n_estimators=n_est,
+                threshold=thresh,
+                task_type=self.task_type,
+                random_state=rs,
+            )
             survived = list(df_sel.columns)
 
         elif hasattr(self.base_selector, "fit") and hasattr(self.base_selector, "get_support"):
@@ -187,10 +284,14 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
 
         elif callable(self.base_selector):
             sig = inspect.signature(self.base_selector)
-            if "task_type" in sig.parameters:
-                res = self.base_selector(X_sub, y_sub, task_type=self.task_type)
-            else:
-                res = self.base_selector(X_sub, y_sub)
+            call_kwargs = {}
+            for param_name, param_val in resolved_params.items():
+                if param_name in sig.parameters:
+                    call_kwargs[param_name] = param_val
+            if "task_type" in sig.parameters and "task_type" not in call_kwargs:
+                call_kwargs["task_type"] = self.task_type
+
+            res = self.base_selector(X_sub, y_sub, **call_kwargs)
             if isinstance(res, pd.DataFrame):
                 survived = list(res.columns)
             elif isinstance(res, (list, np.ndarray)):
@@ -212,8 +313,8 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             # Retain all features in transform to prevent downstream crash
             self.survived_features_ = []
             self.selected_feature_names_ = list(feature_names)
-            self.n_features_out_ = 0
-            reduction_pct = 100.0
+            self.n_features_out_ = n_features
+            reduction_pct = 0.0
         else:
             self.survived_features_ = list(survived)
             self.selected_feature_names_ = list(survived)
@@ -231,6 +332,7 @@ class SubsampledFeatureSelector(BaseEstimator, TransformerMixin):
             "total_size": n_samples,
             "sample_ratio_actual": round(len(X_sub) / float(n_samples), 4),
             "n_initial_features": n_features,
+            "n_survived_features": raw_survived,
             "n_selected_features": self.n_features_out_,
             "fallback_triggered": self.fallback_triggered_,
             "feature_reduction_pct": reduction_pct,
@@ -279,9 +381,11 @@ def evaluate_subsampling_sweep(
     X: pd.DataFrame,
     y: Union[pd.Series, np.ndarray],
     sample_ratios: Sequence[float] = (0.05, 0.10, 0.20, 0.50, 1.0),
+    base_selector: Optional[Union[str, Callable, BaseEstimator]] = "tsfresh",
     fdr_level: float = 0.05,
     random_state: int = 42,
     task_type: str = "classification",
+    **kwargs: Any,
 ) -> pd.DataFrame:
     """Benchmark feature selection latency and feature reduction across sample ratios.
     
@@ -289,9 +393,11 @@ def evaluate_subsampling_sweep(
         X: Feature matrix.
         y: Target series.
         sample_ratios: Sequence of sample ratios to evaluate.
+        base_selector: Base selector strategy or estimator.
         fdr_level: FDR alpha level.
         random_state: Seed for reproducibility.
         task_type: Target problem type ('classification' or 'regression').
+        **kwargs: Additional parameters forwarded to SubsampledFeatureSelector.
         
     Returns:
         DataFrame containing telemetry summary for each sample ratio.
@@ -300,11 +406,12 @@ def evaluate_subsampling_sweep(
 
     for ratio in sample_ratios:
         selector = SubsampledFeatureSelector(
-            base_selector="tsfresh",
+            base_selector=base_selector,
             sample_ratio=ratio,
             fdr_level=fdr_level,
             random_state=random_state,
             task_type=task_type,
+            **kwargs,
         )
         selector.fit(X, y)
         telemetry = selector.telemetry_
@@ -315,6 +422,7 @@ def evaluate_subsampling_sweep(
             "Total Rows": telemetry["total_size"],
             "Fit Time (s)": telemetry["fit_time_sec"],
             "Initial Features": telemetry["n_initial_features"],
+            "Survived Features": telemetry.get("n_survived_features", telemetry["n_selected_features"]),
             "Selected Features": telemetry["n_selected_features"],
             "Fallback Triggered": telemetry["fallback_triggered"],
             "Feature Reduction (%)": telemetry["feature_reduction_pct"],
