@@ -200,8 +200,56 @@ class TestBenchmark(unittest.TestCase):
             self.assertFalse(df_res.empty)
             self.assertTrue(df_res["fallback_triggered"].iloc[0])
             self.assertEqual(df_res["Selection Stability (Jaccard)"].iloc[0], 0.0)
-            self.assertEqual(df_res["Feature Reduction (%)"].iloc[0], 100.0)
-            self.assertEqual(df_res["N Selected Features"].iloc[0], 0.0)
+            self.assertEqual(df_res["Feature Reduction (%)"].iloc[0], 0.0)
+            self.assertEqual(df_res["N Selected Features"].iloc[0], df_res["N Extracted Features"].iloc[0])
+
+    def test_subsampled_selector_hyperparameter_forwarding_in_bakeoff(self):
+        """Verify BakeoffRunner forwards selector hyperparameters (k) into SubsampledFeatureSelector."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ds_dir = Path(tmpdir) / "k_sel_ds"
+            ds_dir.mkdir(parents=True)
+
+            n_seq = 10
+            seq_len = 10
+            df_ts = pl.DataFrame({
+                "sequence_id": np.repeat(np.arange(n_seq, dtype=np.int32), seq_len),
+                "step": np.tile(np.arange(seq_len, dtype=np.int32), n_seq),
+                "sensor": np.random.randn(n_seq * seq_len).astype(np.float32),
+            })
+            df_targets = pl.DataFrame({
+                "sequence_id": np.arange(n_seq, dtype=np.int32),
+                "target": np.array([0, 1] * 5, dtype=np.int32),
+            })
+            df_ts.write_parquet(ds_dir / "time_series.parquet")
+            df_targets.write_parquet(ds_dir / "targets.parquet")
+
+            selector_spec = {
+                "name": "subsampled",
+                "sample_ratio": 1.0,
+                "base_selector": "select_k_best",
+                "k": 3,
+            }
+
+            cfg = PipelineConfig(
+                dataset_paths=[str(ds_dir)],
+                task_type="classification",
+                extractors=["numpy_statistical"],
+                selectors=[selector_spec],
+                models=["random_forest"],
+                n_splits=2,
+                cache_backend="memory",
+                cache_dir=str(Path(tmpdir) / "cache"),
+                output_dir=str(Path(tmpdir) / "out"),
+                enable_ttests=False,
+                enable_plots=False,
+                enable_logging=False,
+            )
+            runner = BakeoffRunner(cfg)
+            df_res = runner.run()
+
+            self.assertFalse(df_res.empty)
+            self.assertFalse(df_res["fallback_triggered"].iloc[0])
+            self.assertEqual(df_res["N Selected Features"].iloc[0], 3.0)
 
     def test_group_cv_single_group_fallback(self):
         """Verify Group CV cleanly falls back to standard CV without crashing when n_groups < 2."""
@@ -318,6 +366,54 @@ class TestBenchmark(unittest.TestCase):
             analysis_dir = Path(tmpdir) / "out" / "analysis"
             tau_plots = list(analysis_dir.glob("tau_estimation_scatter_*.png"))
             self.assertGreater(len(tau_plots), 0)
+
+    def test_bakeoff_runner_extract_features_dispatch(self):
+        """Verify _extract_features dispatches properly across all supported extractor configurations."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            n_seq = 4
+            seq_len = 15
+            df_ts = pl.DataFrame({
+                "sequence_id": np.repeat(np.arange(n_seq, dtype=np.int32), seq_len),
+                "step": np.tile(np.arange(seq_len, dtype=np.int32), n_seq),
+                "sensor": np.random.randn(n_seq * seq_len).astype(np.float32),
+            })
+
+            cfg = PipelineConfig(
+                dataset_paths=[],
+                cache_dir=tmpdir,
+                cache_backend="memory",
+                enable_logging=False,
+            )
+            runner = BakeoffRunner(cfg)
+
+            # 1. numpy_statistical and numpy (2D tensor)
+            f_np, _, _ = runner._extract_features(df_ts, "numpy_statistical", "test_np")
+            self.assertEqual(f_np.shape[0], n_seq)
+
+            f_np2, _, _ = runner._extract_features(df_ts, "numpy", "test_np2")
+            self.assertEqual(f_np2.shape[0], n_seq)
+
+            # 2. polars_statistics
+            f_pl, _, _ = runner._extract_features(df_ts, "polars_statistics", "test_pl")
+            self.assertEqual(f_pl.shape[0], n_seq)
+
+            # 3. tsfel with single channel
+            f_tsfel, _, _ = runner._extract_features(df_ts, "tsfel", "test_tsfel")
+            self.assertEqual(f_tsfel.shape[0], n_seq)
+
+            # 4. ExtractorConfig numba_efficient
+            numba_cfg = ExtractorConfig(name="numba_efficient", fft_coefficients=2)
+            f_nb, _, _ = runner._extract_features(df_ts, numba_cfg, "test_nb")
+            self.assertEqual(f_nb.shape[0], n_seq)
+
+            # 5. dict tsfresh_efficient
+            tsfresh_dict = {"name": "tsfresh_efficient", "fft_coefficients": 2}
+            f_tf, _, _ = runner._extract_features(df_ts, tsfresh_dict, "test_tf")
+            self.assertEqual(f_tf.shape[0], n_seq)
+
+            # 6. Unknown extractor raises ValueError
+            with self.assertRaises(ValueError):
+                runner._extract_features(df_ts, "unsupported_extractor_xyz", "test_err")
 
 
 if __name__ == "__main__":
