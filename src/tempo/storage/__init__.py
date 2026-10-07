@@ -21,6 +21,12 @@ from tempo.storage.segmentation import (
     to_forecasting_tensors,
 )
 
+from tempo.storage.feature_store import (
+    FeatureStore,
+    compute_dataset_fingerprint,
+    compute_extractor_version,
+)
+
 __all__ = [
     "generate_simulated_dataset",
     "generate_simulated_forecasting_dataset",
@@ -38,4 +44,7 @@ __all__ = [
     "segment_time_series",
     "segment_forecasting_series",
     "to_forecasting_tensors",
+    "FeatureStore",
+    "compute_dataset_fingerprint",
+    "compute_extractor_version",
 ]

@@ -12,7 +12,7 @@ import logging
 import os
 from pathlib import Path
 import time
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -32,6 +32,118 @@ def _compute_parameter_hash(params: Optional[Dict[str, Any]]) -> str:
         return hashlib.md5(encoded).hexdigest()[:12]
     except Exception:
         return str(hash(frozenset(str(params))))[:12]
+
+
+def compute_dataset_fingerprint(
+    dataset: Union[str, Path, pd.DataFrame, Any],
+) -> str:
+    """Compute a deterministic hash fingerprint representing dataset identity and content state.
+
+    Supports file paths, directory paths containing Parquet files, and in-memory DataFrames.
+    Uses file size and nanosecond modification timestamps for local filesystem artifacts,
+    and schema, dimension, and sampled boundary checksums for in-memory data.
+    """
+    if isinstance(dataset, (str, Path)):
+        p = Path(dataset)
+        if p.exists():
+            if p.is_dir():
+                # Hash constituent time_series.parquet / targets.parquet or all parquet files
+                candidates = sorted(p.glob("*.parquet"))
+                if not candidates:
+                    candidates = sorted(p.glob("*"))
+                if candidates:
+                    sig_parts = []
+                    for c in candidates:
+                        try:
+                            st = c.stat()
+                            sig_parts.append(f"{c.name}:{st.st_size}:{st.st_mtime_ns}")
+                        except OSError:
+                            pass
+                    if sig_parts:
+                        return hashlib.sha256(";".join(sig_parts).encode("utf-8")).hexdigest()[:12]
+            else:
+                try:
+                    st = p.stat()
+                    sig = f"{p.name}:{st.st_size}:{st.st_mtime_ns}"
+                    return hashlib.sha256(sig.encode("utf-8")).hexdigest()[:12]
+                except OSError:
+                    pass
+        # Fallback for named datasets or nonexistent paths: hash canonical string name
+        return hashlib.sha256(str(dataset).strip().lower().encode("utf-8")).hexdigest()[:12]
+
+    # In-memory DataFrame (Polars or Pandas)
+    try:
+        if hasattr(dataset, "schema") and hasattr(dataset, "shape"):
+            # Polars DataFrame
+            n_rows, n_cols = dataset.shape
+            col_types = [f"{c}:{t}" for c, t in dataset.schema.items()]
+            # Sample first, middle, last rows if available
+            sample_vals = []
+            if n_rows > 0:
+                sample_idx = [0, n_rows // 2, n_rows - 1] if n_rows >= 3 else list(range(n_rows))
+                try:
+                    sample_df = dataset[sample_idx]
+                    sample_vals = [str(row) for row in sample_df.iter_rows()]
+                except Exception:
+                    pass
+            sig_str = f"pl:{n_rows}:{n_cols}:{','.join(col_types)}:{';'.join(sample_vals)}"
+            return hashlib.sha256(sig_str.encode("utf-8")).hexdigest()[:12]
+
+        elif hasattr(dataset, "dtypes") and hasattr(dataset, "shape"):
+            # Pandas DataFrame
+            n_rows, n_cols = dataset.shape
+            col_types = [f"{c}:{t}" for c, t in dataset.dtypes.items()]
+            sample_vals = []
+            if n_rows > 0:
+                sample_idx = [0, n_rows // 2, n_rows - 1] if n_rows >= 3 else list(range(n_rows))
+                try:
+                    sample_vals = [str(dataset.iloc[i].to_dict()) for i in sample_idx]
+                except Exception:
+                    pass
+            sig_str = f"pd:{n_rows}:{n_cols}:{','.join(col_types)}:{';'.join(sample_vals)}"
+            return hashlib.sha256(sig_str.encode("utf-8")).hexdigest()[:12]
+    except Exception:
+        pass
+
+    return hashlib.sha256(str(type(dataset)).encode("utf-8")).hexdigest()[:12]
+
+
+def compute_extractor_version(
+    extractor: Union[str, Callable, Any],
+) -> str:
+    """Compute a deterministic version string or bytecode/name hash for an extractor."""
+    if isinstance(extractor, str):
+        # Known extractor versions in TEMPO framework
+        known_versions: Dict[str, str] = {
+            "numba_efficient": "v1.1.0",
+            "numba": "v1.1.0",
+            "polars_statistics": "v1.0.0",
+            "polars": "v1.0.0",
+            "numpy_statistical": "v1.0.0",
+            "numpy": "v1.0.0",
+            "tsfel": "v1.0.0",
+            "tsfresh_minimal": "v1.0.0",
+            "tsfresh_efficient": "v1.0.0",
+            "tsfresh_comprehensive": "v1.0.0",
+            "tsfresh": "v1.0.0",
+        }
+        clean = extractor.lower().strip()
+        ver = known_versions.get(clean)
+        if ver:
+            return ver
+        return hashlib.sha256(clean.encode("utf-8")).hexdigest()[:8]
+
+    if callable(extractor):
+        try:
+            import inspect
+            src = inspect.getsource(extractor)
+            return hashlib.sha256(src.encode("utf-8")).hexdigest()[:8]
+        except Exception:
+            name = getattr(extractor, "__name__", str(extractor))
+            return hashlib.sha256(name.encode("utf-8")).hexdigest()[:8]
+
+    name = getattr(extractor, "name", str(extractor))
+    return hashlib.sha256(str(name).encode("utf-8")).hexdigest()[:8]
 
 
 class FeatureStore:
@@ -60,24 +172,50 @@ class FeatureStore:
         dataset_name: str,
         extractor_name: str,
         params: Optional[Dict[str, Any]] = None,
+        dataset_hash: Optional[str] = None,
+        extractor_version: Optional[str] = None,
     ) -> str:
-        """Construct a unique cache key from dataset, extractor, and parameter config."""
+        """Construct a unique cache key from dataset, extractor, parameter config, and provenance hashes.
+
+        Args:
+            dataset_name: Dataset identifier.
+            extractor_name: Extractor identifier.
+            params: Optional parameter dictionary.
+            dataset_hash: Optional deterministic dataset content/file fingerprint.
+            extractor_version: Optional extractor version or code hash.
+
+        Returns:
+            Canonical cache key string.
+        """
         param_hash = _compute_parameter_hash(params)
         clean_ds = dataset_name.lower().replace(" ", "_").replace("/", "_")
         clean_ext = extractor_name.lower().replace(" ", "_").replace("/", "_")
-        return f"{clean_ds}__{clean_ext}__{param_hash}"
+        parts = [clean_ds, clean_ext, param_hash]
+        if dataset_hash is not None:
+            parts.append(f"ds_{dataset_hash[:8]}")
+        if extractor_version is not None:
+            parts.append(f"ext_{extractor_version[:8]}")
+        return "__".join(parts)
 
     def exists(
         self,
         dataset_name: str,
         extractor_name: str,
         params: Optional[Dict[str, Any]] = None,
+        dataset_hash: Optional[str] = None,
+        extractor_version: Optional[str] = None,
     ) -> bool:
         """Check if a cached feature matrix exists for the given configuration."""
         if self.backend == "none":
             return False
 
-        key = self.get_cache_key(dataset_name, extractor_name, params)
+        key = self.get_cache_key(
+            dataset_name,
+            extractor_name,
+            params,
+            dataset_hash=dataset_hash,
+            extractor_version=extractor_version,
+        )
 
         if self.backend == "memory":
             return key in self._memory_cache
@@ -100,6 +238,8 @@ class FeatureStore:
         params: Optional[Dict[str, Any]] = None,
         feature_names: Optional[List[str]] = None,
         sample_ids: Optional[np.ndarray] = None,
+        dataset_hash: Optional[str] = None,
+        extractor_version: Optional[str] = None,
     ) -> Optional[Path]:
         """Save an extracted feature matrix to the configured storage backend.
         
@@ -110,6 +250,8 @@ class FeatureStore:
             params: Dictionary of extractor parameters.
             feature_names: Optional list of column names if features is an ndarray.
             sample_ids: Optional index array for row identifiers.
+            dataset_hash: Optional deterministic dataset content/file fingerprint.
+            extractor_version: Optional extractor version or code hash.
             
         Returns:
             Path to saved file (for disk backends) or None (for memory/none backends).
@@ -117,7 +259,13 @@ class FeatureStore:
         if self.backend == "none":
             return None
 
-        key = self.get_cache_key(dataset_name, extractor_name, params)
+        key = self.get_cache_key(
+            dataset_name,
+            extractor_name,
+            params,
+            dataset_hash=dataset_hash,
+            extractor_version=extractor_version,
+        )
 
         # Standardise to pandas DataFrame
         if isinstance(features, np.ndarray):
@@ -129,6 +277,19 @@ class FeatureStore:
         else:
             df = features.copy()
 
+        # Metadata dictionary for provenance auditability
+        meta: Dict[str, Any] = {
+            "key": key,
+            "dataset_name": dataset_name,
+            "extractor_name": extractor_name,
+            "dataset_hash": dataset_hash,
+            "extractor_version": extractor_version,
+            "params": params or {},
+            "shape": list(df.shape),
+            "columns": [str(c) for c in df.columns],
+            "saved_at": time.time(),
+        }
+
         if self.backend == "memory":
             self._memory_cache[key] = df
             logger.debug("Cached %d features in memory for key: %s", df.shape[1], key)
@@ -136,9 +297,15 @@ class FeatureStore:
 
         if self.backend == "parquet":
             file_path = self.storage_dir / f"{key}.parquet"
+            meta_path = self.storage_dir / f"{key}.meta.json"
             # Ensure column names are strings for Parquet schema
             df.columns = [str(c) for c in df.columns]
             df.to_parquet(file_path, engine="pyarrow", index=True)
+            try:
+                with open(meta_path, "w", encoding="utf-8") as f:
+                    json.dump(meta, f, indent=2)
+            except Exception as e:
+                logger.warning("Could not write cache metadata file %s: %s", meta_path, e)
             logger.debug("Saved Parquet feature matrix: %s (shape: %s)", file_path, df.shape)
             return file_path
 
@@ -152,6 +319,7 @@ class FeatureStore:
                 ) from err
 
             file_path = self.storage_dir / f"{key}.h5"
+            meta_path = self.storage_dir / f"{key}.meta.json"
             with h5py.File(file_path, "w") as h5f:
                 h5f.create_dataset(
                     "data",
@@ -171,6 +339,11 @@ class FeatureStore:
                         "index",
                         data=np.array([str(idx).encode("utf-8") for idx in index_vals]),
                     )
+            try:
+                with open(meta_path, "w", encoding="utf-8") as f:
+                    json.dump(meta, f, indent=2)
+            except Exception as e:
+                logger.warning("Could not write cache metadata file %s: %s", meta_path, e)
             logger.debug("Saved HDF5 feature matrix: %s (shape: %s)", file_path, df.shape)
             return file_path
 
@@ -183,6 +356,8 @@ class FeatureStore:
         params: Optional[Dict[str, Any]] = None,
         row_indices: Optional[np.ndarray] = None,
         feature_subset: Optional[List[str]] = None,
+        dataset_hash: Optional[str] = None,
+        extractor_version: Optional[str] = None,
     ) -> pd.DataFrame:
         """Load feature matrix with optional horizontal and vertical slicing.
         
@@ -192,13 +367,27 @@ class FeatureStore:
             params: Dictionary of extractor parameters.
             row_indices: Optional integer or label positional index slice (horizontal).
             feature_subset: Optional list of specific feature column names (vertical).
+            dataset_hash: Optional deterministic dataset content/file fingerprint.
+            extractor_version: Optional extractor version or code hash.
             
         Returns:
             Sliced pandas DataFrame containing requested features and rows.
         """
-        key = self.get_cache_key(dataset_name, extractor_name, params)
+        key = self.get_cache_key(
+            dataset_name,
+            extractor_name,
+            params,
+            dataset_hash=dataset_hash,
+            extractor_version=extractor_version,
+        )
 
-        if not self.exists(dataset_name, extractor_name, params):
+        if not self.exists(
+            dataset_name,
+            extractor_name,
+            params,
+            dataset_hash=dataset_hash,
+            extractor_version=extractor_version,
+        ):
             raise FileNotFoundError(
                 f"Feature cache not found for key: {key} (backend: {self.backend})"
             )
