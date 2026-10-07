@@ -1,51 +1,42 @@
-# TEMPO Extrinsic Regression Bakeoff Configuration (Andreas Scope)
-# Evaluates Extrinsic Regression across Appliances Energy and Beijing PM2.5.
-
+cache_backend: parquet
+cache_dir: data/03_processed/feature_store
 dataset_paths:
-  - "data/03_processed/appliances-energy"
-  - "data/03_processed/beijing-pm25"
-
-task_type: "regression"
-
-extractors:
-  - name: "numba_efficient"
-    fft_coefficients: 10
-  - name: "numba_efficient"
-    fft_coefficients: 25
-  - name: "numba_efficient"
-    fft_coefficients: 50
-  - name: "tsfresh_efficient"
-    fft_coefficients: 25
-  - name: "tsfresh_minimal"
-  - name: "polars_statistics"
-  - name: "tsfel"
-
-selectors:
-  - null                   # Raw baseline unselected features
-  - "select_k_best"        # Top-20 F-regression test
-  - "fdr"                  # Full TSFresh FDR hypothesis test (q=0.05)
-  - name: "subsampled"     # Two-stage subsampled selection (10% sample)
-    sample_ratio: 0.10
-    base_selector: "tsfresh"
-  - name: "subsampled"     # Two-stage subsampled selection (20% sample)
-    sample_ratio: 0.20
-    base_selector: "tsfresh"
-
-models:
-  - "random_forest"
-  - "ridge"
-
-n_splits: 5
-seeds:
-  - 42
-
-cache_backend: "parquet"
-cache_dir: "data/03_processed/feature_store"
-output_dir: "benchmark_results/andreas_regression"
-
-enable_telemetry: true
-telemetry_interval: 0.05
-enable_ttests: true
-enable_plots: true
+- data/03_processed/appliances-energy
+- data/03_processed/beijing-pm25
 enable_logging: true
-log_file: "andreas_regression.log"
+enable_plots: true
+enable_telemetry: true
+enable_ttests: true
+extractors:
+- fft_coefficients: 10
+  name: numba_efficient
+- fft_coefficients: 25
+  name: numba_efficient
+- fft_coefficients: 50
+  name: numba_efficient
+- fft_coefficients: 25
+  name: tsfresh_efficient
+- name: tsfresh_minimal
+- name: polars_statistics
+- name: tsfel
+log_file: andreas_regression.log
+models:
+- random_forest
+- ridge
+n_splits: 5
+output_dir: benchmark_results/andreas_regression
+resume: true
+seeds:
+- 42
+selectors:
+- null
+- select_k_best
+- fdr
+- base_selector: tsfresh
+  name: subsampled
+  sample_ratio: 0.1
+- base_selector: tsfresh
+  name: subsampled
+  sample_ratio: 0.2
+task_type: regression
+telemetry_interval: 0.05

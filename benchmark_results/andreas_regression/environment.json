@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-10-07T12:22:42.194173+00:00",
+  "timestamp_utc": "2026-10-07T13:39:43.867251+00:00",
   "os": {
     "system": "Darwin",
     "release": "27.0.0",
@@ -17,7 +17,7 @@
     "cpu_count_logical": 8,
     "cpu_count_physical": 8,
     "total_ram_gb": 16.0,
-    "available_ram_gb": 3.72,
+    "available_ram_gb": 6.17,
     "cpu_freq_current_mhz": 3228,
     "gpu_available": false,
     "gpu_devices": []
