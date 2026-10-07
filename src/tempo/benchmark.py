@@ -45,7 +45,12 @@ from tempo.selection import (
     variance_threshold_selector,
 )
 from tempo.storage import load_dataset, to_numpy_tensor
-from tempo.storage.feature_store import BackendType, FeatureStore
+from tempo.storage.feature_store import (
+    BackendType,
+    FeatureStore,
+    compute_dataset_fingerprint,
+    compute_extractor_version,
+)
 from tempo.telemetry import ResourceStats, ResourceTracker, log_system_info
 
 logger = logging.getLogger("tempo.benchmark")
@@ -203,6 +208,7 @@ class BakeoffRunner:
         df_ts: pl.DataFrame,
         extractor: Union[str, Dict[str, Any], ExtractorConfig],
         dataset_name: str,
+        dataset_path: Optional[Union[str, Path]] = None,
     ) -> Tuple[pd.DataFrame, ResourceStats, bool]:
         """Extract or retrieve cached features for a given dataset and extractor.
 
@@ -224,11 +230,34 @@ class BakeoffRunner:
 
         params = {"fft_coefficients": fft_limit, **kwargs}
 
+        # Compute provenance fingerprints for robust cache invalidation
+        ds_source = dataset_path if (dataset_path is not None and Path(dataset_path).exists()) else df_ts
+        ds_hash = compute_dataset_fingerprint(ds_source)
+        ext_ver = compute_extractor_version(ext_name)
+
         # Check feature store cache first
-        if self.feature_store.exists(dataset_name, ext_name, params):
-            logger.info("Cache hit for extractor '%s' on dataset '%s'", ext_name, dataset_name)
+        if self.feature_store.exists(
+            dataset_name,
+            ext_name,
+            params,
+            dataset_hash=ds_hash,
+            extractor_version=ext_ver,
+        ):
+            logger.info(
+                "Cache hit for extractor '%s' (ver=%s) on dataset '%s' (hash=%s)",
+                ext_name,
+                ext_ver,
+                dataset_name,
+                ds_hash,
+            )
             t0 = time.perf_counter()
-            features = self.feature_store.load(dataset_name, ext_name, params)
+            features = self.feature_store.load(
+                dataset_name,
+                ext_name,
+                params,
+                dataset_hash=ds_hash,
+                extractor_version=ext_ver,
+            )
             features = features.replace([np.inf, -np.inf], np.nan).fillna(0.0).reset_index(drop=True)
             load_time = time.perf_counter() - t0
             dummy_stats = ResourceStats(
@@ -315,6 +344,8 @@ class BakeoffRunner:
             dataset_name=dataset_name,
             extractor_name=ext_name,
             params=params,
+            dataset_hash=ds_hash,
+            extractor_version=ext_ver,
         )
         return features, stats, False
 
@@ -707,7 +738,9 @@ class BakeoffRunner:
                     )
 
                     # Extract / Load full feature matrix
-                    X_all, ext_stats, is_cached = self._extract_features(df_ts, extractor, ds_name)
+                    X_all, ext_stats, is_cached = self._extract_features(
+                        df_ts, extractor, ds_name, dataset_path=ds_path
+                    )
 
                     for selector in self.config.selectors:
                         sel_name = "None" if selector is None else (
