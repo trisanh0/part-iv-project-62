@@ -1,0 +1,54 @@
+# TEMPO Overnight Empirical Regression & Parameter Estimation Bakeoff
+# Document ID: TM26a6a
+# Evaluates Extractor and Selector Efficiency on Regression and Langevin Tau Bifurcation Parameter Estimation
+
+dataset_paths:
+  - "data/03_processed/drift-bifurcation-reg"
+  - "data/03_processed/pred-maintenance-w100-reg"
+  - "data/03_processed/appliances-energy"
+  - "data/03_processed/beijing-pm25"
+
+task_type: "regression"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "polars_statistics"
+  - name: "numpy_statistical"
+  - name: "tsfresh_minimal"
+
+selectors:
+  - null                              # Raw baseline unselected features
+  - name: "variance_threshold"       # Zero-variance filter
+    threshold: 0.0
+  - name: "select_k_best"             # F-regression selection (k=25)
+    k: 25
+  - name: "l1"                        # Lasso / L1 regularised regression
+    alpha: 0.1
+  - name: "tree_importance"           # ExtraTrees regressor importance
+    model_type: "extra_trees"
+    n_estimators: 50
+  - name: "subsampled"                # Two-Stage Subsampled FDR Selection (10% sample)
+    sample_ratio: 0.10
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+  - "ridge"
+
+n_splits: 5
+seeds:
+  - 42
+  - 101
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/TM26a6a__overnight_regression"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "overnight_regression.log"
+resume: true

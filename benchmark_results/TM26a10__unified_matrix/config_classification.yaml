@@ -1,0 +1,49 @@
+# TEMPO Unified Cross-Domain Extractor & Selector Matrix (Classification)
+# Document ID: TM26a10a
+# Evaluates 5 Extractors x 6 Selectors on Bioacoustic Sensor Degradation (beed) across 2 Seeds
+
+dataset_paths:
+  - "data/03_processed/beed"
+
+task_type: "classification"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "polars_statistics"
+  - name: "numpy_statistical"
+  - name: "tsfel"
+  - name: "tsfresh_minimal"
+
+selectors:
+  - null                              # Raw baseline unselected features
+  - name: "select_k_best_anova"       # ANOVA F-test (k=25)
+    k: 25
+  - name: "mutual_info"               # Non-linear Mutual Information (k=25)
+    k: 25
+  - "fdr"                             # Full TSFresh FDR hypothesis test (q=0.05)
+  - name: "boruta"                    # Boruta All-Relevant Shadow Random Forest
+  - name: "subsampled_fdr"            # Two-Stage Subsampled FDR Selection (10% sample)
+    sample_ratio: 0.10
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+  - "logistic_regression"
+
+n_splits: 5
+seeds:
+  - 42
+  - 101
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/TM26a10__unified_matrix/classification"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "classification_matrix.log"
+resume: true
