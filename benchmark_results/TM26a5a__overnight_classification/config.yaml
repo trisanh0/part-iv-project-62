@@ -1,0 +1,53 @@
+# TEMPO Overnight Empirical Classification Bakeoff
+# Document ID: TM26a5a
+# Evaluates Extractor and Selector Efficiency on Empirical Classification Datasets
+
+dataset_paths:
+  - "data/03_processed/beed"
+  - "data/03_processed/pred-maintenance-w100-cls"
+  - "data/03_processed/har"
+
+task_type: "classification"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "polars_statistics"
+  - name: "numpy_statistical"
+  - name: "tsfresh_minimal"
+
+selectors:
+  - null                              # Raw baseline unselected features
+  - name: "variance_threshold"       # Zero-variance filter
+    threshold: 0.0
+  - name: "select_k_best"             # ANOVA F-test (k=25)
+    k: 25
+  - name: "l1"                        # L1 / Lasso penalized linear selector
+    C: 1.0
+  - name: "tree_importance"           # ExtraTrees Gini importance
+    model_type: "extra_trees"
+    n_estimators: 50
+  - name: "subsampled"                # Two-Stage Subsampled FDR Selection (10% sample)
+    sample_ratio: 0.10
+    base_selector: "tsfresh"
+
+models:
+  - "random_forest"
+  - "logistic_regression"
+
+n_splits: 5
+seeds:
+  - 42
+  - 101
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/TM26a5a__overnight_classification"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "overnight_classification.log"
+resume: true

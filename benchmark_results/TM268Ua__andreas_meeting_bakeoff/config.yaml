@@ -1,0 +1,46 @@
+cache_backend: parquet
+cache_dir: data/03_processed/feature_store
+dataset_paths:
+- data/03_processed/beed
+- data/03_processed/pred-maintenance
+- data/03_processed/har
+enable_logging: true
+enable_plots: true
+enable_telemetry: true
+enable_ttests: true
+extractors:
+- fft_coefficients: 10
+  name: numba_efficient
+- fft_coefficients: 25
+  name: numba_efficient
+- fft_coefficients: 50
+  name: numba_efficient
+- fft_coefficients: 25
+  name: tsfresh_efficient
+- name: tsfresh_minimal
+- name: polars_statistics
+log_file: TM268Ua__andreas_meeting_bakeoff.log
+models:
+- random_forest
+- logistic_regression
+n_splits: 5
+output_dir: benchmark_results/TM268Ua__andreas_meeting_bakeoff
+resume: true
+seeds:
+- 42
+- 123
+selectors:
+- null
+- select_k_best
+- fdr
+- base_selector: tsfresh
+  name: subsampled
+  sample_ratio: 0.1
+- base_selector: tsfresh
+  name: subsampled
+  sample_ratio: 0.2
+- base_selector: tsfresh
+  name: subsampled
+  sample_ratio: 0.5
+task_type: classification
+telemetry_interval: 0.05

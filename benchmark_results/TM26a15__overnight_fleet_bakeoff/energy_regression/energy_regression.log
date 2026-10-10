@@ -1,0 +1,76 @@
+2026-10-11 06:52:31 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-11 06:52:31 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM26a15__overnight_fleet_bakeoff/energy_regression/environment.json
+2026-10-11 06:52:31 [INFO] tempo.benchmark: Loading dataset: appliances-energy
+2026-10-11 06:52:31 [INFO] tempo.benchmark: Cache hit for extractor 'numba_efficient' (ver=v1.1.0) on dataset 'appliances-energy' (hash=60bc7510f7f9)
+2026-10-11 06:52:51 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | random_forest] -> Score: -0.0151 (Fit: 3.844s, Infer: 0.37ms, Total: 19.32s)
+2026-10-11 06:52:51 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | None | ridge] -> Score: -0.3796 (Fit: 0.026s, Infer: 0.16ms, Total: 0.17s)
+2026-10-11 06:52:52 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best_anova | random_forest] -> Score: -0.2357 (Fit: 0.063s, Infer: 0.25ms, Total: 0.51s)
+2026-10-11 06:52:52 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | select_k_best_anova | ridge] -> Score: -0.0748 (Fit: 0.001s, Infer: 0.01ms, Total: 0.14s)
+2026-10-11 06:53:07 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | mutual_info | random_forest] -> Score: -0.2048 (Fit: 0.061s, Infer: 0.25ms, Total: 13.61s)
+2026-10-11 06:53:07 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | mutual_info | ridge] -> Score: 0.0505 (Fit: 0.001s, Infer: 0.01ms, Total: 13.25s)
+2026-10-11 06:53:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | random_forest] -> Score: -0.0019 (Fit: 0.248s, Infer: 0.26ms, Total: 17.65s)
+2026-10-11 06:53:25 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | fdr | ridge] -> Score: -1.5815 (Fit: 0.003s, Infer: 0.02ms, Total: 16.36s)
+2026-10-11 06:53:28 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:53:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:53:42 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:53:49 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:53:56 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:54:00 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:54:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled_fdr | random_forest] -> Score: -0.0151 (Fit: 3.546s, Infer: 0.38ms, Total: 33.87s)
+2026-10-11 06:54:00 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:54:00 [INFO] tempo.benchmark: Evaluated: [appliances-energy | numba_efficient | subsampled_fdr | ridge] -> Score: -0.3796 (Fit: 0.026s, Infer: 0.16ms, Total: 16.21s)
+2026-10-11 06:54:00 [INFO] tempo.benchmark: Cache hit for extractor 'tsfresh_efficient' (ver=v1.0.0) on dataset 'appliances-energy' (hash=60bc7510f7f9)
+2026-10-11 06:54:46 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | None | random_forest] -> Score: 0.0166 (Fit: 9.183s, Infer: 0.64ms, Total: 46.09s)
+2026-10-11 06:54:47 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | None | ridge] -> Score: -2.1389 (Fit: 0.079s, Infer: 0.47ms, Total: 0.52s)
+2026-10-11 06:54:48 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | select_k_best_anova | random_forest] -> Score: -0.1506 (Fit: 0.063s, Infer: 0.25ms, Total: 0.61s)
+2026-10-11 06:54:48 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | select_k_best_anova | ridge] -> Score: -624.0706 (Fit: 0.001s, Infer: 0.01ms, Total: 0.24s)
+2026-10-11 06:55:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | mutual_info | random_forest] -> Score: 0.0344 (Fit: 0.061s, Infer: 0.26ms, Total: 42.94s)
+2026-10-11 06:55:32 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | mutual_info | ridge] -> Score: 0.1457 (Fit: 0.001s, Infer: 0.01ms, Total: 42.57s)
+2026-10-11 06:56:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | fdr | random_forest] -> Score: -0.0584 (Fit: 1.505s, Infer: 0.31ms, Total: 28.31s)
+2026-10-11 06:56:01 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | fdr | ridge] -> Score: -1.7593 (Fit: 0.013s, Infer: 0.07ms, Total: 20.79s)
+2026-10-11 06:56:06 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:56:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:56:35 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:56:48 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:02 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:11 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:57:11 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | subsampled_fdr | random_forest] -> Score: 0.0166 (Fit: 9.290s, Infer: 0.66ms, Total: 69.61s)
+2026-10-11 06:57:12 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:57:12 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfresh_efficient | subsampled_fdr | ridge] -> Score: -2.1389 (Fit: 0.079s, Infer: 0.47ms, Total: 23.50s)
+2026-10-11 06:57:12 [INFO] tempo.benchmark: Cache hit for extractor 'tsfel' (ver=v1.0.0) on dataset 'appliances-energy' (hash=60bc7510f7f9)
+2026-10-11 06:57:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | random_forest] -> Score: -0.3259 (Fit: 0.682s, Infer: 0.29ms, Total: 3.49s)
+2026-10-11 06:57:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | None | ridge] -> Score: -2.9773 (Fit: 0.006s, Infer: 0.04ms, Total: 0.04s)
+2026-10-11 06:57:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best_anova | random_forest] -> Score: -0.2516 (Fit: 0.063s, Infer: 0.25ms, Total: 0.48s)
+2026-10-11 06:57:17 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | select_k_best_anova | ridge] -> Score: -0.1192 (Fit: 0.001s, Infer: 0.01ms, Total: 0.10s)
+2026-10-11 06:57:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | mutual_info | random_forest] -> Score: -0.139 (Fit: 0.061s, Infer: 0.25ms, Total: 3.15s)
+2026-10-11 06:57:20 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | mutual_info | ridge] -> Score: -0.004 (Fit: 0.001s, Infer: 0.01ms, Total: 2.79s)
+2026-10-11 06:57:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | random_forest] -> Score: -0.1581 (Fit: 0.117s, Infer: 0.26ms, Total: 15.59s)
+2026-10-11 06:57:37 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | fdr | ridge] -> Score: -0.3323 (Fit: 0.002s, Infer: 0.01ms, Total: 14.95s)
+2026-10-11 06:57:40 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:43 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:47 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:51 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:55 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:57:55 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:57:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled_fdr | random_forest] -> Score: -0.3259 (Fit: 0.661s, Infer: 0.29ms, Total: 17.98s)
+2026-10-11 06:57:55 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:57:55 [INFO] tempo.benchmark: Evaluated: [appliances-energy | tsfel | subsampled_fdr | ridge] -> Score: -2.9773 (Fit: 0.007s, Infer: 0.04ms, Total: 14.64s)
+2026-10-11 06:57:55 [INFO] tempo.benchmark: Cache hit for extractor 'polars_statistics' (ver=v1.0.0) on dataset 'appliances-energy' (hash=60bc7510f7f9)
+2026-10-11 06:57:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | random_forest] -> Score: -0.2628 (Fit: 0.171s, Infer: 0.26ms, Total: 0.92s)
+2026-10-11 06:57:56 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | None | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 0.02s)
+2026-10-11 06:57:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best_anova | random_forest] -> Score: -0.2788 (Fit: 0.062s, Infer: 0.25ms, Total: 0.47s)
+2026-10-11 06:57:58 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | select_k_best_anova | ridge] -> Score: -0.1056 (Fit: 0.001s, Infer: 0.01ms, Total: 0.10s)
+2026-10-11 06:57:59 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | mutual_info | random_forest] -> Score: -0.2746 (Fit: 0.062s, Infer: 0.24ms, Total: 0.91s)
+2026-10-11 06:57:59 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | mutual_info | ridge] -> Score: -0.0607 (Fit: 0.002s, Infer: 0.01ms, Total: 0.55s)
+2026-10-11 06:58:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | random_forest] -> Score: -0.2791 (Fit: 0.073s, Infer: 0.26ms, Total: 14.80s)
+2026-10-11 06:58:15 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | fdr | ridge] -> Score: -0.1149 (Fit: 0.002s, Infer: 0.01ms, Total: 14.37s)
+2026-10-11 06:58:18 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:58:21 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:58:24 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:58:27 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:58:31 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
+2026-10-11 06:58:31 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:58:31 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled_fdr | random_forest] -> Score: -0.2628 (Fit: 0.180s, Infer: 0.26ms, Total: 15.36s)
+2026-10-11 06:58:31 [WARNING] tempo.benchmark: Fallback triggered on selector 'subsampled_fdr'; setting Jaccard stability to 0.0.
+2026-10-11 06:58:31 [INFO] tempo.benchmark: Evaluated: [appliances-energy | polars_statistics | subsampled_fdr | ridge] -> Score: -0.557 (Fit: 0.002s, Infer: 0.01ms, Total: 14.40s)
+2026-10-11 06:58:31 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM26a15__overnight_fleet_bakeoff/energy_regression/benchmark_results_20261011_065831.csv and benchmark_results/TM26a15__overnight_fleet_bakeoff/energy_regression/benchmark_results.csv

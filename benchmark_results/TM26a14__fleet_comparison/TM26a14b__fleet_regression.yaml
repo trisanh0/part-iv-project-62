@@ -1,0 +1,39 @@
+cache_backend: parquet
+cache_dir: data/03_processed/feature_store
+dataset_paths:
+- data/03_processed/pred-maintenance-w100-reg
+- data/03_processed/drift-bifurcation-reg
+- data/03_processed/appliances-energy
+- data/03_processed/beijing-pm25
+enable_logging: true
+enable_plots: true
+enable_telemetry: true
+enable_ttests: true
+extractors:
+- fft_coefficients: 25
+  name: tsfresh_efficient
+- fft_coefficients: 25
+  name: numba_efficient
+log_file: regression.log
+models:
+- random_forest
+- ridge
+n_splits: 5
+output_dir: benchmark_results/TM26a14__fleet_comparison/regression
+resume: true
+seeds:
+- 42
+- 101
+selectors:
+- null
+- k: 25
+  name: select_k_best_anova
+- k: 25
+  name: mutual_info
+- fdr
+- name: boruta
+- base_selector: tsfresh
+  name: subsampled_fdr
+  sample_ratio: 0.1
+task_type: regression
+telemetry_interval: 0.05

@@ -1,0 +1,50 @@
+# TM26a15b: Cross-Domain Multi-Library Classification Bakeoff
+# Document ID: TM26a15b__multidomain_classification
+
+dataset_paths:
+  - "data/03_processed/drift-bifurcation-cls"
+  - "data/03_processed/pred-maintenance-w100-cls"
+  - "data/03_processed/beed"
+  - "data/03_processed/gas-sensor-drift-sub"
+
+task_type: "classification"
+
+extractors:
+  - name: "numba_efficient"
+    fft_coefficients: 25
+  - name: "tsfresh_efficient"
+    fft_coefficients: 25
+  - name: "tsfel"
+  - name: "polars_statistics"
+
+selectors:
+  - null
+  - name: "select_k_best_anova"
+    k: 25
+  - name: "mutual_info"
+    k: 25
+  - "fdr"
+  - name: "subsampled_fdr"
+    sample_ratio: 0.10
+    base_selector: "tsfresh"
+  - name: "boruta"
+
+models:
+  - "random_forest"
+  - "logistic_regression"
+
+n_splits: 5
+seeds:
+  - 42
+
+cache_backend: "parquet"
+cache_dir: "data/03_processed/feature_store"
+output_dir: "benchmark_results/TM26a15__overnight_fleet_bakeoff/multidomain_classification"
+
+enable_telemetry: true
+telemetry_interval: 0.05
+enable_ttests: true
+enable_plots: true
+enable_logging: true
+log_file: "multidomain_classification.log"
+resume: true
