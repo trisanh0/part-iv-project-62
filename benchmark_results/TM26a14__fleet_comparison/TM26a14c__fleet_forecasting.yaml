@@ -1,0 +1,40 @@
+cache_backend: parquet
+cache_dir: data/03_processed/feature_store
+dataset_paths:
+- data/03_processed/simulated-forecasting
+- data/03_processed/appliances-energy
+- data/03_processed/beijing-pm25
+enable_logging: true
+enable_plots: true
+enable_telemetry: true
+enable_ttests: true
+extractors:
+- fft_coefficients: 25
+  name: tsfresh_efficient
+- fft_coefficients: 25
+  name: numba_efficient
+- name: polars_statistics
+forecast_horizon: 10
+forecast_lower: 0.05
+forecast_upper: 0.95
+history_len: 100
+log_file: forecasting.log
+models:
+- random_forest
+- ridge
+output_dir: benchmark_results/TM26a14__fleet_comparison/forecasting
+resume: true
+seeds:
+- 42
+- 101
+selectors:
+- null
+- k: 25
+  name: select_k_best
+- fdr
+- base_selector: tsfresh
+  name: subsampled
+  sample_ratio: 0.1
+task_type: forecasting
+telemetry_interval: 0.05
+test_size: 0.2

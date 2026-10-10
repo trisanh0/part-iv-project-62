@@ -1,0 +1,39 @@
+cache_backend: parquet
+cache_dir: data/03_processed/feature_store
+dataset_paths:
+- data/03_processed/gas-sensor-drift-sub
+- data/03_processed/drift-bifurcation-cls
+- data/03_processed/pred-maintenance-w100-cls
+- data/03_processed/beed
+enable_logging: true
+enable_plots: true
+enable_telemetry: true
+enable_ttests: true
+extractors:
+- fft_coefficients: 25
+  name: tsfresh_efficient
+- fft_coefficients: 25
+  name: numba_efficient
+log_file: classification.log
+models:
+- random_forest
+- logistic_regression
+n_splits: 5
+output_dir: benchmark_results/TM26a14__fleet_comparison/classification
+resume: true
+seeds:
+- 42
+- 101
+selectors:
+- null
+- k: 25
+  name: select_k_best_anova
+- k: 25
+  name: mutual_info
+- fdr
+- name: boruta
+- base_selector: tsfresh
+  name: subsampled_fdr
+  sample_ratio: 0.1
+task_type: classification
+telemetry_interval: 0.05
