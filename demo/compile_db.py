@@ -15,7 +15,6 @@ import logging
 import math
 import os
 import sqlite3
-from dataclasses import asdict, dataclass
 from typing import Any
 
 import numpy as np
@@ -61,6 +60,16 @@ TRACK_METADATA: dict[str, dict[str, Any]] = {
         "baseline_extractor": "tsfresh_efficient",
         "baseline_model": "random_forest",
     },
+    "har": {
+        "display_name": "Human Kinematics Super-Sprint",
+        "domain": "Biomechanics",
+        "task_type": "classification",
+        "primary_metric": "accuracy",
+        "is_curated_flagship": True,
+        "description": "Tri-axial smartphone accelerometer and gyroscope human activity recognition benchmark across 10,299 sequences.",
+        "baseline_extractor": "tsfresh_efficient",
+        "baseline_model": "random_forest",
+    },
     "drift-bifurcation-reg-1k": {
         "display_name": "Langevin Bifurcation Autostrada",
         "domain": "Nonlinear Dynamics",
@@ -101,6 +110,16 @@ TRACK_METADATA: dict[str, dict[str, Any]] = {
         "baseline_extractor": "tsfresh_efficient",
         "baseline_model": "random_forest",
     },
+    "appliances-energy-forecasting": {
+        "display_name": "Smart Home Demand Horizon",
+        "domain": "Building Physics",
+        "task_type": "forecasting",
+        "primary_metric": "forecast_rmse",
+        "is_curated_flagship": False,
+        "description": "Multi-step forward forecasting of household appliance energy consumption.",
+        "baseline_extractor": "tsfresh_efficient",
+        "baseline_model": "random_forest",
+    },
     "beijing-pm25": {
         "display_name": "Urban Atmospheric Driftway",
         "domain": "Environmental Science",
@@ -111,13 +130,23 @@ TRACK_METADATA: dict[str, dict[str, Any]] = {
         "baseline_extractor": "tsfresh_efficient",
         "baseline_model": "random_forest",
     },
-    "har": {
-        "display_name": "Human Kinematics Super-Sprint",
-        "domain": "Biomechanics",
-        "task_type": "classification",
-        "primary_metric": "accuracy",
+    "beijing-pm25-forecasting": {
+        "display_name": "Atmospheric PM2.5 Horizon",
+        "domain": "Environmental Science",
+        "task_type": "forecasting",
+        "primary_metric": "forecast_rmse",
         "is_curated_flagship": False,
-        "description": "Tri-axial smartphone accelerometer and gyroscope human activity recognition benchmark.",
+        "description": "Recursive multi-horizon aerosol particulate forecasting under seasonal weather drift.",
+        "baseline_extractor": "tsfresh_efficient",
+        "baseline_model": "random_forest",
+    },
+    "simulated-forecasting": {
+        "display_name": "Synthetic AR Forecasting Loop",
+        "domain": "Signal Processing",
+        "task_type": "forecasting",
+        "primary_metric": "forecast_rmse",
+        "is_curated_flagship": False,
+        "description": "Multi-horizon autoregressive time-series forecasting with additive stochastic shocks.",
         "baseline_extractor": "tsfresh_efficient",
         "baseline_model": "random_forest",
     },
@@ -126,6 +155,13 @@ TRACK_METADATA: dict[str, dict[str, Any]] = {
 SELECTOR_NORMALIZATION_MAP = {
     "select_k_best": "select_k_best_anova",
     "subsampled": "subsampled_fdr",
+}
+
+DATASET_ROOT_ALIASES = {
+    "pred-maintenance-w100-cls": "pred-maintenance",
+    "pred-maintenance-w100-reg": "pred-maintenance",
+    "drift-bifurcation-cls": "drift-bifurcation-reg",
+    "drift-bifurcation-reg-1k": "drift-bifurcation-reg",
 }
 
 
@@ -167,11 +203,55 @@ def load_canonical_csvs(repo_root: str = ".") -> pd.DataFrame:
     return master_df
 
 
+def build_physical_reference_tables(df: pd.DataFrame) -> tuple[dict[tuple[str, str], float], dict[tuple[str, str], float], dict[str, float], dict[str, float]]:
+    """Construct multi-tier lookup tables for uncached physical extraction time and RAM."""
+    valid_ext = df[(df["Extraction Time (s)"].notna()) & (df["Extraction Time (s)"] > 0)]
+
+    ref_ext_pairs = valid_ext.groupby(["Dataset", "Extractor"])["Extraction Time (s)"].median().to_dict()
+    ref_ram_pairs = valid_ext.groupby(["Dataset", "Extractor"])["Extraction Peak RAM (MB)"].median().to_dict()
+
+    global_ext = valid_ext.groupby("Extractor")["Extraction Time (s)"].median().to_dict()
+    global_ram = valid_ext.groupby("Extractor")["Extraction Peak RAM (MB)"].median().to_dict()
+
+    return ref_ext_pairs, ref_ram_pairs, global_ext, global_ram
+
+
+def get_physical_measurements(
+    dataset: str,
+    extractor: str,
+    ref_ext_pairs: dict[tuple[str, str], float],
+    ref_ram_pairs: dict[tuple[str, str], float],
+    global_ext: dict[str, float],
+    global_ram: dict[str, float],
+) -> tuple[float, float]:
+    """Retrieve physical extraction time and RAM with 3-tier fallback."""
+    # 1. Direct dataset-extractor pair
+    if (dataset, extractor) in ref_ext_pairs:
+        return ref_ext_pairs[(dataset, extractor)], ref_ram_pairs.get((dataset, extractor), 500.0)
+
+    # 2. Dataset root alias
+    root_ds = DATASET_ROOT_ALIASES.get(dataset)
+    if root_ds and (root_ds, extractor) in ref_ext_pairs:
+        return ref_ext_pairs[(root_ds, extractor)], ref_ram_pairs.get((root_ds, extractor), 500.0)
+
+    # 3. Global extractor fallback
+    ext_val = global_ext.get(extractor, 0.5)
+    ram_val = global_ram.get(extractor, 500.0)
+    return ext_val, ram_val
+
+
 def clean_and_harmonize_master(df: pd.DataFrame) -> pd.DataFrame:
-    """Standardize column names, types, and metric aliases."""
+    """Standardize column names, types, metric aliases, and backfill physical measurements."""
     clean = df.copy()
 
-    # Normalize selector
+    # Disambiguate multi-task datasets into separate tracks
+    is_multi_task_forecasting = (
+        clean["Dataset"].isin(["appliances-energy", "beijing-pm25"]) &
+        (clean["Task"] == "forecasting")
+    )
+    clean.loc[is_multi_task_forecasting, "Dataset"] = clean.loc[is_multi_task_forecasting, "Dataset"] + "-forecasting"
+
+    # Normalize selector strings
     clean["Selector"] = clean["Selector"].apply(normalize_selector)
 
     # Standardize fit time
@@ -185,6 +265,26 @@ def clean_and_harmonize_master(df: pd.DataFrame) -> pd.DataFrame:
         clean["Inference Latency (ms)"] = clean["inference_latency_ms"]
     elif "Inference Latency (ms)" in clean.columns and "inference_latency_ms" in clean.columns:
         clean["Inference Latency (ms)"] = clean["Inference Latency (ms)"].fillna(clean["inference_latency_ms"])
+
+    # Build reference lookup tables
+    ref_ext, ref_ram, glob_ext, glob_ram = build_physical_reference_tables(clean)
+
+    # Impute true physical extraction time and RAM when cached or missing
+    for idx, row in clean.iterrows():
+        cur_ext = row.get("Extraction Time (s)")
+        cur_ram = row.get("Extraction Peak RAM (MB)")
+        ds = str(row.get("Dataset"))
+        ext = str(row.get("Extractor"))
+
+        # Strip '-forecasting' suffix if looking up base dataset measurements
+        base_ds = ds.replace("-forecasting", "")
+
+        phys_time, phys_ram = get_physical_measurements(base_ds, ext, ref_ext, ref_ram, glob_ext, glob_ram)
+
+        if pd.isna(cur_ext) or cur_ext <= 0.0:
+            clean.loc[idx, "Extraction Time (s)"] = phys_time
+        if pd.isna(cur_ram) or cur_ram <= 0.0:
+            clean.loc[idx, "Extraction Peak RAM (MB)"] = phys_ram
 
     # Compute total latency (Extraction + Selection + Fit)
     ext_time = clean["Extraction Time (s)"].fillna(0.0)
@@ -260,17 +360,17 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
 
         # Extraction time stats
         ext_series = sub["Extraction Time (s)"].dropna()
-        ext_mean = float(ext_series.mean()) if len(ext_series) > 0 else 0.0
+        ext_mean = float(ext_series.mean()) if len(ext_series) > 0 else 0.5
         ext_std = float(ext_series.std(ddof=0)) if len(ext_series) > 1 else 0.0
-        ext_min = float(ext_series.min()) if len(ext_series) > 0 else 0.0
-        ext_max = float(ext_series.max()) if len(ext_series) > 0 else 0.0
+        ext_min = float(ext_series.min()) if len(ext_series) > 0 else ext_mean
+        ext_max = float(ext_series.max()) if len(ext_series) > 0 else ext_mean
 
         # RAM stats
         ram_series = sub["Extraction Peak RAM (MB)"].dropna()
-        ram_mean = float(ram_series.mean()) if len(ram_series) > 0 else 0.0
+        ram_mean = float(ram_series.mean()) if len(ram_series) > 0 else 500.0
         ram_std = float(ram_series.std(ddof=0)) if len(ram_series) > 1 else 0.0
-        ram_min = float(ram_series.min()) if len(ram_series) > 0 else 0.0
-        ram_max = float(ram_series.max()) if len(ram_series) > 0 else 0.0
+        ram_min = float(ram_series.min()) if len(ram_series) > 0 else ram_mean
+        ram_max = float(ram_series.max()) if len(ram_series) > 0 else ram_mean
 
         # Latencies
         sel_time_mean = float(sub["Selection Time (s)"].dropna().mean()) if len(sub["Selection Time (s)"].dropna()) > 0 else 0.0
@@ -290,9 +390,8 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
             if len(score_series) == 0:
                 score_series = sub["R2"].dropna()
         elif task == "forecasting":
-            # For forecasting, use 1.0 - normalized RMSE as score
-            rmse_series = sub["Forecast RMSE"].dropna()
-            score_series = -rmse_series if len(rmse_series) > 0 else pd.Series(dtype=float)
+            # For forecasting, report Forecast RMSE
+            score_series = sub["Forecast RMSE"].dropna()
         else:
             score_series = sub["R2"].dropna()
 
@@ -300,6 +399,14 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
         score_std = float(score_series.std(ddof=0)) if len(score_series) > 1 else 0.0
         score_min = float(score_series.min()) if len(score_series) > 0 else 0.0
         score_max = float(score_series.max()) if len(score_series) > 0 else 0.0
+
+        # Clamp severe negative R2 regression explosion (e.g. ill-conditioned Ridge inversion) to -1.0
+        is_diverged = False
+        if task == "regression" and score_mean < -1.0:
+            is_diverged = True
+            score_mean = -1.0
+            score_min = max(-1.0, score_min)
+            score_max = max(-1.0, score_max)
 
         records.append({
             "track_id": dataset,
@@ -326,6 +433,7 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
             "score_std": score_std,
             "score_min": score_min,
             "score_max": score_max,
+            "is_diverged": is_diverged,
         })
 
     agg_df = pd.DataFrame(records)
@@ -336,7 +444,7 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
     pareto_score_col = []
 
     for track_id, sub_track in agg_df.groupby("track_id"):
-        # Find baseline tsfresh_efficient or tsfresh_minimal with None selector
+        # Find baseline tsfresh_efficient or tsfresh_minimal
         baseline_match = sub_track[
             (sub_track["extractor"] == "tsfresh_efficient") &
             (sub_track["selector"] == "None")
@@ -355,10 +463,22 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
             ram_reduc = ((base_ram - cur_ram) / base_ram) * 100.0 if base_ram > 0 else 0.0
 
             # Composite Pareto Score:
-            # Score = 100 * ScoreNorm - 15 * log10(max(tot_lat, 0.001)) - 5 * (RAM / 1000)
-            norm_score = max(0.0, min(1.0, row["score_mean"]))
+            # Classification: Score = 100 * Accuracy - 15 * log10(max(tot_lat, 0.001)) - 5 * (RAM / 1000)
+            # Regression: Score = 50 * (R2 + 1) - 15 * log10(max(tot_lat, 0.001)) - 5 * (RAM / 1000)
+            # Forecasting: Score = 100 / (1 + RMSE) - 15 * log10(max(tot_lat, 0.001)) - 5 * (RAM / 1000)
+            task = row["task_type"]
+            if task == "classification":
+                norm_score = max(0.0, min(1.0, row["score_mean"]))
+                base_term = 100.0 * norm_score
+            elif task == "regression":
+                norm_score = max(0.0, min(1.0, (row["score_mean"] + 1.0) / 2.0))
+                base_term = 100.0 * norm_score
+            else:  # forecasting
+                rmse = max(0.0, row["score_mean"])
+                base_term = 100.0 / (1.0 + rmse / 100.0)
+
             tot_lat = max(row["total_latency_mean"], 1e-3)
-            pareto_val = (100.0 * norm_score) - (15.0 * math.log10(tot_lat)) - (5.0 * (cur_ram / 1000.0))
+            pareto_val = base_term - (15.0 * math.log10(tot_lat)) - (5.0 * (cur_ram / 1000.0))
 
             speedup_col.append((row.name, speedup))
             ram_reduc_col.append((row.name, ram_reduc))
@@ -374,7 +494,13 @@ def aggregate_configurations(clean_df: pd.DataFrame) -> pd.DataFrame:
     # Compute Pareto optimality per track
     agg_df["is_pareto_optimal"] = False
     for track_id, group in agg_df.groupby("track_id"):
-        pareto_mask = calculate_pareto_optimality(group, "score_mean", "total_latency_mean", "extraction_ram_mean")
+        # For forecasting lower RMSE is better, so negate for Pareto computation
+        if group["task_type"].iloc[0] == "forecasting":
+            temp_group = group.copy()
+            temp_group["score_mean"] = -temp_group["score_mean"]
+            pareto_mask = calculate_pareto_optimality(temp_group, "score_mean", "total_latency_mean", "extraction_ram_mean")
+        else:
+            pareto_mask = calculate_pareto_optimality(group, "score_mean", "total_latency_mean", "extraction_ram_mean")
         agg_df.loc[group.index, "is_pareto_optimal"] = pareto_mask
 
     return agg_df
@@ -687,7 +813,7 @@ def export_runtime_json(agg_df: pd.DataFrame, json_path: str = DEFAULT_JSON_PATH
         }
 
     output_payload = {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "generated_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "total_canonical_runs": int(agg_df["sample_count"].sum()),
         "total_unique_configs": len(agg_df),

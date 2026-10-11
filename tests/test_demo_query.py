@@ -25,10 +25,10 @@ def test_list_tracks(engine: DemoQueryEngine) -> None:
     assert len(all_tracks) >= 8, f"Expected at least 8 tracks, got {len(all_tracks)}"
 
     flagship_tracks = engine.list_tracks(flagship_only=True)
-    assert len(flagship_tracks) == 4, f"Expected exactly 4 flagship tracks, got {len(flagship_tracks)}"
+    assert len(flagship_tracks) == 5, f"Expected exactly 5 flagship tracks, got {len(flagship_tracks)}"
 
     flagship_ids = {t.track_id for t in flagship_tracks}
-    expected_ids = {"beed", "pred-maintenance-w100-cls", "gas-sensor-drift-sub", "drift-bifurcation-reg-1k"}
+    expected_ids = {"beed", "pred-maintenance-w100-cls", "gas-sensor-drift-sub", "drift-bifurcation-reg-1k", "har"}
     assert flagship_ids == expected_ids, f"Mismatch in flagship track IDs: {flagship_ids}"
 
 
