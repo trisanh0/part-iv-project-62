@@ -1,0 +1,34 @@
+services:
+  tempo-demo:
+    build:
+      context: .
+      dockerfile: demo/Dockerfile
+    container_name: tempo-grand-prix
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - TZ=Pacific/Auckland
+      - DEMO_ADMIN_PIN=7000
+      - DEMO_DEFAULT_TRACK=beed
+      - DEMO_MAX_ACTIVE_RACERS=4
+      - DEMO_RACE_DURATION_SECONDS=14.0
+      - DEMO_COUNTDOWN_SECONDS=3.0
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/state')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: tempo-cloudflared-tunnel
+    restart: unless-stopped
+    profiles:
+      - tunnel
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - tempo-demo

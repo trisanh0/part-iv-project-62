@@ -402,6 +402,88 @@ class DemoQueryEngine:
                 for r in rows
             ]
 
+    def get_all_configs(self, track_id: str) -> list[ConfigMetrics]:
+        """Fetch all configurations evaluated for a given track."""
+        if self._catalog_cache is not None:
+            track_dict = self._catalog_cache.get("tracks", {}).get(track_id)
+            if track_dict is not None and "configs" in track_dict:
+                results: list[ConfigMetrics] = []
+                for key, cfg in track_dict["configs"].items():
+                    parts = key.split("|")
+                    if len(parts) == 3:
+                        ext, sel, mod = parts
+                        results.append(
+                            ConfigMetrics(
+                                track_id=track_id,
+                                task_type=track_dict.get("task_type", "classification"),
+                                extractor=ext,
+                                selector=sel,
+                                model=mod,
+                                sample_count=cfg.get("sample_count", 1),
+                                extraction_time_s=cfg["extraction_time_s"],
+                                extraction_time_min=cfg.get("extraction_time_bounds", [cfg["extraction_time_s"]])[0],
+                                extraction_time_max=cfg.get("extraction_time_bounds", [cfg["extraction_time_s"], cfg["extraction_time_s"]])[-1],
+                                extraction_time_std=0.0,
+                                extraction_ram_mb=cfg["extraction_ram_mb"],
+                                extraction_ram_min=cfg.get("extraction_ram_bounds", [cfg["extraction_ram_mb"]])[0],
+                                extraction_ram_max=cfg.get("extraction_ram_bounds", [cfg["extraction_ram_mb"], cfg["extraction_ram_mb"]])[-1],
+                                extraction_ram_std=0.0,
+                                selection_time_s=cfg.get("selection_time_s", 0.0),
+                                fit_time_s=cfg.get("fit_time_s", 0.0),
+                                inference_latency_ms=cfg.get("inference_latency_ms", 0.0),
+                                total_latency_s=cfg.get("total_latency_s", cfg["extraction_time_s"]),
+                                n_extracted_features=cfg.get("n_extracted", 0),
+                                n_selected_features=cfg.get("n_selected", 0),
+                                score=cfg["score"],
+                                score_std=cfg.get("score_std", 0.0),
+                                score_min=cfg.get("score_bounds", [cfg["score"]])[0],
+                                score_max=cfg.get("score_bounds", [cfg["score"], cfg["score"]])[-1],
+                                speedup_vs_tsfresh=cfg.get("speedup_vs_tsfresh", 1.0),
+                                ram_reduction_pct=cfg.get("ram_reduction_pct", 0.0),
+                                is_pareto_optimal=cfg.get("is_pareto_optimal", False),
+                                pareto_composite_score=cfg.get("pareto_composite_score", 0.0),
+                            )
+                        )
+                return sorted(results, key=lambda x: x.score, reverse=True)
+
+        with self._get_connection() as con:
+            cur = con.cursor()
+            query = "SELECT * FROM aggregated_configs WHERE track_id = ? ORDER BY score_mean DESC"
+            rows = cur.execute(query, (track_id,)).fetchall()
+            return [
+                ConfigMetrics(
+                    track_id=r["track_id"],
+                    task_type=r["task_type"],
+                    extractor=r["extractor"],
+                    selector=r["selector"],
+                    model=r["model"],
+                    sample_count=r["sample_count"],
+                    extraction_time_s=r["extraction_time_mean"],
+                    extraction_time_min=r["extraction_time_min"],
+                    extraction_time_max=r["extraction_time_max"],
+                    extraction_time_std=r["extraction_time_std"],
+                    extraction_ram_mb=r["extraction_ram_mean"],
+                    extraction_ram_min=r["extraction_ram_min"],
+                    extraction_ram_max=r["extraction_ram_max"],
+                    extraction_ram_std=r["extraction_ram_std"],
+                    selection_time_s=r["selection_time_mean"],
+                    fit_time_s=r["fit_time_mean"],
+                    inference_latency_ms=r["inference_latency_mean"],
+                    total_latency_s=r["total_latency_mean"],
+                    n_extracted_features=r["n_extracted_mean"],
+                    n_selected_features=r["n_selected_mean"],
+                    score=r["score_mean"],
+                    score_std=r["score_std"],
+                    score_min=r["score_min"],
+                    score_max=r["score_max"],
+                    speedup_vs_tsfresh=r["speedup_vs_tsfresh"],
+                    ram_reduction_pct=r["ram_reduction_pct"],
+                    is_pareto_optimal=bool(r["is_pareto_optimal"]),
+                    pareto_composite_score=r["pareto_composite_score"],
+                )
+                for r in rows
+            ]
+
     def execute_custom_query(self, sql: str, params: tuple = ()) -> list[dict[str, Any]]:
         """Execute arbitrary read-only SQL queries for ad-hoc inspection."""
         with self._get_connection() as con:

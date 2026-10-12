@@ -32,3 +32,8 @@ jupyterlab>=4.0.0
 
 # RAG and context management
 ./packages/contexere
+
+# Presentation Demo & Web Services
+fastapi>=0.110.0
+uvicorn>=0.28.0
+websockets>=12.0

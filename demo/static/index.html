@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TEMPO Grand Prix | Live Poster Demo</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Top Navigation & Challenge Track Banner -->
+    <header>
+        <div>
+            <div class="brand-title">TEMPO</div>
+            <div class="track-badge">
+                <span id="track-name" style="font-weight: 700; color: var(--text-primary);">Loading Track...</span> &bull; 
+                <span id="track-desc">Connecting to booth server...</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <span id="phase-badge" class="badge badge-phase">LOBBY</span>
+            <span id="spectator-badge" class="badge badge-spectator">SPECTATING</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. LOBBY SCREEN (Grandstand & Join Form) -->
+        <section id="screen-lobby" class="card">
+            <h2 class="card-title">Join a Race</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Configure a time-series classification pipeline and see how it performs against others.
+            </p>
+
+            <div style="background-color: var(--bg-input); padding: 14px; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--border-color);">
+                <label for="input-nickname" class="form-label">Your nickname</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="input-nickname" class="form-input" placeholder="Enter a name (e.g. Alice)" maxlength="20">
+                    <button id="btn-join" class="btn btn-primary" style="width: auto; padding: 0 20px; white-space: nowrap;">Join</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 16px;">
+                <label class="form-label">Participants</label>
+                <div id="lobby-racers-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+                    <div style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic;">No one has joined yet.</div>
+                </div>
+            </div>
+
+            <!-- Presenter Direct Actions on Grandstand -->
+            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px;">
+                <label class="form-label">Host controls</label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button id="btn-lobby-start-race" class="btn btn-success" style="font-size: 1.1rem; padding: 16px;">Start Race</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="btn-lobby-add-bot" class="btn btn-secondary" style="flex: 1;">Add baseline bot</button>
+                        <button id="btn-lobby-reset" class="btn btn-secondary" style="flex: 1;">Reset</button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+                        <select id="lobby-track-select" class="form-select" style="flex: 1;"></select>
+                        <button id="btn-lobby-change-track" class="btn btn-secondary" style="width: auto; padding: 0 16px; white-space: nowrap;">Switch Track</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PIPELINE BUILDER SCREEN (Mobile Participant Console) -->
+        <section id="screen-building" class="card hidden">
+            <div id="builder-racer-banner" style="display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-input); padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; border-left: 4px solid var(--color-accent);">
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Your entry</span>
+                    <div id="builder-racer-name" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">Racer</div>
+                </div>
+                <button id="btn-leave-heat" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.78rem; width: auto;">Leave</button>
+            </div>
+
+            <h2 class="card-title">Build your pipeline</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+                Choose how to extract, select, and classify features from the benchmark data.
+            </p>
+
+            <!-- Curated Presets -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <label class="form-label" style="margin-bottom: 0;">Presets</label>
+                <span style="font-size: 0.72rem; color: var(--text-secondary);">Tap a preset or customise components below</span>
+            </div>
+            <div class="preset-cards-grid">
+                <button type="button" class="preset-card active" data-preset="numba">
+                    <div class="preset-card-header">
+                        <span class="preset-card-title">Accelerated</span>
+                        <span class="preset-tag preset-tag-fast">Fastest</span>
+                    </div>
+                    <div class="preset-card-sub">TEMPO Numba + Random Forest</div>
+                    <div class="preset-card-desc">JIT-compiled features with high accuracy and fast launch.</div>
+                </button>
+                <button type="button" class="preset-card" data-preset="tsfresh">
+                    <div class="preset-card-header">
+                        <span class="preset-card-title">Standard Benchmark</span>
+                        <span class="preset-tag preset-tag-standard">Literature</span>
+                    </div>
+                    <div class="preset-card-sub">tsfresh + Random Forest</div>
+                    <div class="preset-card-desc">Exhaustive standard feature set with proven literature baseline.</div>
+                </button>
+                <button type="button" class="preset-card" data-preset="polars">
+                    <div class="preset-card-header">
+                        <span class="preset-card-title">Statistical Baseline</span>
+                        <span class="preset-tag preset-tag-lean">Lightweight</span>
+                    </div>
+                    <div class="preset-card-sub">Polars + Logistic Regression</div>
+                    <div class="preset-card-desc">Parallel statistical moments paired with a fast linear model.</div>
+                </button>
+            </div>
+
+            <!-- Hidden native selects to maintain backwards-compatibility -->
+            <select id="select-extractor" class="hidden"></select>
+            <select id="select-selector" class="hidden"></select>
+            <select id="select-model" class="hidden"></select>
+
+            <!-- 3-Step Component Customisation Accordion -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; margin-bottom: 8px;">
+                <label class="form-label" style="margin-bottom: 0;">Customise Components</label>
+                <span style="font-size: 0.72rem; color: var(--text-secondary);">Tap any stage to inspect or change</span>
+            </div>
+
+            <div class="accordion-container">
+                <!-- Step 1: Feature Extractor -->
+                <div class="accordion-item" data-accordion="extractor">
+                    <button type="button" class="accordion-header" id="btn-accordion-extractor">
+                        <div class="accordion-title-col">
+                            <span class="accordion-step-badge">Step 1</span>
+                            <span class="accordion-title">Feature Extractor</span>
+                        </div>
+                        <div class="accordion-status-col">
+                            <span class="accordion-selected-label" id="label-selected-extractor">TEMPO (Numba)</span>
+                            <span class="accordion-chevron">&#9662;</span>
+                        </div>
+                    </button>
+                    <div class="accordion-content" id="content-accordion-extractor">
+                        <div class="accordion-content-inner">
+                            <div class="stage-purpose-callout">
+                                Transforms raw sensor signals into mathematical features for classification.
+                            </div>
+                            <div class="options-cards-grid" id="options-extractor-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Feature Selector -->
+                <div class="accordion-item" data-accordion="selector">
+                    <button type="button" class="accordion-header" id="btn-accordion-selector">
+                        <div class="accordion-title-col">
+                            <span class="accordion-step-badge">Step 2</span>
+                            <span class="accordion-title">Feature Selector</span>
+                        </div>
+                        <div class="accordion-status-col">
+                            <span class="accordion-selected-label" id="label-selected-selector">All Features (None)</span>
+                            <span class="accordion-chevron">&#9662;</span>
+                        </div>
+                    </button>
+                    <div class="accordion-content" id="content-accordion-selector">
+                        <div class="accordion-content-inner">
+                            <div class="stage-purpose-callout">
+                                Filters redundant, constant, or noisy features to reduce compute and prevent overfitting.
+                            </div>
+                            <div class="options-cards-grid" id="options-selector-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Predictive Model -->
+                <div class="accordion-item" data-accordion="model">
+                    <button type="button" class="accordion-header" id="btn-accordion-model">
+                        <div class="accordion-title-col">
+                            <span class="accordion-step-badge">Step 3</span>
+                            <span class="accordion-title">Predictive Model</span>
+                        </div>
+                        <div class="accordion-status-col">
+                            <span class="accordion-selected-label" id="label-selected-model">Random Forest</span>
+                            <span class="accordion-chevron">&#9662;</span>
+                        </div>
+                    </button>
+                    <div class="accordion-content" id="content-accordion-model">
+                        <div class="accordion-content-inner">
+                            <div class="stage-purpose-callout">
+                                Trains the algorithm to recognise classes and make predictions on unseen test data.
+                            </div>
+                            <div class="options-cards-grid" id="options-model-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Machine Dynamics (Pace, Grip, Weight) -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; margin-bottom: 8px;">
+                <label class="form-label" style="margin-bottom: 0;">Machine Dynamics</label>
+                <span style="font-size: 0.72rem; color: var(--text-secondary);">Predicted traits</span>
+            </div>
+            <div class="telemetry-bars-card">
+                <div class="telemetry-bar-row">
+                    <div class="telemetry-bar-meta">
+                        <span class="telemetry-bar-title">Pace</span>
+                        <span id="label-pace-level" class="telemetry-bar-sub">Fast</span>
+                    </div>
+                    <div class="telemetry-bar-track">
+                        <div id="bar-pace" class="telemetry-bar-fill bar-fill-pace" style="width: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="telemetry-bar-row">
+                    <div class="telemetry-bar-meta">
+                        <span class="telemetry-bar-title">Grip</span>
+                        <span id="label-grip-level" class="telemetry-bar-sub">Glued</span>
+                    </div>
+                    <div class="telemetry-bar-track">
+                        <div id="bar-grip" class="telemetry-bar-fill bar-fill-grip" style="width: 90%;"></div>
+                    </div>
+                </div>
+
+                <div class="telemetry-bar-row">
+                    <div class="telemetry-bar-meta">
+                        <span class="telemetry-bar-title">Weight</span>
+                        <span id="label-weight-level" class="telemetry-bar-sub">Lightweight</span>
+                    </div>
+                    <div class="telemetry-bar-track">
+                        <div id="bar-weight" class="telemetry-bar-fill bar-fill-weight" style="width: 30%;"></div>
+                    </div>
+                    <div class="spectrum-sublabels">
+                        <span>Lightweight</span>
+                        <span>Heavyweight</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden elements for backward compatibility -->
+            <span id="stat-latency" class="hidden"></span>
+            <span id="stat-score" class="hidden"></span>
+            <span id="stat-ram" class="hidden"></span>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="btn-ready" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px;">Ready</button>
+                <button id="btn-builder-start-race" class="btn btn-success hidden" style="font-size: 1rem; padding: 14px;">Start Race</button>
+            </div>
+
+            <!-- Other Racers in Heat -->
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                <label class="form-label">Other participants</label>
+                <div id="builder-racers-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+        </section>
+
+        <!-- 3. SYNCHRONIZED 2D CANVAS RACE SCREEN -->
+        <section id="screen-racing" class="hidden" style="width: 100%;">
+            <div class="canvas-wrapper">
+                <canvas id="race-canvas"></canvas>
+                <div id="countdown-overlay" class="countdown-overlay hidden">
+                    <div id="countdown-number" class="countdown-number">3</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. RESULTS & PARETO FRONTIER SCREEN -->
+        <section id="screen-results" class="card hidden">
+            <h2 class="card-title">Results</h2>
+
+            <div id="podium-cards" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                <!-- Dynamically populated podium cards -->
+            </div>
+
+            <h3 class="card-title" style="font-size: 0.95rem; margin-top: 16px;">Performance vs Speed</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">
+                Tap any point to see detailed metrics.
+            </p>
+
+            <div class="canvas-wrapper" style="aspect-ratio: 4 / 3; min-height: 280px;">
+                <canvas id="pareto-canvas"></canvas>
+            </div>
+            <div id="pareto-tooltip" style="display: none; background: var(--bg-card); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); box-shadow: var(--shadow-md); margin-top: 8px;"></div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button id="btn-next-round" class="btn btn-primary" style="flex: 1; padding: 14px;">Race again</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer & Presenter Admin Trigger -->
+    <footer>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto;">
+            <span>Part IV Project 62</span>
+            <button id="btn-open-admin" class="preset-chip" style="font-size: 0.7rem; padding: 4px 8px;">Settings</button>
+        </div>
+    </footer>
+
+    <!-- Authenticated Presenter Admin Modal -->
+    <div id="admin-modal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 class="card-title" style="margin: 0;">Settings</h3>
+                <button id="btn-close-admin" style="background: none; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer;">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label for="admin-pin" class="form-label">Passcode</label>
+                <input type="password" id="admin-pin" class="form-input" value="7000">
+            </div>
+
+            <div class="form-group">
+                <label for="admin-duration-input" class="form-label">Race duration (seconds)</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-duration-input" class="form-input" value="14" min="5" max="60">
+                    <button id="btn-admin-set-duration" class="btn btn-secondary" style="width: auto; padding: 0 16px;">Set</button>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
+                <button id="btn-admin-reset" class="btn btn-secondary">Reset room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Module -->
+    <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

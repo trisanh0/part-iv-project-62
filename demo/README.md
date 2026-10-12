@@ -186,3 +186,65 @@ rows = engine.execute_custom_query(
     "SELECT extractor, AVG(speedup_vs_tsfresh) FROM aggregated_configs WHERE is_curated_flagship=1 GROUP BY extractor"
 )
 ```
+
+---
+
+## 6. Live Web Application & Multiplayer Engine
+
+The live interactive demo runs as an asynchronous FastAPI application serving WebSockets and static assets:
+
+```
+demo/
+├── game_state.py      # Room state machine, player registry, race physics clock
+├── server.py          # FastAPI application, REST endpoints, WebSocket coordinator
+├── static/
+│   ├── index.html     # Unified responsive mobile client and grandstand UI
+│   ├── css/
+│   │   └── style.css  # High-contrast, responsive layout stylesheet
+│   └── js/
+│       ├── track.js           # Catmull-Rom spline circuit geometry & arc-length LUT
+│       ├── canvas_renderer.js # 60 FPS 2D top-down car simulation with cornering slip
+│       ├── pareto_chart.js    # Interactive touch-friendly Pareto frontier scatter plot
+│       └── app.js             # Client WebSocket coordinator and UI transitions
+├── Dockerfile         # Python 3.11-slim container spec for opti deployment
+└── README.md          # This documentation file
+```
+
+### Running Locally (MacBook Pro / Development)
+
+```bash
+# Start server with hot reload on port 8000
+.venv/bin/uvicorn demo.server:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Open `http://localhost:8000/` in multiple browser windows or scan the local QR code on connected mobile phones.
+
+---
+
+## 7. Deployment Reference (`opti` & Cloudflare Tunnel)
+
+The application is containerized and managed via Docker Compose (`docker-compose.demo.yml`).
+
+### Deploying to Homelab Server (`opti`)
+
+1. Copy repository files or build image on `opti`:
+```bash
+docker compose -f docker-compose.demo.yml build
+docker compose -f docker-compose.demo.yml up -d
+```
+
+2. Expose publicly via Cloudflare Tunnel:
+```bash
+# Using Cloudflare Tunnel token
+CLOUDFLARE_TUNNEL_TOKEN=<token> docker compose -f docker-compose.demo.yml --profile tunnel up -d
+```
+
+3. Verification:
+```bash
+curl -s http://localhost:8000/api/state | jq
+```
+
+### Presenter Controls
+- Access `/admin` or click **Presenter Console** in the footer.
+- Passcode (default PIN): `7000` (configurable via `DEMO_ADMIN_PIN` environment variable).
+- Actions available: change active track, add benchmark bots (`tsfresh`), force-start countdown, reset lobby, tune race playback duration (5s to 60s).
