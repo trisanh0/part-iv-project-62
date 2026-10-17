@@ -609,7 +609,7 @@ def convert_appliances_energy(
         time_col="time",
         feature_cols=feature_cols,
         label_col="target",
-        label_strategy="last",
+        label_strategy="mean",
     )
 
     os.makedirs(output_dir, exist_ok=True)
@@ -654,7 +654,7 @@ def convert_beijing_pm25(
         time_col="time",
         feature_cols=feature_cols,
         label_col="target",
-        label_strategy="last",
+        label_strategy="mean",
     )
 
     os.makedirs(output_dir, exist_ok=True)
