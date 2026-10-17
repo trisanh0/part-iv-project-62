@@ -72,6 +72,16 @@ def prepare_ai4i_datasets(
     cls_valid = validate_export(str(cls_path))
     reg_valid = validate_export(str(reg_path))
 
+    if reg_valid:
+        # Verify that time_series in reg_path does not contain target_reg
+        try:
+            ts_schema = pl.read_parquet_schema(reg_path / "time_series.parquet")
+            if "Tool wear [min]" in ts_schema:
+                logger.info("Detected leaked 'Tool wear [min]' column in existing regression parquet. Forcing recreation.")
+                reg_valid = False
+        except Exception:
+            reg_valid = False
+
     if cls_valid and reg_valid and not force_recreate:
         logger.info("Validated existing processed AI4I datasets at %s and %s", cls_path, reg_path)
         return cls_path, reg_path
@@ -91,13 +101,22 @@ def prepare_ai4i_datasets(
         pl.col("Tool wear [min]").cast(pl.Float32).alias("target_reg"),
     ])
 
-    feature_cols = [
+    feature_cols_cls = [
         "Type",
         "Air temperature [K]",
         "Process temperature [K]",
         "Rotational speed [rpm]",
         "Torque [Nm]",
         "Tool wear [min]",
+    ]
+
+    # For regression: strictly exclude "Tool wear [min]" to prevent target leakage
+    feature_cols_reg = [
+        "Type",
+        "Air temperature [K]",
+        "Process temperature [K]",
+        "Rotational speed [rpm]",
+        "Torque [Nm]",
     ]
 
     # 1. Classification dataset
@@ -107,7 +126,7 @@ def prepare_ai4i_datasets(
         window_size=window_size,
         stride=stride,
         time_col="time",
-        feature_cols=feature_cols,
+        feature_cols=feature_cols_cls,
         label_col="target_cls",
         label_strategy=cls_label_strategy,
     )
@@ -115,20 +134,20 @@ def prepare_ai4i_datasets(
     df_targets_cls.write_parquet(cls_path / "targets.parquet")
     logger.info("Exported AI4I classification dataset (%d windows) to %s", df_targets_cls.height, cls_path)
 
-    # 2. Regression dataset (target: final-step Tool wear)
+    # 2. Regression dataset (target: final-step Tool wear; leak-free independent features)
     reg_path.mkdir(parents=True, exist_ok=True)
     df_ts_reg, df_targets_reg = segment_time_series(
         df_filtered,
         window_size=window_size,
         stride=stride,
         time_col="time",
-        feature_cols=feature_cols,
+        feature_cols=feature_cols_reg,
         label_col="target_reg",
         label_strategy="last",
     )
     df_ts_reg.write_parquet(reg_path / "time_series.parquet")
     df_targets_reg.write_parquet(reg_path / "targets.parquet")
-    logger.info("Exported AI4I regression dataset (%d windows) to %s", df_targets_reg.height, reg_path)
+    logger.info("Exported AI4I leak-free regression dataset (%d windows, %d features) to %s", df_targets_reg.height, len(feature_cols_reg), reg_path)
 
     return cls_path, reg_path
 
