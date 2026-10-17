@@ -1,0 +1,8 @@
+dataset,domain,task,N,W,S,p_channels,D_features,cv_strategy,metric,score,status,notes
+beed,Biomedical Telemetry (EEG),classification,157,200,200,16,80,StratifiedKFold (5-fold),Accuracy,0.9681,VALID,"Bangalore EEG Epilepsy Dataset (UCI 1134), non-overlapping windows."
+pred-maintenance,Industrial IoT & Failure,classification,197,200,200,6,30,StratifiedKFold (5-fold),Accuracy,0.9493,VALID,"AI4I 2020 Predictive Maintenance, non-overlapping windows."
+har,Inertial Kinetics (IMU),classification,10299,128,64,9,45,GroupKFold by Subject (5-fold),Accuracy,0.8665919402914884,VALID,"UCI HAR (30 subjects). Shuffled acc: 0.9640, GroupKFold: 0.8666 (subject gap: 0.0974)."
+gas-sensor-drift-sub,Chemical Sensing Array,classification,600,8,8,16,80,StratifiedKFold (5-fold),Accuracy,0.19,INVALID_TS,"Not a valid time series. L=8 represents 8 pre-extracted static features per sensor, resulting in near-chance accuracy (16.67% baseline)."
+appliances-energy,Building Power & Thermodynamics,regression,273,144,144,25,125,KFold (3-fold),R2,0.5365,VALID,Corrected from negative R2 (-0.4522) by fixing target aggregation from instantaneous last snapshot to daily mean load demand.
+beijing-pm25,Environmental Meteorology,regression,3651,24,24,10,50,KFold (3-fold),R2,0.3876,VALID,"Beijing multi-site PM2.5 air quality, non-overlapping daily windows."
+drift-bifurcation-cls,Stochastic Physics (Langevin),classification,200,500,500,3,15,StratifiedKFold (3-fold),Accuracy,0.7451,VALID,Numerical Langevin stochastic trajectories across subcritical and supercritical bifurcation regimes.

@@ -1,0 +1,40 @@
+{
+  "test_1_cache_hit": {
+    "status": "PASS",
+    "cache_exists": true,
+    "retrieval_latency_ms": 106.171,
+    "shape_matches": true,
+    "values_match": true
+  },
+  "test_2_parameter_invalidation": {
+    "status": "PASS",
+    "keys_differ": true,
+    "mutated_cache_exists": false,
+    "key_original": "test1_dataset__numba_efficient__d1b4e883614a__ds_3ea957fe__ext_v1.1.0",
+    "key_mutated": "test1_dataset__numba_efficient__43b848bee238__ds_3ea957fe__ext_v1.1.0"
+  },
+  "test_3_segmentation_invalidation": {
+    "status": "PASS",
+    "hashes_differ": true,
+    "w100_cache_exists": true,
+    "w200_cache_exists": false,
+    "hash_w100": "c4bd9cd8048e",
+    "hash_w200": "c07c1689e550"
+  },
+  "test_4_in_memory_element_mutation": {
+    "status": "PASS",
+    "fingerprints_differ": true,
+    "base_exists": true,
+    "mutated_exists": false,
+    "hash_base": "651704b71ade",
+    "hash_mutated": "3ddf48da9cbf"
+  },
+  "test_5_disk_modification": {
+    "status": "PASS",
+    "disk_hashes_differ": true,
+    "initial_cache_exists": true,
+    "modified_cache_exists": false,
+    "hash_initial": "0c36bf7e5864",
+    "hash_modified": "839dbbdd5601"
+  }
+}

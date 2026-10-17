@@ -1,0 +1,8 @@
+{
+  "git_commit": "70a5d3cfe970a217bb53fc58d9a36f37264732a1",
+  "python_version": "3.11.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "processor": "arm",
+  "workload": "numba_efficient_extractor (N=1000, W=100, P=3)",
+  "timestamp": "2026-10-15T00:36:13+1300"
+}

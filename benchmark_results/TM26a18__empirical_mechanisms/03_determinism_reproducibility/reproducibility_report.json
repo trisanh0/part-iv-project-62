@@ -1,0 +1,63 @@
+{
+  "dataset": "pred-maintenance",
+  "extractor": "numba_efficient",
+  "n_sequences": 197,
+  "n_timesteps": 200,
+  "n_features": 882,
+  "recompute_audit": {
+    "bit_identical": true,
+    "allclose_1e12": true,
+    "allclose_1e6": true,
+    "max_absolute_difference": 0.0,
+    "mean_absolute_difference": 0.0,
+    "fold_scores_identical": true,
+    "fold_scores_diff": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cache_audit": {
+    "bit_identical": true,
+    "max_absolute_difference": 0.0,
+    "fold_scores_identical": true,
+    "fold_scores_diff": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "load_speedup": 8.2
+  },
+  "timings_s": {
+    "fresh_run_1": 1.5798,
+    "fresh_run_2": 0.0128,
+    "cache_load": 0.1916
+  },
+  "fold_scores": {
+    "run_1": [
+      0.95,
+      0.95,
+      0.9487179487179487,
+      0.9487179487179487,
+      0.9487179487179487
+    ],
+    "run_2": [
+      0.95,
+      0.95,
+      0.9487179487179487,
+      0.9487179487179487,
+      0.9487179487179487
+    ],
+    "cached": [
+      0.95,
+      0.95,
+      0.9487179487179487,
+      0.9487179487179487,
+      0.9487179487179487
+    ]
+  }
+}

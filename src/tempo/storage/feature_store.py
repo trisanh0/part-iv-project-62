@@ -71,37 +71,29 @@ def compute_dataset_fingerprint(
         # Fallback for named datasets or nonexistent paths: hash canonical string name
         return hashlib.sha256(str(dataset).strip().lower().encode("utf-8")).hexdigest()[:12]
 
-    # In-memory DataFrame (Polars or Pandas)
+    # In-memory DataFrame or Array (Polars, Pandas, or NumPy)
     try:
-        if hasattr(dataset, "schema") and hasattr(dataset, "shape"):
-            # Polars DataFrame
+        if hasattr(dataset, "schema") and hasattr(dataset, "shape") and hasattr(dataset, "hash_rows"):
+            # Polars DataFrame: fast SIMD row hashing over all rows + schema
             n_rows, n_cols = dataset.shape
-            col_types = [f"{c}:{t}" for c, t in dataset.schema.items()]
-            # Sample first, middle, last rows if available
-            sample_vals = []
-            if n_rows > 0:
-                sample_idx = [0, n_rows // 2, n_rows - 1] if n_rows >= 3 else list(range(n_rows))
-                try:
-                    sample_df = dataset[sample_idx]
-                    sample_vals = [str(row) for row in sample_df.iter_rows()]
-                except Exception:
-                    pass
-            sig_str = f"pl:{n_rows}:{n_cols}:{','.join(col_types)}:{';'.join(sample_vals)}"
-            return hashlib.sha256(sig_str.encode("utf-8")).hexdigest()[:12]
+            col_info = f"pl:{n_rows}:{n_cols}:{','.join(dataset.columns)}:{','.join(str(t) for t in dataset.schema.values())}"
+            row_hashes = dataset.hash_rows().to_numpy().tobytes()
+            sig_bytes = col_info.encode("utf-8") + b":" + row_hashes
+            return hashlib.sha256(sig_bytes).hexdigest()[:12]
 
         elif hasattr(dataset, "dtypes") and hasattr(dataset, "shape"):
-            # Pandas DataFrame
+            # Pandas DataFrame: C-level hash over all elements + column dtypes
             n_rows, n_cols = dataset.shape
-            col_types = [f"{c}:{t}" for c, t in dataset.dtypes.items()]
-            sample_vals = []
-            if n_rows > 0:
-                sample_idx = [0, n_rows // 2, n_rows - 1] if n_rows >= 3 else list(range(n_rows))
-                try:
-                    sample_vals = [str(dataset.iloc[i].to_dict()) for i in sample_idx]
-                except Exception:
-                    pass
-            sig_str = f"pd:{n_rows}:{n_cols}:{','.join(col_types)}:{';'.join(sample_vals)}"
-            return hashlib.sha256(sig_str.encode("utf-8")).hexdigest()[:12]
+            col_info = f"pd:{n_rows}:{n_cols}:{','.join(str(c) for c in dataset.columns)}:{','.join(str(t) for t in dataset.dtypes)}"
+            row_hashes = pd.util.hash_pandas_object(dataset, index=True).values.tobytes()
+            sig_bytes = col_info.encode("utf-8") + b":" + row_hashes
+            return hashlib.sha256(sig_bytes).hexdigest()[:12]
+
+        elif isinstance(dataset, np.ndarray):
+            # NumPy ndarray: full buffer bytes + array metadata
+            shape_info = f"np:{dataset.shape}:{dataset.dtype}"
+            sig_bytes = shape_info.encode("utf-8") + b":" + dataset.tobytes()
+            return hashlib.sha256(sig_bytes).hexdigest()[:12]
     except Exception:
         pass
 

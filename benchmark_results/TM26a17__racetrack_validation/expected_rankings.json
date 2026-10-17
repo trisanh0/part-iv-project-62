@@ -1,0 +1,48 @@
+{
+  "declaration_timestamp_utc": "2026-10-14T10:34:52.465255Z",
+  "description": "A priori declared hypotheses for Run B synthetic planted-signal benchmark",
+  "hypotheses": {
+    "feature_selection": {
+      "fdr_control": "tsfresh_selector (Benjamini-Hochberg FDR) and SubsampledFeatureSelector will maintain empirical FDP <= 0.05.",
+      "anova_inflation": "Standard ANOVA uncorrected p-value thresholding will exhibit severe FDP inflation (> 0.20) under noise columns.",
+      "boruta_shadow": "Boruta shadow feature comparison will achieve high power (> 0.85) while controlling FDP <= 0.05."
+    },
+    "extractor_scaling": {
+      "efficiency_ranking": [
+        "polars_statistics",
+        "numba_efficient",
+        "numpy_statistical",
+        "tsfel",
+        "tsfresh_efficient"
+      ],
+      "explanation": "Polars and Numba execute vectorized/compiled kernels without DataFrame copying; tsfresh incurs high per-feature extraction overhead."
+    }
+  },
+  "planted_signal_specification": {
+    "p_true": 20,
+    "p_noise": 180,
+    "total_features": 200,
+    "true_feature_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ]
+  }
+}

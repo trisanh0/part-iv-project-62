@@ -1,0 +1,28 @@
+2026-10-16 01:27:18,478 [INFO] tempo.experiments.langevin_recovery: Starting Langevin recovery benchmark across lengths: [1000, 10000, 100000, 1000000]
+2026-10-16 01:27:18,478 [INFO] tempo.experiments.langevin_recovery: =================================================================
+STAGE: Trajectory Length L = 1000 (N = 200 trajectories)
+=================================================================
+2026-10-16 01:27:18,478 [INFO] tempo.experiments.langevin_recovery: Simulating 200 Langevin trajectories of length 1000 in float64...
+2026-10-16 01:27:18,886 [INFO] tempo.experiments.langevin_recovery: Cached simulation trajectories to benchmark_results/TM26a1X__langevin/data/simulated_trajectories_L1000.parquet
+2026-10-16 01:27:26,709 [INFO] tempo.experiments.langevin_recovery: Chunk 1/10 took 4.2s. Projected tsfresh total: 42.5s (0.7 min).
+2026-10-16 01:29:03,048 [INFO] tempo.experiments.langevin_recovery: =================================================================
+STAGE: Trajectory Length L = 10000 (N = 200 trajectories)
+=================================================================
+2026-10-16 01:29:03,049 [INFO] tempo.experiments.langevin_recovery: Simulating 200 Langevin trajectories of length 10000 in float64...
+2026-10-16 01:29:06,570 [INFO] tempo.experiments.langevin_recovery: Cached simulation trajectories to benchmark_results/TM26a1X__langevin/data/simulated_trajectories_L10000.parquet
+2026-10-16 01:29:19,381 [INFO] tempo.experiments.langevin_recovery: Chunk 1/10 took 10.2s. Projected tsfresh total: 102.1s (1.7 min).
+2026-10-16 01:32:15,415 [INFO] tempo.experiments.langevin_recovery: =================================================================
+STAGE: Trajectory Length L = 100000 (N = 200 trajectories)
+=================================================================
+2026-10-16 01:32:15,415 [INFO] tempo.experiments.langevin_recovery: Simulating 200 Langevin trajectories of length 100000 in float64...
+2026-10-16 01:32:51,053 [INFO] tempo.experiments.langevin_recovery: Cached simulation trajectories to benchmark_results/TM26a1X__langevin/data/simulated_trajectories_L100000.parquet
+2026-10-16 01:38:21,875 [INFO] tempo.experiments.langevin_recovery: Chunk 1/10 took 322.5s. Projected tsfresh total: 3225.4s (53.8 min).
+2026-10-16 02:18:52,212 [INFO] tempo.experiments.langevin_recovery: =================================================================
+STAGE: Trajectory Length L = 1000000 (N = 100 trajectories)
+=================================================================
+2026-10-16 02:18:52,215 [INFO] tempo.experiments.langevin_recovery: Simulating 100 Langevin trajectories of length 1000000 in float64...
+2026-10-16 02:21:46,378 [INFO] tempo.experiments.langevin_recovery: Cached simulation trajectories to benchmark_results/TM26a1X__langevin/data/simulated_trajectories_L1000000.parquet
+2026-10-16 02:22:09,156 [INFO] tempo.experiments.langevin_recovery: Skipping tsfresh_efficient at length L=1000000 (exceeds 90-minute limit).
+2026-10-16 02:22:43,941 [INFO] tempo.experiments.langevin_recovery: Saved tabular benchmark results to benchmark_results/TM26a1X__langevin/benchmark_results.csv
+2026-10-16 02:22:44,840 [INFO] tempo.experiments.langevin_recovery: Saved two-panel summary figure to benchmark_results/TM26a1X__langevin/figures/langevin_recovery_summary.png
+2026-10-16 02:22:44,843 [INFO] tempo.experiments.langevin_recovery: Wrote summary markdown deliverable to TM26a1X__langevin_summary.md

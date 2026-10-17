@@ -1,0 +1,139 @@
+feature,family,max_abs_diff,mean_abs_diff,is_close_1e5,is_close_1e6,is_exact,sample_tsfresh,sample_numba
+Air temperature [K]__abs_energy,Location & Energy,0.34035035967826843,0.15729376941919326,True,True,False,17839873.823243424,17839873.546875
+Air temperature [K]__absolute_maximum,Location & Energy,59596.699768066406,59304.993919677734,False,False,False,299.1000061035156,59732.499420166016
+Air temperature [K]__absolute_sum_of_changes,Dynamics & Extremes,0.0,0.0,True,True,True,9.29998779296875,9.29998779296875
+Air temperature [K]__autocorrelation__lag_1,Autocorrelation,0.004979667374149788,0.004771787791308566,False,False,False,0.9610148636355484,0.9562097893173708
+Air temperature [K]__autocorrelation__lag_2,Autocorrelation,0.009915194176771225,0.009235481713774434,False,False,False,0.9306513155549582,0.9213448023994085
+Air temperature [K]__autocorrelation__lag_3,Autocorrelation,0.014813038106651244,0.013416293846110261,False,False,False,0.8983517363918739,0.8848764603459958
+Air temperature [K]__autocorrelation__lag_4,Autocorrelation,0.019671313503727084,0.017319365085853394,False,False,False,0.8750614497800976,0.8575602207844958
+Air temperature [K]__autocorrelation__lag_5,Autocorrelation,0.024477541301719197,0.020993913050951097,False,False,False,0.8496560799809799,0.8284146779814554
+Air temperature [K]__autocorrelation__lag_6,Autocorrelation,0.02925478134046766,0.024359899244156314,False,False,False,0.8169118485883908,0.792404493130739
+Air temperature [K]__autocorrelation__lag_7,Autocorrelation,0.0339911660613228,0.027460132451210376,False,False,False,0.7794015110882934,0.752122458200203
+Air temperature [K]__autocorrelation__lag_8,Autocorrelation,0.03863000345508705,0.030254290642786605,False,False,False,0.7484930528297484,0.7185533307165586
+Air temperature [K]__autocorrelation__lag_9,Autocorrelation,0.04320037053811587,0.03279741991642824,False,False,False,0.7129470785126806,0.68086445997961
+Air temperature [K]__count_above_mean,Location & Energy,0.0,0.0,True,True,True,125.0,125.0
+Air temperature [K]__count_below_mean,Location & Energy,0.0,0.0,True,True,True,75.0,75.0
+Air temperature [K]__first_location_of_maximum,Location & Energy,1.1102230246251565e-16,4.440892098500626e-18,True,True,False,0.13,0.13
+Air temperature [K]__first_location_of_minimum,Location & Energy,1.1102230246251565e-16,9.992007221626408e-18,True,True,False,0.0,0.0
+Air temperature [K]__kurtosis,Higher Order Moments,0.3264343101178544,0.08296661684170185,False,False,False,-0.994627333921072,-0.9305780468591052
+Air temperature [K]__last_location_of_maximum,Location & Energy,0.00500000000000006,0.004999999999999992,False,False,False,0.47,0.465
+Air temperature [K]__last_location_of_minimum,Location & Energy,0.0050000000000001155,0.004999999999999987,False,False,False,0.935,0.93
+"Air temperature [K]__linear_trend__attr_""intercept""",Linear Trend,5.684341886080802e-14,1.7053025658242404e-14,True,True,False,298.89960714767227,298.89960714767227
+"Air temperature [K]__linear_trend__attr_""pvalue""",Linear Trend,0.5069851749523843,0.015341113480577184,False,False,False,5.90021989854175e-13,0.0
+"Air temperature [K]__linear_trend__attr_""rvalue""",Linear Trend,0.011048026205194406,0.0032097086851594135,False,False,False,-0.4806271479414967,-0.48473171609325155
+"Air temperature [K]__linear_trend__attr_""slope""",Linear Trend,8.673617379884035e-19,6.071532165918825e-20,True,True,False,-0.002383015546152814,-0.002383015546152814
+"Air temperature [K]__linear_trend__attr_""stderr""",Linear Trend,0.0004628006230941052,0.00025109403931762223,False,False,False,0.00030899287055296447,0.0
+Air temperature [K]__longest_strike_above_mean,Location & Energy,0.0,0.0,True,True,True,125.0,125.0
+Air temperature [K]__longest_strike_below_mean,Location & Energy,0.0,0.0,True,True,True,58.0,58.0
+Air temperature [K]__maximum,Location & Energy,0.0,0.0,True,True,True,299.1000061035156,299.1000061035156
+Air temperature [K]__mean,Location & Energy,0.0,0.0,True,True,True,298.6624971008301,298.6624971008301
+Air temperature [K]__mean_abs_change,Location & Energy,0.0,0.0,True,True,True,0.04673360699984296,0.04673360699984296
+Air temperature [K]__mean_change,Location & Energy,0.0,0.0,True,True,True,0.001507476346576633,0.001507476346576633
+Air temperature [K]__minimum,Location & Energy,0.0,0.0,True,True,True,298.1000061035156,298.1000061035156
+Air temperature [K]__quantile__q_0.1,Quantiles,0.0,0.0,True,True,True,298.20001220703125,298.20001220703125
+Air temperature [K]__quantile__q_0.2,Quantiles,0.0,0.0,True,True,True,298.3999938964844,298.3999938964844
+Air temperature [K]__quantile__q_0.3,Quantiles,0.0,0.0,True,True,True,298.3999938964844,298.3999938964844
+Air temperature [K]__quantile__q_0.4,Quantiles,0.0,0.0,True,True,True,298.70001220703125,298.70001220703125
+Air temperature [K]__quantile__q_0.6,Quantiles,0.0,0.0,True,True,True,298.79998779296875,298.79998779296875
+Air temperature [K]__quantile__q_0.7,Quantiles,0.0,0.0,True,True,True,298.8299896240234,298.8299896240234
+Air temperature [K]__quantile__q_0.8,Quantiles,0.0,0.0,True,True,True,298.8999938964844,298.8999938964844
+Air temperature [K]__quantile__q_0.9,Quantiles,0.0,0.0,True,True,True,299.0,299.0
+Air temperature [K]__ratio_beyond_r_sigma__r_1,Dynamics & Extremes,0.43000000000000005,0.17380000000000004,False,False,False,0.315,0.375
+Air temperature [K]__ratio_value_number_to_time_series_length,Dynamics & Extremes,0.68,0.42729999999999996,False,False,False,0.055,0.625
+Air temperature [K]__root_mean_square,Location & Energy,2.848328790605592e-06,1.3192314793286642e-06,True,True,False,298.66263428192207,298.6626319685391
+Air temperature [K]__skewness,Higher Order Moments,0.04625016420985373,0.01065538478021854,False,False,False,-0.5804323078707166,-0.5909553218022983
+Air temperature [K]__standard_deviation,Dispersion (Var/Std),0.004092223288477775,0.0015191665442433335,False,False,False,0.2862546310390756,0.2838307095191585
+Air temperature [K]__variance,Dispersion (Var/Std),0.0017017517972297003,0.0007864688458211902,False,False,False,0.08194171379131732,0.08055987166614895
+Air temperature [K]__variance_larger_than_standard_deviation,Dispersion (Var/Std),0.0,0.0,True,True,True,0.0,0.0
+Process temperature [K]__abs_energy,Location & Energy,0.25523313879966736,0.1061769299954176,True,True,False,19063920.607042253,19063920.484375
+Process temperature [K]__absolute_maximum,Location & Energy,61681.80001831055,61377.41398925781,False,False,False,309.5,61747.700286865234
+Process temperature [K]__absolute_sum_of_changes,Dynamics & Extremes,0.0,0.0,True,True,True,10.400146484375,10.400146484375
+Process temperature [K]__autocorrelation__lag_1,Autocorrelation,0.0049736036692407115,0.004817962418574751,False,False,False,0.9825640788863093,0.9776512584918777
+Process temperature [K]__autocorrelation__lag_2,Autocorrelation,0.009895325815561518,0.009360626044527287,False,False,False,0.9724046865822797,0.9626806397164575
+Process temperature [K]__autocorrelation__lag_3,Autocorrelation,0.014788112197281267,0.013572127763461917,False,False,False,0.9573983948380241,0.943037418915454
+Process temperature [K]__autocorrelation__lag_4,Autocorrelation,0.019626490995888868,0.017536025534452045,False,False,False,0.9492647893164758,0.9302794935301466
+Process temperature [K]__autocorrelation__lag_5,Autocorrelation,0.024419081175217405,0.02123278939537221,False,False,False,0.9410477621998349,0.9175215681448392
+Process temperature [K]__autocorrelation__lag_6,Autocorrelation,0.029172484927415532,0.024640074578595298,False,False,False,0.9285770322808085,0.9007197213123843
+Process temperature [K]__autocorrelation__lag_7,Autocorrelation,0.0338728815729723,0.027688381094255154,False,False,False,0.9165718649925447,0.884491849717806
+Process temperature [K]__autocorrelation__lag_8,Autocorrelation,0.038500867141399664,0.030501963522811506,False,False,False,0.9070319318235728,0.87075065455063
+Process temperature [K]__autocorrelation__lag_9,Autocorrelation,0.04302024699685225,0.03299152117867774,False,False,False,0.8941873467246586,0.8539489161220488
+Process temperature [K]__count_above_mean,Location & Energy,0.0,0.0,True,True,True,98.0,98.0
+Process temperature [K]__count_below_mean,Location & Energy,0.0,0.0,True,True,True,102.0,102.0
+Process temperature [K]__first_location_of_maximum,Location & Energy,1.1102230246251565e-16,3.3306690738754695e-18,True,True,False,0.125,0.125
+Process temperature [K]__first_location_of_minimum,Location & Energy,1.1102230246251565e-16,1.3322676295501878e-17,True,True,False,0.86,0.86
+Process temperature [K]__kurtosis,Higher Order Moments,0.21354483908066557,0.03873404781096824,False,False,False,-1.016550778473178,-1.003807724939025
+Process temperature [K]__last_location_of_maximum,Location & Energy,0.005000000000000046,0.004999999999999988,False,False,False,0.15500000000000003,0.15
+Process temperature [K]__last_location_of_minimum,Location & Energy,0.00500000000000006,0.00499999999999999,False,False,False,0.87,0.865
+"Process temperature [K]__linear_trend__attr_""intercept""",Linear Trend,5.684341886080802e-14,1.4779288903810084e-14,True,True,False,309.27442009313785,309.2744200931378
+"Process temperature [K]__linear_trend__attr_""pvalue""",Linear Trend,0.8285191153487131,0.047580882374857546,False,False,False,7.96132032832344e-52,0.0
+"Process temperature [K]__linear_trend__attr_""rvalue""",Linear Trend,0.006923298465426164,0.0014060595388354232,False,False,False,-0.8288173887593436,-0.8306289280499064
+"Process temperature [K]__linear_trend__attr_""slope""",Linear Trend,1.734723475976807e-18,2.0816681711721684e-19,True,True,False,-0.005386117173986478,-0.005386117173986478
+"Process temperature [K]__linear_trend__attr_""stderr""",Linear Trend,0.0006282368479238654,0.00030359646953823457,False,False,False,0.0002584040657559719,0.0
+Process temperature [K]__longest_strike_above_mean,Location & Energy,0.0,0.0,True,True,True,95.0,95.0
+Process temperature [K]__longest_strike_below_mean,Location & Energy,0.0,0.0,True,True,True,77.0,77.0
+Process temperature [K]__maximum,Location & Energy,0.0,0.0,True,True,True,309.5,309.5
+Process temperature [K]__mean,Location & Energy,0.0,0.0,True,True,True,308.73850143432617,308.73850143432617
+Process temperature [K]__mean_abs_change,Location & Energy,0.0,0.0,True,True,True,0.05226204263505025,0.05226204263505025
+Process temperature [K]__mean_change,Location & Energy,0.0,0.0,True,True,True,0.0,0.0
+Process temperature [K]__minimum,Location & Energy,0.0,0.0,True,True,True,308.0,308.0
+Process temperature [K]__quantile__q_0.1,Quantiles,0.0,0.0,True,True,True,308.20001220703125,308.20001220703125
+Process temperature [K]__quantile__q_0.2,Quantiles,0.0,0.0,True,True,True,308.3999938964844,308.3999938964844
+Process temperature [K]__quantile__q_0.3,Quantiles,0.0,0.0,True,True,True,308.5,308.5
+Process temperature [K]__quantile__q_0.4,Quantiles,0.0,0.0,True,True,True,308.6000061035156,308.6000061035156
+Process temperature [K]__quantile__q_0.6,Quantiles,0.0,0.0,True,True,True,308.8999938964844,308.8999938964844
+Process temperature [K]__quantile__q_0.7,Quantiles,0.0,0.0,True,True,True,309.0,309.0
+Process temperature [K]__quantile__q_0.8,Quantiles,0.0,0.0,True,True,True,309.1000061035156,309.1000061035156
+Process temperature [K]__quantile__q_0.9,Quantiles,0.0,0.0,True,True,True,309.20001220703125,309.20001220703125
+Process temperature [K]__ratio_beyond_r_sigma__r_1,Dynamics & Extremes,0.4,0.1492,False,False,False,0.325,0.51
+Process temperature [K]__ratio_value_number_to_time_series_length,Dynamics & Extremes,0.59,0.41479999999999995,False,False,False,0.08,0.49
+Process temperature [K]__root_mean_square,Location & Energy,2.073181349260267e-06,8.608160987932934e-07,True,True,False,308.73872940596755,308.7387284126742
+Process temperature [K]__skewness,Higher Order Moments,0.02139468979598913,0.004408041829626604,False,False,False,-0.029199024503921207,-0.02917001085603992
+Process temperature [K]__standard_deviation,Dispersion (Var/Std),0.0031878081473597497,0.0008374630940865446,False,False,False,0.3751896824639893,0.3743714219521346
+Process temperature [K]__variance,Dispersion (Var/Std),0.001276165709740762,0.0005308846484148971,False,False,False,0.14076729782742914,0.1401539615744632
+Process temperature [K]__variance_larger_than_standard_deviation,Dispersion (Var/Std),0.0,0.0,True,True,True,0.0,0.0
+Type__abs_energy,Location & Energy,0.0,0.0,True,True,True,159.0,159.0
+Type__absolute_maximum,Location & Energy,130.0,99.74,False,False,False,2.0,107.0
+Type__absolute_sum_of_changes,Dynamics & Extremes,0.0,0.0,True,True,True,133.0,133.0
+Type__autocorrelation__lag_1,Autocorrelation,0.000792718481586574,0.0002871062854535488,False,False,False,0.09880639994231882,0.09831236794260721
+Type__autocorrelation__lag_2,Autocorrelation,0.0014606026190353005,0.0004321559345857944,False,False,False,-0.04251100261124344,-0.042085892585130964
+Type__autocorrelation__lag_3,Autocorrelation,0.002727944629778545,0.0008920955936719568,False,False,False,0.0595271263438332,0.05863421944867571
+Type__autocorrelation__lag_4,Autocorrelation,0.0033715190317625265,0.000996462247095278,False,False,False,0.007522069316154509,0.007371627929831448
+Type__autocorrelation__lag_5,Autocorrelation,0.004643126742468556,0.0012965408718001396,False,False,False,-0.03564242417370033,-0.034751363569357804
+Type__autocorrelation__lag_6,Autocorrelation,0.004017977409386697,0.001525304742291397,False,False,False,0.012640529835409144,0.012261313940346897
+Type__autocorrelation__lag_7,Autocorrelation,0.005107996222118272,0.0013191231759520053,False,False,False,-0.08115169449732333,-0.07831138518991698
+Type__autocorrelation__lag_8,Autocorrelation,0.00758682904826341,0.002189655241771426,False,False,False,0.049293237023569664,0.04732150754262687
+Type__autocorrelation__lag_9,Autocorrelation,0.007462049197110188,0.0025178809767930116,False,False,False,0.06240196591700469,0.05959387745073949
+Type__count_above_mean,Location & Energy,0.0,0.0,True,True,True,81.0,81.0
+Type__count_below_mean,Location & Energy,0.0,0.0,True,True,True,119.0,119.0
+Type__first_location_of_maximum,Location & Energy,2.7755575615628914e-17,5.551115123125783e-19,True,True,False,0.05,0.05
+Type__first_location_of_minimum,Location & Energy,0.0,0.0,True,True,True,0.005,0.005
+Type__kurtosis,Higher Order Moments,0.040623964341085284,0.024062949825373953,False,False,False,-0.4294729840806699,-0.44866179697119035
+Type__last_location_of_maximum,Location & Energy,0.0050000000000000044,0.004999999999999993,False,False,False,0.985,0.98
+Type__last_location_of_minimum,Location & Energy,0.0050000000000000044,0.0050000000000000044,False,False,False,1.0,0.995
+"Type__linear_trend__attr_""intercept""",Linear Trend,1.1102230246251565e-16,3.1086244689504386e-17,True,True,False,0.5707462686567164,0.5707462686567164
+"Type__linear_trend__attr_""pvalue""",Linear Trend,0.9914976414206255,0.5151348318354546,False,False,False,0.6827251699142945,0.0
+"Type__linear_trend__attr_""rvalue""",Linear Trend,5.551115123125783e-17,1.0740106720641407e-17,True,True,False,-0.02907894839355811,-0.02907894839355811
+"Type__linear_trend__attr_""slope""",Linear Trend,4.336808689942018e-19,1.0035646359068951e-19,True,True,False,-0.0003592589814745369,-0.00035925898147453684
+"Type__linear_trend__attr_""stderr""",Linear Trend,0.0009218897737095278,0.0008365275284068765,False,False,False,0.0008776324007056264,0.0
+Type__longest_strike_above_mean,Location & Energy,0.0,0.0,True,True,True,6.0,6.0
+Type__longest_strike_below_mean,Location & Energy,0.0,0.0,True,True,True,13.0,13.0
+Type__maximum,Location & Energy,0.0,0.0,True,True,True,2.0,2.0
+Type__mean,Location & Energy,0.0,0.0,True,True,True,0.535,0.535
+Type__mean_abs_change,Location & Energy,0.0,0.0,True,True,True,0.6683417085427136,0.6683417085427136
+Type__mean_change,Location & Energy,0.0,0.0,True,True,True,-0.005025125628140704,-0.005025125628140704
+Type__minimum,Location & Energy,0.0,0.0,True,True,True,0.0,0.0
+Type__quantile__q_0.1,Quantiles,0.0,0.0,True,True,True,0.0,0.0
+Type__quantile__q_0.2,Quantiles,0.0,0.0,True,True,True,0.0,0.0
+Type__quantile__q_0.3,Quantiles,0.0,0.0,True,True,True,0.0,0.0
+Type__quantile__q_0.4,Quantiles,0.0,0.0,True,True,True,0.0,0.0
+Type__quantile__q_0.6,Quantiles,0.0,0.0,True,True,True,1.0,1.0
+Type__quantile__q_0.7,Quantiles,0.0,0.0,True,True,True,1.0,1.0
+Type__quantile__q_0.8,Quantiles,0.0,0.0,True,True,True,1.0,1.0
+Type__quantile__q_0.9,Quantiles,0.0,0.0,True,True,True,2.0,2.0
+Type__ratio_beyond_r_sigma__r_1,Dynamics & Extremes,0.5800000000000001,0.49130000000000007,False,False,False,0.13,0.595
+Type__ratio_value_number_to_time_series_length,Dynamics & Extremes,0.475,0.38449999999999995,False,False,False,0.015,0.405
+Type__root_mean_square,Location & Energy,0.0,0.0,True,True,True,0.8916277250063505,0.8916277250063505
+Type__skewness,Higher Order Moments,0.009673206306681115,0.00748911185304818,False,False,False,0.9586638625001742,0.9514588517700917
+Type__standard_deviation,Dispersion (Var/Std),2.220446049250313e-16,4.4408920985006264e-17,True,True,False,0.7132846556599965,0.7132846556599967
+Type__variance,Dispersion (Var/Std),2.220446049250313e-16,6.217248937900877e-17,True,True,False,0.5087749999999999,0.508775
+Type__variance_larger_than_standard_deviation,Dispersion (Var/Std),0.0,0.0,True,True,True,0.0,0.0

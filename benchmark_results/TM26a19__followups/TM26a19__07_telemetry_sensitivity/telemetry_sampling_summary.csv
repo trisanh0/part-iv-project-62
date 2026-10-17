@@ -1,0 +1,5 @@
+frequency_hz,interval_s,n_repeats,sampled_peak_median_mb,os_peak_median_mb,missed_peak_median_mb,attenuation_pct_median,duration_median_s
+10,0.1,5,363.02,363.05,0.03,0.01,0.1366
+20,0.05,5,363.28,363.31,0.03,0.01,0.0864
+100,0.01,5,362.73,362.77,0.03,0.01,0.0668
+200,0.005,5,363.27,363.3,0.03,0.01,0.0669

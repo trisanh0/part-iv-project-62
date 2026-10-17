@@ -1,0 +1,154 @@
+{
+  "har_cv_audit": {
+    "shuffled_accuracy_mean": 0.9639776590577951,
+    "shuffled_folds": [
+      0.9607,
+      0.9641,
+      0.9617,
+      0.9636,
+      0.9699
+    ],
+    "group_kfold_accuracy_mean": 0.8665919402914884,
+    "group_folds": [
+      0.8558,
+      0.8809,
+      0.8947,
+      0.8679,
+      0.8336
+    ],
+    "subject_leakage_gap": 0.0974,
+    "n_subjects": 30
+  },
+  "beed_provenance": {
+    "dataset_name": "Bangalore EEG Epilepsy Dataset (BEED)",
+    "canonical_repository": "UCI Machine Learning Repository (ID 1134)",
+    "source_file": "data/01_raw/beed/BEED_Data.csv",
+    "channels_p": 16,
+    "channels_description": "16 EEG electrode voltage channels (X1 through X16) using standard 10-20 international system",
+    "sampling_rate_hz": 256,
+    "raw_observations": 8000,
+    "class_count": 4,
+    "classes_description": "4 classes: 0 (healthy baseline), 1 (interictal), 2 (pre-ictal), 3 (ictal seizure), exactly 2,000 observations per class",
+    "tempo_windowing": {
+      "window_size_W": 200,
+      "stride_S": 200,
+      "n_instances_N": 157,
+      "overlap_pct": 0.0
+    },
+    "note": "Previously mislabeled in informal notes as 'Bioacoustics/Bee audio'. Raw header and UCI repository verify biomedical EEG identity."
+  },
+  "notation_mapping": {
+    "p": "Number of raw input channels / variables per sequence",
+    "D": "Number of extracted features after pipeline feature extraction",
+    "W": "Window length (temporal steps per sequence)",
+    "S": "Stride offset between consecutive sliding windows",
+    "N": "Number of windowed instances / sequences"
+  },
+  "datasets": [
+    {
+      "dataset": "beed",
+      "domain": "Biomedical Telemetry (EEG)",
+      "task": "classification",
+      "N": 157,
+      "W": 200,
+      "S": 200,
+      "p_channels": 16,
+      "D_features": 80,
+      "cv_strategy": "StratifiedKFold (5-fold)",
+      "metric": "Accuracy",
+      "score": 0.9681,
+      "status": "VALID",
+      "notes": "Bangalore EEG Epilepsy Dataset (UCI 1134), non-overlapping windows."
+    },
+    {
+      "dataset": "pred-maintenance",
+      "domain": "Industrial IoT & Failure",
+      "task": "classification",
+      "N": 197,
+      "W": 200,
+      "S": 200,
+      "p_channels": 6,
+      "D_features": 30,
+      "cv_strategy": "StratifiedKFold (5-fold)",
+      "metric": "Accuracy",
+      "score": 0.9493,
+      "status": "VALID",
+      "notes": "AI4I 2020 Predictive Maintenance, non-overlapping windows."
+    },
+    {
+      "dataset": "har",
+      "domain": "Inertial Kinetics (IMU)",
+      "task": "classification",
+      "N": 10299,
+      "W": 128,
+      "S": 64,
+      "p_channels": 9,
+      "D_features": 45,
+      "cv_strategy": "GroupKFold by Subject (5-fold)",
+      "metric": "Accuracy",
+      "score": 0.8665919402914884,
+      "status": "VALID",
+      "notes": "UCI HAR (30 subjects). Shuffled acc: 0.9640, GroupKFold: 0.8666 (subject gap: 0.0974)."
+    },
+    {
+      "dataset": "gas-sensor-drift-sub",
+      "domain": "Chemical Sensing Array",
+      "task": "classification",
+      "N": 600,
+      "W": 8,
+      "S": 8,
+      "p_channels": 16,
+      "D_features": 80,
+      "cv_strategy": "StratifiedKFold (5-fold)",
+      "metric": "Accuracy",
+      "score": 0.19,
+      "status": "INVALID_TS",
+      "notes": "Not a valid time series. L=8 represents 8 pre-extracted static features per sensor, resulting in near-chance accuracy (16.67% baseline)."
+    },
+    {
+      "dataset": "appliances-energy",
+      "domain": "Building Power & Thermodynamics",
+      "task": "regression",
+      "N": 273,
+      "W": 144,
+      "S": 144,
+      "p_channels": 25,
+      "D_features": 125,
+      "cv_strategy": "KFold (3-fold)",
+      "metric": "R2",
+      "score": 0.5365,
+      "status": "VALID",
+      "notes": "Corrected from negative R2 (-0.4522) by fixing target aggregation from instantaneous last snapshot to daily mean load demand."
+    },
+    {
+      "dataset": "beijing-pm25",
+      "domain": "Environmental Meteorology",
+      "task": "regression",
+      "N": 3651,
+      "W": 24,
+      "S": 24,
+      "p_channels": 10,
+      "D_features": 50,
+      "cv_strategy": "KFold (3-fold)",
+      "metric": "R2",
+      "score": 0.3876,
+      "status": "VALID",
+      "notes": "Beijing multi-site PM2.5 air quality, non-overlapping daily windows."
+    },
+    {
+      "dataset": "drift-bifurcation-cls",
+      "domain": "Stochastic Physics (Langevin)",
+      "task": "classification",
+      "N": 200,
+      "W": 500,
+      "S": 500,
+      "p_channels": 3,
+      "D_features": 15,
+      "cv_strategy": "StratifiedKFold (3-fold)",
+      "metric": "Accuracy",
+      "score": 0.7451,
+      "status": "VALID",
+      "notes": "Numerical Langevin stochastic trajectories across subcritical and supercritical bifurcation regimes."
+    }
+  ]
+}

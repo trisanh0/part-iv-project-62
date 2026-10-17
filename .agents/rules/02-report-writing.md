@@ -23,3 +23,18 @@ description: To be used when writing any components of a report
 - **Paragraph Flow (Setup -> Action -> Result -> Impact)**: Establish problem context, detail analytical execution, state exact numerical outcomes, and conclude with practical impact.
 - **Front-Loaded Sentence Openers**: Frequently begin sentences with introductory participial, infinitive, or prepositional phrases ("To address this issue of scale...", "Given my background in...", "Upon receiving feedback from...").
 - **Balanced Trade-Off Clauses**: Frame nuances using contrastive compound structures ("While the ML model offered better predictive accuracy, the linear regression model was more interpretable...").
+
+## 4. Final Research Report Specifications (Official & Binding)
+- **Word Count**:
+  - **Typical Length**: 12,000 words.
+  - **Minimum Threshold**: No shorter than 8,000 words (**all reports must include at least 8,000 words**).
+  - **Maximum Threshold**: No longer than 13,000 words.
+- **Page Limit**:
+  - **Maximum Length**: Must not exceed a total of **30 pages**.
+- **Counting Scope (Words and Pages)**:
+  - Both words and pages are counted strictly from the **Introduction to the Future Work section inclusive** (Sections 1 through 7).
+  - Excludes front matter (Title Page, Abstract, Declaration, Contents, Lists of Figures/Tables, Glossary) and back matter (References, Appendices).
+- **Typography & Formatting**:
+  - **Font**: Times New Roman.
+  - **Font Size**: 12 pt.
+- **Verification Tool**: Keep [`report/check_stats.py`](file:///Users/trisanh/Documents/2026/ENGSCI%20700/part-iv-project-62/report/check_stats.py) aligned with these exact bounds.

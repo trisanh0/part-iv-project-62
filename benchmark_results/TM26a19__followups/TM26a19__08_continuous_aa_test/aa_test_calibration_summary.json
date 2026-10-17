@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "n_trials": 1000,
+    "n_folds_per_trial": 5,
+    "total_fold_evaluations": 5000,
+    "execution_time_seconds": 56.51,
+    "dataset": "pred-maintenance (AI4I)",
+    "estimator": "RandomForestClassifier(n_estimators=30)",
+    "comparison": "Identical architecture, seeds: seed_a = trial*2, seed_b = trial*2+1"
+  },
+  "discrete_accuracy_audit": {
+    "undefined_t_count": 665,
+    "undefined_t_percentage": 66.5,
+    "mechanism": "Bit-for-bit identical fold predictions across all 199 samples produce delta=[0,0,0,0,0], s_delta=0, t=0/0 -> NaN.",
+    "tempo_handling": "NaN mapped to p=1.0 via fillna(1.0) / non-rejection of H0",
+    "empirical_fpr_alpha_0_05": 0.0,
+    "empirical_fpr_alpha_0_01": 0.0,
+    "nominal_alpha_0_05": 5.0,
+    "nominal_alpha_0_01": 1.0,
+    "min_valid_p_value": 0.1778,
+    "unique_valid_p_values": [
+      0.1778,
+      0.1778,
+      0.1779,
+      0.1779,
+      0.208,
+      0.208,
+      0.21,
+      0.3739,
+      0.3739,
+      0.3739,
+      0.6953,
+      0.704,
+      0.988,
+      0.988,
+      0.988,
+      1.0,
+      1.0
+    ],
+    "conclusion": "Discrete ties render p < 0.05 mathematically impossible on small discrete folds, making the test hyper-conservative (0.00% FPR)."
+  },
+  "continuous_brier_calibration": {
+    "undefined_t_count": 0,
+    "undefined_t_percentage": 0.0,
+    "empirical_rejections_05": 48,
+    "empirical_fpr_alpha_0_05": 4.8,
+    "empirical_rejections_01": 8,
+    "empirical_fpr_alpha_0_01": 0.8,
+    "nominal_alpha_0_05": 5.0,
+    "nominal_alpha_0_01": 1.0,
+    "min_p_value": 0.000217,
+    "ks_statistic_vs_uniform": 0.038,
+    "ks_p_value_vs_uniform": 0.1086,
+    "conclusion": "Continuous predicted probability scoring eliminates undefined t-values and recovers empirical Type I error control matching nominal alpha."
+  },
+  "synthetic_continuous_reference": {
+    "empirical_rejections_05": 43,
+    "empirical_fpr_alpha_0_05": 4.3,
+    "empirical_rejections_01": 9,
+    "empirical_fpr_alpha_0_01": 0.9,
+    "ks_statistic_vs_uniform": 0.0212,
+    "ks_p_value_vs_uniform": 0.7504
+  }
+}

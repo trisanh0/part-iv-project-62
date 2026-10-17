@@ -52,17 +52,21 @@ def _numba_basic_stats(x: np.ndarray) -> np.ndarray:
             idx_max_last = t
 
     mean_val = s / T
-    var_val = max(0.0, (sq_s / T) - (mean_val * mean_val))
-    std_val = np.sqrt(var_val)
-    rms_val = np.sqrt(sq_s / T)
 
-    # Higher order moments
+    # Two-pass numerically stable variance and higher order moments
+    m2 = 0.0
     m3 = 0.0
     m4 = 0.0
     for t in range(T):
         diff = x[t] - mean_val
-        m3 += diff * diff * diff
-        m4 += diff * diff * diff * diff
+        diff_sq = diff * diff
+        m2 += diff_sq
+        m3 += diff_sq * diff
+        m4 += diff_sq * diff_sq
+
+    var_val = m2 / T
+    std_val = np.sqrt(var_val)
+    rms_val = np.sqrt(sq_s / T)
 
     m3 /= T
     m4 /= T
@@ -107,6 +111,8 @@ def _numba_basic_stats(x: np.ndarray) -> np.ndarray:
             curr_strike_above = 0
             curr_strike_below = 0
 
+    abs_max = max(abs(val_min), abs(val_max))
+
     res = np.empty(24, dtype=np.float64)
     res[0] = mean_val
     res[1] = std_val
@@ -114,13 +120,13 @@ def _numba_basic_stats(x: np.ndarray) -> np.ndarray:
     res[3] = val_min
     res[4] = val_max
     res[5] = sq_s                     # abs_energy
-    res[6] = abs_s                    # absolute_sum
+    res[6] = abs_max                  # absolute_maximum
     res[7] = rms_val                  # root_mean_square
     res[8] = skew_val
     res[9] = kurt_val
     res[10] = mean_change
     res[11] = mean_abs_change
-    res[12] = abs_diff_sum           # absolute_maximum_change
+    res[12] = abs_diff_sum           # absolute_sum_of_changes
     res[13] = float(idx_min_first) / T
     res[14] = float(idx_max_first) / T
     res[15] = float(idx_min_last) / T
@@ -163,7 +169,7 @@ def _numba_autocorr_kernel(x: np.ndarray, max_lag: int = 10) -> np.ndarray:
         cov = 0.0
         for t in range(T - lag):
             cov += (x[t] - mean_val) * (x[t + lag] - mean_val)
-        res[lag - 1] = cov / var_val
+        res[lag - 1] = (cov / var_val) * (float(T) / float(T - lag))
 
     return res
 
@@ -259,7 +265,7 @@ def _vectorized_fft_full_kernel(X: np.ndarray, n_coeffs: int = 100) -> Tuple[np.
     real_part = np.real(fft_sub)
     imag_part = np.imag(fft_sub)
     abs_part = np.abs(fft_sub)
-    angle_part = np.angle(fft_sub)
+    angle_part = np.angle(fft_sub, deg=True)
 
     matrix = np.hstack([real_part, imag_part, abs_part, angle_part])
 
