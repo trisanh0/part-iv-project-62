@@ -1,0 +1,9 @@
+family,feature_count,count_exactly_equal_raw,count_exactly_equal_corrected,max_abs_diff_raw,max_abs_diff_after_documented_correction,cause
+Autocorrelation,27,0,0,0.043200370538116206,8.881784197001252e-16,Normalization by (n - lag)*v in tsfresh vs n*v in numba; corrected via T/(T - lag) yields <= 7.77e-16 (machine precision).
+Dispersion (Var/Std),9,3,9,1.360402651640058e-09,0.0,Both use ddof=0; 1-pass summation cancellation in numba vs 2-pass in tsfresh; corrected via 2-pass yields 0.0 max diff.
+Dynamics & Extremes,9,3,3,0.68,0.68,Count and ratio definitions; exact matches on strikes and counts.
+FFT Coefficients,300,228,300,176.81054055763548,0.0,"Angle in degrees (tsfresh) vs radians (numba); corrected via rad2deg yields 0.0 max diff. Real, imag, abs are bit-identical (0.0 diff)."
+Higher Order Moments,6,0,0,0.090499888161089,0.090499888161089,Skewness and kurtosis denominator std^3 and std^4 compound one-pass variance cancellation.
+Linear Trend,15,0,0,0.9914976414206255,0.9914976414206255,Differences in linear regression slope/intercept formulation; Numba computes closed-form OLS.
+Location & Energy,48,30,38,61681.80001831055,1.1102230246251565e-16,"30 exact; 3 absolute_maximum (sum|x| bug in numba), 6 last_loc ((idx+1)/n vs idx/n), 6 first_loc (~1e-16 roundoff), 3 abs_energy & rms (loop sum order)."
+Quantiles,24,24,24,0.0,0.0,Bit-identical (0.0 diff) across all quantiles.

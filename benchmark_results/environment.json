@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-10-07T12:22:42.194173+00:00",
+  "timestamp_utc": "2026-10-17T01:09:27.585187+00:00",
   "os": {
     "system": "Darwin",
     "release": "27.0.0",
@@ -17,14 +17,14 @@
     "cpu_count_logical": 8,
     "cpu_count_physical": 8,
     "total_ram_gb": 16.0,
-    "available_ram_gb": 3.72,
+    "available_ram_gb": 3.2,
     "cpu_freq_current_mhz": 3228,
     "gpu_available": false,
     "gpu_devices": []
   },
   "git": {
-    "commit": "3797aaed500e494b3ec32c9a3c41ee6612ad8989",
-    "branch": "feat/forecasting",
+    "commit": "70a5d3cfe970a217bb53fc58d9a36f37264732a1",
+    "branch": "feat/demo",
     "is_dirty": true
   },
   "packages": {

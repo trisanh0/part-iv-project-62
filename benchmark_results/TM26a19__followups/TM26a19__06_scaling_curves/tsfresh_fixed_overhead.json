@@ -1,0 +1,27 @@
+{
+  "n_windows": 2,
+  "window_len": 10,
+  "repeats": [
+    {
+      "repeat": 0,
+      "duration_call1_s": 4.294187167077325,
+      "duration_call2_s": 3.949162375065498,
+      "net_rss_mb": 1113.1875
+    },
+    {
+      "repeat": 1,
+      "duration_call1_s": 3.6512252079555765,
+      "duration_call2_s": 3.7204516660422087,
+      "net_rss_mb": 1138.5625
+    },
+    {
+      "repeat": 2,
+      "duration_call1_s": 3.471180791966617,
+      "duration_call2_s": 3.6011261249659583,
+      "net_rss_mb": 1192.5781
+    }
+  ],
+  "median_call1_s": 3.6512252079555765,
+  "median_call2_s": 3.7204516660422087,
+  "explanation": "Call 1 reflects multiprocessing pool spin-up, worker serialization, and configuration dict parsing. Call 2 reflects warm pool invocation."
+}

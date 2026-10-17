@@ -1,0 +1,17 @@
+length,feature_set,time_sec,peak_ram_mb,num_features,status
+1000,polars_statistics,0.02145183307584375,355.0625,5,completed
+1000,numba_efficient,0.0192566670011729,424.6406,447,completed
+1000,langevin_features,1.6016271249391139,427.2188,5,completed
+1000,tsfresh_efficient,37.87107250210829,1701.3594,777,completed
+10000,polars_statistics,0.019750375067815185,486.5,5,completed
+10000,numba_efficient,0.16311258298810571,503.3438,447,completed
+10000,langevin_features,1.9680552919162437,506.2969,5,completed
+10000,tsfresh_efficient,102.73222791496664,2136.6719,777,completed
+100000,polars_statistics,0.26477916596923023,1388.2344,5,completed
+100000,numba_efficient,1.9065979999722913,1390.5625,447,completed
+100000,langevin_features,5.48470700008329,1392.9844,5,completed
+100000,tsfresh_efficient,2693.3282162080286,10669.875,777,completed
+1000000,polars_statistics,0.7012525830650702,4341.5469,5,completed
+1000000,numba_efficient,9.089396332972683,4351.0312,447,completed
+1000000,langevin_features,12.685523624997586,4352.2344,5,completed
+1000000,tsfresh_efficient,0.0,0.0,0,skipped (>90 min limit)

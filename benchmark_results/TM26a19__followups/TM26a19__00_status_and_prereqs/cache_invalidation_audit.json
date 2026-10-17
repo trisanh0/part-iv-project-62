@@ -1,0 +1,26 @@
+{
+  "dataset_hash_none_behavior": {
+    "key_when_hash_is_none": "ds_test__numba_efficient__be0211d86f1f",
+    "key_when_hash_is_provided": "ds_test__numba_efficient__be0211d86f1f__ds_hash1234",
+    "can_save_with_dataset_hash_none": true,
+    "exists_with_dataset_hash_none": true,
+    "cross_lookup_with_hash_returns": false,
+    "notes": "When dataset_hash is None, cache key omits ds_<hash> suffix. Querying with a hash misses the None-hash entry."
+  },
+  "mid_array_mutation_audit": {
+    "in_memory_polars": {
+      "fingerprint_clean": "1db90e7b77dd",
+      "fingerprint_mutated_row3": "1db90e7b77dd",
+      "detected_mid_array_row3": false,
+      "fingerprint_mutated_row5_midpoint": "31f8a40886b4",
+      "detected_midpoint_row5": true,
+      "mechanism": "compute_dataset_fingerprint samples indices [0, n//2, n-1] for in-memory DataFrames; mutations outside boundary sample are not detected."
+    },
+    "on_disk_parquet_file": {
+      "fingerprint_clean": "c2cb37d6e151",
+      "fingerprint_mutated_row3": "56f863beb68f",
+      "detected_file_mutation": true,
+      "mechanism": "File paths hash st_size and st_mtime_ns; any on-disk write updates timestamp and triggers cache miss."
+    }
+  }
+}

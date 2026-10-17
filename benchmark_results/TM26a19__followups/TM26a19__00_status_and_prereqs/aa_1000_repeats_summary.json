@@ -1,0 +1,14 @@
+{
+  "n_trials": 1000,
+  "n_folds_per_trial": 5,
+  "total_evaluations": 5000,
+  "mean_score_difference": 0.00022294871794871528,
+  "std_score_difference": 0.003780101363918543,
+  "min_score_difference": -0.015384615384615441,
+  "max_score_difference": 0.02025641025641034,
+  "empirical_fpr_alpha_0_05": 0.0,
+  "nominal_alpha_0_05": 0.05,
+  "empirical_fpr_alpha_0_01": 0.0,
+  "nominal_alpha_0_01": 0.01,
+  "duration_seconds": 183.91
+}

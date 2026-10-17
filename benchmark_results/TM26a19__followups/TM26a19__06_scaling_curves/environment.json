@@ -1,0 +1,11 @@
+{
+  "git_commit": "70a5d3cfe970a217bb53fc58d9a36f37264732a1",
+  "python_version": "3.11.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "processor": "arm",
+  "numpy_version": "2.4.6",
+  "pandas_version": "3.0.3",
+  "polars_version": "1.40.1",
+  "window_length_W": 100,
+  "timestamp": "2026-10-17T13:57:58+1300"
+}

@@ -1,0 +1,8 @@
+extractor,features_d,runtime_s,base_rss_mb,peak_rss_mb,net_rss_mb,kernel_ru_maxrss_mb,tracemalloc_peak_mb,missed_allocation_mb,missed_percentage,rss_to_tracemalloc_ratio,blind_spot_mechanism
+polars_statistics,30,0.0196,301.81,305.36,3.55,305.39,0.07,305.29,99.98,4177.55,CPython allocator misses Rust Apache Arrow contiguous chunk memory
+numpy_statistical,30,0.1251,284.86,286.88,2.02,287.78,0.29,286.59,99.9,991.77,CPython allocator misses C-contiguous array buffer re-allocations
+numba_efficient,882,8.3114,303.33,386.7,83.37,386.73,26.85,359.86,93.06,14.4,CPython allocator misses LLVM JIT native heap & SIMD scratch arrays
+tsfel,186,16.2866,302.73,310.53,7.8,310.53,2.15,308.38,99.31,144.47,Iterative spectral feature extraction partially tracked via pure Python
+tsfresh_minimal,60,3.3754,303.16,1249.08,945.92,320.0,6.59,1242.49,99.47,189.5,Misses child worker processes spawned by MultiprocessingDistributor
+tsfresh_efficient (Single-Process),4662,268.5746,301.75,609.0,307.25,609.22,231.82,377.18,61.93,2.63,Tracks single-process heap objects; misses C-extension buffer overhead
+tsfresh_efficient (Multi-Process Pool),4662,14.6381,303.41,1814.58,1511.17,731.44,236.51,1578.07,86.97,7.67,Misses memory allocated across child worker processes in process tree

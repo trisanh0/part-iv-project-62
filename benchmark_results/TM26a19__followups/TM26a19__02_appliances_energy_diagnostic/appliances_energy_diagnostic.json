@@ -1,0 +1,195 @@
+{
+  "dataset": "appliances-energy",
+  "diagnostic_summary": {
+    "cause_of_negative_r2": "Misspecified target aggregation. The original converter used label_strategy='last', which mapped the target to a single instantaneous 10-minute snapshot at the end of a 24-hour window (t=144). Stochastic appliance on/off spikes (e.g. 740W spikes from 10W baseline) cannot be predicted from 24h rolling environmental averages, causing residual variance to exceed target variance (R2 < 0).",
+    "resolution": "Changed label_strategy from 'last' to 'mean', aggregating daily energy consumption across the 24-hour window."
+  },
+  "target_distribution": {
+    "before_last_snapshot": {
+      "count": 273,
+      "mean": 88.82783882783883,
+      "std": 94.80314882532895,
+      "min": 10.0,
+      "q25": 50.0,
+      "median": 60.0,
+      "q75": 80.0,
+      "max": 740.0,
+      "skewness": 3.6785098733711625
+    },
+    "after_mean_aggregation": {
+      "count": 137,
+      "mean": 97.65308196353216,
+      "std": 28.131697541387076,
+      "min": 37.08333206176758,
+      "q25": 75.625,
+      "median": 91.73611450195312,
+      "q75": 112.84722137451172,
+      "max": 182.5,
+      "skewness": 0.7263938312974744
+    }
+  },
+  "breadth_row_comparison": {
+    "shuffled_kfold": {
+      "before_rf_r2": -0.45224813562497684,
+      "after_rf_r2": 0.5364962148620672,
+      "before_mean_baseline_r2": -0.005332138363437784,
+      "after_mean_baseline_r2": -0.02802711093583395,
+      "before_persist_baseline_r2": -1.4277169264579583,
+      "after_persist_baseline_r2": -0.7863280481063845
+    },
+    "blocked_kfold": {
+      "before_rf_r2": -1.9649883219515545,
+      "after_rf_r2": 0.5340457000495347,
+      "before_mean_baseline_r2": -0.013040593603200312,
+      "after_mean_baseline_r2": -0.004836687893713017,
+      "before_persist_baseline_r2": -1.3336940095039747,
+      "after_persist_baseline_r2": -0.7482995073301821
+    }
+  },
+  "detailed_evaluations": {
+    "before_last": {
+      "shuffled": {
+        "random_forest": {
+          "r2_mean": -0.45224813562497684,
+          "r2_std": 0.16185420947885476,
+          "rmse_mean": 111.11545129723997,
+          "mae_mean": 65.95482295482294,
+          "folds_r2": [
+            -0.6401,
+            -0.2451,
+            -0.4715
+          ]
+        },
+        "mean_predictor_baseline": {
+          "r2_mean": -0.005332138363437784,
+          "r2_std": 0.002779865490384097,
+          "rmse_mean": 93.52429785996719,
+          "mae_mean": 52.65567765567766,
+          "folds_r2": [
+            -0.0048,
+            -0.009,
+            -0.0023
+          ]
+        },
+        "persistence_baseline": {
+          "r2_mean": -1.4277169264579583,
+          "r2_std": 0.4366781435169939,
+          "rmse_mean": 143.07263813641623,
+          "mae_mean": 79.43324075192209,
+          "folds_r2": [
+            -2.0448,
+            -1.0992,
+            -1.1391
+          ]
+        }
+      },
+      "blocked": {
+        "random_forest": {
+          "r2_mean": -1.9649883219515545,
+          "r2_std": 1.4099621884124762,
+          "rmse_mean": 155.25948917398316,
+          "mae_mean": 116.61050061050064,
+          "folds_r2": [
+            -3.5011,
+            -0.0959,
+            -2.298
+          ]
+        },
+        "mean_predictor_baseline": {
+          "r2_mean": -0.013040593603200312,
+          "r2_std": 0.0068109978835312265,
+          "rmse_mean": 94.88149713662234,
+          "mae_mean": 52.630036630036635,
+          "folds_r2": [
+            -0.021,
+            -0.0043,
+            -0.0138
+          ]
+        },
+        "persistence_baseline": {
+          "r2_mean": -1.3336940095039747,
+          "r2_std": 0.09297428458750434,
+          "rmse_mean": 143.82712124752712,
+          "mae_mean": 79.46443666223887,
+          "folds_r2": [
+            -1.2227,
+            -1.3282,
+            -1.4502
+          ]
+        }
+      }
+    },
+    "after_mean": {
+      "shuffled": {
+        "random_forest": {
+          "r2_mean": 0.5364962148620672,
+          "r2_std": 0.06929448345546342,
+          "rmse_mean": 18.550179249433924,
+          "mae_mean": 14.448188521138968,
+          "folds_r2": [
+            0.5943,
+            0.5761,
+            0.4391
+          ]
+        },
+        "mean_predictor_baseline": {
+          "r2_mean": -0.02802711093583395,
+          "r2_std": 0.016102027600984583,
+          "rmse_mean": 27.990450783659426,
+          "mae_mean": 22.80552022648116,
+          "folds_r2": [
+            -0.0458,
+            -0.0068,
+            -0.0314
+          ]
+        },
+        "persistence_baseline": {
+          "r2_mean": -0.7863280481063845,
+          "r2_std": 0.08058321509446931,
+          "rmse_mean": 36.8350285240983,
+          "mae_mean": 27.761369695189405,
+          "folds_r2": [
+            -0.8539,
+            -0.6731,
+            -0.8321
+          ]
+        }
+      },
+      "blocked": {
+        "random_forest": {
+          "r2_mean": 0.5340457000495347,
+          "r2_std": 0.1217424458013514,
+          "rmse_mean": 19.064875179450464,
+          "mae_mean": 14.805354221444327,
+          "folds_r2": [
+            0.455,
+            0.4411,
+            0.706
+          ]
+        },
+        "mean_predictor_baseline": {
+          "r2_mean": -0.004836687893713017,
+          "r2_std": 0.0032766036200153966,
+          "rmse_mean": 28.146241920794335,
+          "mae_mean": 22.78007074750874,
+          "folds_r2": [
+            -0.0094,
+            -0.0033,
+            -0.0018
+          ]
+        },
+        "persistence_baseline": {
+          "r2_mean": -0.7482995073301821,
+          "r2_std": 0.19649175467190055,
+          "rmse_mean": 37.10839852251109,
+          "mae_mean": 27.771962400181476,
+          "folds_r2": [
+            -0.6402,
+            -1.024,
+            -0.5806
+          ]
+        }
+      }
+    }
+  }
+}

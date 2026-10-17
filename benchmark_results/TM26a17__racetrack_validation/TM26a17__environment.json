@@ -1,0 +1,15 @@
+{
+  "timestamp_iso": "2026-10-14T23:34:52.445714",
+  "git_commit": "70a5d3cfe970a217bb53fc58d9a36f37264732a1",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "system": "Darwin",
+  "machine": "arm64",
+  "processor": "arm",
+  "cpu_count": 8,
+  "python_version": "3.11.16 (main, Aug 12 2026, 23:03:19) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "polars": "1.40.1"
+  }
+}

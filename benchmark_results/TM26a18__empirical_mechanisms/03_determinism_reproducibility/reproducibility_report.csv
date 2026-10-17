@@ -1,0 +1,7 @@
+metric,value,detail
+Fresh Recompute Bit-Identical,True,Max Abs Diff: 0.00e+00
+Fresh Recompute Allclose (1e-12),True,Numba parallel=True reduction order invariance
+Cache Hit Bit-Identical,True,Max Abs Diff: 0.00e+00
+Fold Scores Identical (Fresh),True,"Score diff: [0.0, 0.0, 0.0, 0.0, 0.0]"
+Fold Scores Identical (Cache),True,"Score diff: [0.0, 0.0, 0.0, 0.0, 0.0]"
+Cache Load Speedup,8.2x,1.58s fresh vs 0.1916s cache

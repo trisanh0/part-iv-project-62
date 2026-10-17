@@ -1,0 +1,34 @@
+{
+  "timestamp_iso": "2026-10-14T11:09:18Z",
+  "phase1_stats_fix": {
+    "status": "done",
+    "location": "src/tempo/analysis.py, tests/test_analysis.py",
+    "verification": "pytest tests/test_analysis.py passes 8/8 unit tests including metric directionality (latency lower=better), un-nested pairwise paired t-tests, and Critical Difference rank calculations."
+  },
+  "aa_null_test_1000_repeats": {
+    "status": "done",
+    "location": "benchmark_results/TM26a19__followups/TM26a19__00_status_and_prereqs/aa_1000_repeats_summary.json",
+    "raw_output": "benchmark_results/TM26a19__followups/TM26a19__00_status_and_prereqs/aa_1000_repeats_raw.csv"
+  },
+  "cache_invalidation_audit": {
+    "status": "done",
+    "location": "benchmark_results/TM26a19__followups/TM26a19__00_status_and_prereqs/cache_invalidation_audit.json",
+    "finding_dataset_hash_none": "Supported (omits ds_ suffix from cache key).",
+    "finding_mid_array_mutation": "In-memory DataFrame fingerprint checks [0, n//2, n-1] only; mid-array row 3 mutation was not detected in-memory. On-disk Parquet mutation was detected via mtime_ns."
+  },
+  "run_a_integrity_and_leakage": {
+    "status": "done",
+    "location": "benchmark_results/TM26a17__racetrack_validation/raw_fold_scores_run_a.csv",
+    "description": "100-repeat A/A test and Blocked CV class collapse audit (Fold 1 zero-negatives identified)."
+  },
+  "run_b_synthetic_ground_truth": {
+    "status": "done",
+    "location": "benchmark_results/TM26a17__racetrack_validation/fdr_power_results.csv, benchmark_results/TM26a17__racetrack_validation/synthetic_regimes_cd_matrix.csv",
+    "description": "50 Monte Carlo FDR/power trials and N=10 independent regime Critical Difference matrix."
+  },
+  "run_c_isolated_telemetry": {
+    "status": "done",
+    "location": "benchmark_results/TM26a17__racetrack_validation/telemetry_subprocess_benchmarks.csv, benchmark_results/TM26a17__racetrack_validation/monitor_overhead_benchmarks.csv",
+    "description": "Subprocess-isolated OS ru_maxrss tracking and 100 Hz probe effect measurement."
+  }
+}

@@ -91,3 +91,68 @@
 2026-10-07 01:22:30 [WARNING] tempo.benchmark: No features survived selector 'subsampled_fdr'; fallback triggered, retaining full feature space to avoid model fit failure.
 2026-10-07 01:22:34 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | subsampled_fdr | ridge] -> Score: 0.5892 (Fit: 0.003s, Infer: 0.01ms, Total: 15.75s)
 2026-10-07 01:22:34 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results_20261007_012234.csv and benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results.csv
+2026-10-15 11:38:12 [INFO] tempo.benchmark: TEMPO Benchmark Runner initialised. Task: regression
+2026-10-15 11:38:12 [INFO] tempo.benchmark: Recorded runtime environment metadata to benchmark_results/TM269Ga__ai4i_running_benchmark/regression/environment.json
+2026-10-15 11:38:12 [INFO] tempo.benchmark: Resuming from existing checkpoint at benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results_checkpoint.csv (60 completed combinations loaded).
+2026-10-15 11:38:12 [INFO] tempo.benchmark: Loading dataset: pred-maintenance-w100-reg
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | random_forest] -> Score: -0.041 (Fit: 0.433s, Infer: 0.37ms, Total: 2.26s)
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numba_efficient | None | ridge] -> Score: -1.0594 (Fit: 0.008s, Infer: 0.05ms, Total: 0.07s)
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | select_k_best_anova | random_forest | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | select_k_best_anova | ridge | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | mutual_info | random_forest | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | mutual_info | ridge | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | fdr | random_forest | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | fdr | ridge | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | boruta | random_forest | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | boruta | ridge | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | subsampled_fdr | random_forest | seed 42]
+2026-10-15 11:38:14 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numba_efficient | subsampled_fdr | ridge | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | random_forest] -> Score: -0.2176 (Fit: 0.057s, Infer: 0.33ms, Total: 0.38s)
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | polars_statistics | None | ridge] -> Score: -0.1512 (Fit: 0.002s, Infer: 0.01ms, Total: 0.04s)
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | select_k_best_anova | random_forest | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | select_k_best_anova | ridge | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | mutual_info | random_forest | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | mutual_info | ridge | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | fdr | random_forest | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | fdr | ridge | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | boruta | random_forest | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | boruta | ridge | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | subsampled_fdr | random_forest | seed 42]
+2026-10-15 11:38:15 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | polars_statistics | subsampled_fdr | ridge | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | random_forest] -> Score: -0.2169 (Fit: 0.082s, Infer: 0.49ms, Total: 0.53s)
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | numpy_statistical | None | ridge] -> Score: -0.1512 (Fit: 0.003s, Infer: 0.03ms, Total: 0.04s)
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | select_k_best_anova | random_forest | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | select_k_best_anova | ridge | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | mutual_info | random_forest | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | mutual_info | ridge | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | fdr | random_forest | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | fdr | ridge | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | boruta | random_forest | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | boruta | ridge | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | subsampled_fdr | random_forest | seed 42]
+2026-10-15 11:38:16 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | numpy_statistical | subsampled_fdr | ridge | seed 42]
+2026-10-15 11:38:18 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | None | random_forest] -> Score: -0.1737 (Fit: 0.092s, Infer: 0.34ms, Total: 2.66s)
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfel | None | ridge] -> Score: -0.6035 (Fit: 0.003s, Infer: 0.02ms, Total: 2.15s)
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | select_k_best_anova | random_forest | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | select_k_best_anova | ridge | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | mutual_info | random_forest | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | mutual_info | ridge | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | fdr | random_forest | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | fdr | ridge | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | boruta | random_forest | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | boruta | ridge | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | subsampled_fdr | random_forest | seed 42]
+2026-10-15 11:38:19 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfel | subsampled_fdr | ridge | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | random_forest] -> Score: -0.1705 (Fit: 0.060s, Infer: 0.33ms, Total: 5.11s)
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Evaluated: [pred-maintenance-w100-reg | tsfresh_minimal | None | ridge] -> Score: -0.1673 (Fit: 0.002s, Infer: 0.01ms, Total: 4.76s)
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best_anova | random_forest | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | select_k_best_anova | ridge | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | mutual_info | random_forest | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | mutual_info | ridge | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | fdr | random_forest | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | fdr | ridge | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | boruta | random_forest | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | boruta | ridge | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | subsampled_fdr | random_forest | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Resuming: skipping completed [pred-maintenance-w100-reg | tsfresh_minimal | subsampled_fdr | ridge | seed 42]
+2026-10-15 11:38:24 [INFO] tempo.benchmark: Saved benchmark telemetry to: benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results_20261015_113824.csv and benchmark_results/TM269Ga__ai4i_running_benchmark/regression/benchmark_results.csv

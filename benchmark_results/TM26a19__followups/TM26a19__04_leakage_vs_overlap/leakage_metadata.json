@@ -1,0 +1,217 @@
+{
+  "pipeline": {
+    "extractor": "polars_statistical_extractor",
+    "selector": "None",
+    "model": "RandomForestClassifier(n_estimators=50)",
+    "window_size_W": 100,
+    "n_shuffled_seeds": 20,
+    "n_cv_splits": 5
+  },
+  "summary": [
+    {
+      "stride": 100,
+      "overlap_pct": 0.0,
+      "purge_windows": 0,
+      "n_windows": 100,
+      "positive_class_rate": 0.94,
+      "majority_class_accuracy": 0.94,
+      "shuffled_acc_mean": 0.94,
+      "shuffled_acc_ci95": [
+        0.937,
+        0.943
+      ],
+      "blocked_acc_mean": 0.94,
+      "blocked_acc_ci95": [
+        0.94,
+        0.94
+      ],
+      "acc_gap_mean": 0.0,
+      "acc_gap_ci95": [
+        -0.003,
+        0.003
+      ],
+      "shuffled_bacc_mean": 0.5156,
+      "shuffled_bacc_ci95": [
+        0.4993,
+        0.5319
+      ],
+      "blocked_bacc_mean": 0.5,
+      "blocked_bacc_ci95": [
+        0.5,
+        0.5
+      ],
+      "bacc_gap_mean": 0.0156,
+      "bacc_gap_ci95": [
+        -0.0007,
+        0.0319
+      ],
+      "shuffled_fold_bacc_mean": 0.5189,
+      "blocked_fold_bacc_mean": 0.7,
+      "fold_bacc_gap_mean": -0.1811
+    },
+    {
+      "stride": 75,
+      "overlap_pct": 25.0,
+      "purge_windows": 1,
+      "n_windows": 133,
+      "positive_class_rate": 0.9624,
+      "majority_class_accuracy": 0.9624,
+      "shuffled_acc_mean": 0.9617,
+      "shuffled_acc_ci95": [
+        0.9606,
+        0.9627
+      ],
+      "blocked_acc_mean": 0.9624,
+      "blocked_acc_ci95": [
+        0.9624,
+        0.9624
+      ],
+      "acc_gap_mean": -0.0008,
+      "acc_gap_ci95": [
+        -0.0018,
+        0.0003
+      ],
+      "shuffled_bacc_mean": 0.4996,
+      "shuffled_bacc_ci95": [
+        0.499,
+        0.5002
+      ],
+      "blocked_bacc_mean": 0.5,
+      "blocked_bacc_ci95": [
+        0.5,
+        0.5
+      ],
+      "bacc_gap_mean": -0.0004,
+      "bacc_gap_ci95": [
+        -0.001,
+        0.0002
+      ],
+      "shuffled_fold_bacc_mean": 0.4996,
+      "blocked_fold_bacc_mean": 0.7,
+      "fold_bacc_gap_mean": -0.2004
+    },
+    {
+      "stride": 50,
+      "overlap_pct": 50.0,
+      "purge_windows": 1,
+      "n_windows": 199,
+      "positive_class_rate": 0.9497,
+      "majority_class_accuracy": 0.9497,
+      "shuffled_acc_mean": 0.9495,
+      "shuffled_acc_ci95": [
+        0.9486,
+        0.9504
+      ],
+      "blocked_acc_mean": 0.9465,
+      "blocked_acc_ci95": [
+        0.9443,
+        0.9487
+      ],
+      "acc_gap_mean": 0.003,
+      "acc_gap_ci95": [
+        0.0008,
+        0.0052
+      ],
+      "shuffled_bacc_mean": 0.5022,
+      "shuffled_bacc_ci95": [
+        0.497,
+        0.5075
+      ],
+      "blocked_bacc_mean": 0.4983,
+      "blocked_bacc_ci95": [
+        0.4971,
+        0.4994
+      ],
+      "bacc_gap_mean": 0.004,
+      "bacc_gap_ci95": [
+        -0.0012,
+        0.0092
+      ],
+      "shuffled_fold_bacc_mean": 0.5022,
+      "blocked_fold_bacc_mean": 0.5983,
+      "fold_bacc_gap_mean": -0.0961
+    },
+    {
+      "stride": 25,
+      "overlap_pct": 75.0,
+      "purge_windows": 3,
+      "n_windows": 397,
+      "positive_class_rate": 0.9471,
+      "majority_class_accuracy": 0.9471,
+      "shuffled_acc_mean": 0.9446,
+      "shuffled_acc_ci95": [
+        0.9427,
+        0.9465
+      ],
+      "blocked_acc_mean": 0.9388,
+      "blocked_acc_ci95": [
+        0.9378,
+        0.9397
+      ],
+      "acc_gap_mean": 0.0058,
+      "acc_gap_ci95": [
+        0.0038,
+        0.0078
+      ],
+      "shuffled_bacc_mean": 0.5211,
+      "shuffled_bacc_ci95": [
+        0.5137,
+        0.5286
+      ],
+      "blocked_bacc_mean": 0.4967,
+      "blocked_bacc_ci95": [
+        0.4944,
+        0.499
+      ],
+      "bacc_gap_mean": 0.0244,
+      "bacc_gap_ci95": [
+        0.0165,
+        0.0323
+      ],
+      "shuffled_fold_bacc_mean": 0.5208,
+      "blocked_fold_bacc_mean": 0.496,
+      "fold_bacc_gap_mean": 0.0248
+    },
+    {
+      "stride": 10,
+      "overlap_pct": 90.0,
+      "purge_windows": 9,
+      "n_windows": 991,
+      "positive_class_rate": 0.9435,
+      "majority_class_accuracy": 0.9435,
+      "shuffled_acc_mean": 0.9703,
+      "shuffled_acc_ci95": [
+        0.9692,
+        0.9715
+      ],
+      "blocked_acc_mean": 0.9385,
+      "blocked_acc_ci95": [
+        0.9374,
+        0.9397
+      ],
+      "acc_gap_mean": 0.0318,
+      "acc_gap_ci95": [
+        0.0305,
+        0.0331
+      ],
+      "shuffled_bacc_mean": 0.7539,
+      "shuffled_bacc_ci95": [
+        0.746,
+        0.7617
+      ],
+      "blocked_bacc_mean": 0.5049,
+      "blocked_bacc_ci95": [
+        0.5008,
+        0.5091
+      ],
+      "bacc_gap_mean": 0.2489,
+      "bacc_gap_ci95": [
+        0.2418,
+        0.2561
+      ],
+      "shuffled_fold_bacc_mean": 0.7542,
+      "blocked_fold_bacc_mean": 0.5017,
+      "fold_bacc_gap_mean": 0.2525
+    }
+  ]
+}
