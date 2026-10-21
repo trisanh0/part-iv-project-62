@@ -3,7 +3,7 @@ import {setupDisclosures} from './disclosures.js';
 import {RaceCanvasRenderer} from './canvas_renderer.js';
 import {ParetoCanvasChart} from './pareto_chart.js';
 import {algorithmName, escapeText, samePipeline, metricInfo, formatPerformance, formatSeconds,
-    finishPositions, participantView, resolvePreset, fieldScrollDelta, startLightsState,
+    finishPositions, participantView, fieldScrollDelta, startLightsState,
     GUIDED_STAGES, guidedChoices, measurementChange} from './presentation.js';
 
 const CURATED_TRACKS = ['gas-sensor-drift-sub', 'pred-maintenance-w100-cls', 'beed'];
@@ -45,9 +45,6 @@ export class DemoClientApp {
         this.screens = Object.fromEntries(['lobby', 'waiting', 'building', 'racing', 'results'].map(key => [key, byId(`screen-${key}`)]));
         this.inputNickname = byId('input-nickname');
         this.btnJoin = byId('btn-join');
-        this.selectExtractor = byId('select-extractor');
-        this.selectSelector = byId('select-selector');
-        this.selectModel = byId('select-model');
         this.btnReady = byId('btn-ready');
         this.adminPinInput = byId('admin-pin');
         this.adminUnlockForm = byId('admin-unlock-form');
@@ -65,8 +62,9 @@ export class DemoClientApp {
             if (telemetry.finish) {
                 const notice = byId('race-finish-notice');
                 notice.classList.remove('hidden');
+                notice.classList.toggle('is-winner', telemetry.finish.position === 1);
                 byId('finish-notice-title').textContent = telemetry.finish.position === 1
-                    ? telemetry.finish.tied ? 'Joint winner.' : 'You won.' : `Finished · P${telemetry.finish.position}`;
+                    ? telemetry.finish.tied ? 'You share the win!' : 'You won!' : `Finished · P${telemetry.finish.position}`;
                 byId('finish-notice-time').textContent = `${raceTime(telemetry.finish.timeMs)} race time`;
             }
         });
@@ -83,13 +81,6 @@ export class DemoClientApp {
         byId('btn-leave-heat').addEventListener('click', () => this._command({action: 'leave'}));
         byId('btn-leave-queue').addEventListener('click', () => this._command({action: 'set_ready', ready: false}));
         this.btnReady.addEventListener('click', () => this._onToggleReady());
-        for (const [stage, select] of [['extractor', this.selectExtractor], ['selector', this.selectSelector], ['model', this.selectModel]]) {
-            select.addEventListener('change', () => this._onPipelineChange(stage));
-        }
-        byId('select-measured-build').addEventListener('change', event => {
-            const choice = this.state.track.options.configurations[Number(event.target.value)];
-            if (choice) this._command({action: 'set_pipeline', extractor: choice.extractor, selector: choice.selector, model: choice.model});
-        });
         byId('btn-next-round').addEventListener('click', () => {
             if (this.myPlayer && !this.myPlayer.is_spectator) this._command({action: 'race_again', heat_id: (this.state.personal_results || this.state.results)?.heat_id});
             else { this.watching = false; this._syncScreenPhase(); }
@@ -225,11 +216,7 @@ export class DemoClientApp {
             this.currentTrackId = state.track.track_id;
             this.previousConfirmedMetrics = null;
             this.guidedSignature = null;
-            this.presetMeasurements = null;
-            this.presetSignature = null;
-            byId('pipeline-customisation').open = false;
             if (this.pending?.action === 'set_pipeline') this._clearPending();
-            this._fetchPresetMeasurements(this.currentTrackId);
         }
         this._syncScreenPhase();
     }
@@ -285,11 +272,6 @@ export class DemoClientApp {
         }
         this._command({action: 'join', nickname});
     }
-    _resolvePreset(preset) { return resolvePreset(this.state?.track.options.configurations || [], preset); }
-    _measured(config) {
-        const found = this.presetMeasurements?.find(c => samePipeline(c, config));
-        return found ? {...found, task_type: this.state.track.task_type} : null;
-    }
     _rememberCompletedBuild(results) {
         if (!results) return;
         const row = results.rankings.find(r => r.client_id === this.clientId);
@@ -320,7 +302,7 @@ export class DemoClientApp {
                 return {...choice, title: 'ANOVA k-best', description: 'Keep features most associated with the target.'};
             });
             const selectedName = choices.find(choice => choice.value === pipeline[stage.key])?.title || algorithmName(pipeline[stage.key]);
-            return `<details class="build-stage" name="pipeline-build" data-stage="${stage.key}" ${open === stage.key ? 'open' : ''}><summary><span class="stage-number">0${index + 1}</span><span class="stage-heading">${stage.title}<small>${escapeText(selectedName)}</small></span><span class="stage-toggle" aria-hidden="true">+</span></summary><p class="help-text">${stage.key === 'model' && this.state.track.task_type !== 'classification' ? 'Choose the prediction model.' : stage.purpose}</p><div role="radiogroup" aria-label="${stage.title}">${choices.map(choice => `<button type="button" class="component-choice" role="radio" aria-checked="${pipeline[stage.key] === choice.value}" data-stage="${stage.key}" data-choice="${choice.value}" ${this.pending || !this.connected ? 'disabled' : ''}><span class="preset-radio" aria-hidden="true"></span><span><strong>${choice.title}</strong><small>${choice.description}</small></span></button>`).join('') || '<p class="measurement-note">See More options for this challenge.</p>'}</div></details>`;
+            return `<details class="build-stage" name="pipeline-build" data-stage="${stage.key}" ${open === stage.key ? 'open' : ''}><summary><span class="stage-number">0${index + 1}</span><span class="stage-heading">${stage.title}<small>${escapeText(selectedName)}</small></span><span class="stage-toggle" aria-hidden="true">+</span></summary><p class="help-text">${stage.key === 'model' && this.state.track.task_type !== 'classification' ? 'Choose the prediction model.' : stage.purpose}</p><div role="radiogroup" aria-label="${stage.title}">${choices.map(choice => `<button type="button" class="component-choice" role="radio" aria-checked="${pipeline[stage.key] === choice.value}" data-stage="${stage.key}" data-choice="${choice.value}" ${this.pending || !this.connected ? 'disabled' : ''}><span class="preset-radio" aria-hidden="true"></span><span><strong>${choice.title}</strong><small>${choice.description}</small></span></button>`).join('') || '<p class="measurement-note">This stage uses the component shown above.</p>'}</div></details>`;
         }).join('');
         root.querySelectorAll('button[data-choice]').forEach(button => {
             button.addEventListener('click', () => {
@@ -343,41 +325,14 @@ export class DemoClientApp {
         }
         const custom = GUIDED_STAGES.some(stage => !stage.choices.some(c => c.value === pipeline[stage.key]));
         byId('custom-build-summary').classList.toggle('hidden', !custom);
-        byId('custom-build-summary').textContent = 'Custom pipeline selected. See More options to edit it.';
+        byId('custom-build-summary').textContent = 'Custom pipeline selected.';
         this.guidedSignature = signature;
     }
     _renderConfiguration() {
         const track = this.state.track;
         byId('track-name').textContent = `${track.track_id === 'gas-sensor-drift-sub' ? 'Gas sensors · Identify six gases' : track.display_name} · ${track.task_type === 'classification' ? 'Classification' : track.task_type === 'forecasting' ? 'Forecasting' : 'Regression'}`;
         byId('track-desc').textContent = `${track.description} ${metricInfo(track.task_type).note}`;
-        for (const [key, select] of [['extractor', this.selectExtractor], ['selector', this.selectSelector], ['model', this.selectModel]]) {
-            const options = track.options[`${key}s`];
-            const signature = options.join('|');
-            if (select.dataset.options !== signature) {
-                select.replaceChildren(...options.map(value => {
-                    const option = document.createElement('option'); option.value = value; option.textContent = algorithmName(value); return option;
-                }));
-                select.dataset.options = signature;
-            }
-            select.value = this.myPlayer.pipeline[key];
-            select.disabled = !this.connected || !!this.pending;
-            [...select.options].forEach(option => {
-                option.disabled = !track.options.configurations.some(c => samePipeline(c, {...this.myPlayer.pipeline, [key]: option.value}));
-            });
-        }
         this._renderGuidedBuilder();
-        const fullBuild = byId('select-measured-build');
-        const fullSignature = JSON.stringify(track.options.configurations);
-        if (fullBuild.dataset.options !== fullSignature) {
-            fullBuild.replaceChildren(...track.options.configurations.map((c, index) => {
-                const option = document.createElement('option'); option.value = index;
-                option.textContent = ['extractor', 'selector', 'model'].map(k => algorithmName(c[k])).join(' → ');
-                return option;
-            }));
-            fullBuild.dataset.options = fullSignature;
-        }
-        fullBuild.value = track.options.configurations.findIndex(c => samePipeline(c, this.myPlayer.pipeline));
-        fullBuild.disabled = !this.connected || !!this.pending;
         const metrics = this.myPlayer.metrics;
         const entries = [['Compute time', formatSeconds(metrics.total_latency_s)], [metricInfo(track.task_type).label, formatPerformance(metrics)], ['Peak RAM', `${Math.round(metrics.extraction_ram_mb)} MB`], ['Features kept / extracted', `${metrics.n_selected_features.toLocaleString()} / ${metrics.n_extracted_features.toLocaleString()}`]];
         byId('selected-measurements').innerHTML = entries.map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`).join('');
@@ -399,43 +354,12 @@ export class DemoClientApp {
             const remaining = Math.max(0, Math.ceil((this.state.grid_close_timestamp_ms - (Date.now() + this.serverOffsetMs)) / 1000));
             byId('ready-status').textContent = this.pending?.action === 'set_pipeline' ? 'Confirming your build…'
                 : this.state.grid_close_timestamp_ms ? `${isReady ? 'You’re in.' : 'Ready to join?'} Grid closes in ${remaining}s.`
-                : isReady ? 'You’re ready for the next race.' : 'Ready opens an 8-second entry window. Only ready racers take part.';
+                : isReady ? 'You’re ready for the next race.' : '';
         };
         updateGridTime();
         if (this.state.grid_close_timestamp_ms) this.gridTimer = setInterval(updateGridTime, 250);
     }
-    _syncActiveOptionsWithPipeline(pipeline) {
-        this.selectExtractor.value = pipeline.extractor;
-        this.selectSelector.value = pipeline.selector;
-        this.selectModel.value = pipeline.model;
-    }
-    _applyPreset(preset) {
-        const choice = this._resolvePreset(preset);
-        if (!choice || this.pending) return;
-        this._syncActiveOptionsWithPipeline(choice);
-        this._onPipelineChange();
-    }
-    _onPipelineChange(changedStage = null) {
-        const requested = {extractor: this.selectExtractor.value, selector: this.selectSelector.value, model: this.selectModel.value};
-        const choices = this.state.track.options.configurations;
-        let choice = choices.find(c => samePipeline(c, requested));
-        if (!choice) { this._showError('No benchmark is available for that combination.'); this._renderConfiguration(); return; }
-        const {extractor, selector, model} = choice;
-        this._command({action: 'set_pipeline', extractor, selector, model});
-    }
     _onToggleReady() { this._command({action: 'set_ready', ready: !this.myPlayer.is_ready}); }
-    async _fetchPresetMeasurements(trackId) {
-        try {
-            const response = await fetch(`/api/pareto/${encodeURIComponent(trackId)}`);
-            if (!response.ok) throw new Error('Measurements unavailable');
-            const data = await response.json();
-            if (this.currentTrackId !== trackId) return;
-            this.presetMeasurements = data.all_points;
-            if (this.view === 'configuration') this._renderConfiguration();
-        } catch {
-            if (this.currentTrackId === trackId && this.view === 'configuration') this._showError('Other benchmark results could not load. Your selected results are available.');
-        }
-    }
     _renderWaiting() {
         byId('waiting-message').textContent = `${this.myPlayer.nickname}, you’re waiting for a place.`;
         const index = this.state.spectators.filter(p => p.connected !== false).findIndex(p => p.client_id === this.clientId);
@@ -484,9 +408,8 @@ export class DemoClientApp {
         byId('result-summary').textContent = own ? `You finished P${own.finish_position}${own.tied ? ' · tied' : ''}.` : 'Race complete.';
         const task = rows[0]?.metrics.task_type || this.state.track.task_type;
         byId('result-metric-note').textContent = `${task === 'classification' ? 'Higher accuracy is better.' : metricInfo(task).note} Equal race times share a position.`;
-        byId('result-rules-note').textContent = raceExplanation(task);
         byId('winner-banner').classList.toggle('hidden', !own || own.finish_position !== 1);
-        byId('winner-banner').textContent = own?.tied ? 'Joint winner' : 'Race winner';
+        byId('winner-banner').textContent = own?.tied ? 'You share the win!' : 'You won!';
         const previous = this._previousBuild(results.heat_id);
         byId('previous-build-comparison').textContent = own && previous ? `Since your last race: ${measurementChange(own.metrics, previous.metrics)}.` : '';
         if (this.resultSignature !== results.heat_id) {

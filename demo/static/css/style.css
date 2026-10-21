@@ -60,7 +60,6 @@ body[data-view="landing"] main, body[data-view="joining"] main { padding-top: 28
 body[data-view="landing"] .site-footer, body[data-view="joining"] .site-footer { color: #DCCDE9; }
 body[data-view="landing"] .connection-status, body[data-view="joining"] .connection-status { background: #3b195a; color: #eee4f8; }
 .landing-masthead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 46px; }
-.landing-masthead .eyebrow { color: #DCCDE9; font-size: .6rem; }
 .landing-intro > .eyebrow { color: #D3BFDF; margin-bottom: 16px; }
 .landing-intro h1 { font-size: clamp(2.8rem, 11vw, 4rem); line-height: 1.04; letter-spacing: -.065em; font-weight: 600; }
 .landing-description { margin-top: 20px; color: #E3D6EC; font-size: .95rem; line-height: 1.6; }
@@ -172,7 +171,6 @@ canvas { display: block; width: 100%; height: 100%; }
 .live-progress { font-size: .65rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .is-you { background: var(--lavender); }
 .live-leaderboard .is-you { background: transparent; color: var(--purple); font-weight: 600; }
-.comparison-heading { display: flex; justify-content: space-between; font-size: .65rem; color: var(--muted); gap: 12px; margin-top: 30px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 .results-list { list-style: none; padding: 0; margin: 0; }
 .result-row { padding: 18px 8px; border-bottom: 1px solid var(--line); }
 .result-person { display: flex; align-items: center; gap: 9px; font-size: .95rem; font-weight: 600; overflow-wrap: anywhere; }
@@ -228,9 +226,17 @@ canvas { display: block; width: 100%; height: 100%; }
 summary > span[aria-hidden] { transition: transform .24s; }
 details[data-expanded="false"] > summary > span[aria-hidden] { transform: none; }
 .challenge-about[open] > summary > span[aria-hidden] { transform: rotate(45deg); }
-.finish-notice { position: absolute; z-index: 3; inset: 18px 18px auto; border-left: 3px solid var(--purple); background: #faf9fcf2; padding: 18px; color: var(--purple); animation: finish-reveal .3s ease both; pointer-events: none; }
-.finish-notice strong { display: block; font-size: 1.7rem; letter-spacing: -.04em; }
-.finish-notice span { display: block; margin-top: 5px; font-size: .8rem; font-variant-numeric: tabular-nums; }
-.winner-banner { margin: 18px 0 0; padding: 12px 16px; border-left: 3px solid var(--purple); background: var(--lavender); color: var(--purple); font-weight: 600; }
+/* The chequered finish mark is shared by the live notice and result heading. */
+.finish-notice { position: absolute; z-index: 3; inset: 16px 16px auto; display: flex; align-items: center; gap: 18px; padding: 22px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); animation: finish-reveal .4s ease both; pointer-events: none; }
+.finish-notice.is-winner { background: var(--purple-dark); border-color: #75558e; color: var(--paper); }
+.finish-notice strong { display: block; font-size: clamp(1.65rem, 7vw, 2.4rem); line-height: 1.1; letter-spacing: -.045em; font-weight: 650; }
+.finish-notice #finish-notice-time { display: block; margin-top: 8px; font-size: .8rem; font-variant-numeric: tabular-nums; opacity: .8; }
+.finish-flag, .winner-banner::before { content: ""; display: block; width: 36px; height: 36px; flex: 0 0 36px; background: repeating-conic-gradient(currentColor 0% 25%, transparent 0% 50%) 0 0 / 18px 18px; }
+.finish-notice:not(.is-winner) .finish-flag { display: none; }
+.winner-banner { display: flex; align-items: center; gap: 14px; margin-top: 24px; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--purple); font-size: 1.7rem; line-height: 1.2; letter-spacing: -.04em; font-weight: 650; }
+.winner-banner::before { width: 28px; height: 28px; flex-basis: 28px; background-size: 14px 14px; }
+.project-credit { display: grid; gap: 3px; font-size: .65rem; }
+.project-credit > span:last-child { font-size: .7rem; }
+.ready-dock p:empty { display: none; }
 @keyframes finish-reveal { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .finish-notice { animation: none; } }

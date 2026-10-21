@@ -44,22 +44,6 @@ test('equal latencies tie; delayed playback reconstructs the same positions', ()
     assert.deepEqual(resumed.racers, r.racers);
 });
 
-test('presets select complete measured configurations and never substitute another extractor', () => {
-    const app = Object.create(DemoClientApp.prototype);
-    const choice = {extractor: 'numba_efficient', selector: 'None', model: 'ridge'};
-    app.state = {track: {options: {configurations: [choice]}}};
-    assert.deepEqual(app._resolvePreset('numba'), choice);
-    assert.equal(app._resolvePreset('polars'), null);
-    let applied, sent = 0;
-    app._syncActiveOptionsWithPipeline = c => { applied = c; };
-    app._onPipelineChange = () => { sent++; };
-    app._applyPreset('numba');
-    assert.deepEqual(applied, choice);
-    assert.equal(sent, 1);
-    app._applyPreset('polars');
-    assert.equal(sent, 1);
-});
-
 function element() {
     const classes = new Set();
     return {value: '', textContent: '', classList: {
@@ -248,24 +232,6 @@ test('duplicate joins are suppressed and unrelated updates cannot confirm a pend
         app.myPlayer = {nickname: 'Alex'}; app._confirmPending();
         assert.equal(app.pending, null);
     } finally { app._clearPending(); globalThis.document = previousDocument; }
-});
-
-test('late measurements from a previous track cannot overwrite the current previews', async () => {
-    const originalFetch = globalThis.fetch;
-    const resolvers = new Map();
-    globalThis.fetch = url => new Promise(resolve => resolvers.set(url, resolve));
-    const app = Object.create(DemoClientApp.prototype);
-    app.currentTrackId = 'beed'; app.view = 'landing';
-    try {
-        const oldRequest = app._fetchPresetMeasurements('beed');
-        app.currentTrackId = 'har';
-        const currentRequest = app._fetchPresetMeasurements('har');
-        resolvers.get('/api/pareto/har')({ok: true, json: async () => ({all_points: ['current']})});
-        await currentRequest;
-        resolvers.get('/api/pareto/beed')({ok: true, json: async () => ({all_points: ['stale']})});
-        await oldRequest;
-        assert.deepEqual(app.presetMeasurements, ['current']);
-    } finally { globalThis.fetch = originalFetch; }
 });
 
 test('live timing reports bounded elapsed time and shared positions for tied finishers', () => {
