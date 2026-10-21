@@ -94,16 +94,19 @@ def test_player_registration_and_idempotency(room):
 def test_capacity_and_spectator_promotion(room, slot):
     for i in range(5):
         room.add_player(str(i), f'Player {i}')
+        room.set_player_ready(str(i))
     assert room.players['4'].is_spectator
     room.remove_player(str(slot))
     assert not room.players['4'].is_spectator
     assert room.players['4'].car_index == slot
-    assert sorted(p.car_index for p in room.players.values()) == [0, 1, 2, 3]
+    assert sorted(p.car_index for p in room._ready_grid()) == [0, 1, 2, 3]
+
 
 def test_pipeline_validation_and_readiness(room):
     p = room.add_player('a', 'A')
     room.add_player('b', 'B')
-    assert not room.set_player_ready('a')
+    assert room.set_player_ready('a')
+    assert room.grid_close_timestamp_ms > 0
     old = p.metrics
     with pytest.raises(ValueError, match='Unsupported'):
         room.update_pipeline('a', 'missing', 'None', 'random_forest')
@@ -112,6 +115,7 @@ def test_pipeline_validation_and_readiness(room):
     assert not p.is_ready
     room.set_player_ready('a')
     assert room.set_player_ready('b')
+    assert room.start_countdown(ready_only=True)
     assert room.phase == GamePhase.COUNTDOWN
 
 def test_freeze_disconnect_mutation_and_duplicate_start(room):
@@ -157,22 +161,31 @@ def test_shared_awards_and_scoring(room):
     assert a['pareto_score'] == room.heat.entries[0].metrics.pareto_composite_score
 
 def test_disconnect_reservation_expiration_and_resume(room):
-    for i in range(5): room.add_player(str(i), str(i))
+    for i in range(5):
+        room.add_player(str(i), str(i))
+        room.set_player_ready(str(i))
+    assert room.players['4'].is_spectator
     room.disconnect('0')
     then = room.players['0'].disconnected_at
+    assert not room.players['4'].is_spectator
+    assert not room.players['0'].is_ready
     room.expire_disconnected(then + 29)
-    assert '0' in room.players and room.players['4'].is_spectator
+    assert '0' in room.players
     room.reconnect('0')
     assert room.players['0'].connected and not room.players['0'].is_ready
     room.disconnect('0')
     room.expire_disconnected(room.players['0'].disconnected_at + 30)
-    assert '0' not in room.players and not room.players['4'].is_spectator
+    assert '0' not in room.players
+
 
 def test_disconnected_slot_blocks_start(room):
     room.add_player('a', 'A'); room.add_player('b', 'B')
+    room.set_player_ready('a')
+    room.set_player_ready('b')
     room.disconnect('b')
-    assert not room.set_player_ready('a')
-    with pytest.raises(ValueError, match='connected'):room.start_countdown()
+    assert room.start_countdown(ready_only=True)
+    assert {p.client_id for p in room.heat.entries if not p.is_bot} == {'a'}
+
 
 def test_reset_and_expiry_after_heat(room):
     room.add_player('a', 'A'); start(room)
@@ -196,7 +209,7 @@ def test_race_again_only_current_completed_heat_entrant(room):
     with pytest.raises(ValueError, match='completed heat'):
         room.request_race_again('a', heat_id)
     room.finish_race()
-    with pytest.raises(ValueError, match='entrant'):
+    with pytest.raises(ValueError, match='completed heat'):
         room.request_race_again('viewer', heat_id)
     with pytest.raises(ValueError, match='completed heat'):
         room.request_race_again('a', 'stale-heat')
@@ -212,23 +225,22 @@ def test_race_again_only_current_completed_heat_entrant(room):
 
 
 def test_next_round_preparation_is_per_player(room):
-    room.add_player('a', 'Alice')
-    room.add_player('b', 'Bob')
+    room.add_player('a', 'Alice'); room.add_player('b', 'Bob')
     start(room)
     results = room.finish_race()
     heat_id = room.heat.heat_id
+    assert room.get_state_snapshot('b')['participant']['view'] == 'results'
+    assert not room.get_state_snapshot()['active_racers']
     room.request_race_again('a', heat_id)
     room.update_pipeline('a', **room.players['a'].pipeline)
-    assert not room.set_player_ready('a')
-    assert room.phase == GamePhase.RESULTS
-    assert room.race_results_cache is results
-    assert not room.players['b'].preparing_next
-    with pytest.raises(ValueError):
-        room.update_pipeline('b', **room.players['b'].pipeline)
+    assert room.set_player_ready('a')
+    assert room.start_countdown(ready_only=True)
+    assert {p.client_id for p in room.heat.entries if not p.is_bot} == {'a'}
+    assert room.get_state_snapshot('b')['personal_results'] is results
+    assert room.get_state_snapshot('b')['participant']['view'] == 'results'
     room.request_race_again('b', heat_id)
-    assert room.set_player_ready('b')
-    assert room.phase == GamePhase.COUNTDOWN
-    assert room.heat.heat_id != heat_id
+    assert room.get_state_snapshot('b')['participant']['view'] == 'configuration'
+    room.update_pipeline('b', **room.players['b'].pipeline)
 
 
 def test_arrival_during_results_can_build_without_resetting_other_screens(room):
@@ -242,32 +254,32 @@ def test_arrival_during_results_can_build_without_resetting_other_screens(room):
     assert not room.players['a'].preparing_next
     assert room.race_results_cache is results
     room.update_pipeline('b', **newcomer.pipeline)
-    assert not room.set_player_ready('b')
+    assert room.set_player_ready('b')
     room.request_race_again('a', room.heat.heat_id)
     assert room.set_player_ready('a')
+    room.start_countdown(ready_only=True)
     assert {entry.client_id for entry in room.heat.entries} == {'a', 'b'}
 
 
 @pytest.mark.parametrize('join_phase', ['COUNTDOWN', 'RACING'])
 def test_queue_opens_automatically_at_finish_and_preserves_fifo(room, join_phase):
-    room.add_player('a', 'Alice')
-    room.add_player('b', 'Bob')
+    room.add_player('a', 'Alice'); room.add_player('b', 'Bob')
     room.start_countdown()
-    if join_phase == 'RACING':
-        room.start_racing()
-    first = room.add_player('c', 'First arrival')
-    second = room.add_player('d', 'Second arrival')
-    third = room.add_player('e', 'Third arrival')
-    assert all(p.is_spectator for p in (first, second, third))
-    if join_phase == 'COUNTDOWN':
-        room.start_racing()
+    if join_phase == 'RACING': room.start_racing()
+    waiting = []
+    for i in range(5):
+        p = room.add_player(str(i), f'Waiting {i}')
+        assert not p.is_spectator
+        room.set_player_ready(p.client_id)
+        waiting.append(p)
+    assert all(p.is_spectator for p in waiting)
+    if join_phase == 'COUNTDOWN': room.start_racing()
     results = room.finish_race()
-    assert not first.is_spectator and first.preparing_next
-    assert not second.is_spectator and second.preparing_next
-    assert third.is_spectator
-    assert not room.players['a'].preparing_next
-    room.remove_player('b')
-    assert not third.is_spectator and third.preparing_next
+    assert all(not p.is_spectator for p in waiting[:4])
+    assert waiting[4].is_spectator
+    assert room.players['a'].reviewing_results
+    room.remove_player('0')
+    assert not waiting[4].is_spectator
     assert room.race_results_cache is results
     assert len(results['rankings']) == 2
 
@@ -281,6 +293,7 @@ def test_results_release_bot_places_and_allow_a_repeat_solo_race(room):
     assert any(row['client_id'] == bot_id for row in results['rankings'])
     room.request_race_again('a', room.heat.heat_id)
     assert room.set_player_ready('a')
+    room.start_countdown(ready_only=True)
     assert len(room.heat.entries) == 2
     assert any(p.is_bot for p in room.heat.entries)
 
@@ -290,6 +303,7 @@ def test_expired_race_reservations_release_at_finish_without_a_presenter_reset(r
         room.add_player(str(i), f'Racer {i}')
     start(room)
     waiting = room.add_player('next', 'Next racer')
+    room.set_player_ready('next')
     room.disconnect('0')
     room.players['0'].disconnected_at -= 31
     room.expire_disconnected()
@@ -301,19 +315,77 @@ def test_expired_race_reservations_release_at_finish_without_a_presenter_reset(r
 
 
 def test_results_reconnect_grace_expires_and_promotes_waiters(room):
-    for i in range(4):
-        room.add_player(str(i), f'Racer {i}')
-    start(room)
-    room.finish_race()
-    waiting = room.add_player('next', 'Next racer')
-    assert waiting.is_spectator
-    room.disconnect('0')
-    disconnected = room.players['0'].disconnected_at
+    for i in range(4): room.add_player(str(i), f'Racer {i}')
+    start(room); room.finish_race()
+    assert not room._ready_grid()
+    for i in range(5):
+        p = room.add_player(f'new{i}', f'Next {i}')
+        room.set_player_ready(p.client_id)
+    assert room.players['new4'].is_spectator
+    room.disconnect('new0')
+    assert not room.players['new4'].is_spectator
+    disconnected = room.players['new0'].disconnected_at
     room.expire_disconnected(disconnected + 29)
-    assert '0' in room.players and waiting.is_spectator
-    room.reconnect('0')
-    assert not room.players['0'].is_ready
-    room.disconnect('0')
-    room.expire_disconnected(room.players['0'].disconnected_at + 30)
-    assert '0' not in room.players
-    assert not waiting.is_spectator and waiting.preparing_next
+    assert 'new0' in room.players
+    room.expire_disconnected(disconnected + 30)
+    assert 'new0' not in room.players
+
+
+
+def test_only_ready_connected_people_affect_the_next_race(room):
+    for i in range(12):
+        room.add_player(str(i), f'Visitor {i}')
+    assert not room._ready_grid() and not room.grid_close_timestamp_ms
+    assert all(not p.is_spectator for p in room.players.values())
+    room.set_player_ready('0')
+    deadline = room.grid_close_timestamp_ms
+    room.set_player_ready('1')
+    assert room.grid_close_timestamp_ms == deadline
+    room.disconnect('1')
+    assert room.start_countdown(ready_only=True)
+    assert {p.client_id for p in room.heat.entries if not p.is_bot} == {'0'}
+    assert room.get_state_snapshot('2')['participant']['view'] == 'configuration'
+    assert room.get_state_snapshot('1')['participant']['is_ready'] is False
+
+
+def test_undo_and_disconnect_cancel_empty_entry_window(room):
+    room.add_player('a', 'A')
+    room.set_player_ready('a')
+    assert room.grid_close_timestamp_ms
+    room.set_player_ready('a', False)
+    assert room.grid_close_timestamp_ms == 0
+    room.set_player_ready('a')
+    room.disconnect('a')
+    assert room.grid_close_timestamp_ms == 0
+    assert not room.start_countdown(ready_only=True)
+
+
+def test_personal_results_survive_another_heat_and_reentry_is_explicit(room):
+    room.add_player('a', 'A'); room.add_player('b', 'B')
+    start(room)
+    first = room.finish_race()
+    room.request_race_again('b', first['heat_id'])
+    room.set_player_ready('b')
+    room.start_countdown(ready_only=True)
+    assert room.get_state_snapshot('a')['participant']['view'] == 'results'
+    assert room.get_state_snapshot('a')['personal_results'] is first
+    assert room.get_state_snapshot('b')['participant']['view'] == 'race'
+    room.start_racing()
+    second = room.finish_race()
+    assert second['heat_id'] != first['heat_id']
+    assert room.get_state_snapshot('a')['personal_results'] is first
+    assert room.get_state_snapshot('b')['personal_results'] is second
+    room.request_race_again('a', first['heat_id'])
+    assert room.get_state_snapshot('a')['participant']['view'] == 'configuration'
+    assert not room.players['a'].is_ready
+
+
+def test_queue_is_ordered_by_ready_time_instead_of_name_registration(room):
+    room.add_player('early-builder', 'Early builder')
+    room.add_player('racer', 'Racer')
+    room.set_player_ready('racer')
+    room.start_countdown(ready_only=True)
+    later = room.add_player('later-builder', 'Later builder')
+    room.set_player_ready(later.client_id)
+    room.set_player_ready('early-builder')
+    assert [p['client_id'] for p in room.get_state_snapshot()['spectators']] == ['later-builder', 'early-builder']

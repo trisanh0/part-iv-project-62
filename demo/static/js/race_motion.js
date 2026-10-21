@@ -1,6 +1,6 @@
 /** Replay a frozen schedule. All times are relative to the shared lights-out. */
-export const PIT_ENTRY_PROGRESS = .9318;
-export const PIT_EXIT_PROGRESS = 1.0818;
+export const PIT_ENTRY_PROGRESS = .92789;
+export const PIT_EXIT_PROGRESS = 1.08653;
 
 const hermite = (u, a, b) => (3*u*u - 2*u*u*u) + (u*u*u - 2*u*u + u)*a + (u*u*u - u*u)*b;
 

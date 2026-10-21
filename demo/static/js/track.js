@@ -12,7 +12,7 @@ export const CIRCUIT_HEIGHT = 1400;
 
 export const CIRCUIT_PALETTE = Object.freeze({
     paper: '#FAF9FC', line: '#B8ADBF', ink: '#4E2277',
-    asphalt: '#382E43', runoff: '#EEE8F5', kerb: '#AA8FBC',
+    asphalt: '#33343B', runoff: '#E2E7E2', kerb: '#A64E58',
     label: '#45374F', labelLine: '#C6BDCF',
 });
 
@@ -25,18 +25,14 @@ export class TrackCircuit {
         // Original Grand Prix layout: pit straight, opening chicane, two fast
         // sweepers, an infield direction change and a broad final return.
         this.controlPoints = [
-            {x: 220, y: 740},
-            {x: 220, y: 620}, {x: 220, y: 380},
-            {x: 230, y: 240}, {x: 290, y: 170},
-            {x: 370, y: 220}, {x: 460, y: 140},
-            {x: 650, y: 105}, {x: 825, y: 170},
-            {x: 870, y: 335}, {x: 790, y: 475},
-            {x: 650, y: 510}, {x: 585, y: 630},
-            {x: 660, y: 765}, {x: 780, y: 850},
-            {x: 720, y: 930}, {x: 785, y: 1040},
-            {x: 805, y: 1180}, {x: 735, y: 1300},
-            {x: 550, y: 1340}, {x: 340, y: 1300},
-            {x: 235, y: 1190}, {x: 220, y: 1060}, {x: 220, y: 900},
+            {x: 220, y: 740}, {x: 220, y: 560}, {x: 220, y: 380},
+            {x: 250, y: 230}, {x: 390, y: 145}, {x: 650, y: 145},
+            {x: 810, y: 235}, {x: 840, y: 390}, {x: 730, y: 490},
+            {x: 605, y: 520}, {x: 575, y: 640}, {x: 710, y: 720},
+            {x: 815, y: 835}, {x: 750, y: 960}, {x: 585, y: 1020},
+            {x: 520, y: 1135}, {x: 585, y: 1250}, {x: 470, y: 1310},
+            {x: 325, y: 1270}, {x: 240, y: 1150}, {x: 220, y: 1030},
+            {x: 220, y: 900},
         ];
 
         this.splineSamples = [];
@@ -302,13 +298,24 @@ export class TrackCircuit {
         ctx.translate((renderWidth - CIRCUIT_WIDTH * scale) / 2, (renderHeight - CIRCUIT_HEIGHT * scale) / 2);
         ctx.scale(scale, scale);
 
+        // Restrained paddock and grandstand detail around an original circuit.
+        ctx.fillStyle = '#EDF0EC';
+        this._traceRoad(ctx); ctx.fill();
+        ctx.save(); ctx.translate(492, 67); ctx.rotate(.02);
+        ctx.fillStyle = '#D9D9DF'; ctx.fillRect(0, 0, 190, 25);
+        ctx.strokeStyle = '#B5B6C0'; ctx.lineWidth = 1;
+        for (let x = 8; x < 190; x += 14) { ctx.beginPath(); ctx.moveTo(x, 3); ctx.lineTo(x, 22); ctx.stroke(); }
+        ctx.restore();
+        ctx.strokeStyle = '#D7D8DF'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(69, 520); ctx.lineTo(69, 885); ctx.stroke();
+
         // Pit lane follows the main straight; the buildings sit outside the race line.
         ctx.beginPath(); ctx.moveTo(this.pitEntry.x, this.pitEntry.y);
         ctx.bezierCurveTo(this.pitEntry.x, this.pitEntry.y - 30, 145, 960, 145, 900);
         ctx.lineTo(145, 520);
         ctx.bezierCurveTo(145, 470, this.pitExit.x, this.pitExit.y + 40, this.pitExit.x, this.pitExit.y);
         ctx.strokeStyle = CIRCUIT_PALETTE.line; ctx.lineWidth = 28; ctx.stroke();
-        ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 22; ctx.stroke();
+        ctx.strokeStyle = '#DBDCE2'; ctx.lineWidth = 22; ctx.stroke();
         ctx.fillStyle = '#E2DCE8'; ctx.fillRect(83, 550, 32, 300);
         ctx.strokeStyle = CIRCUIT_PALETTE.line; ctx.lineWidth = 1.5;
         for (let y = 570; y < 850; y += 36) {
@@ -317,9 +324,9 @@ export class TrackCircuit {
 
         this._traceRoad(ctx);
         ctx.lineJoin = "round"; ctx.lineCap = "round";
-        ctx.strokeStyle = CIRCUIT_PALETTE.runoff; ctx.lineWidth = 92; ctx.stroke();
-        ctx.strokeStyle = CIRCUIT_PALETTE.line; ctx.lineWidth = 76; ctx.stroke();
-        ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 72; ctx.stroke();
+        ctx.strokeStyle = CIRCUIT_PALETTE.runoff; ctx.lineWidth = 106; ctx.stroke();
+        ctx.strokeStyle = '#C2C7C3'; ctx.lineWidth = 82; ctx.stroke();
+        ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 78; ctx.stroke();
         ctx.lineCap = "butt";
         ctx.strokeStyle = CIRCUIT_PALETTE.kerb; ctx.setLineDash([14, 14]); ctx.stroke();
         ctx.setLineDash([]);
@@ -343,7 +350,12 @@ export class TrackCircuit {
                 ctx.lineTo(x, y + 7); ctx.lineTo(x - 22, y + 7); ctx.stroke();
             }
         }
-        ctx.restore(); ctx.restore();
+        ctx.restore();
+        ctx.fillStyle = '#77747E'; ctx.font = '15px system-ui'; ctx.textAlign = 'center';
+        ctx.save(); ctx.translate(102, 710); ctx.rotate(-Math.PI/2); ctx.fillText('PIT LANE', 0, 0); ctx.restore();
+        ctx.strokeStyle = '#8C8797'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(178, 733); ctx.lineTo(178, 705); ctx.lineTo(262, 705); ctx.lineTo(262, 733); ctx.stroke();
+        ctx.restore();
         return scale;
     }
 }

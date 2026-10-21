@@ -139,7 +139,8 @@ async def broadcast_event(kind, data):
 
 
 async def broadcast_state():
-    await broadcast_event('STATE_UPDATE', room_manager.get_state_snapshot())
+    for client_id, connection in tuple(connections.items()):
+        enqueue(connection, envelope('STATE_UPDATE', room_manager.get_state_snapshot(client_id)))
 
 
 async def execute_race_lifecycle(heat):
@@ -173,13 +174,29 @@ async def execute_race_lifecycle(heat):
         await broadcast_state()
 
 
+async def execute_ready_races():
+    """Collect ready entrants without making builders or result viewers wait."""
+    while True:
+        if room_manager.phase == GamePhase.COUNTDOWN and room_manager.heat:
+            await execute_race_lifecycle(room_manager.heat)
+            continue
+        deadline = room_manager.grid_close_timestamp_ms
+        if not deadline:
+            return
+        await asyncio.sleep(max(0, deadline / 1000 - time.time()))
+        async with command_lock:
+            if deadline != room_manager.grid_close_timestamp_ms:
+                continue
+            if not room_manager.start_countdown(ready_only=True):
+                await broadcast_state()
+                return
+
+
 def trigger_race_lifecycle():
     global race_task
     if race_task is not None and not race_task.done():
         return
-    if room_manager.phase != GamePhase.COUNTDOWN:
-        room_manager.start_countdown()
-    race_task = spawn(execute_race_lifecycle(room_manager.heat))
+    race_task = spawn(execute_ready_races())
 
 
 async def cancel_race():
@@ -216,6 +233,9 @@ async def dispatch(command, client_id=None):
             elif action == 'race_again':
                 room_manager.request_race_again(client_id, command.heat_id)
             elif action == 'start_race':
+                if room_manager.admission_open:
+                    await cancel_race()
+                    room_manager.start_countdown()
                 trigger_race_lifecycle()
             elif action == 'reset_lobby':
                 await cancel_race()
@@ -383,7 +403,7 @@ async def websocket_game_endpoint(websocket: WebSocket):
         session.disconnected_at = None
         room_manager.reconnect(client_id)
         connection.writer = spawn(writer_loop(connection))
-        enqueue(connection, envelope('INIT', {'client_id': client_id, 'resume_token': session.token, 'state': room_manager.get_state_snapshot()}))
+        enqueue(connection, envelope('INIT', {'client_id': client_id, 'resume_token': session.token, 'state': room_manager.get_state_snapshot(client_id)}))
         if resumed:
             await broadcast_state()
         while True:

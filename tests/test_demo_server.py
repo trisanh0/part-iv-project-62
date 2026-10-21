@@ -12,6 +12,7 @@ def reset(monkeypatch):
     room_manager.players.clear()
     room_manager.reset_to_lobby()
     room_manager.change_track('beed')
+    room_manager.grid_window_seconds = .01
     room_manager.countdown_seconds = .01
     room_manager.race_duration_seconds = 5
 
@@ -276,6 +277,7 @@ def test_six_racers_queue_promotion_and_local_next_round():
     from contextlib import ExitStack
     previous_capacity = room_manager.max_active_racers
     room_manager.max_active_racers = 6
+    room_manager.grid_window_seconds = 30
 
     def state_until(ws, predicate):
         for _ in range(100):
@@ -286,37 +288,37 @@ def test_six_racers_queue_promotion_and_local_next_round():
 
     try:
         with TestClient(app) as client, ExitStack() as stack:
-            sockets = []
-            ids = []
+            sockets, ids = [], []
             for i in range(7):
                 ws = stack.enter_context(client.websocket_connect('/ws/game'))
-                init = hello(ws)
-                ids.append(init['client_id'])
+                ids.append(hello(ws)['client_id'])
                 ws.send_json({'action': 'join', 'nickname': f'Racer {i}'})
-                state_until(ws, lambda s, cid=ids[-1]: any(p['client_id'] == cid for p in s['active_racers'] + s['spectators']))
+                state_until(ws, lambda state: state['participant'] is not None)
                 sockets.append(ws)
-            snapshot = room_manager.get_state_snapshot()
-            assert len(snapshot['active_racers']) == 6
-            assert snapshot['spectators'][0]['client_id'] == ids[6]
-            for ws in sockets[:6]:
+            assert len(room_manager.get_state_snapshot()['active_racers']) == 7
+            assert not room_manager.get_state_snapshot()['spectators']
+            for ws in sockets:
                 ws.send_json({'action': 'set_ready', 'ready': True})
+                state_until(ws, lambda state: state['participant']['is_ready'])
+            assert room_manager.players[ids[6]].is_spectator
+            assert admin(client, 'start_race').status_code == 200
             results = receive(sockets[0], 'RACE_FINISH')['data']
             assert len(results['rankings']) == 6
+            state = state_until(sockets[0], lambda state: state['participant']['view'] == 'results')
+            assert state['personal_results'] == results
+            assert not room_manager.players[ids[6]].is_spectator
+            assert all(room_manager.players[cid].reviewing_results for cid in ids[:6])
             sockets[0].send_json({'action': 'race_again', 'heat_id': results['heat_id']})
-            state = state_until(sockets[0], lambda s: any(p['client_id'] == ids[0] and p.get('preparing_next') for p in s['active_racers']))
-            assert state['phase'] == 'RESULTS'
-            assert not next(p for p in state['active_racers'] if p['client_id'] == ids[1])['preparing_next']
-            sockets[5].send_json({'action': 'leave'})
-            promoted = state_until(sockets[6], lambda s: any(p['client_id'] == ids[6] for p in s['active_racers']))
-            assert not promoted['spectators']
-            assert promoted['phase'] == 'RESULTS'
-            assert next(p for p in promoted['active_racers'] if p['client_id'] == ids[6])['preparing_next']
-            assert promoted['results']['heat_id'] == results['heat_id']
+            state = state_until(sockets[0], lambda state: state['participant']['view'] == 'configuration')
+            assert not state['participant']['is_ready']
+            assert room_manager.players[ids[1]].reviewing_results
+            assert room_manager.get_state_snapshot(ids[1])['personal_results'] == results
     finally:
         room_manager.max_active_racers = previous_capacity
 
 
 def test_late_arrival_promotes_when_race_finishes_and_results_admit_new_visitors():
+    room_manager.grid_window_seconds = 30
     with TestClient(app) as client:
         with client.websocket_connect('/ws/game') as racer, client.websocket_connect('/ws/game') as waiting:
             racer_id = hello(racer)['client_id']
@@ -325,15 +327,17 @@ def test_late_arrival_promotes_when_race_finishes_and_results_admit_new_visitors
             receive(racer, 'STATE_UPDATE')
             assert admin(client, 'start_race').status_code == 200
             waiting.send_json({'action': 'join', 'nickname': 'Late arrival'})
+            receive(waiting, 'STATE_UPDATE')
+            waiting.send_json({'action': 'set_ready', 'ready': True})
             while True:
                 state = receive(waiting, 'STATE_UPDATE')['data']
-                if any(p['client_id'] == waiting_id for p in state['spectators']):
+                if state['participant'] and state['participant']['view'] == 'waiting':
                     break
             results = receive(waiting, 'RACE_FINISH')['data']
             state = receive(waiting, 'STATE_UPDATE')['data']
             promoted = next(p for p in state['active_racers'] if p['client_id'] == waiting_id)
             assert promoted['preparing_next'] and not promoted['is_spectator']
-            assert not next(p for p in state['active_racers'] if p['client_id'] == racer_id)['preparing_next']
+            assert room_manager.players[racer_id].reviewing_results
             assert state['phase'] == 'RESULTS' and state['results'] == results
             assert not any(p['is_bot'] for p in state['active_racers'])
             with client.websocket_connect('/ws/game') as newcomer:

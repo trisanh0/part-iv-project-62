@@ -5,7 +5,7 @@
  * measured ML latency to race progress and authoritative finish times.
  */
 
-import {scheduledMotion} from './race_motion.js';
+import {scheduledMotion, PIT_ENTRY_PROGRESS, PIT_EXIT_PROGRESS} from './race_motion.js';
 import { TrackCircuit, CIRCUIT_WIDTH, CIRCUIT_HEIGHT, CIRCUIT_PALETTE } from "./track.js";
 
 export class RaceCanvasRenderer {
@@ -130,7 +130,7 @@ export class RaceCanvasRenderer {
             const elapsedSec = (Date.now() - this.raceStartTimeMs) / 1000.0;
             this.renderFrame(elapsedSec);
 
-            if (elapsedSec < this.raceDurationSec) {
+            if (elapsedSec < this.raceDurationSec + 2.5) {
                 this.animationFrameId = requestAnimationFrame(tick);
             } else {
                 this.isRunning = false;
@@ -201,11 +201,22 @@ export class RaceCanvasRenderer {
             const launch = Math.min(1, lapProgress / .12);
             const gridFade = 1 - launch * launch * (3 - 2 * launch);
             const gridSpacing = (car.gridRow * 60) / (this.circuit.totalTrackLength || 4000);
+            let visualProgress = lapProgress;
+            if (car.isFinished && this.circuit.totalTrackLength) {
+                const coastSeconds = 1.8 + (car.car_index || 0) * .1;
+                const u = Math.min(1, Math.max(0, elapsedSec - car.completionTimeSec) / coastSeconds);
+                const prior = car.race_schedule
+                    ? scheduledMotion(car.race_schedule, (car.completionTimeSec - .001) * 1000, this.circuit, car.pacePhase).progress
+                    : this.circuit.progressAtTime(2 - .002 / car.completionTimeSec);
+                const velocity = (2 - prior) / .001;
+                visualProgress += velocity * coastSeconds / 3 * (1 - (1-u)**3);
+            }
+            car.visualProgress = visualProgress;
             const pt = motion?.inPit ? this.circuit.samplePit(motion.pitRoute)
-                : this.circuit.sample(lapProgress - gridSpacing * gridFade);
+                : this.circuit.sample(visualProgress - gridSpacing * gridFade);
 
             const pitBlend = car.race_schedule?.uses_accuracy && !car.inPit
-                ? Math.min(1, Math.abs(lapProgress - .9318) / .025, Math.abs(lapProgress - 1.0818) / .025) : 1;
+                ? Math.min(1, Math.abs(lapProgress - PIT_ENTRY_PROGRESS) / .025, Math.abs(lapProgress - PIT_EXIT_PROGRESS) / .025) : 1;
             const smoothPitBlend = pitBlend * pitBlend * (3 - 2 * pitBlend);
             const laneScale = car.inPit ? 0 : (gridFade + (1 - gridFade) * (pt.laneScale ?? 1)) * smoothPitBlend;
             const dynamicOffset = car.lateralOffset * laneScale;
@@ -264,7 +275,7 @@ export class RaceCanvasRenderer {
         ctx.strokeStyle = '#F6F1FA'; ctx.lineWidth = .65;
         ctx.beginPath(); ctx.ellipse(-length * .06, 0, length * .09, width * .16, 0, -Math.PI / 2, Math.PI / 2); ctx.stroke();
         ctx.restore();
-        this.driverLabels.push({x, y, mine, name: car.nickname || "Racer"});
+        if (mine) this.driverLabels.push({x, y, mine, name: "YOU"});
     }
 
     _drawLabels(ctx, width, height) {
@@ -272,7 +283,7 @@ export class RaceCanvasRenderer {
         for (const label of this.driverLabels.sort((a, b) => Number(b.mine) - Number(a.mine))) {
             ctx.save(); ctx.font = `${label.mine ? 600 : 400} 12px system-ui`;
             const name = label.name.length > 14 ? label.name.slice(0, 13) + "…" : label.name;
-            const text = label.mine ? `${name} / you` : name;
+            const text = label.mine ? "YOU" : name;
             const w = ctx.measureText(text).width, h = 18;
             let box;
             for (const [dx, dy] of [[12, -9], [-w - 12, -9], [12, 12], [-w - 12, 12], [12, -30], [-w - 12, -30], [12, 33], [-w - 12, 33]]) {
@@ -314,7 +325,12 @@ export class RaceCanvasRenderer {
             this.onTelemetry({elapsed: Math.max(0, Math.min(elapsedSec, this.raceDurationSec)),
                 position: own && elapsedSec > 0 ? standings.findIndex(r => r === own ||
                     (own.isFinished && r.isFinished && r.completionTimeSec === own.completionTimeSec)) + 1 : null,
-                lap: own ? Math.min(this.totalLaps, Math.floor(own.progress) + 1) : null});
+                lap: own ? Math.min(this.totalLaps, Math.floor(own.progress) + 1) : null,
+                finish: own?.isFinished ? {
+                    position: 1 + this.racers.filter(r => r.completionTimeSec < own.completionTimeSec).length,
+                    tied: this.racers.filter(r => r.completionTimeSec === own.completionTimeSec).length > 1,
+                    timeMs: Math.round(own.completionTimeSec * 1000),
+                } : null});
         }
         standings.forEach((car, index) => {
             let row = this.leaderboardRows.get(car);
@@ -326,7 +342,7 @@ export class RaceCanvasRenderer {
                     cell.className = className;
                     row.appendChild(cell);
                 }
-                row.children[1].textContent = `${car.nickname}${car.client_id === this.viewerClientId ? " (You)" : ""}`;
+                row.children[1].textContent = car.client_id === this.viewerClientId ? "You" : car.is_bot ? "Benchmark" : `Racer ${car.car_index + 1}`;
                 row.classList.toggle("is-you", !!this.viewerClientId && car.client_id === this.viewerClientId);
                 row.style.setProperty("--racer-color", car.avatar_color || "#3B82F6");
                 this.leaderboardRows.set(car, row);

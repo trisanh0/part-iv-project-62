@@ -38,8 +38,8 @@
             <p class="eyebrow">Next on the grid</p><h1 id="waiting-title">You’re in line.</h1>
             <p id="waiting-message" class="lede"></p>
             <div class="waiting-line"><span class="status-dot"></span><span id="waiting-status">Waiting for an available place</span></div>
-            <p class="help-text">Setup opens when a place is free. You can watch the race while you wait.</p>
-            <button id="btn-leave-queue" class="text-button" type="button">Leave the queue</button>
+            <p class="help-text">You’re ready for the next available race. You can watch while you wait.</p>
+            <button id="btn-leave-queue" class="text-button" type="button">Back to setup</button>
             <div id="waiting-race" class="hidden"><p class="eyebrow section-rule">On track now</p><div class="waiting-canvas"><canvas id="waiting-canvas" aria-label="Current race"></canvas></div><ol id="waiting-leaderboard" class="live-leaderboard" aria-label="Current race positions"></ol></div>
         </section>
 
@@ -47,16 +47,15 @@
             <div class="section-heading"><p class="eyebrow">01 / Setup</p><button id="btn-leave-heat" class="text-button" type="button">Leave</button></div>
             <h1 id="builder-title">Build your pipeline.</h1>
             <p id="track-name" class="challenge-name"></p>
-            <details class="challenge-about"><summary>About this challenge</summary><p id="track-desc"></p></details>
-            <p class="section-intro">Swap components and compare speed, predictions and memory.</p>
+            <details class="challenge-about"><summary>Challenge details <span aria-hidden="true">+</span></summary><p id="track-desc"></p></details>
+            <p id="race-rules" class="race-rules"></p>
+            <p class="section-intro">Swap components and compare speed, accuracy and peak RAM.</p>
             <div class="pipeline-strip" aria-label="Your pipeline"><span>Signals</span><span aria-hidden="true">→</span><strong>Extract</strong><span aria-hidden="true">→</span><strong>Select</strong><span aria-hidden="true">→</span><strong>Predict</strong></div>
             <div id="guided-builder" class="guided-builder"></div>
             <p id="custom-build-summary" class="custom-build-summary hidden"></p>
             <div class="measurement-heading"><h2>Your build</h2><span class="help-text">Benchmark results</span></div>
             <dl id="selected-measurements" class="technical-measurements build-measurements"></dl>
             <p id="build-change" class="build-change" role="status" aria-live="polite"></p>
-            <p class="measurement-note">These are recorded benchmark results, not a live training run.</p>
-            <p id="race-rules" class="race-rules"></p>
             <details id="pipeline-customisation" class="detail-section">
                 <summary>More options <span aria-hidden="true">+</span></summary>
                 <p class="help-text">Only benchmarked combinations are available.</p>
@@ -68,7 +67,7 @@
             <details class="detail-section"><summary>About TEMPO <span aria-hidden="true">+</span></summary><p class="help-text">ML libraries use different data formats and interfaces. TEMPO connects them in one pipeline and evaluates each combination under the same conditions. It also caches extracted features and records time and memory.</p></details>
             <details class="detail-section"><summary>Measurements and race rules <span aria-hidden="true">+</span></summary><p class="help-text">Compute time covers feature extraction, selection and model training. Memory is peak RAM during extraction. Each pipeline uses one recorded measurement; the demo does not show run-to-run variation.</p><p class="measurement-note">For classification, compute time sets driving pace and prediction errors add a pit stop. Memory does not affect race position. Regression and forecasting races use compute time only.</p><p class="measurement-note">Driving cost = 1 + 0.12 × ln(1 + compute seconds). Pit cost = 4 × (1 − accuracy). Both use the same scale so the last car finishes at the chosen race duration. These are game rules applied to the measurements.</p></details>
             <p id="config-error" class="form-error" role="alert"></p>
-            <div class="participants-section"><div class="section-heading"><h2>On the grid</h2><span id="readiness-count" class="help-text"></span></div><ul id="builder-racers-list" class="participant-list"></ul></div>
+            <div class="participants-section"><div class="section-heading"><h2>Next race</h2><span id="readiness-count" class="help-text"></span></div><ul id="builder-racers-list" class="participant-list"></ul></div>
             <div class="ready-dock"><p id="ready-build-metrics" class="dock-measurements"></p><p id="ready-status" role="status">Choose a build, then join the grid.</p><button id="btn-ready" class="button button-primary" type="button">Ready <span aria-hidden="true">→</span></button></div>
         </section>
 
@@ -76,15 +75,15 @@
             <div class="race-heading"><div><p class="eyebrow">02 / On track</p><h1 id="race-title">Grand Prix.</h1></div><span id="race-phase" class="race-phase">Live</span></div>
             <div id="race-identity" class="race-identity">Watching the race</div>
             <dl class="timing-strip"><div><dt>Elapsed</dt><dd id="race-elapsed">00:00.0</dd></div><div><dt>Your position</dt><dd id="race-position">—</dd></div><div><dt>Lap</dt><dd id="race-lap">— / 2</dd></div></dl>
-            <div class="race-canvas-wrapper"><canvas id="race-canvas" aria-label="Live race circuit"></canvas><div id="countdown-overlay" class="countdown-overlay hidden"><div class="start-sequence"><div id="start-lights" class="start-lights" aria-hidden="true"><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span></div><p id="start-light-status" class="start-light-status" role="status" aria-live="polite">Automatic start</p></div></div></div>
+            <div class="race-canvas-wrapper"><div id="race-finish-notice" class="finish-notice hidden" role="status" aria-live="polite"><strong id="finish-notice-title"></strong><span id="finish-notice-time"></span></div><canvas id="race-canvas" aria-label="Live race circuit"></canvas><div id="countdown-overlay" class="countdown-overlay hidden"><div class="start-sequence"><div id="start-lights" class="start-lights" aria-hidden="true"><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span></div><p id="start-light-status" class="start-light-status" role="status" aria-live="polite">Automatic start</p></div></div></div>
             <div class="live-telemetry"><div class="section-heading"><h2>Live positions</h2><span class="help-text">2 laps</span></div><ol id="live-leaderboard" class="live-leaderboard" aria-label="Live race positions"></ol></div>
             <p id="race-measurement-note" class="measurement-note"></p>
         </section>
 
         <section id="screen-results" class="hidden" aria-labelledby="results-title">
             <p class="eyebrow">03 / Results</p><h1 id="results-title">Race results.</h1>
-            <p id="result-summary" class="lede"></p><p id="result-rules-note" class="help-text"></p><p id="previous-build-comparison" class="build-change"></p>
-            <div class="comparison-heading"><span>Position</span><span>Time / Prediction quality</span></div>
+            <p id="winner-banner" class="winner-banner hidden"></p><p id="result-summary" class="lede"></p><p id="result-rules-note" class="help-text"></p><p id="previous-build-comparison" class="build-change"></p>
+            <div class="comparison-heading"><span>Position</span><span>Benchmark measurements</span></div>
             <ol id="podium-cards" class="results-list"></ol>
             <p id="result-metric-note" class="measurement-note"></p>
             <details class="detail-section" id="result-technical"><summary>Technical details <span aria-hidden="true">+</span></summary><div id="result-technical-content"></div></details>
@@ -93,7 +92,7 @@
             <div class="results-action"><p>Change one component and race again.</p><button id="btn-next-round" class="button button-primary" type="button">Change your build <span aria-hidden="true">↗</span></button></div>
         </section>
     </main>
-    <footer class="site-footer"><span>TEMPO / Engineering</span><button id="btn-open-admin" class="text-button" type="button">Presenter <span aria-hidden="true">↗</span></button></footer>
+    <footer class="site-footer"><span>Scott Mouat · Trisan Huynh</span><button id="btn-open-admin" class="text-button" type="button">Presenter <span aria-hidden="true">↗</span></button></footer>
     <dialog id="admin-modal" class="presenter-dialog" aria-labelledby="admin-title">
         <div class="section-heading"><p class="eyebrow">Race control</p><button id="btn-close-admin" class="text-button" type="button" aria-label="Close presenter settings">Close</button></div>
         <h2 id="admin-title">Presenter settings</h2>

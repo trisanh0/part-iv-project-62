@@ -1,3 +1,4 @@
+import {setupDisclosures} from './disclosures.js';
 /** Mobile participant journey, driven by confirmed room state. */
 import {RaceCanvasRenderer} from './canvas_renderer.js';
 import {ParetoCanvasChart} from './pareto_chart.js';
@@ -15,14 +16,14 @@ export function selectDemoTracks(tracks, currentId, showAll = false) {
 const raceTime = milliseconds => `${(milliseconds / 1000).toFixed(3)} s`;
 const byId = id => document.getElementById(id);
 function metricMarkup(metrics) {
-    return `<span class="build-metrics"><span><span class="metric-label">Compute time</span><span class="metric-value">${formatSeconds(metrics?.total_latency_s ?? metrics?.latency_s)}</span></span><span><span class="metric-label">${metricInfo(metrics?.task_type).label}</span><span class="metric-value">${formatPerformance(metrics)}</span></span></span>`;
+    return `<span class="build-metrics"><span><span class="metric-label">Compute time</span><span class="metric-value">${formatSeconds(metrics?.total_latency_s ?? metrics?.latency_s)}</span></span><span><span class="metric-label">${metricInfo(metrics?.task_type).label}</span><span class="metric-value">${formatPerformance(metrics)}</span></span><span><span class="metric-label">Peak RAM</span><span class="metric-value">${Math.round(metrics?.extraction_ram_mb ?? metrics?.ram_mb ?? 0)} MB</span></span></span>`;
 }
 function loadHistory() {
     try { const value = JSON.parse(sessionStorage.getItem('tempoBuildHistory') || '[]'); return Array.isArray(value) ? value.slice(-2) : []; }
     catch { return []; }
 }
 const raceExplanation = task => task === 'classification'
-    ? 'Faster compute means a faster car. Errors add pit time.'
+    ? 'Faster compute gives more pace. Higher accuracy means less time in the pits.'
     : 'Race order uses compute time. Prediction quality is shown separately.';
 function storageGet() { try { return sessionStorage.getItem('tempoResumeToken'); } catch { return null; } }
 function storageSet(token) { try { sessionStorage.setItem('tempoResumeToken', token); } catch { /* In-memory play still works. */ } }
@@ -61,10 +62,18 @@ export class DemoClientApp {
             byId('race-elapsed').textContent = `${minutes}:${seconds}`;
             byId('race-position').textContent = telemetry.position ? `P${telemetry.position}` : '—';
             byId('race-lap').textContent = `${telemetry.lap || '—'} / 2`;
+            if (telemetry.finish) {
+                const notice = byId('race-finish-notice');
+                notice.classList.remove('hidden');
+                byId('finish-notice-title').textContent = telemetry.finish.position === 1
+                    ? telemetry.finish.tied ? 'Joint winner.' : 'You won.' : `Finished · P${telemetry.finish.position}`;
+                byId('finish-notice-time').textContent = `${raceTime(telemetry.finish.timeMs)} race time`;
+            }
         });
         this.waitingRenderer = new RaceCanvasRenderer(byId('waiting-canvas'), byId('waiting-leaderboard'));
         this.paretoChart = new ParetoCanvasChart(byId('pareto-canvas'), byId('pareto-tooltip'), byId('benchmark-inspector'));
         this._setupListeners();
+        this.disclosures = setupDisclosures();
         this._connectWebSocket();
     }
 
@@ -72,7 +81,7 @@ export class DemoClientApp {
         this._setupNameFocus();
         byId('join-form').addEventListener('submit', event => { event.preventDefault(); this._onJoin(); });
         byId('btn-leave-heat').addEventListener('click', () => this._command({action: 'leave'}));
-        byId('btn-leave-queue').addEventListener('click', () => this._command({action: 'leave'}));
+        byId('btn-leave-queue').addEventListener('click', () => this._command({action: 'set_ready', ready: false}));
         this.btnReady.addEventListener('click', () => this._onToggleReady());
         for (const [stage, select] of [['extractor', this.selectExtractor], ['selector', this.selectSelector], ['model', this.selectModel]]) {
             select.addEventListener('change', () => this._onPipelineChange(stage));
@@ -82,7 +91,7 @@ export class DemoClientApp {
             if (choice) this._command({action: 'set_pipeline', extractor: choice.extractor, selector: choice.selector, model: choice.model});
         });
         byId('btn-next-round').addEventListener('click', () => {
-            if (this.myPlayer && !this.myPlayer.is_spectator) this._command({action: 'race_again', heat_id: this.state.heat_id});
+            if (this.myPlayer && !this.myPlayer.is_spectator) this._command({action: 'race_again', heat_id: (this.state.personal_results || this.state.results)?.heat_id});
             else { this.watching = false; this._syncScreenPhase(); }
         });
         byId('benchmark-explorer').addEventListener('toggle', event => {
@@ -205,12 +214,12 @@ export class DemoClientApp {
         const previousPlayer = this.myPlayer;
         this.state = state;
         this.serverOffsetMs = state.server_time_utc * 1000 - Date.now();
-        this.myPlayer = state.active_racers.find(p => p.client_id === this.clientId) || state.spectators.find(p => p.client_id === this.clientId);
+        this.myPlayer = state.participant || state.active_racers.find(p => p.client_id === this.clientId) || state.spectators.find(p => p.client_id === this.clientId);
         if (oldTrack === state.track.track_id && previousPlayer?.metrics && this.myPlayer?.metrics
             && !samePipeline(previousPlayer.pipeline, this.myPlayer.pipeline)) {
             this.previousConfirmedMetrics = previousPlayer.metrics;
         }
-        this._rememberCompletedBuild(state.results);
+        this._rememberCompletedBuild(state.personal_results || state.results);
         this._confirmPending();
         if (oldTrack !== state.track.track_id) {
             this.currentTrackId = state.track.track_id;
@@ -226,7 +235,14 @@ export class DemoClientApp {
     }
 
     _syncScreenPhase() {
-        const next = participantView(this.state, this.clientId, this.pending?.action, this.watching);
+        let next = participantView(this.state, this.clientId, this.pending?.action, this.watching);
+        const personalResults = this.state?.personal_results || this.state?.results;
+        const finishAt = this.raceRenderer.raceStartTimeMs + this.raceRenderer.raceDurationSec * 1000 + 2500;
+        if (next === 'results' && this.view === 'race' && personalResults?.heat_id === this.raceRenderer.raceHeatId && Date.now() < finishAt) {
+            next = 'race';
+            clearTimeout(this.finishTransitionTimer);
+            this.finishTransitionTimer = setTimeout(() => this._syncScreenPhase(), finishAt - Date.now());
+        }
         const previous = this.view;
         this.view = next;
         const key = {landing: 'lobby', joining: 'lobby', configuration: 'building', race: 'racing', waiting: 'waiting', results: 'results'}[next];
@@ -236,12 +252,13 @@ export class DemoClientApp {
         this.btnJoin.querySelector('span').textContent = this.pending?.action === 'join' ? 'Joining…' : 'Start';
         this._renderIdentity();
         if (next !== 'race') this.raceRenderer.stop();
+        if (next !== 'configuration') clearInterval(this.gridTimer);
         if (next !== 'waiting') this.waitingRenderer.stop();
         if (next !== 'race' && next !== 'waiting') clearInterval(this.countdownTimer);
         if (next === 'configuration') this._renderConfiguration();
         if (next === 'waiting') this._renderWaiting();
         if (next === 'race') this._renderRace(this.raceRenderer);
-        if (next === 'results') this._renderResults(this.state.results);
+        if (next === 'results') this._renderResults(personalResults);
         if (next !== previous && !(next === 'joining' || previous === 'joining')) {
             window.scrollTo(0, 0);
             document.activeElement?.blur();
@@ -255,7 +272,7 @@ export class DemoClientApp {
         header.style.setProperty('--racer-color', this.myPlayer?.is_spectator ? '#4E2277' : this.myPlayer?.avatar_color || '#4E2277');
         this.raceRenderer.viewerClientId = this.clientId;
         const identity = byId('race-identity');
-        const entrant = this.state?.active_racers.find(p => p.client_id === this.clientId);
+        const entrant = this.state?.active_racers.find(p => p.client_id === this.clientId) || (this.view === 'race' ? this.myPlayer : null);
         identity.textContent = entrant ? `YOU · ${entrant.nickname}` : 'Watching the race';
         identity.style.setProperty('--racer-color', entrant?.avatar_color || '#b9a4cf');
     }
@@ -291,7 +308,7 @@ export class DemoClientApp {
         const signature = JSON.stringify([configurations, pipeline, !!this.pending, this.connected]);
         if (this.guidedSignature === signature) return;
         const root = byId('guided-builder');
-        const open = root.querySelector('details[open]')?.dataset.stage || 'extractor';
+        const open = root.querySelector('details[open]:not([data-expanded="false"])')?.dataset.stage || 'extractor';
         if (document.activeElement?.dataset.choice) {
             this.guidedFocus = {choice: document.activeElement.dataset.choice, stage: document.activeElement.dataset.stage};
         }
@@ -367,24 +384,25 @@ export class DemoClientApp {
         const previous = this.previousConfirmedMetrics || this._previousBuild()?.metrics;
         byId('build-change').textContent = previous ? `Since your ${this.previousConfirmedMetrics ? 'last selection' : 'last race'}: ${measurementChange(metrics, previous)}.` : '';
         byId('race-rules').textContent = raceExplanation(track.task_type);
-        const racers = this.state.active_racers;
-        const readyForHeat = p => p.is_ready && p.connected !== false
-            && (this.state.phase !== 'RESULTS' || p.is_bot || p.preparing_next);
+        const racers = (this.state.participants || this.state.active_racers).filter(p => !p.is_bot);
+        const readyForHeat = p => p.is_ready && p.connected !== false;
         const ready = racers.filter(readyForHeat).length;
-        byId('readiness-count').textContent = `${ready} of ${racers.length} ready`;
-        byId('builder-racers-list').replaceChildren(...racers.map(p => {
-            const row = document.createElement('li');
-            const dot = document.createElement('span'); dot.className = 'racer-dot'; dot.style.setProperty('--racer-color', p.avatar_color);
-            const name = document.createElement('span'); name.textContent = p.nickname + (p.client_id === this.clientId ? ' (You)' : '');
-            const status = document.createElement('span'); status.className = 'participant-ready'; status.textContent = p.connected === false ? 'Offline' : readyForHeat(p) ? '✓ Ready' : this.state.phase === 'RESULTS' && !p.preparing_next ? 'Reviewing results' : '';
-            row.append(dot, name, status); return row;
-        }));
-        byId('ready-build-metrics').textContent = `${formatSeconds(metrics.total_latency_s)} compute · ${formatPerformance(metrics)} ${track.task_type === 'classification' ? 'accuracy' : ''}`.trim();
+        byId('readiness-count').textContent = `${ready} ready · ${racers.filter(p => !p.is_ready).length} building`;
+        byId('builder-racers-list').replaceChildren();
+        byId('ready-build-metrics').textContent = `${formatSeconds(metrics.total_latency_s)} compute · ${formatPerformance(metrics)} ${track.task_type === 'classification' ? 'accuracy' : ''} · ${Math.round(metrics.extraction_ram_mb)} MB RAM`.trim();
         const isReady = this.myPlayer.is_ready;
         this.btnReady.disabled = !this.connected || !!this.pending;
         this.btnReady.className = `button ${isReady ? 'button-secondary' : 'button-primary'}`;
         this.btnReady.textContent = this.pending?.action === 'set_ready' ? 'Confirming…' : isReady ? 'Undo ready' : 'Ready →';
-        byId('ready-status').textContent = this.pending?.action === 'set_pipeline' ? 'Confirming your build…' : isReady ? 'You’re ready. Waiting for the others.' : racers.filter(p => !p.is_bot).length === 1 ? 'A benchmark bot will join you for a solo race.' : 'The race starts when everyone is ready.';
+        clearInterval(this.gridTimer);
+        const updateGridTime = () => {
+            const remaining = Math.max(0, Math.ceil((this.state.grid_close_timestamp_ms - (Date.now() + this.serverOffsetMs)) / 1000));
+            byId('ready-status').textContent = this.pending?.action === 'set_pipeline' ? 'Confirming your build…'
+                : this.state.grid_close_timestamp_ms ? `${isReady ? 'You’re in.' : 'Ready to join?'} Grid closes in ${remaining}s.`
+                : isReady ? 'You’re ready for the next race.' : 'Ready opens an 8-second entry window. Only ready racers take part.';
+        };
+        updateGridTime();
+        if (this.state.grid_close_timestamp_ms) this.gridTimer = setInterval(updateGridTime, 250);
     }
     _syncActiveOptionsWithPipeline(pipeline) {
         this.selectExtractor.value = pipeline.extractor;
@@ -433,11 +451,13 @@ export class DemoClientApp {
     }
     _renderRace(renderer) {
         const state = this.state;
+        if (state.phase === 'RESULTS') return;
         byId('race-measurement-note').textContent = `${raceExplanation(state.track.task_type)} Times are scaled for the race.`;
         const key = `${state.heat_id}:${state.phase}`;
         renderer.viewerClientId = this.clientId;
         if (renderer.heatKey !== key || (state.phase === 'RACING' && !renderer.isRunning)) {
-            renderer.stop(); renderer.heatKey = key;
+            renderer.stop(); renderer.heatKey = key; renderer.raceHeatId = state.heat_id;
+            byId('race-finish-notice').classList.add('hidden');
             renderer.setupRace(state.active_racers, state.race_duration_seconds, state.race_start_timestamp_ms - this.serverOffsetMs);
             if (state.phase === 'RACING' && !document.hidden) renderer.start();
             else renderer.renderFrame(0);
@@ -465,10 +485,12 @@ export class DemoClientApp {
         const task = rows[0]?.metrics.task_type || this.state.track.task_type;
         byId('result-metric-note').textContent = `${task === 'classification' ? 'Higher accuracy is better.' : metricInfo(task).note} Equal race times share a position.`;
         byId('result-rules-note').textContent = raceExplanation(task);
+        byId('winner-banner').classList.toggle('hidden', !own || own.finish_position !== 1);
+        byId('winner-banner').textContent = own?.tied ? 'Joint winner' : 'Race winner';
         const previous = this._previousBuild(results.heat_id);
         byId('previous-build-comparison').textContent = own && previous ? `Since your last race: ${measurementChange(own.metrics, previous.metrics)}.` : '';
         if (this.resultSignature !== results.heat_id) {
-            byId('podium-cards').innerHTML = rows.map(row => `<li class="result-row ${row.client_id === this.clientId ? 'is-you' : ''}"><div class="result-person"><span class="finish-position">${row.finish_position}${row.tied ? '=' : ''}</span><span class="racer-dot" data-color="${row.client_id}"></span><span>${escapeText(row.nickname)}</span>${row.client_id === this.clientId ? '<span class="you-label">You</span>' : ''}</div>${metricMarkup(row.metrics)}<p class="result-memory">Peak RAM · ${Math.round(row.metrics.extraction_ram_mb)} MB</p>${row.race_schedule ? `<p class="race-breakdown">${row.race_schedule.uses_accuracy ? `Drive ${raceTime(row.race_schedule.driving_ms)} · Pit ${raceTime(row.race_schedule.pit_ms)} · ` : ''}<strong>Total ${raceTime(row.race_schedule.finish_ms)}</strong></p>` : ''}</li>`).join('');
+            byId('podium-cards').innerHTML = rows.map(row => `<li class="result-row ${row.client_id === this.clientId ? 'is-you' : ''}"><div class="result-person"><span class="finish-position">${row.finish_position}${row.tied ? '=' : ''}</span><span class="racer-dot" data-color="${row.client_id}"></span><span>${escapeText(row.client_id === this.clientId ? row.nickname : row.is_bot ? "Benchmark" : `Racer ${row.car_index + 1}`)}</span>${row.client_id === this.clientId ? '<span class="you-label">You</span>' : ''}</div>${metricMarkup(row.metrics)}${row.race_schedule ? `<p class="race-breakdown">${row.race_schedule.uses_accuracy ? `Drive ${raceTime(row.race_schedule.driving_ms)} · Pit ${raceTime(row.race_schedule.pit_ms)} · ` : ''}<strong>Total ${raceTime(row.race_schedule.finish_ms)}</strong></p>` : ''}</li>`).join('');
             byId('podium-cards').querySelectorAll('[data-color]').forEach(dot => dot.style.setProperty('--racer-color', rows.find(r => r.client_id === dot.dataset.color).avatar_color));
             const details = byId('result-technical-content');
             details.replaceChildren(...rows.map(row => {
@@ -486,7 +508,7 @@ export class DemoClientApp {
         byId('btn-next-round').disabled = !this.connected || !!this.pending;
     }
     async _loadChart() {
-        const results = this.state?.results;
+        const results = this.state?.personal_results || this.state?.results;
         if (!results) return;
         const task = results.rankings[0]?.metrics.task_type || this.state.track.task_type;
         byId('chart-explanation').textContent = `Left is faster. Higher means ${task === 'forecasting' ? 'lower forecast error' : 'better predictions'}. The line marks pipelines that cannot improve on one axis without losing on the other.`;
@@ -495,7 +517,7 @@ export class DemoClientApp {
             const response = await fetch(`/api/pareto/${encodeURIComponent(results.track_id)}`);
             if (!response.ok) throw new Error('No benchmark data');
             const data = await response.json();
-            if (this.state?.heat_id !== results.heat_id) return;
+            if ((this.state?.personal_results || this.state?.results)?.heat_id !== results.heat_id) return;
             this.paretoChart.setData(data.all_points, data.pareto_frontier, finishPositions(results.rankings), task, this.clientId);
             this.chartHeat = results.heat_id;
         } catch { byId('chart-explanation').textContent = 'Chart unavailable. Close and reopen to retry.'; }

@@ -3,8 +3,8 @@ from dataclasses import asdict, dataclass
 import math
 
 RACE_RULES_VERSION = 'accuracy-pit-v1'
-PIT_ENTRY_PROGRESS = 0.9318
-PIT_EXIT_PROGRESS = 1.0818
+PIT_ENTRY_PROGRESS = 0.92789
+PIT_EXIT_PROGRESS = 1.08653
 
 
 @dataclass(frozen=True)

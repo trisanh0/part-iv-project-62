@@ -287,7 +287,7 @@ test('live timing reports bounded elapsed time and shared positions for tied fin
         r.renderFrame(0);
         assert.equal(telemetry.position, null);
         r.renderFrame(14);
-        assert.deepEqual(telemetry, {elapsed: 14, position: 1, lap: 2});
+        assert.deepEqual(telemetry, {elapsed: 14, position: 1, lap: 2, finish: {position: 1, tied: true, timeMs: 14000}});
         r.renderFrame(100);
         assert.equal(telemetry.elapsed, 14);
         assert.equal(telemetry.position, 1);
@@ -568,4 +568,33 @@ test('finish opens promoted and new visitors builds while previous entrants keep
     assert.equal(participantView(results, 'promoted'), 'configuration');
     assert.equal(participantView(results, 'new'), 'configuration');
     assert.equal(participantView({...results, active_racers: racers.slice(0, 1), spectators: [{client_id: 'promoted'}]}, 'promoted'), 'waiting');
+});
+
+test('personal views keep builders and result reviewers out of an unrelated race', () => {
+    for (const view of ['configuration', 'waiting', 'race', 'results']) {
+        const state = {phase: 'RACING', participant: {client_id: 'me', view}, active_racers: [], spectators: []};
+        assert.equal(participantView(state, 'me'), view);
+    }
+});
+
+test('cars coast past the finish, decelerate and retain their exact classified finish', () => {
+    const r = renderer([1, 2], 27);
+    r.circuit = new TrackCircuit(); r.circuit.render = () => 1;
+    const car = r.racers[0];
+    r.renderFrame(car.completionTimeSec);
+    assert.equal(car.progress, 2);
+    assert.equal(car.visualProgress, 2);
+    const finish = car.finishTimeSec;
+    let previous = car.visualProgress;
+    for (let i=1; i<=300; i++) {
+        r.renderFrame(car.completionTimeSec + i/100);
+        assert.ok(car.visualProgress >= previous);
+        assert.equal(car.progress, 2);
+        assert.equal(car.finishTimeSec, finish);
+        previous = car.visualProgress;
+    }
+    const parked = car.visualProgress;
+    assert.ok(parked > 2 && parked < 2.15);
+    r.renderFrame(1000);
+    assert.equal(car.visualProgress, parked);
 });

@@ -111,7 +111,7 @@ body[data-view="landing"] .connection-status, body[data-view="joining"] .connect
 .race-rules { border-left: 2px solid var(--purple); padding-left: 12px; font-size: .83rem; line-height: 1.6; margin: 20px 0; }
 .result-memory, .race-breakdown { margin: 12px 0 0 39px; font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
 .race-breakdown { color: var(--purple); font-variant-numeric: tabular-nums; }
-.build-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+.build-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; border-top: 1px solid var(--line); padding-top: 12px; }
 .build-metrics span { display: block; }
 .metric-label { font-size: .63rem; color: var(--muted); }
 .metric-value { font-size: 1.2rem; font-weight: 600; letter-spacing: -.035em; font-variant-numeric: tabular-nums; padding-top: 3px; }
@@ -219,3 +219,18 @@ canvas { display: block; width: 100%; height: 100%; }
 .legend-racer { width: 8px; height: 8px; border: 1px solid var(--purple); border-radius: 50%; }
 .chart-selection-title { font-weight: 650; margin-bottom: 10px; overflow-wrap: anywhere; }
 .chart-tooltip .technical-measurements { margin: 12px 0 0; }
+
+/* Native disclosures share a reversible height animation. */
+.disclosure-content { display: flow-root; }
+.build-stage .disclosure-content > .help-text { margin-bottom: 14px; }
+.challenge-about > summary { justify-content: space-between; gap: 12px; border: 1px solid var(--line); padding: 0 12px; border-radius: 3px; list-style: none; color: var(--purple); }
+.challenge-about > summary::-webkit-details-marker { display: none; }
+summary > span[aria-hidden] { transition: transform .24s; }
+details[data-expanded="false"] > summary > span[aria-hidden] { transform: none; }
+.challenge-about[open] > summary > span[aria-hidden] { transform: rotate(45deg); }
+.finish-notice { position: absolute; z-index: 3; inset: 18px 18px auto; border-left: 3px solid var(--purple); background: #faf9fcf2; padding: 18px; color: var(--purple); animation: finish-reveal .3s ease both; pointer-events: none; }
+.finish-notice strong { display: block; font-size: 1.7rem; letter-spacing: -.04em; }
+.finish-notice span { display: block; margin-top: 5px; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.winner-banner { margin: 18px 0 0; padding: 12px 16px; border-left: 3px solid var(--purple); background: var(--lavender); color: var(--purple); font-weight: 600; }
+@keyframes finish-reveal { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .finish-notice { animation: none; } }

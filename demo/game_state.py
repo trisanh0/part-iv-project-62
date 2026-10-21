@@ -43,6 +43,9 @@ class PlayerSlot:
     is_bot: bool = False
     is_ready: bool = False
     preparing_next: bool = False
+    reviewing_results: bool = False
+    last_results: Optional[dict] = field(default=None, repr=False)
+    ready_at: float = 0
     pipeline: dict[str, str] = field(default_factory=dict)
     metrics: Optional[ConfigMetrics] = None
     pareto_score: float = 0.0
@@ -52,7 +55,7 @@ class PlayerSlot:
 
     def to_dict(self):
         return {k: (metrics_dict(v) if k == 'metrics' else v.copy() if isinstance(v, (dict, list)) else v)
-                for k, v in vars(self).items() if k != 'disconnected_at'}
+                for k, v in vars(self).items() if k not in ('disconnected_at', 'last_results', 'ready_at')}
 
 
 @dataclass(frozen=True)
@@ -105,6 +108,8 @@ class BoothRoomManager:
         self.heat = None
         self.revision = 0
         self.bot_counter = 0
+        self.grid_window_seconds = 8.0
+        self.grid_close_timestamp_ms = 0
 
     def touch(self):
         self.revision += 1
@@ -118,9 +123,26 @@ class BoothRoomManager:
         if self.phase not in (GamePhase.LOBBY, GamePhase.BUILDING):
             raise ValueError('Reset to the lobby before editing this heat')
 
-    def _allocate_car_index(self):
-        used = {p.car_index for p in self.players.values() if not p.is_spectator}
+    def is_current_entrant(self, client_id):
+        return (not self.admission_open and self.heat is not None
+                and any(entry.client_id == client_id for entry in self.heat.entries))
+
+    def _ready_grid(self):
+        return [p for p in self.players.values() if p.connected and p.is_ready
+                and not p.is_spectator and not p.reviewing_results]
+
+    def _allocate_car_index(self, exclude=None):
+        used = {p.car_index for p in self._ready_grid() if p.client_id != exclude}
         return next(i for i in range(self.max_active_racers) if i not in used)
+
+    def ensure_grid_window(self):
+        if self.admission_open and self._ready_grid():
+            if not self.grid_close_timestamp_ms:
+                self.grid_close_timestamp_ms = round((time.time() + self.grid_window_seconds) * 1000)
+                self.touch()
+        elif self.admission_open and self.grid_close_timestamp_ms:
+            self.grid_close_timestamp_ms = 0
+            self.touch()
 
     def _get_default_pipeline(self):
         c = min(self.engine.get_all_configs(self.current_track_id),
@@ -135,12 +157,10 @@ class BoothRoomManager:
         if avatar_color is not None and not re.fullmatch(r'#[0-9a-fA-F]{6}', avatar_color):
             raise ValueError('Invalid colour')
         self.expire_disconnected()
-        spectator = (sum(not p.is_spectator for p in self.players.values()) >= self.max_active_racers
-                     or not self.admission_open)
-        index = 0 if spectator else self._allocate_car_index()
+        index = sum(not p.is_bot for p in self.players.values()) % self.max_active_racers
         pipeline = self._get_default_pipeline()
         p = PlayerSlot(client_id, nickname.strip(), avatar_color or CAR_COLORS[index], index,
-                       is_spectator=spectator, preparing_next=self.phase == GamePhase.RESULTS and not spectator,
+                       is_spectator=False, preparing_next=True,
                        pipeline=pipeline,
                        metrics=self.engine.get_config(self.current_track_id, **pipeline))
         self.players[client_id] = p
@@ -151,12 +171,16 @@ class BoothRoomManager:
         p = self.players.pop(client_id, None)
         if self.admission_open:
             self._promote_spectators()
+            self.ensure_grid_window()
         self.touch()
         return p
 
     def disconnect(self, client_id):
         if p := self.players.get(client_id):
             p.connected, p.is_ready, p.disconnected_at = False, False, time.monotonic()
+            p.is_spectator = False
+            self._promote_spectators()
+            self.ensure_grid_window()
             self.touch()
 
     def reconnect(self, client_id):
@@ -165,31 +189,30 @@ class BoothRoomManager:
             self.touch()
 
     def expire_disconnected(self, now=None):
-        if not self.admission_open:
-            return
         now = time.monotonic() if now is None else now
         for cid, p in list(self.players.items()):
-            if not p.connected and p.disconnected_at is not None and now - p.disconnected_at >= 30:
+            if (not p.connected and not self.is_current_entrant(cid) and p.disconnected_at is not None
+                    and now - p.disconnected_at >= 30):
                 self.remove_player(cid)
 
     def _promote_spectators(self):
         if not self.admission_open:
             return
-        for p in self.players.values():
-            if sum(not x.is_spectator for x in self.players.values()) >= self.max_active_racers:
+        waiting = sorted((p for p in self.players.values() if p.is_spectator and p.connected and p.is_ready),
+                         key=lambda p: p.ready_at)
+        for p in waiting:
+            if len(self._ready_grid()) >= self.max_active_racers:
                 break
-            if p.is_spectator and p.connected and not p.is_bot:
-                p.car_index = self._allocate_car_index()
-                p.is_spectator = False
-                p.avatar_color = CAR_COLORS[p.car_index]
-                p.preparing_next = self.phase == GamePhase.RESULTS
-                p.is_ready = False
+            p.car_index = self._allocate_car_index(p.client_id)
+            p.is_spectator = False
+            p.avatar_color = CAR_COLORS[p.car_index]
+            p.preparing_next = True
+        self.ensure_grid_window()
 
     def require_player_editable(self, client_id):
         player = self.players.get(client_id)
-        if self.phase == GamePhase.RESULTS and player and player.preparing_next:
-            return
-        self.require_editable()
+        if player is None or player.reviewing_results or self.is_current_entrant(client_id):
+            raise ValueError('Open your build before editing it')
 
     def update_pipeline(self, client_id, extractor, selector, model):
         self.require_player_editable(client_id)
@@ -200,28 +223,36 @@ class BoothRoomManager:
         if c is None:
             raise ValueError('Unsupported pipeline combination')
         p.pipeline = {k: getattr(c, k) for k in ('extractor', 'selector', 'model')}
-        p.metrics, p.is_ready = c, False
+        p.metrics, p.is_ready, p.is_spectator = c, False, False
+        self._promote_spectators()
+        self.ensure_grid_window()
         self.touch()
         return p
 
     def set_player_ready(self, client_id, is_ready=True):
         self.require_player_editable(client_id)
         p = self.players.get(client_id)
-        if p is None or p.is_spectator or p.metrics is None or not p.connected:
-            raise ValueError('A connected racer with a valid pipeline is required')
+        if p is None or p.metrics is None or not p.connected:
+            raise ValueError('A connected participant with a valid pipeline is required')
+        if is_ready and not p.is_ready:
+            p.ready_at = time.monotonic()
         p.is_ready = is_ready
+        p.is_spectator = False
+        if is_ready:
+            if not self.admission_open or len(self._ready_grid()) > self.max_active_racers:
+                p.is_spectator = True
+            else:
+                p.car_index = self._allocate_car_index(p.client_id)
+                p.avatar_color = CAR_COLORS[p.car_index]
+        self._promote_spectators()
+        self.ensure_grid_window()
         self.touch()
-        active = [x for x in self.players.values() if not x.is_spectator]
-        if any(not x.is_bot for x in active) and all(x.connected and x.is_ready and x.metrics
-                and (self.phase != GamePhase.RESULTS or x.is_bot or x.preparing_next) for x in active):
-            self.start_countdown()
-            return True
-        return False
+        return bool(self.grid_close_timestamp_ms)
 
     def add_bot(self, nickname=None, extractor=None, selector=None, model=None):
         if not self.admission_open:
             self.require_editable()
-        if sum(not p.is_spectator for p in self.players.values()) >= self.max_active_racers:
+        if len(self._ready_grid()) >= self.max_active_racers:
             return None
         configs = self.engine.get_all_configs(self.current_track_id)
         if any(x is not None for x in (extractor, selector, model)):
@@ -235,6 +266,8 @@ class BoothRoomManager:
         name = nickname or 'Benchmark bot'
         p = self.add_player(f'bot_{self.bot_counter}', name)
         p.metrics, p.is_bot, p.is_ready = c, True, True
+        p.car_index = self._allocate_car_index(p.client_id)
+        p.avatar_color = CAR_COLORS[p.car_index]
         p.pipeline = {k: getattr(c, k) for k in ('extractor', 'selector', 'model')}
         return p
 
@@ -242,8 +275,10 @@ class BoothRoomManager:
         self.require_editable()
         if self.engine.get_track(track_id) is None:
             return False
+        self.grid_close_timestamp_ms = 0
         self.current_track_id = track_id
         for p in self.players.values():
+            p.reviewing_results, p.last_results, p.is_spectator = False, None, False
             pipeline = p.pipeline if self.engine.get_config(track_id, **p.pipeline) else self._get_default_pipeline()
             p.pipeline, p.metrics, p.is_ready = pipeline.copy(), self.engine.get_config(track_id, **pipeline), p.is_bot
         self.heat, self.race_results_cache, self.race_start_timestamp_ms = None, None, 0
@@ -256,21 +291,28 @@ class BoothRoomManager:
         self.phase, self.phase_start_time_utc = GamePhase.BUILDING, time.time()
         for p in self.players.values():
             p.is_ready = p.is_bot
+        self.ensure_grid_window()
         self.touch()
 
-    def start_countdown(self):
-        if self.phase in (GamePhase.COUNTDOWN, GamePhase.RACING):
+    def start_countdown(self, ready_only=False):
+        if not self.admission_open:
             return False
-        if self.phase != GamePhase.RESULTS:
-            self.require_editable()
-        active = [p for p in self.players.values() if not p.is_spectator]
-        if any(not p.connected or p.metrics is None for p in active):
-            raise ValueError('All occupied slots must be connected with valid pipelines')
-        while len(active) < 2:
-            self.add_bot()
-            active = [p for p in self.players.values() if not p.is_spectator]
-        for player in active:
+        if ready_only:
+            active = self._ready_grid()
+            if not active:
+                self.grid_close_timestamp_ms = 0
+                return False
+        else:
+            active = [p for p in self.players.values() if p.connected and not p.reviewing_results
+                      and not p.is_spectator][:self.max_active_racers]
+        for index, player in enumerate(active):
+            player.car_index = index
+            player.avatar_color = CAR_COLORS[index]
+            player.is_ready = True
             player.preparing_next = False
+        while len(active) < 2:
+            active.append(self.add_bot())
+        self.grid_close_timestamp_ms = 0
         self.phase, self.phase_start_time_utc = GamePhase.COUNTDOWN, time.time()
         self.race_start_timestamp_ms = int((self.phase_start_time_utc + self.countdown_seconds) * 1000)
         entries = tuple(RaceEntry(p.client_id, p.nickname, p.avatar_color, p.car_index, p.is_bot, p.metrics) for p in active)
@@ -320,8 +362,12 @@ class BoothRoomManager:
             'track_id': self.heat.track_id, 'rankings': rows,
             'pareto_frontier': [dict(key=c.key, latency_s=c.total_latency_s, ram_mb=c.extraction_ram_mb, **metrics_dict(c))
                                 for c in self.engine.get_pareto_frontier(self.heat.track_id)], 'recorded_at_utc': time.time()}
-        # The completed heat owns its results. Bots and expired reservations must
-        # not occupy places on the next grid while people review that heat.
+        for entry in entries:
+            player = self.players.get(entry.client_id)
+            if player is not None and not player.is_bot:
+                player.last_results = self.race_results_cache
+                player.reviewing_results = True
+                player.is_ready = player.is_spectator = player.preparing_next = False
         for client_id, player in list(self.players.items()):
             if player.is_bot:
                 del self.players[client_id]
@@ -331,44 +377,51 @@ class BoothRoomManager:
         return self.race_results_cache
 
     def request_race_again(self, client_id: str, heat_id: Optional[str]) -> None:
-        """Allow a connected entrant to reopen only their completed heat."""
+        """Re-enter setup from this participant's own completed race."""
         player = self.players.get(client_id)
-        if (self.phase != GamePhase.RESULTS or self.heat is None
-                or self.heat.heat_id != heat_id):
-            raise ValueError('Race again requires the current completed heat')
-        if (player is None or not player.connected or player.is_bot
-                or not any(entry.client_id == client_id for entry in self.heat.entries)):
-            raise ValueError('Only a connected heat entrant can request another race')
-        if not player.preparing_next:
-            player.preparing_next = True
-            player.is_ready = False
-            self.touch()
+        if (player is None or not player.connected or player.is_bot or player.last_results is None
+                or player.last_results['heat_id'] != heat_id or self.is_current_entrant(client_id)):
+            raise ValueError('Race again requires your completed heat')
+        player.reviewing_results = False
+        player.preparing_next = True
+        player.is_ready = player.is_spectator = False
+        self.touch()
 
     def reset_to_lobby(self):
         self.phase, self.phase_start_time_utc = GamePhase.LOBBY, time.time()
+        self.grid_close_timestamp_ms = 0
         self.race_start_timestamp_ms, self.heat, self.race_results_cache = 0, None, None
         for cid, p in list(self.players.items()):
             if p.is_bot:
                 del self.players[cid]
             else:
                 p.is_ready, p.awards, p.preparing_next = False, [], False
+                p.reviewing_results, p.last_results, p.is_spectator = False, None, False
         self.expire_disconnected()
         self._promote_spectators()
         self.touch()
 
-    def get_state_snapshot(self):
+    def get_state_snapshot(self, client_id=None):
         from dataclasses import asdict
         track = asdict(self.engine.get_track(self.current_track_id))
         track['options'] = self.engine.get_valid_options(self.current_track_id)
         active = ([p.to_dict() for p in self.heat.entries] if self.heat and self.phase in (GamePhase.COUNTDOWN, GamePhase.RACING)
-                  else [p.to_dict() for p in self.players.values() if not p.is_spectator])
+                  else [p.to_dict() for p in self.players.values() if p.connected and not p.is_spectator and not p.reviewing_results])
         if self.heat and self.phase in (GamePhase.COUNTDOWN, GamePhase.RACING):
             for row, schedule in zip(active, self.heat.schedules):
                 row['race_schedule'] = schedule.to_dict()
-        return dict(race_rules_version=self.heat.race_rules_version if self.heat else RACE_RULES_VERSION,
+        participant = self.players.get(client_id)
+        personal = participant.to_dict() if participant else None
+        if personal is not None:
+            personal['view'] = ('results' if participant.reviewing_results else 'race' if self.is_current_entrant(client_id)
+                                else 'waiting' if participant.is_spectator else 'configuration')
+        return dict(participant=personal, personal_results=participant.last_results if participant else None,
+                    grid_close_timestamp_ms=self.grid_close_timestamp_ms, grid_window_seconds=self.grid_window_seconds,
+                    participants=[p.to_dict() for p in self.players.values() if p.connected and not p.reviewing_results and not self.is_current_entrant(p.client_id)],
+                    race_rules_version=self.heat.race_rules_version if self.heat else RACE_RULES_VERSION,
                     protocol_version=PROTOCOL_VERSION, revision=self.revision, heat_id=self.heat.heat_id if self.heat else None,
                     build_id=self.engine.build_id, scoring_version=SCORING_VERSION, phase=self.phase.value, track=track,
-                    active_racers=active, spectators=[p.to_dict() for p in self.players.values() if p.is_spectator],
+                    active_racers=active, spectators=[p.to_dict() for p in sorted(self.players.values(), key=lambda p: p.ready_at) if p.is_spectator],
                     max_active_racers=self.max_active_racers, race_duration_seconds=self.heat.duration_seconds if self.heat else self.race_duration_seconds,
                     countdown_seconds=self.countdown_seconds, phase_start_time_utc=self.phase_start_time_utc,
                     race_start_timestamp_ms=self.race_start_timestamp_ms, server_time_utc=time.time(), results=self.race_results_cache)
