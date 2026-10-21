@@ -321,7 +321,7 @@ export class RaceCanvasRenderer {
                     cell.className = className;
                     row.appendChild(cell);
                 }
-                row.children[1].textContent = car.client_id === this.viewerClientId ? "You" : this.showNames ? car.nickname : car.is_bot ? "Benchmark" : `Racer ${car.car_index + 1}`;
+                row.children[1].textContent = car.client_id === this.viewerClientId ? "You" : car.nickname || (car.is_bot ? "Benchmark" : "Racer");
                 row.classList.toggle("is-you", !!this.viewerClientId && car.client_id === this.viewerClientId);
                 row.style.setProperty("--racer-color", car.avatar_color || "#5C9FA0");
                 this.leaderboardRows.set(car, row);

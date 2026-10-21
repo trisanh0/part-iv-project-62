@@ -15,7 +15,6 @@ export class PresenterApp {
         this.renderer = new RaceCanvasRenderer($('control-canvas'), $('control-leaderboard'), data => {
             $('control-timing').textContent = `${data.elapsed.toFixed(1)} s`;
         });
-        this.renderer.showNames = true;
         this.listen(); this.syncAccess(); this.connect();
         this.clockTimer = setInterval(() => this.updateClock(), 100);
         fetch('/api/tracks', {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject()).then(data => {

@@ -5,6 +5,30 @@ const score = p => p.metrics?.score ?? p.score;
 const valid = p => Number.isFinite(latency(p)) && latency(p) > 0 && Number.isFinite(score(p));
 const buildName = p => ['extractor', 'selector', 'model'].map(k => algorithmName(p.pipeline?.[k] ?? p[k])).join(' · ');
 
+/** Decade gridlines with logarithmically spaced minor divisions and sparse labels. */
+export function logarithmicTicks(logMin, logMax, pixelWidth) {
+    const span = logMax - logMin;
+    if (!Number.isFinite(span) || span <= 0 || pixelWidth <= 0) return [];
+    const ticks = [];
+    for (let exponent = Math.floor(logMin); exponent <= Math.ceil(logMax); exponent++) {
+        for (let multiplier = 1; multiplier <= (span <= 4 ? 9 : 1); multiplier++) {
+            const value = multiplier * 10 ** exponent;
+            const position = (Math.log10(value) - logMin) / span;
+            if (position < -1e-10 || position > 1 + 1e-10) continue;
+            ticks.push({value, position, major: multiplier === 1, label: false,
+                priority: multiplier === 1 ? 0 : [2, 5].includes(multiplier) ? 1 : 2});
+        }
+    }
+    const labelled = [];
+    for (const tick of [...ticks].sort((a, b) => a.priority - b.priority || a.value - b.value)) {
+        if (tick.priority === 2 && span >= 1) continue;
+        if (labelled.every(other => Math.abs(tick.position - other.position) * pixelWidth >= 54)) {
+            tick.label = true; labelled.push(tick);
+        }
+    }
+    return ticks;
+}
+
 /** Measured speed/quality comparison. Memory stays outside this two-axis frontier. */
 export class ParetoCanvasChart {
     constructor(canvas, tooltipEl = null, inspector = null) {
@@ -138,8 +162,10 @@ export class ParetoCanvasChart {
         const ctx = this.ctx, w = this.displayWidth, h = this.displayHeight, p = this.padding;
         ctx.clearRect(0, 0, w, h);
         const b = this._getBounds(), plotW = w - p.left - p.right, plotH = h - p.top - p.bottom;
+        ctx.fillStyle = '#F0ECF6';
+        ctx.fillRect(p.left, p.top, plotW, plotH);
         ctx.font = '10px system-ui, sans-serif';
-        ctx.fillStyle = '#776D82'; ctx.strokeStyle = '#E5DFEB'; ctx.lineWidth = 1;
+        ctx.fillStyle = '#71617E'; ctx.strokeStyle = '#DCD3E5'; ctx.lineWidth = 1;
         ctx.textAlign = 'right';
         for (let i = 0; i <= 4; i++) {
             const quality = this.taskType === 'forecasting' ? i / 4 : 1 - i / 4;
@@ -150,12 +176,22 @@ export class ParetoCanvasChart {
             ctx.fillText(label, p.left - 8, y + 3);
         }
         ctx.textAlign = 'center';
-        // Even log intervals stay legible when a challenge spans less than a decade.
-        for (let i = 0; i <= 2; i++) {
-            const x = p.left + i / 2 * plotW;
-            const value = 10 ** (b.logMinLat + i / 2 * (b.logMaxLat - b.logMinLat));
-            ctx.fillText(`${Number(value.toPrecision(2))} s`, x, h - p.bottom + 19);
+        for (const tick of logarithmicTicks(b.logMinLat, b.logMaxLat, plotW)) {
+            const x = p.left + tick.position * plotW;
+            ctx.beginPath(); ctx.moveTo(x, p.top); ctx.lineTo(x, h - p.bottom);
+            ctx.strokeStyle = tick.major ? '#CCBEDB' : '#E2DAEB';
+            ctx.lineWidth = tick.major ? 1 : .65; ctx.stroke();
+            if (tick.label) {
+                ctx.beginPath(); ctx.moveTo(x, h - p.bottom); ctx.lineTo(x, h - p.bottom + 4);
+                ctx.strokeStyle = '#927BA6'; ctx.lineWidth = 1; ctx.stroke();
+                const label = `${Number(tick.value.toPrecision(2))} s`;
+                const halfLabel = ctx.measureText(label).width / 2;
+                const labelX = Math.max(halfLabel + 2, Math.min(w - halfLabel - 2, x));
+                ctx.fillText(label, labelX, h - p.bottom + 19);
+            }
         }
+        ctx.beginPath(); ctx.moveTo(p.left, p.top); ctx.lineTo(p.left, h - p.bottom); ctx.lineTo(w - p.right, h - p.bottom);
+        ctx.strokeStyle = '#927BA6'; ctx.lineWidth = 1.2; ctx.stroke();
         ctx.fillStyle = '#564760';
         ctx.fillText('Compute time · logarithmic scale', p.left + plotW / 2, h - 9);
         ctx.textAlign = 'left';
@@ -166,14 +202,14 @@ export class ParetoCanvasChart {
             ctx.beginPath(); ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
             ctx.fillStyle = colour; ctx.fill();
         };
-        this.allPoints.forEach(point => dot(point, 2.5, '#C2B8CB'));
+        this.allPoints.forEach(point => dot(point, 2.75, '#AD9DBB'));
         ctx.beginPath();
         this.paretoPoints.forEach((point, i) => {
             const pos = this._toScreenCoords(point.latency_s, point.score);
             if (i) ctx.lineTo(pos.x, pos.y); else ctx.moveTo(pos.x, pos.y);
         });
-        ctx.strokeStyle = '#4E2277'; ctx.lineWidth = 1.5; ctx.stroke();
-        this.paretoPoints.forEach(point => dot(point, 3, '#4E2277'));
+        ctx.strokeStyle = '#4E2277'; ctx.lineWidth = 2; ctx.stroke();
+        this.paretoPoints.forEach(point => dot(point, 3.5, '#4E2277'));
         // Segmented rings keep coincident participants visible at their true measurements.
         const groups = new Map();
         for (const point of this.racerPoints) {

@@ -132,13 +132,15 @@ body[data-view="landing"] .connection-status, body[data-view="joining"] .connect
 .ready-dock .dock-measurements { color: var(--ink); font-size: .8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .ready-dock p { font-size: .75rem; margin-bottom: 9px; color: var(--muted); }
 body[data-view="configuration"] .site-footer { padding-top: 8px; }
-.race-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
-.race-heading h1 { margin-top: 6px; font-size: 1.65rem; font-weight: 500; }
+body[data-view="race"] main { padding-top: 16px; }
+body[data-view="race"] .app-header { min-height: 56px; padding-top: 4px; padding-bottom: 4px; }
+.race-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+.race-heading h1 { margin-top: 4px; font-size: 1.45rem; font-weight: 500; }
 .race-heading .eyebrow { color: var(--purple); }
 .race-phase { font-size: .75rem; color: var(--purple); }
-.race-identity { display: flex; align-items: center; gap: 9px; color: var(--purple); padding: 12px 0; font-size: .78rem; font-weight: 500; overflow-wrap: anywhere; }
+.race-identity { display: flex; align-items: center; gap: 9px; color: var(--purple); padding: 6px 0; font-size: .78rem; font-weight: 500; overflow-wrap: anywhere; }
 .race-identity::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--racer-color, var(--purple)); flex-shrink: 0; }
-.timing-strip { display: grid; grid-template-columns: 1.2fr 1fr .7fr; gap: 16px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0; padding: 12px 0; }
+.timing-strip { display: grid; grid-template-columns: 1.2fr 1fr .7fr; gap: 16px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0; padding: 8px 0; }
 .timing-strip dt { font-size: .65rem; color: var(--muted); }
 .timing-strip dd { margin: 4px 0 0; font: 400 1rem ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); font-variant-numeric: tabular-nums; }
 .race-canvas-wrapper { position: relative; aspect-ratio: 5 / 7; width: 100%; overflow: hidden; background: var(--paper); }
@@ -163,7 +165,9 @@ canvas { display: block; width: 100%; height: 100%; }
 }
 .name-entry { padding-bottom: max(320px, 45svh); }
 #input-nickname { scroll-margin-block: 24px; }
-.live-telemetry { padding: 20px 0 0; margin-top: 20px; border-top: 1px solid var(--line); }
+.live-telemetry { padding: 10px 0 0; margin: 0; }
+.live-telemetry .live-leaderboard { margin: 6px 0 8px; }
+.live-telemetry .live-racer { min-height: 32px; padding: 5px 4px; font-size: .8rem; }
 .live-leaderboard { list-style: none; padding: 0; margin: 12px 0; }
 .live-racer { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 46px; padding: 8px 4px; border-bottom: 1px solid var(--line); font-size: .85rem; }
 .live-position { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -212,7 +216,7 @@ canvas { display: block; width: 100%; height: 100%; }
 
 .chart-legend { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 16px; font-size: .65rem; color: var(--muted); }
 .chart-legend > span { display: flex; align-items: center; gap: 6px; }
-.legend-point { width: 5px; height: 5px; border-radius: 50%; background: #C7BFCE; }
+.legend-point { width: 5px; height: 5px; border-radius: 50%; background: #AD9DBB; }
 .legend-line { width: 16px; height: 2px; background: var(--purple); }
 .legend-racer { width: 8px; height: 8px; border: 1px solid var(--purple); border-radius: 50%; }
 .chart-selection-title { font-weight: 650; margin-bottom: 10px; overflow-wrap: anywhere; }
@@ -255,3 +259,10 @@ details[data-expanded="false"] > summary > span[aria-hidden] { transform: none; 
 @media (max-width: 360px) { .color-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 @media (min-width: 520px) { .vehicle-choices { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.race-equations { margin: 18px 0 12px; }
+.race-equations > div { padding: 14px 0; border-top: 1px solid var(--line); }
+.race-equations dt { margin-bottom: 6px; color: var(--muted); font-size: .72rem; font-weight: 600; }
+.race-equations dd { margin: 0; color: var(--purple); font-family: "Cambria Math", Cambria, Georgia, serif; font-size: 1.25rem; line-height: 1.5; font-variant-numeric: lining-nums tabular-nums; }
+.equation-key { margin: 0 0 18px; color: var(--muted); font-size: .75rem; line-height: 1.8; }
+.equation-key var { color: var(--purple); font-family: "Cambria Math", Cambria, Georgia, serif; font-size: 1rem; }

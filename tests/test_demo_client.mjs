@@ -228,6 +228,8 @@ test('live timing reports bounded elapsed time and shared positions for tied fin
         r.onTelemetry = value => { telemetry = value; };
         r.renderFrame(0);
         assert.equal(telemetry.position, null);
+        assert.equal(r.leaderboardRows.get(r.racers[0]).children[1].textContent, 'Driver 0');
+        assert.equal(r.leaderboardRows.get(r.racers[1]).children[1].textContent, 'You');
         r.renderFrame(14);
         assert.deepEqual(telemetry, {elapsed: 14, position: 1, lap: 2, finish: {position: 1, tied: true, timeMs: 14000}});
         r.renderFrame(100);
@@ -633,4 +635,19 @@ test('restoring defaults replaces an unapplied challenge selection even when opt
         app.renderTrackOptions();
         assert.equal(select.value, 'gas-sensor-drift-sub');
     } finally { globalThis.document = originalDocument; }
+});
+
+test('logarithmic chart ticks mark decades and non-uniform minor divisions without crowding labels', async () => {
+    const {logarithmicTicks} = await import('../demo/static/js/pareto_chart.js');
+    const ticks = logarithmicTicks(-2, 2, 240);
+    assert.deepEqual(ticks.filter(t => t.major).map(t => t.value), [.01, .1, 1, 10, 100]);
+    assert.ok(Math.abs(ticks.find(t => t.value === .1).position - ticks.find(t => t.value === .01).position - .25) < 1e-10);
+    const minor = ticks.filter(t => t.value >= 1 && t.value <= 3);
+    assert.ok(minor[1].position - minor[0].position > minor[2].position - minor[1].position);
+    const labels = ticks.filter(t => t.label);
+    for (let i = 1; i < labels.length; i++) assert.ok((labels[i].position - labels[i - 1].position) * 240 >= 54);
+    const narrow = logarithmicTicks(Math.log10(3), Math.log10(6), 200);
+    assert.ok(narrow.some(t => t.label));
+    assert.ok(narrow.every(t => t.value >= 3 && t.value <= 6));
+    assert.ok(logarithmicTicks(-6, 2, 200).every(t => t.major));
 });
