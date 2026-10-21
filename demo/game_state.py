@@ -14,7 +14,7 @@ from demo.scoring import SCORING_VERSION, composite_score, performance_order, pe
 PROTOCOL_VERSION = 2
 ALL_READY_COUNTDOWN_SECONDS = 3.0
 DEFAULT_SETTINGS = dict(track_id='gas-sensor-drift-sub', race_duration_seconds=27.0,
-                        grid_window_seconds=20.0, countdown_seconds=7.0, laps=2)
+                        grid_window_seconds=20.0, countdown_seconds=7.0, laps=3)
 VEHICLE_TYPES = ('formula', 'hatchback', 'motorbike', 'camper')
 CAR_COLORS = ['#C66E7A', '#5C9FA0', '#99AD87', '#D0AF68', '#9E83B4', '#C58B64']
 
@@ -90,14 +90,14 @@ class Heat:
     race_start_timestamp_ms: int
     schedules: tuple[RaceSchedule, ...]
     countdown_seconds: float = 7.0
-    laps: int = 2
+    laps: int = 3
     race_rules_version: str = RACE_RULES_VERSION
     scoring_version: str = SCORING_VERSION
 
 
 class BoothRoomManager:
     def __init__(self, query_engine: DemoQueryEngine, initial_track_id='gas-sensor-drift-sub', max_active_racers=4,
-                 race_duration_seconds=27.0, countdown_seconds=7.0, admin_pin='', grid_window_seconds=20.0, laps=2):
+                 race_duration_seconds=27.0, countdown_seconds=7.0, admin_pin='', grid_window_seconds=20.0, laps=3):
         if not query_engine.get_track(initial_track_id):
             raise ValueError('Default track is not in the eligible catalogue')
         if not 2 <= max_active_racers <= len(CAR_COLORS):

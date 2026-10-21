@@ -254,7 +254,7 @@ export class RaceCanvasRenderer {
         }
         drawVehicle(ctx, car.vehicle || 'formula', color, length);
         ctx.restore();
-        if (mine) this.driverLabels.push({x, y, mine, name: "YOU"});
+        if (mine) this.driverLabels.push({x, y, mine, name: "You"});
     }
 
     _drawLabels(ctx, width, height) {
@@ -262,7 +262,7 @@ export class RaceCanvasRenderer {
         for (const label of this.driverLabels.sort((a, b) => Number(b.mine) - Number(a.mine))) {
             ctx.save(); ctx.font = `${label.mine ? 600 : 400} 12px system-ui`;
             const name = label.name.length > 14 ? label.name.slice(0, 13) + "…" : label.name;
-            const text = label.mine ? "YOU" : name;
+            const text = label.mine ? "You" : name;
             const w = ctx.measureText(text).width, h = 18;
             let box;
             for (const [dx, dy] of [[12, -9], [-w - 12, -9], [12, 12], [-w - 12, 12], [12, -30], [-w - 12, -30], [12, 33], [-w - 12, 33]]) {

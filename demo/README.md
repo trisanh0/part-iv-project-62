@@ -153,6 +153,21 @@ People includes building, ready, queued, racing, result-reviewing and offline pa
 Authenticated `POST /api/admin/state` provides the complete roster without resume tokens; the tablet polls once per second while unlocked. The public WebSocket drives the circuit and Display mode, which never occupies a racer place. Credentials remain in memory and are sent only to existing same-origin password-protected presenter routes. Participant appearance uses `set_appearance`; presenter commands add `set_grid_window` and `remove_participant`. Older clients default to the Formula car and automatic colour assignment.
 
 
-Presenter Settings also provide **Lap count** (2–6, default 2) and **Starting lights** (normal sequence 3–15 seconds, default 7). Lap count is frozen with each heat and sent to every renderer. The first-lap pit timestamps scale with lap count; measured driving/pit costs and final finish times stay the same. Everyone-ready starts still use their fixed three-second sequence. `DEMO_LAPS` sets the startup lap count.
+Presenter Settings also provide **Lap count** (2–6, default 3) and **Starting lights** (normal sequence 3–15 seconds, default 7). Lap count is frozen with each heat and sent to every renderer. The pit stop moves to the end of the penultimate lap; measured driving/pit costs and final finish times stay the same. Everyone-ready starts still use their fixed three-second sequence. `DEMO_LAPS` sets the startup lap count.
 
-**Restore default settings** restores gas sensors, two laps, a 27-second race, a 20-second entry window and seven-second normal lights. These are the display-day defaults, independent of environment overrides. It preserves registered participants; changing the challenge validates their builds again. Applying during an active heat requires confirmation and ends that heat. Each successful setting change displays a specific confirmation from server-confirmed state; the confirmation stays visible while scrolling Settings. Runtime changes remain in memory until restart.
+**Restore default settings** restores gas sensors, three laps, a 27-second race, a 20-second entry window and seven-second normal lights. These are the display-day defaults, independent of environment overrides. It preserves registered participants; changing the challenge validates their builds again. Applying during an active heat requires confirmation and ends that heat. Each successful setting change displays a specific confirmation from server-confirmed state; the confirmation stays visible while scrolling Settings. Runtime changes remain in memory until restart.
+
+
+## Reviewing participant joins
+
+Every successful name registration writes one JSON object per line to `demo/logs/joins.jsonl`. Records contain a UTC timestamp, participant ID and name, current challenge and room phase, browser User-Agent, browser/platform/mobile client hints when provided, and the connection address reported by the ASGI server. User-Agent strings are browser-reported: exact device models are often unavailable, and absent hints are recorded as null. The connection address may be a proxy address, depending on the deployment's trusted-proxy configuration; arbitrary forwarded headers are not treated as verified client IPs.
+
+Rejected joins, duplicate join commands, reconnects and benchmark bots do not create extra registration records. Leaving and deliberately joining again creates another record. Passwords, resume tokens, cookies and full request headers are excluded. Files rotate at 5 MiB with five backups (`joins.jsonl.1` through `.5`), keeping up to about 30 MiB. Startup checks that the log can be opened; later write failures are reported as `join_audit_write_failed` without interrupting racing.
+
+Compose stores these files in the `demo-join-logs` named volume, preserving them across container restarts and rebuilds. To copy all current and rotated logs for review:
+
+```bash
+docker cp tempo-grand-prix:/app/demo/logs ./tempo-join-logs
+```
+
+For a local deployment, set `DEMO_JOIN_LOG` to override the file location. Local participant records are ignored by Git and excluded from Docker build context. They are not exposed through the website or public API. Removing the Docker volume (for example, `docker compose down -v`) deletes its retained records.

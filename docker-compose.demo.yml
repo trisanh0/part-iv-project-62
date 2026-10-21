@@ -14,8 +14,11 @@ services:
       - DEMO_MAX_ACTIVE_RACERS=6
       - DEMO_RACE_DURATION_SECONDS=27.0
       - DEMO_COUNTDOWN_SECONDS=7.0
-      - DEMO_LAPS=${DEMO_LAPS:-2}
+      - DEMO_LAPS=${DEMO_LAPS:-3}
       - DEMO_GRID_WINDOW_SECONDS=${DEMO_GRID_WINDOW_SECONDS:-20}
+      - DEMO_JOIN_LOG=/app/demo/logs/joins.jsonl
+    volumes:
+      - demo-join-logs:/app/demo/logs
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/state')"]
       interval: 30s
@@ -34,3 +37,6 @@ services:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
     depends_on:
       - tempo-demo
+
+volumes:
+  demo-join-logs:

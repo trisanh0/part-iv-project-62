@@ -1,0 +1,2 @@
+# Never copy local participant records into a deployment image.
+demo/logs/

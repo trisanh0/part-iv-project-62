@@ -23,7 +23,7 @@ class RaceSchedule:
         return asdict(self)
 
 
-def build_schedules(entries: tuple, duration_seconds: float, laps: int = 2) -> tuple[RaceSchedule, ...]:
+def build_schedules(entries: tuple, duration_seconds: float, laps: int = 3) -> tuple[RaceSchedule, ...]:
     """Compress costs equally; integer millisecond ties are shared race finishes."""
     if type(laps) is not int or not 2 <= laps <= 6:
         raise ValueError('Lap count must be between 2 and 6')
@@ -42,9 +42,10 @@ def build_schedules(entries: tuple, duration_seconds: float, laps: int = 2) -> t
         pit_ms = round(pit * scale)
         driving_ms = finish_ms - pit_ms
         box = entry.car_index
-        stop_ms = round(driving_ms * (0.96 + box * 0.016) / laps)
+        pit_lap_offset = laps - 2  # Enter near the end of the penultimate lap.
+        stop_ms = round(driving_ms * (pit_lap_offset + 0.96 + box * 0.016) / laps)
         schedules.append(RaceSchedule(
-            driving_ms, pit_ms, round(driving_ms * 0.88 / laps), stop_ms,
-            stop_ms + pit_ms, round(driving_ms * 1.12 / laps) + pit_ms,
+            driving_ms, pit_ms, round(driving_ms * (pit_lap_offset + 0.88) / laps), stop_ms,
+            stop_ms + pit_ms, round(driving_ms * (pit_lap_offset + 1.12) / laps) + pit_ms,
             finish_ms, accuracy, box))
     return tuple(schedules)

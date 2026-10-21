@@ -85,3 +85,6 @@ build/
 dist/
 *.egg-info/
 .eggs/
+
+# Local booth participant records
+demo/logs/

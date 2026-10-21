@@ -253,10 +253,6 @@ export class DemoClientApp {
         header.textContent = this.myPlayer?.nickname || (this.watching ? 'Watching' : '');
         header.style.setProperty('--racer-color', this.myPlayer?.is_spectator ? '#4E2277' : this.myPlayer?.avatar_color || '#4E2277');
         this.raceRenderer.viewerClientId = this.clientId;
-        const identity = byId('race-identity');
-        const entrant = this.state?.active_racers.find(p => p.client_id === this.clientId) || (this.view === 'race' ? this.myPlayer : null);
-        identity.textContent = entrant ? `YOU · ${entrant.nickname}` : 'Watching the race';
-        identity.style.setProperty('--racer-color', entrant?.avatar_color || '#b9a4cf');
     }
     _onJoin() {
         if (this.pending) return;

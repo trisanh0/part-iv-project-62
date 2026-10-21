@@ -7,8 +7,9 @@ import demo.server as server
 from demo.server import app, room_manager
 
 @pytest.fixture(autouse=True)
-def reset(monkeypatch):
+def reset(monkeypatch, tmp_path):
     monkeypatch.setenv('DEMO_ADMIN_PIN', 'test-presenter')
+    monkeypatch.setenv('DEMO_JOIN_LOG', str(tmp_path / 'joins.jsonl'))
     monkeypatch.setattr(server, 'ALL_READY_COUNTDOWN_SECONDS', .01)
     room_manager.players.clear()
     room_manager.reset_to_lobby()
@@ -568,3 +569,69 @@ def test_camper_choice_is_confirmed_and_frozen_with_muted_livery():
                     break
             entry = next(row for row in state['active_racers'] if row['client_id'] == identity['client_id'])
             assert entry['vehicle'] == 'camper' and entry['avatar_color'] == CAR_COLORS[5]
+
+
+def test_successful_join_logs_device_once_without_credentials(tmp_path):
+    import json
+    headers = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)',
+               'sec-ch-ua-platform': '"iOS"', 'sec-ch-ua-mobile': '?1',
+               'sec-ch-ua': '"Example Browser";v="1"',
+               'cookie': 'private-cookie-value', 'authorization': 'Bearer private-auth-value',
+               'x-forwarded-for': 'spoofed-address'}
+    path = tmp_path / 'joins.jsonl'
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game', headers=headers) as ws:
+            identity = hello(ws)
+            assert path.read_text() == ''
+            ws.send_json({'action': 'join', 'nickname': '   '})
+            receive(ws, 'ERROR')
+            assert path.read_text() == ''
+            ws.send_json({'action': 'join', 'nickname': 'Alex\nTablet'})
+            receive(ws, 'STATE_UPDATE')
+            ws.send_json({'action': 'join', 'nickname': 'Duplicate'})
+            receive(ws, 'STATE_UPDATE')
+        with client.websocket_connect('/ws/game', headers=headers) as resumed:
+            assert hello(resumed, identity['resume_token'])['client_id'] == identity['client_id']
+        assert admin(client, 'add_bot').status_code == 200
+    lines = path.read_text().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record['event'] == 'participant_joined'
+    assert record['nickname'] == 'Alex\nTablet'
+    assert record['client_id'] == identity['client_id']
+    assert record['timestamp_utc'].endswith('Z')
+    assert record['track_id'] == 'beed'
+    assert record['user_agent'] == headers['user-agent']
+    assert record['platform'] == '"iOS"' and record['mobile'] is True
+    assert record['browser_brands'] == headers['sec-ch-ua']
+    assert record['connection_address'] != 'spoofed-address'
+    raw = path.read_text()
+    assert all(secret not in raw for secret in [identity['resume_token'], 'test-presenter', 'private-cookie-value', 'private-auth-value', 'spoofed-address'])
+    assert client.get('/static/logs/joins.jsonl').status_code == 404
+
+
+def test_join_logs_append_across_server_restarts(tmp_path):
+    import json
+    for name in ['First visitor', 'Second visitor']:
+        with TestClient(app) as client:
+            with client.websocket_connect('/ws/game') as ws:
+                hello(ws)
+                ws.send_json({'action': 'join', 'nickname': name})
+                receive(ws, 'STATE_UPDATE')
+    records = [json.loads(line) for line in (tmp_path / 'joins.jsonl').read_text().splitlines()]
+    assert [record['nickname'] for record in records] == ['First visitor', 'Second visitor']
+    assert records[0]['client_id'] != records[1]['client_id']
+    assert records[0]['platform'] is None and records[0]['mobile'] is None
+
+
+def test_join_log_write_failure_does_not_reject_participation(monkeypatch, caplog):
+    with TestClient(app) as client:
+        def disk_full(*args):
+            raise OSError('disk full')
+        monkeypatch.setattr(app.state.join_log.handler.stream, 'write', disk_full)
+        with client.websocket_connect('/ws/game') as ws:
+            hello(ws)
+            ws.send_json({'action': 'join', 'nickname': 'Alex'})
+            state = receive(ws, 'STATE_UPDATE')['data']
+            assert state['participant']['nickname'] == 'Alex'
+            assert 'join_audit_write_failed' in caplog.text

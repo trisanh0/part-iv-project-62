@@ -597,9 +597,13 @@ test('configured lap counts retain smooth pit playback, exact finish and coastin
     for (const laps of [2, 3, 6]) {
         const circuit = new TrackCircuit();
         const drive = 20000, pit = 4000;
-        const schedule = {driving_ms: drive, pit_ms: pit, pit_entry_ms: Math.round(drive * .88 / laps),
-            pit_stop_ms: Math.round(drive * .96 / laps), pit_departure_ms: Math.round(drive * .96 / laps) + pit,
-            pit_exit_ms: Math.round(drive * 1.12 / laps) + pit, finish_ms: drive + pit, uses_accuracy: true, pit_box: 0};
+        const schedule = {driving_ms: drive, pit_ms: pit, pit_entry_ms: Math.round(drive * (laps - 2 + .88) / laps),
+            pit_stop_ms: Math.round(drive * (laps - 2 + .96) / laps), pit_departure_ms: Math.round(drive * (laps - 2 + .96) / laps) + pit,
+            pit_exit_ms: Math.round(drive * (laps - 2 + 1.12) / laps) + pit, finish_ms: drive + pit, uses_accuracy: true, pit_box: 0};
+        const entryMotion = scheduledMotion(schedule, schedule.pit_entry_ms, circuit, 0, laps);
+        assert.ok(Math.abs(entryMotion.progress - (laps - 2 + PIT_ENTRY_PROGRESS)) < 1e-8);
+        const exitMotion = scheduledMotion(schedule, schedule.pit_exit_ms, circuit, 0, laps);
+        assert.ok(Math.abs(exitMotion.progress - (laps - 2 + PIT_EXIT_PROGRESS)) < 1e-8);
         let previous = 0;
         for (let time = 0; time <= schedule.finish_ms; time += 10) {
             const motion = scheduledMotion(schedule, time, circuit, 0, laps);

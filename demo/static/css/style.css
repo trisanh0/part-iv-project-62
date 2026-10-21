@@ -138,8 +138,6 @@ body[data-view="race"] .app-header { min-height: 56px; padding-top: 4px; padding
 .race-heading h1 { margin-top: 4px; font-size: 1.45rem; font-weight: 500; }
 .race-heading .eyebrow { color: var(--purple); }
 .race-phase { font-size: .75rem; color: var(--purple); }
-.race-identity { display: flex; align-items: center; gap: 9px; color: var(--purple); padding: 6px 0; font-size: .78rem; font-weight: 500; overflow-wrap: anywhere; }
-.race-identity::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--racer-color, var(--purple)); flex-shrink: 0; }
 .timing-strip { display: grid; grid-template-columns: 1.2fr 1fr .7fr; gap: 16px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0; padding: 8px 0; }
 .timing-strip dt { font-size: .65rem; color: var(--muted); }
 .timing-strip dd { margin: 4px 0 0; font: 400 1rem ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); font-variant-numeric: tabular-nums; }

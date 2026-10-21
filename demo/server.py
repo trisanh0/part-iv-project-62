@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from demo.game_state import BoothRoomManager, GamePhase, PROTOCOL_VERSION, ALL_READY_COUNTDOWN_SECONDS, DEFAULT_SETTINGS
 from demo.query import DemoQueryEngine
+from demo.join_log import JoinLog, device_metadata
 
 logger = logging.getLogger('demo.server')
 STATIC_DIR = Path(__file__).resolve().parent / 'static'
@@ -42,7 +43,7 @@ room_manager = BoothRoomManager(query_engine, initial_track_id=os.getenv('DEMO_D
     race_duration_seconds=float(os.getenv('DEMO_RACE_DURATION_SECONDS', '27')),
     countdown_seconds=float(os.getenv('DEMO_COUNTDOWN_SECONDS', '7')),
     grid_window_seconds=float(os.getenv('DEMO_GRID_WINDOW_SECONDS', '20')),
-    laps=int(os.getenv('DEMO_LAPS', '2')))
+    laps=int(os.getenv('DEMO_LAPS', '3')))
 
 
 class Command(BaseModel):
@@ -89,6 +90,7 @@ class Connection:
     queue: asyncio.Queue = field(default_factory=lambda: asyncio.Queue(maxsize=32))
     writer: Optional[asyncio.Task] = None
     closing: bool = False
+    device_metadata: dict = field(default_factory=dict)
 
 
 sessions: dict[str, Session] = {}
@@ -241,7 +243,11 @@ async def dispatch(command, client_id=None):
     async with command_lock:
         try:
             if action == 'join':
-                room_manager.add_player(client_id, command.nickname or 'Visitor', command.color)
+                already_joined = client_id in room_manager.players
+                player = room_manager.add_player(client_id, command.nickname or 'Visitor', command.color)
+                connection = connections.get(client_id)
+                if not already_joined and connection:
+                    app.state.join_log.record(player, room_manager, connection.device_metadata)
             elif action == 'leave':
                 room_manager.remove_player(client_id)
             elif action == 'set_pipeline':
@@ -363,6 +369,8 @@ async def lifespan(app):
     pin = os.getenv('DEMO_ADMIN_PIN', '')
     if not 4 <= len(pin) <= 128:
         raise RuntimeError('Set DEMO_ADMIN_PIN to a private 4–128 character presenter code')
+    app.state.join_log = JoinLog(os.getenv('DEMO_JOIN_LOG', str(Path(__file__).resolve().parent / 'logs' / 'joins.jsonl')))
+    logger.info('join_audit_ready path=%s', app.state.join_log.path)
     room_manager.admin_pin = pin
     reaper = spawn(expire_sessions())
     logger.info('catalogue_loaded build_id=%s tracks=%s', query_engine.build_id, len(query_engine.list_tracks()))
@@ -382,6 +390,7 @@ async def lifespan(app):
         room_manager.players.clear()
         room_manager.reset_to_lobby()
         room_manager.admin_pin = ''
+        app.state.join_log.close()
 
 
 app = FastAPI(title='TEMPO Display Day Demo', version='2.0.0', lifespan=lifespan)
@@ -480,7 +489,7 @@ async def websocket_game_endpoint(websocket: WebSocket):
             sessions[session.token] = session
         client_id = session.client_id
         old = connections.get(client_id)
-        connection = Connection(websocket)
+        connection = Connection(websocket, device_metadata=device_metadata(websocket))
         connections[client_id] = connection
         if old:
             spawn(close_connection(old, 1000))

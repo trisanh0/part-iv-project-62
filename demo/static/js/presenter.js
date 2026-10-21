@@ -52,7 +52,7 @@ export class PresenterApp {
         $('window-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_grid_window', {grid_window_seconds: Number($('control-window').value)}, 'window-form'); });
         $('laps-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_laps', {laps: Number($('control-laps').value)}, 'laps-form'); });
         $('countdown-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_countdown', {countdown_seconds: Number($('control-countdown').value)}, 'countdown-form'); });
-        $('restore-defaults').addEventListener('click', () => this.confirm('Restore default settings?', `Gas sensors, 2 laps, a 27-second race, a 20-second entry window and 7-second lights.${activeHeat(this.state) ? ' This ends the current heat and returns racers to setup.' : ''}`, () => this.command('reset_settings', {interrupt_heat: activeHeat(this.state)}), 'Restore defaults'));
+        $('restore-defaults').addEventListener('click', () => this.confirm('Restore default settings?', `Gas sensors, 3 laps, a 27-second race, a 20-second entry window and 7-second lights.${activeHeat(this.state) ? ' This ends the current heat and returns racers to setup.' : ''}`, () => this.command('reset_settings', {interrupt_heat: activeHeat(this.state)}), 'Restore defaults'));
         $('start-ready').addEventListener('click', () => this.command('start_race'));
         $('add-bot').addEventListener('click', () => this.command('add_bot'));
         $('reset-room').addEventListener('click', () => this.confirm('Reset the room?', 'This ends the current heat and returns everyone to setup.', () => this.command('reset_lobby'), 'Reset room'));
@@ -309,7 +309,7 @@ export class PresenterApp {
             set_grid_window: `Entry window changed to ${settings.grid_window_seconds} seconds.`,
             set_laps: `Lap count changed to ${settings.laps}.`,
             set_countdown: `Normal starting lights changed to ${settings.countdown_seconds} seconds.`,
-            reset_settings: 'Default settings restored: gas sensors, 2 laps, 27-second race, 20-second entry window and 7-second lights.',
+            reset_settings: 'Default settings restored: gas sensors, 3 laps, 27-second race, 20-second entry window and 7-second lights.',
             remove_participant: 'Participant removed.', add_bot: 'Benchmark car added.',
             reset_lobby: 'Room reset. Everyone is back in setup.', start_race: 'The race is starting.',
         }[action] || 'Settings updated.';

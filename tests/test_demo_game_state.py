@@ -17,6 +17,7 @@ def test_initial_state(room):
     assert state['phase'] == 'LOBBY'
     assert state['race_duration_seconds'] == 27
     assert state['countdown_seconds'] == 7
+    assert state['laps'] == 3
     assert state['protocol_version'] == 2
     assert state['build_id'] == room.engine.build_id
     assert 'phase_start_time_utc' in state
@@ -530,7 +531,7 @@ def test_all_ready_requires_real_people_and_handles_full_grid_queue(room):
 
 
 @pytest.mark.parametrize('laps', [2, 3, 6])
-def test_lap_count_freezes_and_scales_first_lap_pit_without_changing_finish(room, laps):
+def test_lap_count_freezes_and_scales_penultimate_lap_pit_without_changing_finish(room, laps):
     from demo.race import build_schedules
     room.add_player('a', 'Alex')
     room.add_player('b', 'Sam')
@@ -539,11 +540,11 @@ def test_lap_count_freezes_and_scales_first_lap_pit_without_changing_finish(room
     room.start_countdown()
     assert room.heat.laps == laps
     assert room.get_state_snapshot()['laps'] == laps
-    baseline = build_schedules(room.heat.entries, room.race_duration_seconds)
+    baseline = build_schedules(room.heat.entries, room.race_duration_seconds, laps=2)
     for scheduled, original in zip(room.heat.schedules, baseline):
         assert scheduled.finish_ms == original.finish_ms
         assert scheduled.pit_ms == original.pit_ms
-        assert scheduled.pit_entry_ms == round(scheduled.driving_ms * .88 / laps)
+        assert scheduled.pit_entry_ms == round(scheduled.driving_ms * (laps - 2 + .88) / laps)
         assert 0 < scheduled.pit_entry_ms < scheduled.pit_stop_ms <= scheduled.pit_departure_ms < scheduled.pit_exit_ms < scheduled.finish_ms
     room.laps = 2
     assert room.get_state_snapshot()['laps'] == laps  # Playback follows the frozen heat.

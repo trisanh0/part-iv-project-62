@@ -13,6 +13,7 @@ export function scheduledMotion(schedule, elapsedMs, circuit, phase = 0, totalLa
     }
     const entry = schedule.pit_entry_ms, stop = schedule.pit_stop_ms;
     const departure = schedule.pit_departure_ms, exit = schedule.pit_exit_ms;
+    const pitLapOffset = totalLaps - 2;
     const box = .27 + schedule.pit_box * .09;
     if (elapsed >= entry && elapsed < exit) {
         let route;
@@ -24,15 +25,15 @@ export function scheduledMotion(schedule, elapsedMs, circuit, phase = 0, totalLa
             const u = (elapsed - departure) / (exit - departure);
             route = box + (1 - box) * u * u * (2 - u);
         }
-        return {progress: PIT_ENTRY_PROGRESS + route * (PIT_EXIT_PROGRESS - PIT_ENTRY_PROGRESS),
+        return {progress: pitLapOffset + PIT_ENTRY_PROGRESS + route * (PIT_EXIT_PROGRESS - PIT_ENTRY_PROGRESS),
             pitRoute: route, inPit: true, dwelling: elapsed >= stop && elapsed < departure,
             pitRemaining: Math.max(0, departure - Math.max(elapsed, stop)) / 1000};
     }
     const before = elapsed < entry;
     const u = before ? elapsed / entry : (elapsed - exit) / (finish - exit);
     // A small wave between fixed checkpoints cannot move the pit or finish times.
-    const start = before ? 0 : circuit.timeAtProgress(PIT_EXIT_PROGRESS);
-    const end = before ? circuit.timeAtProgress(PIT_ENTRY_PROGRESS) : totalLaps;
+    const start = before ? 0 : pitLapOffset + circuit.timeAtProgress(PIT_EXIT_PROGRESS);
+    const end = before ? pitLapOffset + circuit.timeAtProgress(PIT_ENTRY_PROGRESS) : totalLaps;
     const pitLength = circuit.pitSamples.at(-1).distance;
     const checkpoint = before ? end : start;
     const paceSlope = (circuit.progressAtTime(checkpoint + 1e-5) - circuit.progressAtTime(checkpoint - 1e-5)) / 2e-5;
