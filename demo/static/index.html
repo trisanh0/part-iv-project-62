@@ -51,6 +51,7 @@
             <p id="race-rules" class="race-rules"></p>
             <p class="section-intro">Swap components and compare speed, accuracy and peak RAM.</p>
             <div class="pipeline-strip" aria-label="Your pipeline"><span>Signals</span><span aria-hidden="true">→</span><strong>Extract</strong><span aria-hidden="true">→</span><strong>Select</strong><span aria-hidden="true">→</span><strong>Predict</strong></div>
+            <details class="detail-section car-customisation"><summary>Your car <span id="car-summary"></span><span aria-hidden="true">+</span></summary><div id="vehicle-choices" class="vehicle-choices" role="radiogroup" aria-label="Vehicle"></div><div id="color-choices" class="color-choices" role="radiogroup" aria-label="Car colour"></div><p id="car-color-note" class="help-text" role="status"></p></details>
             <div id="guided-builder" class="guided-builder"></div>
             <p id="custom-build-summary" class="custom-build-summary hidden"></p>
             <div class="measurement-heading"><h2>Your build</h2></div>
@@ -83,18 +84,7 @@
             <div class="results-action"><p>Change one component and race again.</p><button id="btn-next-round" class="button button-primary" type="button">Change your build <span aria-hidden="true">↗</span></button></div>
         </section>
     </main>
-    <footer class="site-footer"><span class="project-credit"><span>Part IV Project 62 · University of Auckland</span><span>Scott Mouat · Trisan Huynh</span></span><button id="btn-open-admin" class="text-button" type="button">Presenter <span aria-hidden="true">↗</span></button></footer>
-    <dialog id="admin-modal" class="presenter-dialog" aria-labelledby="admin-title">
-        <div class="section-heading"><p class="eyebrow">Race control</p><button id="btn-close-admin" class="text-button" type="button" aria-label="Close presenter settings">Close</button></div>
-        <h2 id="admin-title">Presenter settings</h2>
-        <form id="admin-unlock-form"><div class="field"><label for="admin-pin">Admin password</label><input type="password" id="admin-pin" autocomplete="current-password" maxlength="128" required></div><button class="button button-primary" type="submit">Unlock settings <span aria-hidden="true">→</span></button></form>
-        <p id="admin-status" class="help-text" role="status" aria-live="polite"></p>
-        <div id="admin-controls" class="hidden">
-            <div class="field"><label for="admin-track-select">Challenge</label><select id="admin-track-select"></select><label class="checkbox-label"><input id="admin-all-tracks" type="checkbox">Show all tracks</label><p class="help-text">Keep the same challenge for a few rounds. Classification races include accuracy pit stops. Regression and forecasting use compute-only rules.</p><button id="btn-admin-change-track" class="button button-secondary" type="button">Change challenge</button></div>
-            <div class="field"><label for="admin-duration-input">Race duration (seconds)</label><input id="admin-duration-input" type="number" min="5" max="60" value="27"><button id="btn-admin-set-duration" class="button button-secondary" type="button">Set duration</button></div>
-            <div class="admin-actions"><button id="btn-admin-add-bot" class="button button-secondary" type="button">Add baseline bot</button><button id="btn-admin-start-race" class="button button-primary" type="button">Start race</button><button id="btn-admin-watch" class="button button-secondary" type="button">Watch current heat</button><button id="btn-admin-reset" class="button button-secondary" type="button">Reset room for everyone</button><button id="btn-admin-lock" class="text-button" type="button">Lock settings</button></div>
-        </div>
-    </dialog>
+    <footer class="site-footer"><span class="project-credit"><span>Part IV Project 62 · University of Auckland</span><span>Scott Mouat · Trisan Huynh</span></span><a class="text-button" href="/admin">Presenter <span aria-hidden="true">↗</span></a></footer>
     <script type="module" src="/static/js/app.js"></script>
 </body>
 </html>

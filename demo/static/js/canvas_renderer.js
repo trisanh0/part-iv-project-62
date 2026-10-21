@@ -5,6 +5,7 @@
  * measured ML latency to race progress and authoritative finish times.
  */
 
+import {drawVehicle} from './vehicles.js';
 import {scheduledMotion, PIT_ENTRY_PROGRESS, PIT_EXIT_PROGRESS} from './race_motion.js';
 import { TrackCircuit, CIRCUIT_WIDTH, CIRCUIT_HEIGHT, CIRCUIT_PALETTE } from "./track.js";
 
@@ -250,30 +251,7 @@ export class RaceCanvasRenderer {
             ctx.strokeStyle = CIRCUIT_PALETTE.ink; ctx.lineWidth = .9;
             ctx.beginPath(); ctx.ellipse(0, 0, length * .67, width, 0, 0, Math.PI * 2); ctx.stroke();
         }
-        // Four exposed tyres, separated from the narrow central body.
-        ctx.fillStyle = '#17131C';
-        for (const axle of [-.30, .25]) {
-            for (const side of [-1, 1]) ctx.fillRect(axle * length - length * .11,
-                side * width * .44 - width * .16, length * .22, width * .32);
-        }
-        ctx.fillStyle = color; ctx.strokeStyle = '#20182B'; ctx.lineWidth = .5;
-        ctx.beginPath();
-        ctx.moveTo(-length * .4, -width * .20);
-        ctx.lineTo(-length * .15, -width * .30);
-        ctx.lineTo(length * .13, -width * .16);
-        ctx.lineTo(length * .46, -width * .07);
-        ctx.lineTo(length * .46, width * .07);
-        ctx.lineTo(length * .13, width * .16);
-        ctx.lineTo(-length * .15, width * .30);
-        ctx.lineTo(-length * .4, width * .20);
-        ctx.closePath(); ctx.fill(); ctx.stroke();
-        ctx.fillRect(length * .39, -width * .57, length * .08, width * 1.14);
-        ctx.fillRect(-length * .48, -width * .46, length * .10, width * .92);
-        // Cockpit and halo keep the silhouette recognisably single-seater.
-        ctx.fillStyle = '#241A31';
-        ctx.beginPath(); ctx.ellipse(-length * .08, 0, length * .12, width * .18, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#F6F1FA'; ctx.lineWidth = .65;
-        ctx.beginPath(); ctx.ellipse(-length * .06, 0, length * .09, width * .16, 0, -Math.PI / 2, Math.PI / 2); ctx.stroke();
+        drawVehicle(ctx, car.vehicle || 'formula', color, length);
         ctx.restore();
         if (mine) this.driverLabels.push({x, y, mine, name: "YOU"});
     }
@@ -342,7 +320,7 @@ export class RaceCanvasRenderer {
                     cell.className = className;
                     row.appendChild(cell);
                 }
-                row.children[1].textContent = car.client_id === this.viewerClientId ? "You" : car.is_bot ? "Benchmark" : `Racer ${car.car_index + 1}`;
+                row.children[1].textContent = car.client_id === this.viewerClientId ? "You" : this.showNames ? car.nickname : car.is_bot ? "Benchmark" : `Racer ${car.car_index + 1}`;
                 row.classList.toggle("is-you", !!this.viewerClientId && car.client_id === this.viewerClientId);
                 row.style.setProperty("--racer-color", car.avatar_color || "#3B82F6");
                 this.leaderboardRows.set(car, row);

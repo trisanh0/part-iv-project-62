@@ -68,6 +68,7 @@ export function finishPositions(rows) {
 }
 export function participantView(state, clientId, pendingAction = null, watching = false) {
     if (state?.participant?.client_id === clientId) return state.participant.view;
+    if (state && Object.hasOwn(state, 'participant') && !state.participant && !watching) return pendingAction === 'join' ? 'joining' : 'landing';
     const active = state?.active_racers?.find(p => p.client_id === clientId);
     const queued = state?.spectators?.find(p => p.client_id === clientId);
     if (queued) return 'waiting';

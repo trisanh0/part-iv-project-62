@@ -3,6 +3,7 @@ import test from 'node:test';
 
 globalThis.window = {addEventListener() {}};
 const {RaceCanvasRenderer} = await import('../demo/static/js/canvas_renderer.js');
+const {PresenterApp} = await import('../demo/static/js/presenter.js');
 const {DemoClientApp} = await import('../demo/static/js/app.js');
 
 function renderer(latencies, duration = 14) {
@@ -52,31 +53,6 @@ function element() {
         toggle(c, on) { if (on) classes.add(c); else classes.delete(c); },
     }};
 }
-
-test('password verification unlocks controls; rejected settings preserve the unlock', async () => {
-    const app = Object.create(DemoClientApp.prototype);
-    for (const key of ['adminUnlockForm', 'adminControls', 'adminPinInput', 'adminStatus']) app[key] = element();
-    app._fetchTrackList = () => {};
-    app.adminPin = '';
-    app._syncAdminControls();
-    assert.ok(app.adminControls.classList.contains('hidden'));
-    const originalFetch = globalThis.fetch;
-    try {
-        app.adminPinInput.value = 'wrong';
-        globalThis.fetch = async () => ({ok: false, status: 403, json: async () => ({detail: 'Incorrect password'})});
-        await app._unlockAdmin();
-        assert.ok(app.adminControls.classList.contains('hidden'));
-        app.adminPinInput.value = 'correct';
-        globalThis.fetch = async () => ({ok: true, status: 200, json: async () => ({status: 'ok'})});
-        await app._unlockAdmin();
-        assert.equal(app.adminControls.classList.contains('hidden'), false);
-        assert.equal(app.adminPinInput.value, '');
-        globalThis.fetch = async () => ({ok: false, status: 409, json: async () => ({detail: 'Reset first'})});
-        await app._sendAdminAction('change_track', {track_id: 'har'});
-        assert.equal(app.adminPin, 'correct');
-        assert.equal(app.adminStatus.textContent, 'Reset first');
-    } finally { globalThis.fetch = originalFetch; }
-});
 
 test('close cars trade the lead, move forward, and retain exact finish order', () => {
     const r = renderer([10, 10.1, 10000]);
@@ -563,4 +539,54 @@ test('cars coast past the finish, decelerate and retain their exact classified f
     assert.ok(parked > 2 && parked < 2.15);
     r.renderFrame(1000);
     assert.equal(car.visualProgress, parked);
+});
+
+test('explicitly removed participant stays on landing despite their frozen car', () => {
+    const state = {phase: 'RACING', participant: null, active_racers: [{client_id: 'removed'}], spectators: []};
+    assert.equal(participantView(state, 'removed'), 'landing');
+    assert.equal(participantView(state, 'removed', 'join'), 'joining');
+});
+
+test('appearance changes require matching server confirmation', () => {
+    const app = Object.create(DemoClientApp.prototype);
+    app.pending = {action: 'set_appearance', vehicle: 'motorbike', color: '#00E5FF'};
+    app.myPlayer = {vehicle: 'formula', preferred_color: '#00E5FF'};
+    app._confirmPending();
+    assert.ok(app.pending);
+    app.myPlayer.vehicle = 'motorbike';
+    app._confirmPending();
+    assert.equal(app.pending, null);
+});
+
+test('presenter commands preserve unlock on rejected settings and ignore responses after locking', async () => {
+    const previousDocument = globalThis.document;
+    const nodes = new Map();
+    globalThis.document = {getElementById(id) {
+        if (!nodes.has(id)) nodes.set(id, {...element(), dataset: {dirty: 'true'}});
+        return nodes.get(id);
+    }};
+    const app = Object.create(PresenterApp.prototype);
+    Object.assign(app, {pin: 'correct', connected: true, managementConnected: true, busy: false, authGeneration: 0,
+        updateButtons() {}, lock() { this.pin = ''; this.authGeneration++; }});
+    let applied = null;
+    app.applyState = state => { applied = state; };
+    try {
+        app.post = async () => { const error = new Error('Check the setting'); error.status = 409; throw error; };
+        await app.command('set_grid_window', {grid_window_seconds: 0});
+        assert.equal(app.pin, 'correct');
+        assert.equal(nodes.get('control-status').textContent, 'Check the setting');
+        let resolve;
+        app.post = () => new Promise(r => { resolve = r; });
+        const pending = app.command('set_grid_window', {grid_window_seconds: 20});
+        assert.equal(app.busy, true);
+        app.lock();
+        resolve({state: {revision: 1}});
+        await pending;
+        assert.equal(applied, null);
+        assert.equal(app.pin, '');
+        app.pin = 'correct';
+        app.post = async () => { const error = new Error('Unauthorized'); error.status = 403; throw error; };
+        await app.command('set_duration', {duration_seconds: 10});
+        assert.equal(app.pin, '');
+    } finally { globalThis.document = previousDocument; }
 });

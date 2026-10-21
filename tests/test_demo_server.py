@@ -56,6 +56,7 @@ def test_authorization_both_transports(action):
 
 
 def test_presenter_actions():
+    room_manager.grid_window_seconds = 60
     with TestClient(app) as client:
         assert admin(client,'add_bot').status_code==200
         assert admin(client,'change_track',track_id='har').status_code==200
@@ -142,11 +143,14 @@ def test_real_heat_two_clients_reconnect_results():
 
 def test_reset_cancels_task():
     with TestClient(app) as client:
+        assert admin(client,'start_race').status_code==409
+        assert admin(client,'add_bot').status_code==200
         assert admin(client,'start_race').status_code==200
         old_task=server.race_task
         assert admin(client,'reset_lobby').status_code==200
         assert old_task.done()
         assert room_manager.heat is None and room_manager.phase.value=='LOBBY'
+        assert admin(client,'add_bot').status_code==200
         assert admin(client,'start_race').status_code==200
         assert server.race_task is not old_task
     assert not server.background_tasks and not server.connections
@@ -325,6 +329,8 @@ def test_late_arrival_promotes_when_race_finishes_and_results_admit_new_visitors
             waiting_id = hello(waiting)['client_id']
             racer.send_json({'action': 'join', 'nickname': 'Alice'})
             receive(racer, 'STATE_UPDATE')
+            racer.send_json({'action': 'set_ready', 'ready': True})
+            receive(racer, 'STATE_UPDATE')
             assert admin(client, 'start_race').status_code == 200
             waiting.send_json({'action': 'join', 'nickname': 'Late arrival'})
             receive(waiting, 'STATE_UPDATE')
@@ -348,3 +354,92 @@ def test_late_arrival_promotes_when_race_finishes_and_results_admit_new_visitors
                 assert entrant['preparing_next'] and not entrant['is_spectator']
                 newcomer.send_json({'action': 'set_pipeline', **entrant['pipeline']})
                 assert receive(newcomer, 'STATE_UPDATE')['data']['results'] == results
+
+
+def test_presenter_state_is_private_and_dedicated_page_is_versioned():
+    with TestClient(app) as client:
+        assert client.post('/api/admin/state', json={'pin': 'wrong'}).status_code == 403
+        room_manager.add_player('offline', 'Offline')
+        room_manager.disconnect('offline')
+        state = client.post('/api/admin/state', json={'pin': 'test-presenter'}).json()
+        assert state['roster'][0]['status'] == 'Offline'
+        assert 'roster' not in client.get('/api/state').json()
+        assert 'resume_token' not in str(state) and 'test-presenter' not in str(state)
+        html = client.get('/admin').text
+        assert f'/assets/{server.FRONTEND_VERSION}/js/presenter.js' in html
+        assert 'screen-lobby' not in html
+        assert client.get(f'/assets/{server.FRONTEND_VERSION}/js/vehicles.js').status_code == 200
+
+
+def test_grid_setting_shortens_live_deadline_and_wakes_old_timer():
+    room_manager.grid_window_seconds = 60
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as ws:
+            hello(ws)
+            ws.send_json({'action': 'join', 'nickname': 'Alex'})
+            receive(ws, 'STATE_UPDATE')
+            ws.send_json({'action': 'set_ready', 'ready': True})
+            receive(ws, 'STATE_UPDATE')
+            old_task = server.race_task
+            response = admin(client, 'set_grid_window', grid_window_seconds=1.0)
+            assert response.status_code == 200
+            assert old_task.done() and server.race_task is not old_task
+            assert response.json()['state']['settings']['grid_window_seconds'] == 1
+            assert receive(ws, 'RACE_START')['data']['duration_seconds'] == 5
+
+
+def test_immediate_heat_settings_require_explicit_interrupt_and_broadcast():
+    room_manager.grid_window_seconds = 60
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as ws:
+            data = hello(ws)
+            ws.send_json({'action': 'join', 'nickname': 'Alex'})
+            receive(ws, 'STATE_UPDATE')
+            ws.send_json({'action': 'set_ready', 'ready': True})
+            receive(ws, 'STATE_UPDATE')
+            assert admin(client, 'start_race').status_code == 200
+            frozen = room_manager.heat
+            assert admin(client, 'set_duration', duration_seconds=15.0).status_code == 409
+            assert room_manager.heat is frozen
+            response = admin(client, 'set_duration', duration_seconds=15.0, interrupt_heat=True)
+            assert response.status_code == 200
+            state = response.json()['state']
+            assert state['heat_id'] is None and state['settings']['race_duration_seconds'] == 15
+            assert not room_manager.players[data['client_id']].is_ready
+            assert not room_manager.heat
+            assert admin(client, 'change_track', track_id='har').status_code == 200
+            assert room_manager.current_track_id == 'har'
+
+
+def test_removed_phone_gets_notice_new_identity_and_frozen_results():
+    room_manager.grid_window_seconds = 60
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as ws:
+            data = hello(ws)
+            ws.send_json({'action': 'join', 'nickname': 'Alex'})
+            receive(ws, 'STATE_UPDATE')
+            ws.send_json({'action': 'set_appearance', 'vehicle': 'motorbike', 'color': '#00E5FF'})
+            state = receive(ws, 'STATE_UPDATE')['data']
+            assert state['participant']['vehicle'] == 'motorbike'
+            ws.send_json({'action': 'set_ready', 'ready': True})
+            receive(ws, 'STATE_UPDATE')
+            assert admin(client, 'start_race').status_code == 200
+            assert admin(client, 'remove_participant', target_client_id=data['client_id']).status_code == 200
+            assert receive(ws, 'REMOVED')['data']['message']
+            assert data['client_id'] not in room_manager.players
+            with client.websocket_connect('/ws/game') as replacement:
+                restored = hello(replacement, data['resume_token'])
+                assert restored['client_id'] != data['client_id']
+            results = receive(ws, 'RACE_FINISH')['data']
+            assert any(p['client_id'] == data['client_id'] and p['vehicle'] == 'motorbike' for p in results['rankings'])
+            assert data['client_id'] not in room_manager.players
+
+
+def test_presenter_start_never_pulls_unready_builders_into_heat():
+    room_manager.grid_window_seconds = 60
+    with TestClient(app) as client:
+        room_manager.add_player('builder', 'Builder')
+        room_manager.add_player('ready', 'Ready')
+        room_manager.set_player_ready('ready')
+        assert admin(client, 'start_race').status_code == 200
+        assert 'builder' not in {entry.client_id for entry in room_manager.heat.entries}

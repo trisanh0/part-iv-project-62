@@ -352,7 +352,6 @@ export class TrackCircuit {
         }
         ctx.restore();
         ctx.fillStyle = '#77747E'; ctx.font = '15px system-ui'; ctx.textAlign = 'center';
-        ctx.save(); ctx.translate(102, 710); ctx.rotate(-Math.PI/2); ctx.fillText('PIT LANE', 0, 0); ctx.restore();
         ctx.strokeStyle = '#8C8797'; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(178, 733); ctx.lineTo(178, 705); ctx.lineTo(262, 705); ctx.lineTo(262, 733); ctx.stroke();
         ctx.restore();

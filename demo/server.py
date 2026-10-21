@@ -40,13 +40,15 @@ query_engine = DemoQueryEngine()
 room_manager = BoothRoomManager(query_engine, initial_track_id=os.getenv('DEMO_DEFAULT_TRACK', 'gas-sensor-drift-sub'),
     max_active_racers=int(os.getenv('DEMO_MAX_ACTIVE_RACERS', '6')),
     race_duration_seconds=float(os.getenv('DEMO_RACE_DURATION_SECONDS', '27')),
-    countdown_seconds=float(os.getenv('DEMO_COUNTDOWN_SECONDS', '7')))
+    countdown_seconds=float(os.getenv('DEMO_COUNTDOWN_SECONDS', '7')),
+    grid_window_seconds=float(os.getenv('DEMO_GRID_WINDOW_SECONDS', '20')))
 
 
 class Command(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     action: Literal['join', 'leave', 'set_pipeline', 'set_ready', 'ping', 'start_race', 'reset_lobby',
-                    'change_track', 'add_bot', 'set_duration', 'start_building', 'race_again']
+                    'change_track', 'add_bot', 'set_duration', 'start_building', 'race_again',
+                    'set_grid_window', 'remove_participant', 'set_appearance']
     heat_id: Optional[str] = Field(default=None, min_length=1, max_length=64)
     pin: Optional[str] = Field(default=None, max_length=128)
     nickname: Optional[str] = Field(default=None, min_length=1, max_length=20)
@@ -56,6 +58,10 @@ class Command(BaseModel):
     selector: Optional[str] = Field(default=None, min_length=1, max_length=100)
     model: Optional[str] = Field(default=None, min_length=1, max_length=100)
     track_id: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    vehicle: Optional[Literal['formula', 'hatchback', 'motorbike']] = None
+    target_client_id: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    interrupt_heat: bool = False
+    grid_window_seconds: Optional[float] = Field(default=None, ge=1, le=120, allow_inf_nan=False)
     ready: bool = True
     duration_seconds: Optional[float] = Field(default=None, ge=5, le=60, allow_inf_nan=False)
 
@@ -87,7 +93,7 @@ connections: dict[str, Connection] = {}
 race_task = None
 command_lock = asyncio.Lock()
 background_tasks = set()
-PRESENTER_ACTIONS = {'start_race', 'reset_lobby', 'change_track', 'add_bot', 'set_duration', 'start_building'}
+PRESENTER_ACTIONS = {'start_race', 'reset_lobby', 'change_track', 'add_bot', 'set_duration', 'start_building', 'set_grid_window', 'remove_participant'}
 
 
 def spawn(coro):
@@ -199,6 +205,13 @@ def trigger_race_lifecycle():
     race_task = spawn(execute_ready_races())
 
 
+async def restart_grid_timer():
+    if room_manager.admission_open:
+        await cancel_race()
+        if room_manager.grid_close_timestamp_ms:
+            trigger_race_lifecycle()
+
+
 async def cancel_race():
     global race_task
     if race_task and not race_task.done():
@@ -227,6 +240,8 @@ async def dispatch(command, client_id=None):
                 if any(v is None for v in (command.extractor, command.selector, command.model)):
                     raise ValueError('All three pipeline components are required')
                 room_manager.update_pipeline(client_id, command.extractor, command.selector, command.model)
+            elif action == 'set_appearance':
+                room_manager.update_appearance(client_id, command.vehicle, command.color)
             elif action == 'set_ready':
                 if room_manager.set_player_ready(client_id, command.ready):
                     trigger_race_lifecycle()
@@ -235,12 +250,22 @@ async def dispatch(command, client_id=None):
             elif action == 'start_race':
                 if room_manager.admission_open:
                     await cancel_race()
-                    room_manager.start_countdown()
+                    if not room_manager.start_countdown(ready_only=True):
+                        raise ValueError('No ready racers to start')
                 trigger_race_lifecycle()
             elif action == 'reset_lobby':
                 await cancel_race()
                 room_manager.reset_to_lobby()
             elif action == 'change_track':
+                if not command.track_id or not query_engine.get_track(command.track_id):
+                    raise ValueError('Unknown eligible track')
+                if command.track_id == room_manager.current_track_id:
+                    return
+                if not room_manager.admission_open:
+                    if not command.interrupt_heat:
+                        raise ValueError('Applying now ends the current heat. Confirm to continue.')
+                    await cancel_race()
+                    room_manager.reset_to_lobby()
                 if not command.track_id or not room_manager.change_track(command.track_id):
                     raise ValueError('Unknown eligible track')
             elif action == 'start_building':
@@ -249,16 +274,37 @@ async def dispatch(command, client_id=None):
                 if room_manager.add_bot(command.bot_name or command.nickname, command.extractor, command.selector, command.model) is None:
                     raise ValueError('Lobby is full')
             elif action == 'set_duration':
-                room_manager.require_editable()
                 if command.duration_seconds is None:
                     raise ValueError('Duration is required')
+                if command.duration_seconds == room_manager.race_duration_seconds:
+                    return
+                if not room_manager.admission_open:
+                    if not command.interrupt_heat:
+                        raise ValueError('Applying now ends the current heat. Confirm to continue.')
+                    await cancel_race()
+                    room_manager.reset_to_lobby()
                 room_manager.race_duration_seconds = command.duration_seconds
                 room_manager.touch()
+            elif action == 'set_grid_window':
+                if command.grid_window_seconds is None:
+                    raise ValueError('Grid entry window is required')
+                room_manager.set_grid_window(command.grid_window_seconds)
+            elif action == 'remove_participant':
+                if not command.target_client_id or command.target_client_id not in room_manager.players:
+                    raise ValueError('Participant has already left')
+                room_manager.remove_player(command.target_client_id)
+                for token, session in list(sessions.items()):
+                    if session.client_id == command.target_client_id:
+                        sessions.pop(token, None)
+                target = connections.get(command.target_client_id)
+                if target:
+                    enqueue(target, envelope('REMOVED', {'message': 'The presenter removed you from the grid. You can join again.'}))
             elif action == 'ping':
                 return
         except ValueError as error:
             logger.info('command_rejected action=%s reason=invalid_state_or_value', action)
             raise HTTPException(409, str(error)) from None
+        await restart_grid_timer()
         await broadcast_state()
 
 
@@ -359,10 +405,16 @@ async def unlock_admin(body: AdminCredentials):
     return {'status': 'ok'}
 
 
+@app.post('/api/admin/state')
+async def get_presenter_state(body: AdminCredentials):
+    await unlock_admin(body)
+    return room_manager.presenter_snapshot()
+
+
 @app.post('/api/admin/action')
 async def execute_admin_action(body: Command):
     await dispatch(body)
-    return {'status': 'ok', 'message': f'{body.action} completed'}
+    return {'status': 'ok', 'message': f'{body.action} completed', 'state': room_manager.presenter_snapshot()}
 
 
 @app.websocket('/ws/game')
@@ -439,14 +491,14 @@ async def websocket_game_endpoint(websocket: WebSocket):
 @app.middleware('http')
 async def frontend_cache_policy(request, call_next):
     response = await call_next(request)
-    if request.url.path in ('/', '/admin') or request.url.path.startswith('/static/'):
+    if request.url.path in ('/', '/admin') or request.url.path.startswith(('/static/', '/api/')):
         response.headers['Cache-Control'] = 'no-store'
     return response
 
 
 @app.get('/assets/{version}/{asset_path:path}')
 async def serve_frontend_asset(version: str, asset_path: str):
-    if version != FRONTEND_VERSION or asset_path not in FRONTEND_FILES or asset_path == 'index.html':
+    if version != FRONTEND_VERSION or asset_path not in FRONTEND_FILES or asset_path.endswith('.html'):
         raise HTTPException(404, 'Frontend version unavailable; refresh the page')
     media_type = mimetypes.guess_type(asset_path)[0] or 'application/octet-stream'
     return Response(FRONTEND_FILES[asset_path], media_type=media_type,
@@ -458,7 +510,12 @@ app.mount('/static', StaticFiles(directory=STATIC_DIR), name='static')
 
 
 @app.get('/')
-@app.get('/admin')
 async def serve_index():
     html = FRONTEND_FILES['index.html'].decode().replace('/static/', f'/assets/{FRONTEND_VERSION}/')
+    return HTMLResponse(html, headers={'Cache-Control': 'no-store'})
+
+
+@app.get('/admin')
+async def serve_presenter():
+    html = FRONTEND_FILES['presenter.html'].decode().replace('/static/', f'/assets/{FRONTEND_VERSION}/')
     return HTMLResponse(html, headers={'Cache-Control': 'no-store'})

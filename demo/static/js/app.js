@@ -1,3 +1,4 @@
+import {drawVehicle, VEHICLES, COLOR_NAMES} from './vehicles.js';
 import {setupDisclosures} from './disclosures.js';
 /** Mobile participant journey, driven by confirmed room state. */
 import {RaceCanvasRenderer} from './canvas_renderer.js';
@@ -37,7 +38,6 @@ export class DemoClientApp {
         this.connected = false;
         this.pending = null;
         this.currentTrackId = null;
-        this.adminPin = '';
         this.serverOffsetMs = 0;
         this.watching = false;
         this.view = 'landing';
@@ -46,13 +46,6 @@ export class DemoClientApp {
         this.inputNickname = byId('input-nickname');
         this.btnJoin = byId('btn-join');
         this.btnReady = byId('btn-ready');
-        this.adminPinInput = byId('admin-pin');
-        this.adminUnlockForm = byId('admin-unlock-form');
-        this.adminControls = byId('admin-controls');
-        this.adminStatus = byId('admin-status');
-        this.adminTrackSelect = byId('admin-track-select');
-        this.adminAllTracks = byId('admin-all-tracks');
-        this.adminModal = byId('admin-modal');
         this.raceRenderer = new RaceCanvasRenderer(byId('race-canvas'), byId('live-leaderboard'), telemetry => {
             const minutes = Math.floor(telemetry.elapsed / 60).toString().padStart(2, '0');
             const seconds = (telemetry.elapsed % 60).toFixed(1).padStart(4, '0');
@@ -80,6 +73,16 @@ export class DemoClientApp {
         byId('join-form').addEventListener('submit', event => { event.preventDefault(); this._onJoin(); });
         byId('btn-leave-heat').addEventListener('click', () => this._command({action: 'leave'}));
         byId('btn-leave-queue').addEventListener('click', () => this._command({action: 'set_ready', ready: false}));
+        for (const id of ['vehicle-choices', 'color-choices']) byId(id).addEventListener('keydown', event => {
+            if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+            const buttons = [...byId(id).querySelectorAll('button:not(:disabled)')];
+            const index = buttons.indexOf(event.target);
+            if (index < 0) return;
+            event.preventDefault();
+            const direction = ['ArrowRight', 'ArrowDown'].includes(event.key) ? 1 : -1;
+            const next = buttons[(index + direction + buttons.length) % buttons.length];
+            next.focus(); next.click();
+        });
         this.btnReady.addEventListener('click', () => this._onToggleReady());
         byId('btn-next-round').addEventListener('click', () => {
             if (this.myPlayer && !this.myPlayer.is_spectator) this._command({action: 'race_again', heat_id: (this.state.personal_results || this.state.results)?.heat_id});
@@ -87,24 +90,6 @@ export class DemoClientApp {
         });
         byId('benchmark-explorer').addEventListener('toggle', event => {
             if (event.target.open) this._loadChart();
-        });
-        byId('btn-open-admin').addEventListener('click', () => this._openAdmin());
-        byId('btn-close-admin').addEventListener('click', () => this.adminModal.close());
-        this.adminUnlockForm.addEventListener('submit', event => { event.preventDefault(); this._unlockAdmin(); });
-        this.adminAllTracks.addEventListener('change', () => this._fetchTrackList());
-        byId('btn-admin-lock').addEventListener('click', () => {
-            this.adminPin = ''; this.watching = false; this._syncAdminControls(); this._syncScreenPhase();
-        });
-        byId('btn-admin-watch').addEventListener('click', () => {
-            this.watching = true; this.adminModal.close(); this._syncScreenPhase();
-        });
-        for (const [id, action] of [['btn-admin-add-bot', 'add_bot'], ['btn-admin-start-race', 'start_race'], ['btn-admin-reset', 'reset_lobby']]) {
-            byId(id).addEventListener('click', () => this._sendAdminAction(action));
-        }
-        byId('btn-admin-change-track').addEventListener('click', () => this._sendAdminAction('change_track', {track_id: this.adminTrackSelect.value}));
-        byId('btn-admin-set-duration').addEventListener('click', () => {
-            const field = byId('admin-duration-input');
-            if (field.reportValidity()) this._sendAdminAction('set_duration', {duration_seconds: Number(field.value)});
         });
         // Pausing a hidden tab is safe: elapsed time reconstructs the same positions.
         document.addEventListener('visibilitychange', () => {
@@ -179,11 +164,21 @@ export class DemoClientApp {
         if (!p) return;
         const confirmed = (p.action === 'join' && this.myPlayer) || (p.action === 'leave' && !this.myPlayer)
             || (p.action === 'set_pipeline' && samePipeline(this.myPlayer?.pipeline, p))
+            || (p.action === 'set_appearance' && this.myPlayer?.vehicle === p.vehicle && this.myPlayer?.preferred_color === p.color)
             || (p.action === 'set_ready' && this.myPlayer?.is_ready === p.ready)
             || (p.action === 'race_again' && this.myPlayer?.preparing_next);
         if (confirmed) this._clearPending();
     }
     _handleServerEvent(event) {
+        if (event.type === 'REMOVED') {
+            this._clearPending();
+            try { sessionStorage.removeItem('tempoResumeToken'); } catch { /* In-memory session. */ }
+            this.state = null; this.myPlayer = null; this.clientId = null;
+            this._syncScreenPhase();
+            byId('join-error').textContent = event.data.message;
+            this.socket.close();
+            return;
+        }
         if (event.type === 'ERROR') {
             if (event.data.code === 'reload_required') this.reloadRequired = true;
             this._clearPending(); this._showError(event.data.message); this._syncScreenPhase(); return;
@@ -205,7 +200,7 @@ export class DemoClientApp {
         const previousPlayer = this.myPlayer;
         this.state = state;
         this.serverOffsetMs = state.server_time_utc * 1000 - Date.now();
-        this.myPlayer = state.participant || state.active_racers.find(p => p.client_id === this.clientId) || state.spectators.find(p => p.client_id === this.clientId);
+        this.myPlayer = Object.hasOwn(state, 'participant') ? state.participant : state.active_racers.find(p => p.client_id === this.clientId) || state.spectators.find(p => p.client_id === this.clientId);
         if (oldTrack === state.track.track_id && previousPlayer?.metrics && this.myPlayer?.metrics
             && !samePipeline(previousPlayer.pipeline, this.myPlayer.pipeline)) {
             this.previousConfirmedMetrics = previousPlayer.metrics;
@@ -328,10 +323,48 @@ export class DemoClientApp {
         byId('custom-build-summary').textContent = 'Custom pipeline selected.';
         this.guidedSignature = signature;
     }
+    _renderAppearance() {
+        const player = this.myPlayer;
+        const colors = this.state.car_colors || ['#FF4D4D', '#00E5FF', '#76FF03', '#FFD600', '#D500F9', '#FF9100'];
+        const signature = JSON.stringify([player.vehicle, player.avatar_color, player.preferred_color, !!this.pending, this.connected]);
+        if (signature === this.appearanceSignature) return;
+        this.appearanceSignature = signature;
+        byId('car-summary').textContent = `${VEHICLES.find(v => v.id === player.vehicle)?.name || 'Formula'} · ${COLOR_NAMES[colors.indexOf(player.avatar_color)] || 'Auto'}`;
+        const choose = (vehicle, color, focus) => { this.appearanceFocus = focus; this._command({action: 'set_appearance', vehicle, color}); };
+        const vehicles = byId('vehicle-choices');
+        vehicles.replaceChildren(...VEHICLES.map(vehicle => {
+            const button = document.createElement('button');
+            button.type = 'button'; button.className = 'vehicle-choice'; button.setAttribute('role', 'radio');
+            button.setAttribute('aria-checked', String((player.vehicle || 'formula') === vehicle.id));
+            button.disabled = !this.connected || !!this.pending;
+            const canvas = document.createElement('canvas'); canvas.width = 120; canvas.height = 64; canvas.setAttribute('aria-hidden', 'true');
+            const ctx = canvas.getContext('2d'); ctx.translate(60, 32); drawVehicle(ctx, vehicle.id, player.avatar_color, 65);
+            const name = document.createElement('span'); name.textContent = vehicle.name;
+            button.append(canvas, name); button.addEventListener('click', () => choose(vehicle.id, player.preferred_color || player.avatar_color, {type: 'vehicle', value: vehicle.name}));
+            return button;
+        }));
+        byId('color-choices').replaceChildren(...colors.map((color, index) => {
+            const button = document.createElement('button'); button.type = 'button'; button.className = 'color-choice';
+            button.setAttribute('role', 'radio'); button.setAttribute('aria-label', COLOR_NAMES[index]);
+            button.setAttribute('aria-checked', String(player.avatar_color === color));
+            button.style.setProperty('--racer-color', color); button.disabled = !this.connected || !!this.pending;
+            button.addEventListener('click', () => choose(player.vehicle || 'formula', color, {type: 'color', value: COLOR_NAMES[index]}));
+            return button;
+        }));
+        if (this.appearanceFocus && !this.pending) {
+            const {type, value} = this.appearanceFocus;
+            const root = byId(type === 'vehicle' ? 'vehicle-choices' : 'color-choices');
+            [...root.querySelectorAll('button')].find(button => (button.getAttribute('aria-label') || button.textContent) === value)?.focus({preventScroll: true});
+            this.appearanceFocus = null;
+        }
+        byId('car-color-note').textContent = player.is_ready && player.preferred_color && player.preferred_color !== player.avatar_color
+            ? 'Your preferred colour was taken. This is your colour for the next race.' : '';
+    }
     _renderConfiguration() {
         const track = this.state.track;
         byId('track-name').textContent = `${track.track_id === 'gas-sensor-drift-sub' ? 'Gas sensors · Identify six gases' : track.display_name} · ${track.task_type === 'classification' ? 'Classification' : track.task_type === 'forecasting' ? 'Forecasting' : 'Regression'}`;
         byId('track-desc').textContent = `${track.description} ${metricInfo(track.task_type).note}`;
+        this._renderAppearance();
         this._renderGuidedBuilder();
         const metrics = this.myPlayer.metrics;
         const entries = [['Compute time', formatSeconds(metrics.total_latency_s)], [metricInfo(track.task_type).label, formatPerformance(metrics)], ['Peak RAM', `${Math.round(metrics.extraction_ram_mb)} MB`], ['Features kept / extracted', `${metrics.n_selected_features.toLocaleString()} / ${metrics.n_extracted_features.toLocaleString()}`]];
@@ -446,59 +479,6 @@ export class DemoClientApp {
         } catch { byId('chart-explanation').textContent = 'Chart unavailable. Close and reopen to retry.'; }
     }
 
-    _openAdmin() {
-        this._syncAdminControls();
-        if (this.state) byId('admin-duration-input').value = this.state.race_duration_seconds;
-        this.adminModal.showModal();
-        this._fetchTrackList();
-        if (!this.adminPin) this.adminPinInput.focus();
-    }
-    _syncAdminControls() {
-        const unlocked = !!this.adminPin;
-        this.adminUnlockForm?.classList.toggle('hidden', unlocked);
-        this.adminControls?.classList.toggle('hidden', !unlocked);
-        if (this.adminPinInput) this.adminPinInput.value = '';
-        if (this.adminStatus) this.adminStatus.textContent = unlocked ? 'Admin settings unlocked on this device.' : 'Enter the admin password to unlock settings.';
-    }
-    async _unlockAdmin() {
-        const pin = this.adminPinInput.value;
-        try {
-            const response = await fetch('/api/admin/unlock', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({pin})});
-            const data = await response.json();
-            this.adminPin = response.ok ? pin : '';
-            this._syncAdminControls();
-            if (!response.ok) this.adminStatus.textContent = typeof data.detail === 'string' ? data.detail : 'Enter a valid password.';
-            else this._fetchTrackList();
-        } catch { this.adminStatus.textContent = 'Could not connect. Try unlocking again.'; }
-    }
-    async _sendAdminAction(action, payload = {}) {
-        if (!this.adminPin) { this._openAdmin(); return; }
-        if (this.adminBusy) return;
-        this.adminBusy = true;
-        this.adminStatus.textContent = 'Updating…';
-        try {
-            const response = await fetch('/api/admin/action', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({pin: this.adminPin, action, ...payload})});
-            const data = await response.json();
-            if (response.status === 403) { this.adminPin = ''; this._syncAdminControls(); }
-            this.adminStatus.textContent = response.ok ? 'Settings updated.' : typeof data.detail === 'string' ? data.detail : 'Check the settings and try again.';
-            if (response.ok && action === 'start_race') {
-                this.watching = true; this.adminModal.close(); this._syncScreenPhase();
-            }
-            if (response.ok && action === 'change_track') this._fetchTrackList();
-        } catch { this.adminStatus.textContent = 'Could not connect. Try again.'; }
-        finally { this.adminBusy = false; }
-    }
-    async _fetchTrackList() {
-        try {
-            const response = await fetch('/api/tracks');
-            if (!response.ok) throw new Error('Track list unavailable');
-            const data = await response.json();
-            this.adminTrackSelect.replaceChildren(...selectDemoTracks(data.tracks, data.current_track_id, !!this.adminAllTracks.checked).map(t => {
-                const option = document.createElement('option'); option.value = t.track_id;
-                option.textContent = t.display_name + (t.task_type !== 'classification' ? ' — compute-only race' : '');
-                option.selected = t.track_id === data.current_track_id; return option;
-            }));
-        } catch { this.adminStatus.textContent = 'Challenge list could not load. Reopen settings to retry.'; }
-    }
+
 }
 window.addEventListener('DOMContentLoaded', () => { window.demoApp = new DemoClientApp(); });

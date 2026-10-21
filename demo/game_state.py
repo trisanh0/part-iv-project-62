@@ -12,6 +12,7 @@ from demo.race import RACE_RULES_VERSION, RaceSchedule, build_schedules
 from demo.scoring import SCORING_VERSION, composite_score, performance_order, performance_utility
 
 PROTOCOL_VERSION = 2
+VEHICLE_TYPES = ('formula', 'hatchback', 'motorbike')
 CAR_COLORS = ['#FF4D4D', '#00E5FF', '#76FF03', '#FFD600', '#D500F9', '#FF9100']
 
 
@@ -39,6 +40,8 @@ class PlayerSlot:
     nickname: str
     avatar_color: str
     car_index: int = 0
+    vehicle: str = 'formula'
+    preferred_color: Optional[str] = None
     is_spectator: bool = False
     is_bot: bool = False
     is_ready: bool = False
@@ -66,10 +69,11 @@ class RaceEntry:
     car_index: int
     is_bot: bool
     metrics: ConfigMetrics
+    vehicle: str = 'formula'
 
     def to_dict(self):
         return dict(client_id=self.client_id, nickname=self.nickname, avatar_color=self.avatar_color,
-                    car_index=self.car_index, is_bot=self.is_bot, is_spectator=False, is_ready=True,
+                    car_index=self.car_index, vehicle=self.vehicle, is_bot=self.is_bot, is_spectator=False, is_ready=True,
                     metrics=metrics_dict(self.metrics), pipeline={k: getattr(self.metrics, k) for k in ('extractor', 'selector', 'model')})
 
 
@@ -88,7 +92,7 @@ class Heat:
 
 class BoothRoomManager:
     def __init__(self, query_engine: DemoQueryEngine, initial_track_id='gas-sensor-drift-sub', max_active_racers=4,
-                 race_duration_seconds=27.0, countdown_seconds=7.0, admin_pin=''):
+                 race_duration_seconds=27.0, countdown_seconds=7.0, admin_pin='', grid_window_seconds=20.0):
         if not query_engine.get_track(initial_track_id):
             raise ValueError('Default track is not in the eligible catalogue')
         if not 2 <= max_active_racers <= len(CAR_COLORS):
@@ -97,6 +101,8 @@ class BoothRoomManager:
             raise ValueError('Race duration must be between 5 and 60 seconds')
         if not math.isfinite(countdown_seconds) or not 0 <= countdown_seconds <= 30:
             raise ValueError('Invalid countdown')
+        if not math.isfinite(grid_window_seconds) or not 1 <= grid_window_seconds <= 120:
+            raise ValueError('Grid entry window must be between 1 and 120 seconds')
         self.engine, self.current_track_id = query_engine, initial_track_id
         self.max_active_racers, self.race_duration_seconds = max_active_racers, race_duration_seconds
         self.countdown_seconds, self.admin_pin = countdown_seconds, admin_pin
@@ -108,8 +114,9 @@ class BoothRoomManager:
         self.heat = None
         self.revision = 0
         self.bot_counter = 0
-        self.grid_window_seconds = 8.0
+        self.grid_window_seconds = grid_window_seconds
         self.grid_close_timestamp_ms = 0
+        self.grid_open_timestamp_ms = 0
 
     def touch(self):
         self.revision += 1
@@ -138,11 +145,50 @@ class BoothRoomManager:
     def ensure_grid_window(self):
         if self.admission_open and self._ready_grid():
             if not self.grid_close_timestamp_ms:
-                self.grid_close_timestamp_ms = round((time.time() + self.grid_window_seconds) * 1000)
+                self.grid_open_timestamp_ms = round(time.time() * 1000)
+                self.grid_close_timestamp_ms = self.grid_open_timestamp_ms + round(self.grid_window_seconds * 1000)
                 self.touch()
         elif self.admission_open and self.grid_close_timestamp_ms:
-            self.grid_close_timestamp_ms = 0
+            self.grid_close_timestamp_ms = self.grid_open_timestamp_ms = 0
             self.touch()
+
+    def set_grid_window(self, seconds):
+        if not math.isfinite(seconds) or not 1 <= seconds <= 120:
+            raise ValueError('Grid entry window must be between 1 and 120 seconds')
+        self.grid_window_seconds = seconds
+        if self.grid_close_timestamp_ms:
+            self.grid_close_timestamp_ms = self.grid_open_timestamp_ms + round(seconds * 1000)
+        self.touch()
+
+    def _assign_color(self, player, reserved=None):
+        used = ({p.avatar_color for p in self._ready_grid() if p.client_id != player.client_id}
+                if reserved is None else reserved)
+        preferred = player.preferred_color or player.avatar_color
+        player.avatar_color = preferred if preferred in CAR_COLORS and preferred not in used else next(c for c in CAR_COLORS if c not in used)
+
+    def update_appearance(self, client_id, vehicle, color):
+        self.require_player_editable(client_id)
+        if vehicle not in VEHICLE_TYPES or color not in CAR_COLORS:
+            raise ValueError('Choose an available vehicle and palette colour')
+        p = self.players[client_id]
+        p.vehicle, p.preferred_color, p.avatar_color = vehicle, color, color
+        p.is_ready = p.is_spectator = False
+        self._promote_spectators()
+        self.ensure_grid_window()
+        self.touch()
+
+    def presenter_snapshot(self):
+        state = self.get_state_snapshot()
+        roster = []
+        queue = sorted((p for p in self.players.values() if p.is_spectator), key=lambda p: p.ready_at)
+        for p in self.players.values():
+            status = ('Racing' if self.is_current_entrant(p.client_id) else 'Offline' if not p.connected
+                      else 'Reviewing results' if p.reviewing_results else 'Queued' if p.is_spectator
+                      else 'Ready' if p.is_ready else 'Building')
+            roster.append({**p.to_dict(), 'status': status,
+                           'queue_position': queue.index(p) + 1 if p in queue else None})
+        state['roster'] = roster
+        return state
 
     def _get_default_pipeline(self):
         c = min(self.engine.get_all_configs(self.current_track_id),
@@ -160,6 +206,7 @@ class BoothRoomManager:
         index = sum(not p.is_bot for p in self.players.values()) % self.max_active_racers
         pipeline = self._get_default_pipeline()
         p = PlayerSlot(client_id, nickname.strip(), avatar_color or CAR_COLORS[index], index,
+                       preferred_color=avatar_color or CAR_COLORS[index],
                        is_spectator=False, preparing_next=True,
                        pipeline=pipeline,
                        metrics=self.engine.get_config(self.current_track_id, **pipeline))
@@ -205,7 +252,7 @@ class BoothRoomManager:
                 break
             p.car_index = self._allocate_car_index(p.client_id)
             p.is_spectator = False
-            p.avatar_color = CAR_COLORS[p.car_index]
+            self._assign_color(p)
             p.preparing_next = True
         self.ensure_grid_window()
 
@@ -243,7 +290,7 @@ class BoothRoomManager:
                 p.is_spectator = True
             else:
                 p.car_index = self._allocate_car_index(p.client_id)
-                p.avatar_color = CAR_COLORS[p.car_index]
+                self._assign_color(p)
         self._promote_spectators()
         self.ensure_grid_window()
         self.touch()
@@ -267,15 +314,17 @@ class BoothRoomManager:
         p = self.add_player(f'bot_{self.bot_counter}', name)
         p.metrics, p.is_bot, p.is_ready = c, True, True
         p.car_index = self._allocate_car_index(p.client_id)
-        p.avatar_color = CAR_COLORS[p.car_index]
+        self._assign_color(p)
         p.pipeline = {k: getattr(c, k) for k in ('extractor', 'selector', 'model')}
+        self.ensure_grid_window()
         return p
 
     def change_track(self, track_id):
-        self.require_editable()
+        if not self.admission_open:
+            raise ValueError('End the current heat before changing challenge')
         if self.engine.get_track(track_id) is None:
             return False
-        self.grid_close_timestamp_ms = 0
+        self.grid_close_timestamp_ms = self.grid_open_timestamp_ms = 0
         self.current_track_id = track_id
         for p in self.players.values():
             p.reviewing_results, p.last_results, p.is_spectator = False, None, False
@@ -307,15 +356,17 @@ class BoothRoomManager:
                       and not p.is_spectator][:self.max_active_racers]
         for index, player in enumerate(active):
             player.car_index = index
-            player.avatar_color = CAR_COLORS[index]
+            reserved = {p.avatar_color for p in active[:index]}
+            if player.avatar_color not in CAR_COLORS or player.avatar_color in reserved:
+                self._assign_color(player, reserved)
             player.is_ready = True
             player.preparing_next = False
         while len(active) < 2:
             active.append(self.add_bot())
-        self.grid_close_timestamp_ms = 0
+        self.grid_close_timestamp_ms = self.grid_open_timestamp_ms = 0
         self.phase, self.phase_start_time_utc = GamePhase.COUNTDOWN, time.time()
         self.race_start_timestamp_ms = int((self.phase_start_time_utc + self.countdown_seconds) * 1000)
-        entries = tuple(RaceEntry(p.client_id, p.nickname, p.avatar_color, p.car_index, p.is_bot, p.metrics) for p in active)
+        entries = tuple(RaceEntry(p.client_id, p.nickname, p.avatar_color, p.car_index, p.is_bot, p.metrics, p.vehicle) for p in active)
         self.heat = Heat(uuid.uuid4().hex, self.current_track_id, self.engine.build_id,
                          entries, self.race_duration_seconds, self.race_start_timestamp_ms,
                          build_schedules(entries, self.race_duration_seconds))
@@ -389,7 +440,7 @@ class BoothRoomManager:
 
     def reset_to_lobby(self):
         self.phase, self.phase_start_time_utc = GamePhase.LOBBY, time.time()
-        self.grid_close_timestamp_ms = 0
+        self.grid_close_timestamp_ms = self.grid_open_timestamp_ms = 0
         self.race_start_timestamp_ms, self.heat, self.race_results_cache = 0, None, None
         for cid, p in list(self.players.items()):
             if p.is_bot:
@@ -415,13 +466,13 @@ class BoothRoomManager:
         if personal is not None:
             personal['view'] = ('results' if participant.reviewing_results else 'race' if self.is_current_entrant(client_id)
                                 else 'waiting' if participant.is_spectator else 'configuration')
-        return dict(participant=personal, personal_results=participant.last_results if participant else None,
+        return dict(vehicle_types=list(VEHICLE_TYPES), car_colors=CAR_COLORS.copy(), settings=dict(race_duration_seconds=self.race_duration_seconds, grid_window_seconds=self.grid_window_seconds, track_id=self.current_track_id), participant=personal, personal_results=participant.last_results if participant else None,
                     grid_close_timestamp_ms=self.grid_close_timestamp_ms, grid_window_seconds=self.grid_window_seconds,
                     participants=[p.to_dict() for p in self.players.values() if p.connected and not p.reviewing_results and not self.is_current_entrant(p.client_id)],
                     race_rules_version=self.heat.race_rules_version if self.heat else RACE_RULES_VERSION,
                     protocol_version=PROTOCOL_VERSION, revision=self.revision, heat_id=self.heat.heat_id if self.heat else None,
                     build_id=self.engine.build_id, scoring_version=SCORING_VERSION, phase=self.phase.value, track=track,
                     active_racers=active, spectators=[p.to_dict() for p in sorted(self.players.values(), key=lambda p: p.ready_at) if p.is_spectator],
-                    max_active_racers=self.max_active_racers, race_duration_seconds=self.heat.duration_seconds if self.heat else self.race_duration_seconds,
+                    max_active_racers=self.max_active_racers, race_duration_seconds=self.heat.duration_seconds if self.heat and not self.admission_open else self.race_duration_seconds,
                     countdown_seconds=self.countdown_seconds, phase_start_time_utc=self.phase_start_time_utc,
                     race_start_timestamp_ms=self.race_start_timestamp_ms, server_time_utc=time.time(), results=self.race_results_cache)

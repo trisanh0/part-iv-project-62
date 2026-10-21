@@ -389,3 +389,99 @@ def test_queue_is_ordered_by_ready_time_instead_of_name_registration(room):
     room.set_player_ready(later.client_id)
     room.set_player_ready('early-builder')
     assert [p['client_id'] for p in room.get_state_snapshot()['spectators']] == ['later-builder', 'early-builder']
+
+
+def test_twenty_second_window_updates_from_original_opening(room, monkeypatch):
+    import demo.game_state as state
+    clock = [100.0]
+    monkeypatch.setattr(state.time, 'time', lambda: clock[0])
+    assert room.grid_window_seconds == 20
+    room.add_player('a', 'Alex')
+    room.set_player_ready('a')
+    assert room.grid_open_timestamp_ms == 100000
+    assert room.grid_close_timestamp_ms == 120000
+    clock[0] += 10
+    room.set_grid_window(30)
+    assert room.grid_close_timestamp_ms == 130000
+    room.set_grid_window(5)
+    assert room.grid_close_timestamp_ms == 105000  # The lifecycle must start immediately.
+    room.set_player_ready('a', False)
+    assert room.grid_close_timestamp_ms == room.grid_open_timestamp_ms == 0
+    room.set_player_ready('a')
+    assert room.grid_close_timestamp_ms == 115000
+    with pytest.raises(ValueError):
+        room.set_grid_window(0)
+
+
+def test_preferred_colours_reserve_on_ready_and_survive_freeze(room):
+    from demo.game_state import CAR_COLORS
+    for cid in ['first-joined', 'first-ready', 'builder']:
+        room.add_player(cid, cid)
+        room.update_appearance(cid, 'motorbike', CAR_COLORS[1])
+    room.set_player_ready('first-ready')
+    room.set_player_ready('first-joined')
+    assert room.players['first-ready'].avatar_color == CAR_COLORS[1]
+    assert room.players['first-joined'].avatar_color != CAR_COLORS[1]
+    before = {p.client_id: p.avatar_color for p in room._ready_grid()}
+    room.start_countdown(ready_only=True)
+    assert {p.client_id: p.avatar_color for p in room.heat.entries} == before
+    assert all(p.vehicle == 'motorbike' for p in room.heat.entries)
+    assert len({p.avatar_color for p in room.heat.entries}) == len(room.heat.entries)
+    with pytest.raises(ValueError):
+        room.update_appearance('first-ready', 'hatchback', CAR_COLORS[0])
+    room.start_racing()
+    results = room.finish_race()
+    room.request_race_again('first-ready', results['heat_id'])
+    assert room.players['first-ready'].vehicle == 'motorbike'
+    assert room.players['first-ready'].preferred_color == CAR_COLORS[1]
+
+
+def test_six_identical_colour_requests_queue_and_editing_releases_reservation():
+    from demo.game_state import CAR_COLORS
+    room = BoothRoomManager(DemoQueryEngine(), max_active_racers=6)
+    for i in range(7):
+        room.add_player(str(i), f'Racer {i}')
+        room.update_appearance(str(i), 'hatchback', CAR_COLORS[0])
+        room.set_player_ready(str(i))
+    assert len({p.avatar_color for p in room._ready_grid()}) == 6
+    assert room.players['6'].is_spectator
+    room.update_appearance('0', 'formula', CAR_COLORS[2])
+    assert not room.players['0'].is_ready
+    assert not room.players['6'].is_spectator
+    assert room.players['6'].avatar_color == CAR_COLORS[0]
+    assert len({p.avatar_color for p in room._ready_grid()}) == 6
+    room.start_countdown(ready_only=True)
+    assert len({p.avatar_color for p in room.heat.entries}) == 6
+
+
+def test_removed_frozen_entrant_finishes_without_reappearing(room):
+    room.add_player('a', 'Alex')
+    room.set_player_ready('a')
+    room.start_countdown(ready_only=True)
+    frozen = room.heat.entries
+    room.remove_player('a')
+    assert room.heat.entries == frozen
+    room.reconnect('a')
+    assert 'a' not in room.players
+    room.start_racing()
+    results = room.finish_race()
+    assert any(r['client_id'] == 'a' for r in results['rankings'])
+    assert 'a' not in room.players
+
+
+def test_presenter_roster_includes_reviewers_offline_and_queue(room):
+    room.add_player('a', 'Alex')
+    room.set_player_ready('a')
+    room.start_countdown(ready_only=True)
+    room.add_player('b', 'Builder')
+    room.add_player('q', 'Queued')
+    room.set_player_ready('q')
+    room.add_player('o', 'Offline')
+    room.disconnect('o')
+    statuses = {p['client_id']: p['status'] for p in room.presenter_snapshot()['roster']}
+    assert statuses['a'] == 'Racing' and statuses['b'] == 'Building'
+    assert statuses['q'] == 'Queued' and statuses['o'] == 'Offline'
+    room.start_racing(); room.finish_race()
+    roster = room.presenter_snapshot()['roster']
+    assert next(p for p in roster if p['client_id'] == 'a')['status'] == 'Reviewing results'
+    assert not any('last_results' in p or 'token' in p for p in roster)
