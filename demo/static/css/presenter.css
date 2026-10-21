@@ -54,8 +54,6 @@
 .danger-button { color: var(--error); }
 .confirmation-actions { display: flex; gap: 14px; margin-top: 22px; }
 body.display-mode .management { display: none !important; }
-body.display-mode .control-main { padding-top: 20px; }
-body.display-mode .control-map { height: clamp(400px, 75vh, 900px); }
 @media (max-width: 760px) {
 .control-header { padding: 12px 20px; gap: 14px; flex-wrap: wrap; }
 .display-actions { gap: 16px; }
@@ -69,3 +67,42 @@ body.display-mode .control-map { height: clamp(400px, 75vh, 900px); }
 @media (min-width: 1500px) { .control-map { height: 760px; } }
 
 @media (orientation: portrait) { .dashboard-layout { grid-template-columns: minmax(0, 1fr); } .control-map { height: min(65svh, 760px); } }
+
+/* Ambient display uses the available viewport, including browser/fullscreen changes. */
+body.display-mode:not(:has(#control-workspace.hidden)) {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+body.display-mode .control-header { min-height: 60px; padding: 6px 24px; flex-shrink: 0; }
+body.display-mode .control-main { min-height: 0; padding: 12px 24px 16px; display: flex; flex-direction: column; }
+body.display-mode #control-workspace { flex: 1; min-height: 0; display: flex; }
+body.display-mode #panel-dashboard { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+body.display-mode .control-heading { flex-shrink: 0; margin: 0 0 12px; }
+body.display-mode .control-heading h1 { font-size: 1.6rem; margin-top: 2px; }
+body.display-mode .dashboard-layout { flex: 1; min-height: 0; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+body.display-mode .control-circuit { min-height: 0; display: flex; flex-direction: column; }
+body.display-mode .circuit-caption { flex-shrink: 0; padding: 8px 12px; }
+body.display-mode .control-map { flex: 1; min-height: 0; height: auto; max-height: none; }
+body.display-mode .control-sidebar { min-height: 0; }
+body.display-mode .control-sidebar > section { margin-bottom: 12px; }
+body.display-mode .control-sidebar h2 { font-size: 1rem; }
+body.display-mode .live-leaderboard { margin: 4px 0; }
+body.display-mode .live-racer { min-height: 28px; padding: 3px 4px; font-size: .75rem; }
+body.display-mode .control-builds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+body.display-mode .control-build { min-width: 0; padding: 4px 0; }
+body.display-mode .control-build-title { font-size: .78rem; gap: 6px; }
+body.display-mode .control-build-title canvas { width: 32px; height: 20px; }
+body.display-mode .control-pipeline { font-size: .65rem; line-height: 1.25; margin: 3px 0 5px; }
+body.display-mode .control-build .build-metrics { gap: 4px; padding-top: 4px; }
+body.display-mode .control-build .metric-label { font-size: .56rem; }
+body.display-mode .control-build .metric-value { font-size: .73rem; }
+body.display-mode #panel-dashboard[data-racing="true"] #last-result { display: none; }
+@media (orientation: portrait) {
+    body.display-mode .dashboard-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; }
+    body.display-mode .control-sidebar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); align-content: start; gap: 16px; }
+    body.display-mode .control-sidebar > section { margin: 0; }
+    body.display-mode .control-sidebar > section:nth-child(2) { grid-column: 2; grid-row: 1; }
+    body.display-mode #live-timing, body.display-mode #last-result { grid-column: 1; grid-row: 1; }
+}

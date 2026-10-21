@@ -175,6 +175,7 @@ export class PresenterApp {
             this.renderer.setupRace(running ? this.state.active_racers : [], this.state.race_duration_seconds, this.state.race_start_timestamp_ms - this.offset, this.state.laps || 2);
             if (this.state.phase === 'RACING' && this.connected) this.renderer.start(); else this.renderer.renderFrame(0);
         }
+        $('panel-dashboard').dataset.racing = String(running);
         $('live-timing').classList.toggle('hidden', !running);
         $('control-lap-count').textContent = `${this.state.laps || 2} laps`;
         if (!running) $('control-timing').textContent = `${this.state.laps || 2} laps`;
