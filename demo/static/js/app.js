@@ -285,8 +285,7 @@ export class DemoClientApp {
         const signature = JSON.stringify([configurations, pipeline, !!this.pending, this.connected]);
         if (this.guidedSignature === signature) return;
         const root = byId('guided-builder');
-        const open = root.querySelector('details[open]:not([data-expanded="false"])')?.dataset.stage
-            || (document.querySelector('.car-customisation[open]:not([data-expanded="false"])') ? null : 'extractor');
+        const open = root.querySelector('details[open]:not([data-expanded="false"])')?.dataset.stage || null;
         if (document.activeElement?.dataset.choice) {
             this.guidedFocus = {choice: document.activeElement.dataset.choice, stage: document.activeElement.dataset.stage};
         }
