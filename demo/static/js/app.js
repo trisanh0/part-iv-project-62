@@ -22,8 +22,8 @@ function loadHistory() {
     catch { return []; }
 }
 const raceExplanation = task => task === 'classification'
-    ? 'Compute time sets your pace. Prediction errors add pit time. Both decide the finish.'
-    : 'Compute-only race: compute time sets the finish order. Prediction quality is shown separately.';
+    ? 'Faster compute means a faster car. Errors add pit time.'
+    : 'Race order uses compute time. Prediction quality is shown separately.';
 function storageGet() { try { return sessionStorage.getItem('tempoResumeToken'); } catch { return null; } }
 function storageSet(token) { try { sessionStorage.setItem('tempoResumeToken', token); } catch { /* In-memory play still works. */ } }
 
@@ -300,10 +300,10 @@ export class DemoClientApp {
         root.innerHTML = GUIDED_STAGES.map((stage, index) => {
             const choices = guidedChoices(configurations, pipeline, stage).map(choice => {
                 if (choice.value !== 'select_k_best_anova' || this.state.track.track_id === 'gas-sensor-drift-sub') return choice;
-                return {...choice, title: 'ANOVA k-best', description: 'Keep features ranked by their relationship to the target.'};
+                return {...choice, title: 'ANOVA k-best', description: 'Keep features most associated with the target.'};
             });
             const selectedName = choices.find(choice => choice.value === pipeline[stage.key])?.title || algorithmName(pipeline[stage.key]);
-            return `<details class="build-stage" name="pipeline-build" data-stage="${stage.key}" ${open === stage.key ? 'open' : ''}><summary><span class="stage-number">0${index + 1}</span><span class="stage-heading">${stage.title}<small>${escapeText(selectedName)}</small></span><span class="stage-toggle" aria-hidden="true">+</span></summary><p class="help-text">${stage.key === 'model' && this.state.track.task_type !== 'classification' ? 'Learn to predict the target from the selected features.' : stage.purpose}</p><div role="radiogroup" aria-label="${stage.title}">${choices.map(choice => `<button type="button" class="component-choice" role="radio" aria-checked="${pipeline[stage.key] === choice.value}" data-stage="${stage.key}" data-choice="${choice.value}" ${this.pending || !this.connected ? 'disabled' : ''}><span class="preset-radio" aria-hidden="true"></span><span><strong>${choice.title}</strong><small>${choice.description}</small></span></button>`).join('') || '<p class="measurement-note">Use the full component library for this challenge.</p>'}</div></details>`;
+            return `<details class="build-stage" name="pipeline-build" data-stage="${stage.key}" ${open === stage.key ? 'open' : ''}><summary><span class="stage-number">0${index + 1}</span><span class="stage-heading">${stage.title}<small>${escapeText(selectedName)}</small></span><span class="stage-toggle" aria-hidden="true">+</span></summary><p class="help-text">${stage.key === 'model' && this.state.track.task_type !== 'classification' ? 'Choose the prediction model.' : stage.purpose}</p><div role="radiogroup" aria-label="${stage.title}">${choices.map(choice => `<button type="button" class="component-choice" role="radio" aria-checked="${pipeline[stage.key] === choice.value}" data-stage="${stage.key}" data-choice="${choice.value}" ${this.pending || !this.connected ? 'disabled' : ''}><span class="preset-radio" aria-hidden="true"></span><span><strong>${choice.title}</strong><small>${choice.description}</small></span></button>`).join('') || '<p class="measurement-note">See More options for this challenge.</p>'}</div></details>`;
         }).join('');
         root.querySelectorAll('button[data-choice]').forEach(button => {
             button.addEventListener('click', () => {
@@ -326,7 +326,7 @@ export class DemoClientApp {
         }
         const custom = GUIDED_STAGES.some(stage => !stage.choices.some(c => c.value === pipeline[stage.key]));
         byId('custom-build-summary').classList.toggle('hidden', !custom);
-        byId('custom-build-summary').textContent = 'Custom build selected. Your measured components are preserved; inspect them in the full component library.';
+        byId('custom-build-summary').textContent = 'Custom pipeline selected. See More options to edit it.';
         this.guidedSignature = signature;
     }
     _renderConfiguration() {
@@ -362,10 +362,10 @@ export class DemoClientApp {
         fullBuild.value = track.options.configurations.findIndex(c => samePipeline(c, this.myPlayer.pipeline));
         fullBuild.disabled = !this.connected || !!this.pending;
         const metrics = this.myPlayer.metrics;
-        const entries = [['Compute time', formatSeconds(metrics.total_latency_s)], [metricInfo(track.task_type).label, formatPerformance(metrics)], ['Peak extraction RAM', `${Math.round(metrics.extraction_ram_mb)} MB`], ['Features retained / extracted', `${metrics.n_selected_features.toLocaleString()} / ${metrics.n_extracted_features.toLocaleString()}`]];
+        const entries = [['Compute time', formatSeconds(metrics.total_latency_s)], [metricInfo(track.task_type).label, formatPerformance(metrics)], ['Peak RAM', `${Math.round(metrics.extraction_ram_mb)} MB`], ['Features kept / extracted', `${metrics.n_selected_features.toLocaleString()} / ${metrics.n_extracted_features.toLocaleString()}`]];
         byId('selected-measurements').innerHTML = entries.map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`).join('');
         const previous = this.previousConfirmedMetrics || this._previousBuild()?.metrics;
-        byId('build-change').textContent = previous ? `Compared with your ${this.previousConfirmedMetrics ? 'previous selection' : 'last race'}: ${measurementChange(metrics, previous)}.` : '';
+        byId('build-change').textContent = previous ? `Since your ${this.previousConfirmedMetrics ? 'last selection' : 'last race'}: ${measurementChange(metrics, previous)}.` : '';
         byId('race-rules').textContent = raceExplanation(track.task_type);
         const racers = this.state.active_racers;
         const readyForHeat = p => p.is_ready && p.connected !== false
@@ -384,7 +384,7 @@ export class DemoClientApp {
         this.btnReady.disabled = !this.connected || !!this.pending;
         this.btnReady.className = `button ${isReady ? 'button-secondary' : 'button-primary'}`;
         this.btnReady.textContent = this.pending?.action === 'set_ready' ? 'Confirming…' : isReady ? 'Undo ready' : 'Ready →';
-        byId('ready-status').textContent = this.pending?.action === 'set_pipeline' ? 'Confirming your build…' : isReady ? 'You’re ready. Waiting for the rest of the grid.' : racers.filter(p => !p.is_bot).length === 1 ? 'Racing solo? A baseline bot will join you.' : 'The race starts when everyone is ready.';
+        byId('ready-status').textContent = this.pending?.action === 'set_pipeline' ? 'Confirming your build…' : isReady ? 'You’re ready. Waiting for the others.' : racers.filter(p => !p.is_bot).length === 1 ? 'A benchmark bot will join you for a solo race.' : 'The race starts when everyone is ready.';
     }
     _syncActiveOptionsWithPipeline(pipeline) {
         this.selectExtractor.value = pipeline.extractor;
@@ -401,7 +401,7 @@ export class DemoClientApp {
         const requested = {extractor: this.selectExtractor.value, selector: this.selectSelector.value, model: this.selectModel.value};
         const choices = this.state.track.options.configurations;
         let choice = choices.find(c => samePipeline(c, requested));
-        if (!choice) { this._showError('That combination has not been measured. Choose a supported build.'); this._renderConfiguration(); return; }
+        if (!choice) { this._showError('No benchmark is available for that combination.'); this._renderConfiguration(); return; }
         const {extractor, selector, model} = choice;
         this._command({action: 'set_pipeline', extractor, selector, model});
     }
@@ -415,13 +415,16 @@ export class DemoClientApp {
             this.presetMeasurements = data.all_points;
             if (this.view === 'configuration') this._renderConfiguration();
         } catch {
-            if (this.currentTrackId === trackId && this.view === 'configuration') this._showError('Benchmark exploration could not load. Your confirmed build measurements are still available.');
+            if (this.currentTrackId === trackId && this.view === 'configuration') this._showError('Other benchmark results could not load. Your selected results are available.');
         }
     }
     _renderWaiting() {
-        byId('waiting-message').textContent = `${this.myPlayer.nickname}, your place is reserved in the queue.`;
+        byId('waiting-message').textContent = `${this.myPlayer.nickname}, you’re waiting for a place.`;
         const index = this.state.spectators.filter(p => p.connected !== false).findIndex(p => p.client_id === this.clientId);
-        byId('waiting-status').textContent = `${['COUNTDOWN', 'RACING'].includes(this.state.phase) ? 'Race in progress' : this.state.phase === 'RESULTS' ? 'Waiting for the next heat' : 'Waiting for a free place'} · Queue position ${index + 1}`;
+        const reason = this.state.phase === 'COUNTDOWN' ? 'Race starting'
+            : this.state.phase === 'RACING' ? 'Race in progress'
+            : `Grid full · ${this.state.max_active_racers} places occupied`;
+        byId('waiting-status').textContent = `${reason} · Queue position ${index + 1}`;
         const running = ['COUNTDOWN', 'RACING'].includes(this.state.phase);
         byId('waiting-race').classList.toggle('hidden', !running);
         if (running) this._renderRace(this.waitingRenderer);
@@ -430,7 +433,7 @@ export class DemoClientApp {
     }
     _renderRace(renderer) {
         const state = this.state;
-        byId('race-measurement-note').textContent = `${raceExplanation(state.track.task_type)} Times are compressed equally for this heat.`;
+        byId('race-measurement-note').textContent = `${raceExplanation(state.track.task_type)} Times are scaled for the race.`;
         const key = `${state.heat_id}:${state.phase}`;
         renderer.viewerClientId = this.clientId;
         if (renderer.heatKey !== key || (state.phase === 'RACING' && !renderer.isRunning)) {
@@ -458,14 +461,14 @@ export class DemoClientApp {
         if (!results) return;
         const rows = finishPositions(results.rankings);
         const own = rows.find(r => r.client_id === this.clientId);
-        byId('result-summary').textContent = own ? `You finished P${own.finish_position}${own.tied ? ' · tied' : ''}.` : 'A comparison built on measured data.';
+        byId('result-summary').textContent = own ? `You finished P${own.finish_position}${own.tied ? ' · tied' : ''}.` : 'Race complete.';
         const task = rows[0]?.metrics.task_type || this.state.track.task_type;
-        byId('result-metric-note').textContent = `${metricInfo(task).note} Recorded benchmark measurements; matching race times share a position.`;
+        byId('result-metric-note').textContent = `${task === 'classification' ? 'Higher accuracy is better.' : metricInfo(task).note} Equal race times share a position.`;
         byId('result-rules-note').textContent = raceExplanation(task);
         const previous = this._previousBuild(results.heat_id);
-        byId('previous-build-comparison').textContent = own && previous ? `Compared with your last race: ${measurementChange(own.metrics, previous.metrics)}.` : '';
+        byId('previous-build-comparison').textContent = own && previous ? `Since your last race: ${measurementChange(own.metrics, previous.metrics)}.` : '';
         if (this.resultSignature !== results.heat_id) {
-            byId('podium-cards').innerHTML = rows.map(row => `<li class="result-row ${row.client_id === this.clientId ? 'is-you' : ''}"><div class="result-person"><span class="finish-position">${row.finish_position}${row.tied ? '=' : ''}</span><span class="racer-dot" data-color="${row.client_id}"></span><span>${escapeText(row.nickname)}</span>${row.client_id === this.clientId ? '<span class="you-label">You</span>' : ''}</div>${metricMarkup(row.metrics)}<p class="result-pipeline">${['extractor', 'selector', 'model'].map(k => escapeText(algorithmName(row.pipeline[k]))).join(' → ')}</p><p class="result-memory">Peak extraction RAM · ${Math.round(row.metrics.extraction_ram_mb)} MB</p>${row.race_schedule ? `<p class="race-breakdown">${raceTime(row.race_schedule.driving_ms)} driving + ${raceTime(row.race_schedule.pit_ms)} accuracy pit = <strong>${raceTime(row.race_schedule.finish_ms)} finish</strong></p>` : ''}</li>`).join('');
+            byId('podium-cards').innerHTML = rows.map(row => `<li class="result-row ${row.client_id === this.clientId ? 'is-you' : ''}"><div class="result-person"><span class="finish-position">${row.finish_position}${row.tied ? '=' : ''}</span><span class="racer-dot" data-color="${row.client_id}"></span><span>${escapeText(row.nickname)}</span>${row.client_id === this.clientId ? '<span class="you-label">You</span>' : ''}</div>${metricMarkup(row.metrics)}<p class="result-memory">Peak RAM · ${Math.round(row.metrics.extraction_ram_mb)} MB</p>${row.race_schedule ? `<p class="race-breakdown">${row.race_schedule.uses_accuracy ? `Drive ${raceTime(row.race_schedule.driving_ms)} · Pit ${raceTime(row.race_schedule.pit_ms)} · ` : ''}<strong>Total ${raceTime(row.race_schedule.finish_ms)}</strong></p>` : ''}</li>`).join('');
             byId('podium-cards').querySelectorAll('[data-color]').forEach(dot => dot.style.setProperty('--racer-color', rows.find(r => r.client_id === dot.dataset.color).avatar_color));
             const details = byId('result-technical-content');
             details.replaceChildren(...rows.map(row => {
@@ -486,7 +489,7 @@ export class DemoClientApp {
         const results = this.state?.results;
         if (!results) return;
         const task = results.rankings[0]?.metrics.task_type || this.state.track.task_type;
-        byId('chart-explanation').textContent = `Compare the builds you raced with all measured options. Left is faster; higher on the chart is better prediction quality. ${metricInfo(task).note} The purple line joins builds that cannot be beaten on both speed and prediction quality. The race uses fixed game rules to combine compute and accuracy; this chart shows their raw measurements. Memory is shown separately.`;
+        byId('chart-explanation').textContent = `Left is faster. Higher means ${task === 'forecasting' ? 'lower forecast error' : 'better predictions'}. The line marks pipelines that cannot improve on one axis without losing on the other.`;
         if (this.chartHeat === results.heat_id) { this.paretoChart.resize(); return; }
         try {
             const response = await fetch(`/api/pareto/${encodeURIComponent(results.track_id)}`);
@@ -495,7 +498,7 @@ export class DemoClientApp {
             if (this.state?.heat_id !== results.heat_id) return;
             this.paretoChart.setData(data.all_points, data.pareto_frontier, finishPositions(results.rankings), task, this.clientId);
             this.chartHeat = results.heat_id;
-        } catch { byId('chart-explanation').textContent = 'The chart could not load. Close and reopen this section to retry.'; }
+        } catch { byId('chart-explanation').textContent = 'Chart unavailable. Close and reopen to retry.'; }
     }
 
     _openAdmin() {

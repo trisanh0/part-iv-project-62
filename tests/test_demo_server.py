@@ -306,9 +306,41 @@ def test_six_racers_queue_promotion_and_local_next_round():
             state = state_until(sockets[0], lambda s: any(p['client_id'] == ids[0] and p.get('preparing_next') for p in s['active_racers']))
             assert state['phase'] == 'RESULTS'
             assert not next(p for p in state['active_racers'] if p['client_id'] == ids[1])['preparing_next']
-            assert admin(client, 'reset_lobby').status_code == 200
             sockets[5].send_json({'action': 'leave'})
             promoted = state_until(sockets[6], lambda s: any(p['client_id'] == ids[6] for p in s['active_racers']))
             assert not promoted['spectators']
+            assert promoted['phase'] == 'RESULTS'
+            assert next(p for p in promoted['active_racers'] if p['client_id'] == ids[6])['preparing_next']
+            assert promoted['results']['heat_id'] == results['heat_id']
     finally:
         room_manager.max_active_racers = previous_capacity
+
+
+def test_late_arrival_promotes_when_race_finishes_and_results_admit_new_visitors():
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as racer, client.websocket_connect('/ws/game') as waiting:
+            racer_id = hello(racer)['client_id']
+            waiting_id = hello(waiting)['client_id']
+            racer.send_json({'action': 'join', 'nickname': 'Alice'})
+            receive(racer, 'STATE_UPDATE')
+            assert admin(client, 'start_race').status_code == 200
+            waiting.send_json({'action': 'join', 'nickname': 'Late arrival'})
+            while True:
+                state = receive(waiting, 'STATE_UPDATE')['data']
+                if any(p['client_id'] == waiting_id for p in state['spectators']):
+                    break
+            results = receive(waiting, 'RACE_FINISH')['data']
+            state = receive(waiting, 'STATE_UPDATE')['data']
+            promoted = next(p for p in state['active_racers'] if p['client_id'] == waiting_id)
+            assert promoted['preparing_next'] and not promoted['is_spectator']
+            assert not next(p for p in state['active_racers'] if p['client_id'] == racer_id)['preparing_next']
+            assert state['phase'] == 'RESULTS' and state['results'] == results
+            assert not any(p['is_bot'] for p in state['active_racers'])
+            with client.websocket_connect('/ws/game') as newcomer:
+                newcomer_id = hello(newcomer)['client_id']
+                newcomer.send_json({'action': 'join', 'nickname': 'After the race'})
+                state = receive(newcomer, 'STATE_UPDATE')['data']
+                entrant = next(p for p in state['active_racers'] if p['client_id'] == newcomer_id)
+                assert entrant['preparing_next'] and not entrant['is_spectator']
+                newcomer.send_json({'action': 'set_pipeline', **entrant['pipeline']})
+                assert receive(newcomer, 'STATE_UPDATE')['data']['results'] == results

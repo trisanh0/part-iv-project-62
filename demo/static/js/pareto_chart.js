@@ -51,7 +51,7 @@ export class ParetoCanvasChart {
         this.inspectionPoints = [...this.racerPoints, ...this.allPoints];
         if (this.inspector) {
             this.inspector.replaceChildren();
-            for (const [label, points] of [['This heat', this.racerPoints], ['All measured builds', this.allPoints]]) {
+            for (const [label, points] of [['This race', this.racerPoints], ['All benchmarked pipelines', this.allPoints]]) {
                 if (!points.length) continue;
                 const group = document.createElement('optgroup');
                 group.label = label;
@@ -88,7 +88,7 @@ export class ParetoCanvasChart {
             if (point) {
                 const title = document.createElement('p');
                 title.className = 'chart-selection-title';
-                title.textContent = point.nickname || 'Measured build';
+                title.textContent = point.nickname || 'Benchmarked pipeline';
                 const pipeline = document.createElement('p');
                 pipeline.textContent = buildName(point);
                 const measurements = document.createElement('dl');

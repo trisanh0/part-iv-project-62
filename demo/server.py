@@ -249,8 +249,10 @@ async def expire_sessions():
             before = room_manager.revision
             room_manager.expire_disconnected()
             for token, session in list(sessions.items()):
-                # Heat entrants remain resumable until the presenter resets the room.
-                retained = room_manager.heat and any(e.client_id == session.client_id for e in room_manager.heat.entries)
+                # Protect frozen entrants through the race; results use the usual
+                # reconnect grace so abandoned places cannot block the next grid.
+                retained = (not room_manager.admission_open and room_manager.heat
+                            and any(e.client_id == session.client_id for e in room_manager.heat.entries))
                 if (not retained and session.client_id not in connections and session.disconnected_at is not None
                         and time.monotonic() - session.disconnected_at >= 30):
                     sessions.pop(token, None)
@@ -362,7 +364,8 @@ async def websocket_game_endpoint(websocket: WebSocket):
             return
         session = sessions.get(hello.resume_token)
         if session is not None and session.disconnected_at is not None:
-            retained = room_manager.heat and any(e.client_id == session.client_id for e in room_manager.heat.entries)
+            retained = (not room_manager.admission_open and room_manager.heat
+                        and any(e.client_id == session.client_id for e in room_manager.heat.entries))
             if not retained and time.monotonic() - session.disconnected_at >= 30:
                 room_manager.remove_player(session.client_id)
                 sessions.pop(session.token, None)

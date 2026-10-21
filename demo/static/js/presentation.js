@@ -8,19 +8,19 @@ const NAMES = {numba_efficient: 'Numba', numpy_statistical: 'NumPy summaries', p
     tsfresh_minimal: 'tsfresh Minimal', None: 'All features', random_forest: 'Random forest', logistic_regression: 'Logistic regression', ridge: 'Ridge',
     l1: 'L1 regularisation', fdr: 'False discovery rate', subsampled_fdr: 'Subsampled FDR', select_k_best_anova: 'ANOVA k-best'};
 export const GUIDED_STAGES = [
-    {key: 'extractor', title: 'Extract', purpose: 'Turn sensor signals into numerical features.', choices: [
-        {value: 'numpy_statistical', title: 'NumPy summaries', description: 'Five statistical summaries per channel.'},
-        {value: 'numba_efficient', title: 'Numba', description: 'A broad set of compiled signal features.'},
-        {value: 'tsfresh_minimal', title: 'tsfresh Minimal', description: 'A small feature set from the tsfresh library.'},
+    {key: 'extractor', title: 'Extract', purpose: 'Summarise the sensor signals as features.', choices: [
+        {value: 'numpy_statistical', title: 'NumPy summaries', description: 'Five statistics for each sensor channel.'},
+        {value: 'numba_efficient', title: 'Numba', description: 'A large feature set, using compiled code.'},
+        {value: 'tsfresh_minimal', title: 'tsfresh Minimal', description: 'A small set of features from tsfresh.'},
     ]},
-    {key: 'selector', title: 'Select', purpose: 'Choose which extracted features reach the model.', choices: [
-        {value: 'None', title: 'Keep all', description: 'Pass every extracted feature to the model.'},
-        {value: 'select_k_best_anova', title: 'ANOVA top 25', description: 'Keep 25 features ranked by their relationship to the target.'},
-        {value: 'subsampled_fdr', title: 'Subsampled FDR', description: 'Test feature relevance on a 10% sample of the training data.'},
+    {key: 'selector', title: 'Select', purpose: 'Choose which features the model uses.', choices: [
+        {value: 'None', title: 'Keep all', description: 'Use every extracted feature.'},
+        {value: 'select_k_best_anova', title: 'ANOVA top 25', description: 'Keep the 25 features most associated with the target.'},
+        {value: 'subsampled_fdr', title: 'Subsampled FDR', description: 'Select relevant features using 10% of the training data.'},
     ]},
-    {key: 'model', title: 'Predict', purpose: 'Learn to predict the target from the selected features.', choices: [
-        {value: 'logistic_regression', title: 'Logistic regression', description: 'Learn a linear decision rule.'},
-        {value: 'random_forest', title: 'Random forest', description: 'Combine predictions from many decision trees.'},
+    {key: 'model', title: 'Predict', purpose: 'Choose the prediction model.', choices: [
+        {value: 'logistic_regression', title: 'Logistic regression', description: 'Fit a linear classification model.'},
+        {value: 'random_forest', title: 'Random forest', description: 'Combine many decision trees.'},
     ]},
 ];
 
@@ -42,9 +42,9 @@ export const algorithmName = key => NAMES[key] || String(key || '').replaceAll('
 export const escapeText = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 export const samePipeline = (a, b) => !!a && !!b && ['extractor', 'selector', 'model'].every(k => a[k] === b[k]);
 export function metricInfo(task) {
-    if (task === 'classification') return {label: 'Prediction accuracy', suffix: '%', note: 'Accuracy is the share of correct predictions. Higher is better.'};
-    if (task === 'forecasting') return {label: 'Forecast error', suffix: 'RMSE', note: 'RMSE measures forecast error. Lower is better; values use the challenge’s target units.'};
-    return {label: 'Prediction fit', suffix: 'R²', note: 'R² measures fit against a constant prediction. Higher is better; negative values are possible.'};
+    if (task === 'classification') return {label: 'Accuracy', suffix: '%', note: 'Share of correct predictions. Higher is better.'};
+    if (task === 'forecasting') return {label: 'Forecast error', suffix: 'RMSE', note: 'RMSE is prediction error in the target’s units. Lower is better.'};
+    return {label: 'Prediction fit', suffix: 'R²', note: 'R² compares the model with predicting the mean. Higher is better; values can be negative.'};
 }
 export function formatPerformance(metrics) {
     if (!Number.isFinite(metrics?.score)) return '—';

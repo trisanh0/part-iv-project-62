@@ -109,7 +109,7 @@ body[data-view="landing"] .connection-status, body[data-view="joining"] .connect
 .build-change { color: var(--purple); font-size: .8rem; line-height: 1.65; margin: 16px 0; overflow-wrap: anywhere; }
 .build-change:empty { display: none; }
 .race-rules { border-left: 2px solid var(--purple); padding-left: 12px; font-size: .83rem; line-height: 1.6; margin: 20px 0; }
-.result-pipeline, .result-memory, .race-breakdown { margin: 12px 0 0 39px; font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
+.result-memory, .race-breakdown { margin: 12px 0 0 39px; font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
 .race-breakdown { color: var(--purple); font-variant-numeric: tabular-nums; }
 .build-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
 .build-metrics span { display: block; }

@@ -559,3 +559,13 @@ test('pit entry and exit match physical velocity rather than jumping between spe
         }
     }
 });
+
+test('finish opens promoted and new visitors builds while previous entrants keep results', () => {
+    const racers = [{client_id: 'previous', preparing_next: false}, {client_id: 'promoted', preparing_next: true},
+        {client_id: 'new', preparing_next: true}];
+    const results = {phase: 'RESULTS', active_racers: racers, spectators: []};
+    assert.equal(participantView(results, 'previous'), 'results');
+    assert.equal(participantView(results, 'promoted'), 'configuration');
+    assert.equal(participantView(results, 'new'), 'configuration');
+    assert.equal(participantView({...results, active_racers: racers.slice(0, 1), spectators: [{client_id: 'promoted'}]}, 'promoted'), 'waiting');
+});

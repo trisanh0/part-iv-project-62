@@ -109,6 +109,11 @@ class BoothRoomManager:
     def touch(self):
         self.revision += 1
 
+    @property
+    def admission_open(self):
+        """The grid is locked only while a heat is starting or running."""
+        return self.phase not in (GamePhase.COUNTDOWN, GamePhase.RACING)
+
     def require_editable(self):
         if self.phase not in (GamePhase.LOBBY, GamePhase.BUILDING):
             raise ValueError('Reset to the lobby before editing this heat')
@@ -129,12 +134,14 @@ class BoothRoomManager:
             raise ValueError('Nickname must contain 1–20 characters')
         if avatar_color is not None and not re.fullmatch(r'#[0-9a-fA-F]{6}', avatar_color):
             raise ValueError('Invalid colour')
+        self.expire_disconnected()
         spectator = (sum(not p.is_spectator for p in self.players.values()) >= self.max_active_racers
-                     or self.phase not in (GamePhase.LOBBY, GamePhase.BUILDING))
+                     or not self.admission_open)
         index = 0 if spectator else self._allocate_car_index()
         pipeline = self._get_default_pipeline()
         p = PlayerSlot(client_id, nickname.strip(), avatar_color or CAR_COLORS[index], index,
-                       is_spectator=spectator, pipeline=pipeline,
+                       is_spectator=spectator, preparing_next=self.phase == GamePhase.RESULTS and not spectator,
+                       pipeline=pipeline,
                        metrics=self.engine.get_config(self.current_track_id, **pipeline))
         self.players[client_id] = p
         self.touch()
@@ -142,7 +149,7 @@ class BoothRoomManager:
 
     def remove_player(self, client_id):
         p = self.players.pop(client_id, None)
-        if self.phase in (GamePhase.LOBBY, GamePhase.BUILDING):
+        if self.admission_open:
             self._promote_spectators()
         self.touch()
         return p
@@ -158,7 +165,7 @@ class BoothRoomManager:
             self.touch()
 
     def expire_disconnected(self, now=None):
-        if self.phase not in (GamePhase.LOBBY, GamePhase.BUILDING):
+        if not self.admission_open:
             return
         now = time.monotonic() if now is None else now
         for cid, p in list(self.players.items()):
@@ -166,6 +173,8 @@ class BoothRoomManager:
                 self.remove_player(cid)
 
     def _promote_spectators(self):
+        if not self.admission_open:
+            return
         for p in self.players.values():
             if sum(not x.is_spectator for x in self.players.values()) >= self.max_active_racers:
                 break
@@ -173,6 +182,8 @@ class BoothRoomManager:
                 p.car_index = self._allocate_car_index()
                 p.is_spectator = False
                 p.avatar_color = CAR_COLORS[p.car_index]
+                p.preparing_next = self.phase == GamePhase.RESULTS
+                p.is_ready = False
 
     def require_player_editable(self, client_id):
         player = self.players.get(client_id)
@@ -208,7 +219,8 @@ class BoothRoomManager:
         return False
 
     def add_bot(self, nickname=None, extractor=None, selector=None, model=None):
-        self.require_editable()
+        if not self.admission_open:
+            self.require_editable()
         if sum(not p.is_spectator for p in self.players.values()) >= self.max_active_racers:
             return None
         configs = self.engine.get_all_configs(self.current_track_id)
@@ -308,6 +320,13 @@ class BoothRoomManager:
             'track_id': self.heat.track_id, 'rankings': rows,
             'pareto_frontier': [dict(key=c.key, latency_s=c.total_latency_s, ram_mb=c.extraction_ram_mb, **metrics_dict(c))
                                 for c in self.engine.get_pareto_frontier(self.heat.track_id)], 'recorded_at_utc': time.time()}
+        # The completed heat owns its results. Bots and expired reservations must
+        # not occupy places on the next grid while people review that heat.
+        for client_id, player in list(self.players.items()):
+            if player.is_bot:
+                del self.players[client_id]
+        self.expire_disconnected()
+        self._promote_spectators()
         self.touch()
         return self.race_results_cache
 
