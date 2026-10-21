@@ -2,320 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TEMPO Grand Prix | Live Poster Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#4E2277">
+    <title>TEMPO — Build a model. Take the track.</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
-    <!-- Top Navigation & Challenge Track Banner -->
-    <header>
-        <div>
-            <div class="brand-title">TEMPO</div>
-            <div class="track-badge">
-                <span id="track-name" style="font-weight: 700; color: var(--text-primary);">Loading Track...</span> &bull; 
-                <span id="track-desc">Connecting to booth server...</span>
-            </div>
-        </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <span id="phase-badge" class="badge badge-phase">LOBBY</span>
-            <span id="spectator-badge" class="badge badge-spectator">SPECTATING</span>
-        </div>
+<body data-view="landing">
+    <header class="app-header">
+        <a class="wordmark" href="/" aria-label="TEMPO home">TEMPO<span class="wordmark-mark" aria-hidden="true">↗</span></a>
+        <span id="header-identity" class="header-identity"></span>
     </header>
-
+    <p id="connection-status" class="connection-status" role="status" aria-live="polite">Connecting to the track…</p>
     <main>
-        <!-- 1. LOBBY SCREEN (Grandstand & Join Form) -->
-        <section id="screen-lobby" class="card">
-            <h2 class="card-title">Join a Race</h2>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
-                Configure a time-series classification pipeline and see how it performs against others.
-            </p>
-
-            <div style="background-color: var(--bg-input); padding: 14px; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--border-color);">
-                <label for="input-nickname" class="form-label">Your nickname</label>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="input-nickname" class="form-input" placeholder="Enter a name (e.g. Alice)" maxlength="20">
-                    <button id="btn-join" class="btn btn-primary" style="width: auto; padding: 0 20px; white-space: nowrap;">Join</button>
-                </div>
-            </div>
-
-            <div style="margin-top: 16px;">
-                <label class="form-label">Participants</label>
-                <div id="lobby-racers-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
-                    <div style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic;">No one has joined yet.</div>
-                </div>
-            </div>
-
-            <!-- Presenter Direct Actions on Grandstand -->
-            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px;">
-                <label class="form-label">Host controls</label>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button id="btn-lobby-start-race" class="btn btn-success" style="font-size: 1.1rem; padding: 16px;">Start Race</button>
-                    <div style="display: flex; gap: 8px;">
-                        <button id="btn-lobby-add-bot" class="btn btn-secondary" style="flex: 1;">Add baseline bot</button>
-                        <button id="btn-lobby-reset" class="btn btn-secondary" style="flex: 1;">Reset</button>
-                    </div>
-                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
-                        <select id="lobby-track-select" class="form-select" style="flex: 1;"></select>
-                        <button id="btn-lobby-change-track" class="btn btn-secondary" style="width: auto; padding: 0 16px; white-space: nowrap;">Switch Track</button>
-                    </div>
-                </div>
-            </div>
+        <section id="screen-lobby" class="landing-screen" aria-labelledby="landing-title">
+            <div class="landing-masthead"><span class="wordmark">TEMPO<span class="wordmark-mark" aria-hidden="true">↗</span></span><span class="eyebrow">Engineering / Live</span></div>
+            <div class="landing-intro"><p class="eyebrow">Machine learning, in motion</p><h1 id="landing-title">Build a model.<br>Take the track.</h1><p class="landing-description">Swap the parts of a machine-learning pipeline.<br>Race the trade-offs. Refine your build.</p></div>
+            <svg class="pipeline-circuit" viewBox="0 0 350 175" role="img" aria-labelledby="circuit-title">
+                <title id="circuit-title">A racing circuit connects three stages: extract, select, predict.</title>
+                <path class="circuit-outline" d="M78 24 H255 C320 24 339 69 293 91 L247 111 C222 124 234 153 189 153 H77 C17 153 7 100 46 83 C77 69 36 24 78 24 Z"/>
+                <path class="circuit-route" d="M78 24 H255 C320 24 339 69 293 91 L247 111 C222 124 234 153 189 153 H77 C17 153 7 100 46 83 C77 69 36 24 78 24 Z"/>
+                <g class="circuit-node"><circle cx="105" cy="24" r="5"/><text x="105" y="53">Extract</text></g>
+                <g class="circuit-node"><circle cx="290" cy="92" r="5"/><text x="270" y="76">Select</text></g>
+                <g class="circuit-node"><circle cx="105" cy="153" r="5"/><text x="105" y="132">Predict</text></g>
+            </svg>
+            <form id="join-form" class="join-form" novalidate>
+                <label for="input-nickname">Your name</label>
+                <input id="input-nickname" name="nickname" autocomplete="nickname" enterkeyhint="go" maxlength="20" placeholder="What should we call you?" aria-describedby="join-error" required>
+                <p id="join-error" class="form-error" role="alert"></p>
+                <button id="btn-join" class="button button-on-purple" type="submit" disabled><span>Start</span><span aria-hidden="true">→</span></button>
+                <p class="landing-footnote">Up to 6 racers <span aria-hidden="true">/</span> No account needed</p>
+            </form>
         </section>
 
-        <!-- 2. PIPELINE BUILDER SCREEN (Mobile Participant Console) -->
-        <section id="screen-building" class="card hidden">
-            <div id="builder-racer-banner" style="display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-input); padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; border-left: 4px solid var(--color-accent);">
-                <div>
-                    <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Your entry</span>
-                    <div id="builder-racer-name" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">Racer</div>
-                </div>
-                <button id="btn-leave-heat" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.78rem; width: auto;">Leave</button>
-            </div>
-
-            <h2 class="card-title">Build your pipeline</h2>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
-                Choose how to extract, select, and classify features from the benchmark data.
-            </p>
-
-            <!-- Curated Presets -->
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-                <label class="form-label" style="margin-bottom: 0;">Presets</label>
-                <span style="font-size: 0.72rem; color: var(--text-secondary);">Tap a preset or customise components below</span>
-            </div>
-            <div class="preset-cards-grid">
-                <button type="button" class="preset-card active" data-preset="numba">
-                    <div class="preset-card-header">
-                        <span class="preset-card-title">Accelerated</span>
-                        <span class="preset-tag preset-tag-fast">Fastest</span>
-                    </div>
-                    <div class="preset-card-sub">TEMPO Numba + Random Forest</div>
-                    <div class="preset-card-desc">JIT-compiled features with high accuracy and fast launch.</div>
-                </button>
-                <button type="button" class="preset-card" data-preset="tsfresh">
-                    <div class="preset-card-header">
-                        <span class="preset-card-title">Standard Benchmark</span>
-                        <span class="preset-tag preset-tag-standard">Literature</span>
-                    </div>
-                    <div class="preset-card-sub">tsfresh + Random Forest</div>
-                    <div class="preset-card-desc">Exhaustive standard feature set with proven literature baseline.</div>
-                </button>
-                <button type="button" class="preset-card" data-preset="polars">
-                    <div class="preset-card-header">
-                        <span class="preset-card-title">Statistical Baseline</span>
-                        <span class="preset-tag preset-tag-lean">Lightweight</span>
-                    </div>
-                    <div class="preset-card-sub">Polars + Logistic Regression</div>
-                    <div class="preset-card-desc">Parallel statistical moments paired with a fast linear model.</div>
-                </button>
-            </div>
-
-            <!-- Hidden native selects to maintain backwards-compatibility -->
-            <select id="select-extractor" class="hidden"></select>
-            <select id="select-selector" class="hidden"></select>
-            <select id="select-model" class="hidden"></select>
-
-            <!-- 3-Step Component Customisation Accordion -->
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; margin-bottom: 8px;">
-                <label class="form-label" style="margin-bottom: 0;">Customise Components</label>
-                <span style="font-size: 0.72rem; color: var(--text-secondary);">Tap any stage to inspect or change</span>
-            </div>
-
-            <div class="accordion-container">
-                <!-- Step 1: Feature Extractor -->
-                <div class="accordion-item" data-accordion="extractor">
-                    <button type="button" class="accordion-header" id="btn-accordion-extractor">
-                        <div class="accordion-title-col">
-                            <span class="accordion-step-badge">Step 1</span>
-                            <span class="accordion-title">Feature Extractor</span>
-                        </div>
-                        <div class="accordion-status-col">
-                            <span class="accordion-selected-label" id="label-selected-extractor">TEMPO (Numba)</span>
-                            <span class="accordion-chevron">&#9662;</span>
-                        </div>
-                    </button>
-                    <div class="accordion-content" id="content-accordion-extractor">
-                        <div class="accordion-content-inner">
-                            <div class="stage-purpose-callout">
-                                Transforms raw sensor signals into mathematical features for classification.
-                            </div>
-                            <div class="options-cards-grid" id="options-extractor-grid"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2: Feature Selector -->
-                <div class="accordion-item" data-accordion="selector">
-                    <button type="button" class="accordion-header" id="btn-accordion-selector">
-                        <div class="accordion-title-col">
-                            <span class="accordion-step-badge">Step 2</span>
-                            <span class="accordion-title">Feature Selector</span>
-                        </div>
-                        <div class="accordion-status-col">
-                            <span class="accordion-selected-label" id="label-selected-selector">All Features (None)</span>
-                            <span class="accordion-chevron">&#9662;</span>
-                        </div>
-                    </button>
-                    <div class="accordion-content" id="content-accordion-selector">
-                        <div class="accordion-content-inner">
-                            <div class="stage-purpose-callout">
-                                Filters redundant, constant, or noisy features to reduce compute and prevent overfitting.
-                            </div>
-                            <div class="options-cards-grid" id="options-selector-grid"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 3: Predictive Model -->
-                <div class="accordion-item" data-accordion="model">
-                    <button type="button" class="accordion-header" id="btn-accordion-model">
-                        <div class="accordion-title-col">
-                            <span class="accordion-step-badge">Step 3</span>
-                            <span class="accordion-title">Predictive Model</span>
-                        </div>
-                        <div class="accordion-status-col">
-                            <span class="accordion-selected-label" id="label-selected-model">Random Forest</span>
-                            <span class="accordion-chevron">&#9662;</span>
-                        </div>
-                    </button>
-                    <div class="accordion-content" id="content-accordion-model">
-                        <div class="accordion-content-inner">
-                            <div class="stage-purpose-callout">
-                                Trains the algorithm to recognise classes and make predictions on unseen test data.
-                            </div>
-                            <div class="options-cards-grid" id="options-model-grid"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Machine Dynamics (Pace, Grip, Weight) -->
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; margin-bottom: 8px;">
-                <label class="form-label" style="margin-bottom: 0;">Machine Dynamics</label>
-                <span style="font-size: 0.72rem; color: var(--text-secondary);">Predicted traits</span>
-            </div>
-            <div class="telemetry-bars-card">
-                <div class="telemetry-bar-row">
-                    <div class="telemetry-bar-meta">
-                        <span class="telemetry-bar-title">Pace</span>
-                        <span id="label-pace-level" class="telemetry-bar-sub">Fast</span>
-                    </div>
-                    <div class="telemetry-bar-track">
-                        <div id="bar-pace" class="telemetry-bar-fill bar-fill-pace" style="width: 85%;"></div>
-                    </div>
-                </div>
-
-                <div class="telemetry-bar-row">
-                    <div class="telemetry-bar-meta">
-                        <span class="telemetry-bar-title">Grip</span>
-                        <span id="label-grip-level" class="telemetry-bar-sub">Glued</span>
-                    </div>
-                    <div class="telemetry-bar-track">
-                        <div id="bar-grip" class="telemetry-bar-fill bar-fill-grip" style="width: 90%;"></div>
-                    </div>
-                </div>
-
-                <div class="telemetry-bar-row">
-                    <div class="telemetry-bar-meta">
-                        <span class="telemetry-bar-title">Weight</span>
-                        <span id="label-weight-level" class="telemetry-bar-sub">Lightweight</span>
-                    </div>
-                    <div class="telemetry-bar-track">
-                        <div id="bar-weight" class="telemetry-bar-fill bar-fill-weight" style="width: 30%;"></div>
-                    </div>
-                    <div class="spectrum-sublabels">
-                        <span>Lightweight</span>
-                        <span>Heavyweight</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hidden elements for backward compatibility -->
-            <span id="stat-latency" class="hidden"></span>
-            <span id="stat-score" class="hidden"></span>
-            <span id="stat-ram" class="hidden"></span>
-
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button id="btn-ready" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px;">Ready</button>
-                <button id="btn-builder-start-race" class="btn btn-success hidden" style="font-size: 1rem; padding: 14px;">Start Race</button>
-            </div>
-
-            <!-- Other Racers in Heat -->
-            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px;">
-                <label class="form-label">Other participants</label>
-                <div id="builder-racers-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
-            </div>
+        <section id="screen-waiting" class="hidden" aria-labelledby="waiting-title">
+            <p class="eyebrow">Next on the grid</p><h1 id="waiting-title">You’re in line.</h1>
+            <p id="waiting-message" class="lede"></p>
+            <div class="waiting-line"><span class="status-dot"></span><span id="waiting-status">Waiting for an available place</span></div>
+            <p class="help-text">Your build screen will open when a place is available. You can watch the current race below.</p>
+            <button id="btn-leave-queue" class="text-button" type="button">Leave the queue</button>
+            <div id="waiting-race" class="hidden"><p class="eyebrow section-rule">On track now</p><div class="waiting-canvas"><canvas id="waiting-canvas" aria-label="Current race"></canvas></div><ol id="waiting-leaderboard" class="live-leaderboard" aria-label="Current race positions"></ol></div>
         </section>
 
-        <!-- 3. SYNCHRONIZED 2D CANVAS RACE SCREEN -->
-        <section id="screen-racing" class="hidden" style="width: 100%;">
-            <div class="canvas-wrapper">
-                <canvas id="race-canvas"></canvas>
-                <div id="countdown-overlay" class="countdown-overlay hidden">
-                    <div id="countdown-number" class="countdown-number">3</div>
-                </div>
-            </div>
+        <section id="screen-building" class="hidden" aria-labelledby="builder-title">
+            <div class="section-heading"><p class="eyebrow">01 / The build</p><button id="btn-leave-heat" class="text-button" type="button">Leave</button></div>
+            <h1 id="builder-title">Choose your build.</h1>
+            <p id="track-name" class="challenge-name"></p>
+            <details class="challenge-about"><summary>About this challenge</summary><p id="track-desc"></p></details>
+            <p class="section-intro">Swapping ML libraries usually means rewiring data and evaluation. TEMPO gives each component a shared interface.</p>
+            <div class="pipeline-strip" aria-label="Your pipeline"><span>Signals</span><span aria-hidden="true">→</span><strong>Extract</strong><span aria-hidden="true">→</span><strong>Select</strong><span aria-hidden="true">→</span><strong>Predict</strong></div>
+            <div id="guided-builder" class="guided-builder"></div>
+            <p id="custom-build-summary" class="custom-build-summary hidden"></p>
+            <div class="measurement-heading"><h2>Your measured build</h2><span class="help-text">Recorded benchmark</span></div>
+            <dl id="selected-measurements" class="technical-measurements build-measurements"></dl>
+            <p id="build-change" class="build-change" role="status" aria-live="polite"></p>
+            <p class="measurement-note">Compute = extraction + selection + model fitting. Memory = peak RAM during extraction. Your choices replay recorded benchmarks; they do not run a new experiment.</p>
+            <p id="race-rules" class="race-rules"></p>
+            <details id="pipeline-customisation" class="detail-section">
+                <summary>Full component library <span aria-hidden="true">+</span></summary>
+                <p class="help-text">Only measured combinations are selectable. Choose a complete build to switch between components that have different compatible options.</p>
+                <div class="field"><label for="select-measured-build">Measured builds</label><select id="select-measured-build"></select></div>
+                <div class="field"><label for="select-extractor">Feature extractor</label><select id="select-extractor"></select></div>
+                <div class="field"><label for="select-selector">Feature selector</label><select id="select-selector"></select></div>
+                <div class="field"><label for="select-model">Prediction model</label><select id="select-model"></select></div>
+            </details>
+            <details class="detail-section"><summary>How TEMPO makes this possible <span aria-hidden="true">+</span></summary><p class="help-text">A pipeline is a chain of plug-ins. TEMPO adapts datasets to one format, connects extractors, selectors and models, and evaluates them with the same experimental setup. Feature caching avoids repeating extraction; stage-level telemetry records time and memory. The framework handles that plumbing when a component changes.</p><p class="measurement-note">Race rules: driving cost = 1 + 0.12 × ln(1 + compute seconds); accuracy pit cost = 4 × (1 − accuracy). Both costs use one shared scale so the final car finishes at the chosen race duration. This weighting is a game rule, not a benchmark measurement. Memory is compared separately.</p><p class="measurement-note">This challenge uses one eligible benchmark measurement per build. The poster summarises separate experiments; this replay does not establish statistical significance.</p></details>
+            <p id="config-error" class="form-error" role="alert"></p>
+            <div class="participants-section"><div class="section-heading"><h2>On the grid</h2><span id="readiness-count" class="help-text"></span></div><ul id="builder-racers-list" class="participant-list"></ul></div>
+            <div class="ready-dock"><p id="ready-build-metrics" class="dock-measurements"></p><p id="ready-status" role="status">Choose a build, then join the grid.</p><button id="btn-ready" class="button button-primary" type="button">Ready <span aria-hidden="true">→</span></button></div>
         </section>
 
-        <!-- 4. RESULTS & PARETO FRONTIER SCREEN -->
-        <section id="screen-results" class="card hidden">
-            <h2 class="card-title">Results</h2>
+        <section id="screen-racing" class="hidden" aria-labelledby="race-title">
+            <div class="race-heading"><div><p class="eyebrow">02 / On track</p><h1 id="race-title">Grand Prix.</h1></div><span id="race-phase" class="race-phase">Live</span></div>
+            <div id="race-identity" class="race-identity">Watching the race</div>
+            <dl class="timing-strip"><div><dt>Elapsed</dt><dd id="race-elapsed">00:00.0</dd></div><div><dt>Your position</dt><dd id="race-position">—</dd></div><div><dt>Lap</dt><dd id="race-lap">— / 2</dd></div></dl>
+            <div class="race-canvas-wrapper"><canvas id="race-canvas" aria-label="Live race circuit"></canvas><div id="countdown-overlay" class="countdown-overlay hidden"><div class="start-sequence"><div id="start-lights" class="start-lights" aria-hidden="true"><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span></div><p id="start-light-status" class="start-light-status" role="status" aria-live="polite">Automatic start</p></div></div></div>
+            <div class="live-telemetry"><div class="section-heading"><h2>Live positions</h2><span class="help-text">2 laps</span></div><ol id="live-leaderboard" class="live-leaderboard" aria-label="Live race positions"></ol></div>
+            <p id="race-measurement-note" class="measurement-note"></p>
+        </section>
 
-            <div id="podium-cards" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-                <!-- Dynamically populated podium cards -->
-            </div>
-
-            <h3 class="card-title" style="font-size: 0.95rem; margin-top: 16px;">Performance vs Speed</h3>
-            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">
-                Tap any point to see detailed metrics.
-            </p>
-
-            <div class="canvas-wrapper" style="aspect-ratio: 4 / 3; min-height: 280px;">
-                <canvas id="pareto-canvas"></canvas>
-            </div>
-            <div id="pareto-tooltip" style="display: none; background: var(--bg-card); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); box-shadow: var(--shadow-md); margin-top: 8px;"></div>
-
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button id="btn-next-round" class="btn btn-primary" style="flex: 1; padding: 14px;">Race again</button>
-            </div>
+        <section id="screen-results" class="hidden" aria-labelledby="results-title">
+            <p class="eyebrow">03 / The comparison</p><h1 id="results-title">Across the line.</h1>
+            <p id="result-summary" class="lede"></p><p id="result-rules-note" class="help-text"></p><p id="previous-build-comparison" class="build-change"></p>
+            <div class="comparison-heading"><span>Race finish</span><span>Compute / Prediction quality</span></div>
+            <ol id="podium-cards" class="results-list"></ol>
+            <p id="result-metric-note" class="measurement-note"></p>
+            <details class="detail-section" id="result-technical"><summary>Technical details <span aria-hidden="true">+</span></summary><div id="result-technical-content"></div></details>
+            <details class="detail-section" id="benchmark-explorer"><summary>Compare speed &amp; predictions <span aria-hidden="true">+</span></summary><p id="chart-explanation" class="help-text"></p><div class="chart-legend"><span><i class="legend-point"></i>Measured builds</span><span><i class="legend-line"></i>Best trade-offs</span><span><i class="legend-racer"></i>This heat</span></div><div class="chart-canvas-wrapper"><canvas id="pareto-canvas" aria-label="Compute time and prediction quality comparison"></canvas></div><div class="field"><label for="benchmark-inspector">Inspect a build</label><select id="benchmark-inspector" disabled><option>Loading measured builds…</option></select></div><div id="pareto-tooltip" class="chart-tooltip" hidden></div></details>
+            <p id="results-error" class="form-error" role="alert"></p>
+            <div class="results-action"><p>Try changing one component and compare the result.</p><button id="btn-next-round" class="button button-primary" type="button">Change your build <span aria-hidden="true">↗</span></button></div>
         </section>
     </main>
-
-    <!-- Footer & Presenter Admin Trigger -->
-    <footer>
-        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto;">
-            <span>Part IV Project 62</span>
-            <button id="btn-open-admin" class="preset-chip" style="font-size: 0.7rem; padding: 4px 8px;">Settings</button>
+    <footer class="site-footer"><span>TEMPO / Engineering</span><button id="btn-open-admin" class="text-button" type="button">Presenter <span aria-hidden="true">↗</span></button></footer>
+    <dialog id="admin-modal" class="presenter-dialog" aria-labelledby="admin-title">
+        <div class="section-heading"><p class="eyebrow">Race control</p><button id="btn-close-admin" class="text-button" type="button" aria-label="Close presenter settings">Close</button></div>
+        <h2 id="admin-title">Presenter settings</h2>
+        <form id="admin-unlock-form"><div class="field"><label for="admin-pin">Admin password</label><input type="password" id="admin-pin" autocomplete="current-password" maxlength="128" required></div><button class="button button-primary" type="submit">Unlock settings <span aria-hidden="true">→</span></button></form>
+        <p id="admin-status" class="help-text" role="status" aria-live="polite"></p>
+        <div id="admin-controls" class="hidden">
+            <div class="field"><label for="admin-track-select">Challenge</label><select id="admin-track-select"></select><label class="checkbox-label"><input id="admin-all-tracks" type="checkbox">Show all tracks</label><p class="help-text">Keep the same challenge for a few rounds. Classification races include accuracy pit stops. Regression and forecasting use compute-only rules.</p><button id="btn-admin-change-track" class="button button-secondary" type="button">Change challenge</button></div>
+            <div class="field"><label for="admin-duration-input">Race duration (seconds)</label><input id="admin-duration-input" type="number" min="5" max="60" value="27"><button id="btn-admin-set-duration" class="button button-secondary" type="button">Set duration</button></div>
+            <div class="admin-actions"><button id="btn-admin-add-bot" class="button button-secondary" type="button">Add baseline bot</button><button id="btn-admin-start-race" class="button button-primary" type="button">Start race</button><button id="btn-admin-watch" class="button button-secondary" type="button">Watch current heat</button><button id="btn-admin-reset" class="button button-secondary" type="button">Reset room for everyone</button><button id="btn-admin-lock" class="text-button" type="button">Lock settings</button></div>
         </div>
-    </footer>
-
-    <!-- Authenticated Presenter Admin Modal -->
-    <div id="admin-modal" class="modal-backdrop hidden">
-        <div class="modal-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 class="card-title" style="margin: 0;">Settings</h3>
-                <button id="btn-close-admin" style="background: none; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer;">&times;</button>
-            </div>
-
-            <div class="form-group">
-                <label for="admin-pin" class="form-label">Passcode</label>
-                <input type="password" id="admin-pin" class="form-input" value="7000">
-            </div>
-
-            <div class="form-group">
-                <label for="admin-duration-input" class="form-label">Race duration (seconds)</label>
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" id="admin-duration-input" class="form-input" value="14" min="5" max="60">
-                    <button id="btn-admin-set-duration" class="btn btn-secondary" style="width: auto; padding: 0 16px;">Set</button>
-                </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
-                <button id="btn-admin-reset" class="btn btn-secondary">Reset room</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Application Script Module -->
+    </dialog>
     <script type="module" src="/static/js/app.js"></script>
 </body>
 </html>

@@ -1,24 +1,27 @@
 /**
- * TEMPO Display Day 2D Canvas Race Renderer.
+ * TEMPO open-wheel race and live timing renderer.
  *
  * Runs the 60 FPS requestAnimationFrame animation loop, mapping empirical
- * ML latency to vehicle throttle/staging delay, and classification score to cornering grip.
+ * measured ML latency to race progress and authoritative finish times.
  */
 
-import { TrackCircuit } from "./track.js";
+import {scheduledMotion} from './race_motion.js';
+import { TrackCircuit, CIRCUIT_WIDTH, CIRCUIT_HEIGHT, CIRCUIT_PALETTE } from "./track.js";
 
 export class RaceCanvasRenderer {
     /**
      * @param {HTMLCanvasElement} canvas
      */
-    constructor(canvas) {
+    constructor(canvas, leaderboard = null, onTelemetry = null) {
         this.canvas = canvas;
+        this.leaderboard = leaderboard;
+        this.onTelemetry = onTelemetry;
         this.ctx = canvas.getContext("2d");
         this.circuit = new TrackCircuit();
 
         this.racers = [];
         this.raceStartTimeMs = 0;
-        this.raceDurationSec = 14.0;
+        this.raceDurationSec = 27.0;
         this.totalLaps = 2;
         this.isRunning = false;
         this.animationFrameId = null;
@@ -78,46 +81,48 @@ export class RaceCanvasRenderer {
     /**
      * Set active racers and race parameters.
      */
-    setupRace(racers, durationSec = 14.0, startTimeMs = 0) {
+    setupRace(racers, durationSec = 27.0, startTimeMs = 0) {
         this.resize();
         this.raceDurationSec = durationSec;
         this.raceStartTimeMs = startTimeMs || Date.now();
 
-        // Calculate dynamic physics weights for each racer based on their real metrics
+        // Derive deterministic pace from each entrant’s measured compute time.
         this.racers = racers.map((r, idx) => {
             const m = r.metrics || {};
             const extractionTime = Math.max(0.01, m.extraction_time_s || 1.0);
             const totalLatency = Math.max(0.01, m.total_latency_s || extractionTime);
-            const score = Math.max(0.5, Math.min(1.0, m.score || 0.9));
 
-            // Staging delay simulates extraction compute overhead before car launches
-            // Logarithmic compression keeps max wait to 3.0s while showing clear disparity
-            const launchDelaySec = Math.min(3.2, Math.max(0.2, Math.log(1 + extractionTime) * 0.7));
-
-            // Run speed multiplier
-            const availableDriveSec = Math.max(2.0, this.raceDurationSec - launchDelaySec);
-            const speedFactor = 1.0 / (1.0 + 0.12 * Math.log(1 + totalLatency));
+            // Log compression preserves latency ordering without making fast cars vanish.
+            const speedFactor = 1.0 / (1.0 + 0.12 * Math.log1p(totalLatency));
 
             return {
                 ...r,
-                launchDelaySec,
-                availableDriveSec,
                 speedFactor,
-                score,
+                pacePhase: (r.car_index ?? idx) * Math.PI * (3 - Math.sqrt(5)),
                 totalLatency,
                 extractionTime,
                 progress: 0.0,
-                lateralOffset: (idx - (racers.length - 1) / 2) * 10, // Lane grid spacing
+                lateralOffset: (idx % 2 === 0 ? -1 : 1) * 15,
+                gridRow: Math.floor(idx / 2),
                 isFinished: false,
                 finishTimeSec: null,
             };
         });
+        this.leaderboardRows = new Map();
+        this.leaderboard?.replaceChildren();
+        this.lastLeaderboardTick = null;
+        const slowestSpeed = Math.min(...this.racers.map(car => car.speedFactor));
+        for (const car of this.racers) {
+            car.completionTimeSec = car.race_schedule ? car.race_schedule.finish_ms / 1000 : this.raceDurationSec * (slowestSpeed / car.speedFactor);
+        }
+
     }
 
     /**
      * Start the continuous animation loop.
      */
     start() {
+        this.stop();
         this.resize();
         this.isRunning = true;
         const tick = () => {
@@ -125,7 +130,7 @@ export class RaceCanvasRenderer {
             const elapsedSec = (Date.now() - this.raceStartTimeMs) / 1000.0;
             this.renderFrame(elapsedSec);
 
-            if (elapsedSec < this.raceDurationSec + 2.0) {
+            if (elapsedSec < this.raceDurationSec) {
                 this.animationFrameId = requestAnimationFrame(tick);
             } else {
                 this.isRunning = false;
@@ -159,42 +164,51 @@ export class RaceCanvasRenderer {
 
         ctx.clearRect(0, 0, width, height);
 
-        // Draw background terrain
-        ctx.fillStyle = "#F0F1F4";
+        // Carry the page surface through the circuit.
+        ctx.fillStyle = CIRCUIT_PALETTE.paper;
         ctx.fillRect(0, 0, width, height);
 
         // Render circuit tarmac and obtain viewport coordinate scale
         const scale = this.circuit.render(ctx, width, height);
-        const offsetX = (width - 1000 * scale) / 2;
-        const offsetY = (height - 600 * scale) / 2;
+        const offsetX = (width - CIRCUIT_WIDTH * scale) / 2;
+        const offsetY = (height - CIRCUIT_HEIGHT * scale) / 2;
 
+        this.driverLabels = [];
         // Update and draw each competitor vehicle
         this.racers.forEach((car) => {
-            // Compute vehicle progression
-            let lapProgress = 0.0;
-            let currentStatus = "EXTRACTING";
-
-            if (elapsedSec > car.launchDelaySec) {
-                const drivingElapsed = elapsedSec - car.launchDelaySec;
-                // Target: fastest reaches 2.0 laps around raceDurationSec
-                const completionRate = drivingElapsed / car.availableDriveSec;
-                lapProgress = Math.min(this.totalLaps, completionRate * this.totalLaps * car.speedFactor);
-                currentStatus = lapProgress >= this.totalLaps ? "FINISHED" : `LAP ${Math.min(this.totalLaps, Math.floor(lapProgress) + 1)}/${this.totalLaps}`;
-            }
-
+            // Every car moves from t=0; the slowest completes at the room deadline.
+            const fraction = Math.min(1, Math.max(0, elapsedSec) / car.completionTimeSec);
+            // One gentle pace wave per race. Speed modulation stays below 9%,
+            // with no displacement or speed change at either endpoint.
+            const variation = 0.009 * Math.sin(Math.PI * fraction) ** 2
+                * Math.sin(2 * Math.PI * fraction + car.pacePhase);
+            const elapsedLaps = this.totalLaps * (fraction + variation);
+            // A common monotonic time-to-distance map slows corners while preserving
+            // completion times, tied finishes and deterministic reconnect playback.
+            const motion = car.race_schedule
+                ? scheduledMotion(car.race_schedule, elapsedSec * 1000, this.circuit, car.pacePhase) : null;
+            const lapProgress = motion ? motion.progress : this.circuit.progressAtTime(elapsedLaps);
+            car.inPit = !!motion?.inPit;
+            car.dwelling = !!motion?.dwelling;
+            car.pitRemaining = motion?.pitRemaining || 0;
             car.progress = lapProgress;
-            if (lapProgress >= this.totalLaps && !car.isFinished) {
-                car.isFinished = true;
-                car.finishTimeSec = elapsedSec;
-            }
+            car.isFinished = lapProgress >= this.totalLaps;
+            car.finishTimeSec = car.isFinished ? car.completionTimeSec : null;
 
             // Sample track coordinate at instantaneous progress
-            const pt = this.circuit.sample(lapProgress);
+            // A two-column grid converges onto the race line after launch.
+            // This visual grid spacing does not change measured progress or finish times.
+            const launch = Math.min(1, lapProgress / .12);
+            const gridFade = 1 - launch * launch * (3 - 2 * launch);
+            const gridSpacing = (car.gridRow * 60) / (this.circuit.totalTrackLength || 4000);
+            const pt = motion?.inPit ? this.circuit.samplePit(motion.pitRoute)
+                : this.circuit.sample(lapProgress - gridSpacing * gridFade);
 
-            // Compute cornering slip governed by (1 - Accuracy)
-            // Low accuracy slides wide on sharp corners (high curvature)
-            const slipMagnitude = (1.0 - car.score) * 60.0 * (pt.curvature * 15.0);
-            const dynamicOffset = car.lateralOffset + slipMagnitude * Math.sin(elapsedSec * 6);
+            const pitBlend = car.race_schedule?.uses_accuracy && !car.inPit
+                ? Math.min(1, Math.abs(lapProgress - .9318) / .025, Math.abs(lapProgress - 1.0818) / .025) : 1;
+            const smoothPitBlend = pitBlend * pitBlend * (3 - 2 * pitBlend);
+            const laneScale = car.inPit ? 0 : (gridFade + (1 - gridFade) * (pt.laneScale ?? 1)) * smoothPitBlend;
+            const dynamicOffset = car.lateralOffset * laneScale;
 
             // Perpendicular unit vector to heading
             const perpX = -Math.sin(pt.heading);
@@ -207,122 +221,124 @@ export class RaceCanvasRenderer {
             const screenX = offsetX + carVirtualX * scale;
             const screenY = offsetY + carVirtualY * scale;
 
-            this._drawCarSprite(ctx, screenX, screenY, pt.heading, car, scale, currentStatus);
+            this._drawDriverMarker(ctx, screenX, screenY, car, scale, pt.heading);
         });
 
-        // Draw Telemetry Leaderboard Overlay
-        this._drawLeaderboardOverlay(ctx, width, height, elapsedSec);
+        this._drawLabels(ctx, width, height);
+        this._updateLeaderboard(elapsedSec);
     }
 
-    /**
-     * Draw geometric top-down racecar sprite with wheels and nametag.
-     */
-    _drawCarSprite(ctx, x, y, heading, car, scale, status) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(heading);
-
-        const carLen = 28 * scale;
-        const carWid = 16 * scale;
-
-        // Tires (4 corners)
-        ctx.fillStyle = "#B0B5C0";
-        const tireLen = 8 * scale;
-        const tireWid = 4 * scale;
-        ctx.fillRect(-carLen / 2 + 2, -carWid / 2 - tireWid / 2, tireLen, tireWid);
-        ctx.fillRect(carLen / 2 - tireLen - 2, -carWid / 2 - tireWid / 2, tireLen, tireWid);
-        ctx.fillRect(-carLen / 2 + 2, carWid / 2 - tireWid / 2, tireLen, tireWid);
-        ctx.fillRect(carLen / 2 - tireLen - 2, carWid / 2 - tireWid / 2, tireLen, tireWid);
-
-        // Vehicle Chassis
-        ctx.fillStyle = car.avatar_color || "#3B82F6";
+    /** Render a compact open-wheel silhouette aligned to the racing line. */
+    _drawDriverMarker(ctx, x, y, car, scale, heading = 0) {
+        const mine = !!this.viewerClientId && car.client_id === this.viewerClientId;
+        const color = car.avatar_color || CIRCUIT_PALETTE.ink;
+        const length = Math.max(20, Math.min(28, 52 * scale));
+        const width = length * .44;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(heading);
+        if (mine) {
+            ctx.strokeStyle = CIRCUIT_PALETTE.ink; ctx.lineWidth = .9;
+            ctx.beginPath(); ctx.ellipse(0, 0, length * .67, width, 0, 0, Math.PI * 2); ctx.stroke();
+        }
+        // Four exposed tyres, separated from the narrow central body.
+        ctx.fillStyle = '#17131C';
+        for (const axle of [-.30, .25]) {
+            for (const side of [-1, 1]) ctx.fillRect(axle * length - length * .11,
+                side * width * .44 - width * .16, length * .22, width * .32);
+        }
+        ctx.fillStyle = color; ctx.strokeStyle = '#20182B'; ctx.lineWidth = .5;
         ctx.beginPath();
-        ctx.roundRect(-carLen / 2, -carWid / 2, carLen, carWid, 4 * scale);
-        ctx.fill();
-
-        // Cockpit / Windshield
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(-carLen * 0.1, -carWid * 0.3, carLen * 0.4, carWid * 0.6);
-
-        // Front wing indicator
-        ctx.fillStyle = "#1A1A2E";
-        ctx.fillRect(carLen / 2 - 2, -carWid / 2, 2, carWid);
-
+        ctx.moveTo(-length * .4, -width * .20);
+        ctx.lineTo(-length * .15, -width * .30);
+        ctx.lineTo(length * .13, -width * .16);
+        ctx.lineTo(length * .46, -width * .07);
+        ctx.lineTo(length * .46, width * .07);
+        ctx.lineTo(length * .13, width * .16);
+        ctx.lineTo(-length * .15, width * .30);
+        ctx.lineTo(-length * .4, width * .20);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillRect(length * .39, -width * .57, length * .08, width * 1.14);
+        ctx.fillRect(-length * .48, -width * .46, length * .10, width * .92);
+        // Cockpit and halo keep the silhouette recognisably single-seater.
+        ctx.fillStyle = '#241A31';
+        ctx.beginPath(); ctx.ellipse(-length * .08, 0, length * .12, width * .18, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#F6F1FA'; ctx.lineWidth = .65;
+        ctx.beginPath(); ctx.ellipse(-length * .06, 0, length * .09, width * .16, 0, -Math.PI / 2, Math.PI / 2); ctx.stroke();
         ctx.restore();
-
-        // Nametag & Status badge
-        ctx.save();
-        ctx.translate(x, y - 22 * scale);
-        ctx.font = `bold ${Math.max(10, Math.floor(11 * scale))}px system-ui, sans-serif`;
-        ctx.textAlign = "center";
-
-        // Label background pill
-        const labelText = `${car.nickname} (${car.pipeline?.extractor || "TEMPO"})`;
-        const textWidth = ctx.measureText(labelText).width;
-        ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
-        ctx.beginPath();
-        ctx.roundRect(-textWidth / 2 - 6, -12, textWidth + 12, 16, 4);
-        ctx.fill();
-
-        // Label text
-        ctx.fillStyle = car.avatar_color || "#1A1A2E";
-        ctx.fillText(labelText, 0, 0);
-
-        ctx.restore();
+        this.driverLabels.push({x, y, mine, name: car.nickname || "Racer"});
     }
 
-    /**
-     * Draw split-screen telemetry leaderboard in canvas upper-right corner.
-     */
-    _drawLeaderboardOverlay(ctx, width, height, elapsedSec) {
-        const sorted = [...this.racers].sort((a, b) => b.progress - a.progress);
+    _drawLabels(ctx, width, height) {
+        const occupied = [];
+        for (const label of this.driverLabels.sort((a, b) => Number(b.mine) - Number(a.mine))) {
+            ctx.save(); ctx.font = `${label.mine ? 600 : 400} 12px system-ui`;
+            const name = label.name.length > 14 ? label.name.slice(0, 13) + "…" : label.name;
+            const text = label.mine ? `${name} / you` : name;
+            const w = ctx.measureText(text).width, h = 18;
+            let box;
+            for (const [dx, dy] of [[12, -9], [-w - 12, -9], [12, 12], [-w - 12, 12], [12, -30], [-w - 12, -30], [12, 33], [-w - 12, 33]]) {
+                const candidate = {x: Math.max(6, Math.min(width - w - 6, label.x + dx)),
+                    y: Math.max(6, Math.min(height - h - 6, label.y + dy)), w, h};
+                if (!occupied.some(b => candidate.x < b.x + b.w + 5 && candidate.x + w + 5 > b.x && candidate.y < b.y + b.h + 3 && candidate.y + h + 3 > b.y)) {
+                    box = candidate; break;
+                }
+            }
+            if (!box) { ctx.restore(); continue; }
+            occupied.push(box);
+            ctx.strokeStyle = CIRCUIT_PALETTE.labelLine; ctx.lineWidth = .7;
+            const anchor = box.x > label.x ? box.x - 3 : box.x + w + 3;
+            ctx.beginPath(); ctx.moveTo(label.x, label.y); ctx.lineTo(anchor, box.y + h / 2); ctx.stroke();
+            // A paper halo keeps names legible when the circuit passes underneath.
+            ctx.textAlign = "left"; ctx.lineJoin = "round";
+            ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 4;
+            ctx.strokeText(text, box.x, box.y + 13);
+            ctx.fillStyle = label.mine ? CIRCUIT_PALETTE.ink : CIRCUIT_PALETTE.label;
+            ctx.fillText(text, box.x, box.y + 13);
+            ctx.restore();
+        }
+    }
 
-        ctx.save();
-        const cardWidth = Math.min(260, width * 0.35);
-        const cardX = width - cardWidth - 14;
-        const cardY = 14;
+    getStandings() {
+        return [...this.racers].sort((a, b) =>
+            b.progress - a.progress || a.completionTimeSec - b.completionTimeSec ||
+            String(a.client_id || "").localeCompare(String(b.client_id || "")));
+    }
 
-        ctx.fillStyle = "rgba(255, 255, 255, 0.94)";
-        ctx.strokeStyle = "#E2E4E9";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.roundRect(cardX, cardY, cardWidth, 26 + sorted.length * 28, 8);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = "bold 11px system-ui, sans-serif";
-        ctx.fillStyle = "#6B7185";
-        ctx.fillText("LIVE TELEMETRY STANDINGS", cardX + 12, cardY + 18);
-
-        sorted.forEach((r, i) => {
-            const rowY = cardY + 40 + i * 28;
-
-            // Position badge
-            ctx.fillStyle = i === 0 ? "#FBBF24" : i === 1 ? "#8B8FA3" : "#9CA3AF";
-            ctx.font = "bold 12px system-ui, sans-serif";
-            ctx.fillText(`P${i + 1}`, cardX + 12, rowY);
-
-            // Car Color Dot
-            ctx.fillStyle = r.avatar_color || "#3B82F6";
-            ctx.beginPath();
-            ctx.arc(cardX + 40, rowY - 4, 5, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Name
-            ctx.fillStyle = "#1A1A2E";
-            ctx.font = "500 12px system-ui, sans-serif";
-            const truncatedName = r.nickname.length > 10 ? r.nickname.substring(0, 9) + "…" : r.nickname;
-            ctx.fillText(truncatedName, cardX + 52, rowY);
-
-            // Score & Latency
-            ctx.fillStyle = "#6B7185";
-            ctx.font = "11px system-ui, sans-serif";
-            ctx.textAlign = "right";
-            const latencyStr = `${(r.totalLatency || 0).toFixed(1)}s`;
-            ctx.fillText(latencyStr, cardX + cardWidth - 12, rowY);
-            ctx.textAlign = "left";
+    _updateLeaderboard(elapsedSec) {
+        if (!this.leaderboard) return;
+        const tick = Math.floor(Math.max(0, elapsedSec) * 10);
+        if (tick === this.lastLeaderboardTick) return;
+        this.lastLeaderboardTick = tick;
+        const standings = this.getStandings();
+        if (this.onTelemetry) {
+            const own = standings.find(r => r.client_id === this.viewerClientId);
+            this.onTelemetry({elapsed: Math.max(0, Math.min(elapsedSec, this.raceDurationSec)),
+                position: own && elapsedSec > 0 ? standings.findIndex(r => r === own ||
+                    (own.isFinished && r.isFinished && r.completionTimeSec === own.completionTimeSec)) + 1 : null,
+                lap: own ? Math.min(this.totalLaps, Math.floor(own.progress) + 1) : null});
+        }
+        standings.forEach((car, index) => {
+            let row = this.leaderboardRows.get(car);
+            if (!row) {
+                row = document.createElement("li");
+                row.className = "live-racer";
+                for (const className of ["live-position", "live-name", "live-progress"]) {
+                    const cell = document.createElement("span");
+                    cell.className = className;
+                    row.appendChild(cell);
+                }
+                row.children[1].textContent = `${car.nickname}${car.client_id === this.viewerClientId ? " (You)" : ""}`;
+                row.classList.toggle("is-you", !!this.viewerClientId && car.client_id === this.viewerClientId);
+                row.style.setProperty("--racer-color", car.avatar_color || "#3B82F6");
+                this.leaderboardRows.set(car, row);
+            }
+            const previous = standings[index - 1];
+            const tied = car.isFinished && previous?.isFinished && car.completionTimeSec === previous.completionTimeSec;
+            row.children[0].textContent = tied ? "=" : `P${index + 1}`;
+            row.children[2].textContent = car.isFinished
+                ? `Finished · ${car.finishTimeSec.toFixed(3)}s`
+                : car.inPit ? (car.dwelling ? `In pits · accuracy penalty ${car.pitRemaining.toFixed(1)}s` : `Pit lane · ${car.pitRemaining.toFixed(1)}s penalty`)
+                : `Lap ${Math.min(this.totalLaps, Math.floor(car.progress) + 1)}/${this.totalLaps} · ${Math.floor(car.progress / this.totalLaps * 100)}%`;
+            this.leaderboard.appendChild(row);
         });
-
-        ctx.restore();
     }
 }

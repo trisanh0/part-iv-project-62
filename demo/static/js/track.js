@@ -1,3 +1,5 @@
+import {PIT_ENTRY_PROGRESS, PIT_EXIT_PROGRESS} from './race_motion.js';
+
 /**
  * TEMPO Display Day 2D Circuit Track Geometry.
  *
@@ -5,30 +7,44 @@
  * for 2D canvas race rendering without external physics libraries.
  */
 
+export const CIRCUIT_WIDTH = 1000;
+export const CIRCUIT_HEIGHT = 1400;
+
+export const CIRCUIT_PALETTE = Object.freeze({
+    paper: '#FAF9FC', line: '#B8ADBF', ink: '#4E2277',
+    asphalt: '#382E43', runoff: '#EEE8F5', kerb: '#AA8FBC',
+    label: '#45374F', labelLine: '#C6BDCF',
+});
+
 export class TrackCircuit {
     /**
      * Initialize track with closed control points and normalized interpolation table.
      */
     constructor() {
-        // Closed loop control waypoints scaled to a virtual 1000x600 coordinate canvas
+        // Closed loop control waypoints scaled to a virtual 1000x1400 coordinate canvas
+        // Original Grand Prix layout: pit straight, opening chicane, two fast
+        // sweepers, an infield direction change and a broad final return.
         this.controlPoints = [
-            { x: 180, y: 150 }, // Turn 1 entrance
-            { x: 450, y: 120 }, // North high-speed straight
-            { x: 750, y: 140 }, // Turn 2 approach
-            { x: 880, y: 220 }, // Turn 2 hairpin apex
-            { x: 850, y: 380 }, // East loop
-            { x: 700, y: 440 }, // Chicane entrance
-            { x: 620, y: 350 }, // Chicane flick
-            { x: 480, y: 480 }, // South sweeping bend
-            { x: 250, y: 500 }, // Final turn approach
-            { x: 120, y: 400 }, // Final hairpin apex
-            { x: 130, y: 250 }, // Main straightaway
+            {x: 220, y: 740},
+            {x: 220, y: 620}, {x: 220, y: 380},
+            {x: 230, y: 240}, {x: 290, y: 170},
+            {x: 370, y: 220}, {x: 460, y: 140},
+            {x: 650, y: 105}, {x: 825, y: 170},
+            {x: 870, y: 335}, {x: 790, y: 475},
+            {x: 650, y: 510}, {x: 585, y: 630},
+            {x: 660, y: 765}, {x: 780, y: 850},
+            {x: 720, y: 930}, {x: 785, y: 1040},
+            {x: 805, y: 1180}, {x: 735, y: 1300},
+            {x: 550, y: 1340}, {x: 340, y: 1300},
+            {x: 235, y: 1190}, {x: 220, y: 1060}, {x: 220, y: 900},
         ];
 
         this.splineSamples = [];
         this.totalTrackLength = 0;
         this.sampleResolution = 600; // Number of equidistant arc-length lookup samples
         this._buildSplineLUT();
+        this._buildPaceLUT();
+        this._buildPitLane();
     }
 
     /**
@@ -80,6 +96,9 @@ export class TrackCircuit {
                 rawPoints.push({ x: pt.x, y: pt.y, dist: cumulativeLength });
             }
         }
+        const first = rawPoints[0], last = rawPoints[rawPoints.length - 1];
+        cumulativeLength += Math.hypot(first.x - last.x, first.y - last.y);
+        rawPoints.push({...first, dist: cumulativeLength});
         this.totalTrackLength = cumulativeLength;
 
         // Resample into equidistant intervals along arc length s in [0, 1]
@@ -110,104 +129,221 @@ export class TrackCircuit {
         }
     }
 
-    /**
-     * Sample continuous track coordinates and tangent angle at progress s in [0, 1].
-     */
-    sample(progress) {
-        const s = ((progress % 1.0) + 1.0) % 1.0;
-        const floatIdx = s * this.sampleResolution;
-        const i0 = Math.floor(floatIdx);
-        const i1 = (i0 + 1) % this.splineSamples.length;
-        const frac = floatIdx - i0;
-
-        const p0 = this.splineSamples[i0];
-        const p1 = this.splineSamples[i1];
-
-        const x = p0.x + (p1.x - p0.x) * frac;
-        const y = p0.y + (p1.y - p0.y) * frac;
-
-        // Forward finite difference for heading angle
-        const dx = p1.x - p0.x;
-        const dy = p1.y - p0.y;
-        const heading = Math.atan2(dy, dx);
-
-        // Approximate local curvature by second difference
-        const i2 = (i1 + 1) % this.splineSamples.length;
-        const p2 = this.splineSamples[i2];
-        const dx2 = p2.x - p1.x;
-        const dy2 = p2.y - p1.y;
-        const headingNext = Math.atan2(dy2, dx2);
-        let angleDiff = headingNext - heading;
-        while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-        while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-        const curvature = Math.abs(angleDiff);
-
-        return { x, y, heading, curvature };
+    /** Gaussian filtering wraps around the lap instead of introducing a seam. */
+    _smoothPeriodic(values, distance) {
+        const sigma = distance / (this.totalTrackLength / this.sampleResolution);
+        const radius = Math.ceil(3 * sigma);
+        const weights = Array.from({length: radius * 2 + 1}, (_, i) =>
+            Math.exp(-.5 * ((i - radius) / sigma) ** 2));
+        const total = weights.reduce((sum, value) => sum + value, 0);
+        return values.map((_, i) => {
+            let sum = 0;
+            for (let j = -radius; j <= radius; j++) {
+                sum += values[(i + j + values.length) % values.length] * weights[j + radius];
+            }
+            return sum / total;
+        });
     }
 
-    /**
-     * Render racetrack tarmac, curbs, kerbs, and starting grid onto target 2D context.
-     */
-    render(ctx, renderWidth, renderHeight) {
-        const scaleX = renderWidth / 1000;
-        const scaleY = renderHeight / 600;
-        const scale = Math.min(scaleX, scaleY);
+    /** Plan broad braking zones, rather than reacting to individual geometry samples. */
+    _buildPaceLUT() {
+        const count = this.sampleResolution;
+        const step = this.totalTrackLength / count;
+        const curvature = Array.from({length: count}, (_, i) => this.sample(i / count).curvature);
+        this.laneCurvatures = this._smoothPeriodic(curvature, 20);
+        const bends = this._smoothPeriodic(curvature, 60);
+        let speeds = bends.map(bend => .62 + .38 / (1 + (bend / .008) ** 2));
+        // Propagate braking and acceleration constraints across the lap boundary.
+        for (let pass = 0; pass < 2; pass++) {
+            for (let i = 0; i < count; i++) {
+                const next = (i + 1) % count;
+                speeds[next] = Math.min(speeds[next], Math.sqrt(speeds[i] ** 2 + 2 * .0012 * step));
+            }
+            for (let i = count - 1; i >= 0; i--) {
+                const next = (i + 1) % count;
+                speeds[i] = Math.min(speeds[i], Math.sqrt(speeds[next] ** 2 + 2 * .0018 * step));
+            }
+        }
+        speeds = this._smoothPeriodic(speeds, 30);
+        const times = [0];
+        for (let i = 0; i < count; i++) {
+            times.push(times[i] + 2 * step / (speeds[i] + speeds[(i + 1) % count]));
+        }
+        this.paceTimes = times.map(time => time / times[count]);
+        this.paceSlopes = speeds.map(speed => speed * times[count] / this.totalTrackLength);
+    }
 
-        ctx.save();
-        ctx.translate((renderWidth - 1000 * scale) / 2, (renderHeight - 600 * scale) / 2);
-        ctx.scale(scale, scale);
+    /** Smooth time-to-distance interpolation matches velocity on both sides of every knot. */
+    progressAtTime(elapsedLaps) {
+        const laps = Math.floor(elapsedLaps);
+        const fraction = elapsedLaps - laps;
+        let low = 0, high = this.sampleResolution;
+        while (high - low > 1) {
+            const mid = Math.floor((low + high) / 2);
+            if (this.paceTimes[mid] <= fraction) low = mid;
+            else high = mid;
+        }
+        const span = this.paceTimes[high] - this.paceTimes[low];
+        const t = (fraction - this.paceTimes[low]) / span;
+        const t2 = t * t, t3 = t2 * t;
+        const start = low / this.sampleResolution;
+        const end = high / this.sampleResolution;
+        const slopeA = this.paceSlopes[low] * span;
+        const slopeB = this.paceSlopes[high % this.sampleResolution] * span;
+        return laps + (2 * t3 - 3 * t2 + 1) * start + (t3 - 2 * t2 + t) * slopeA
+            + (-2 * t3 + 3 * t2) * end + (t3 - t2) * slopeB;
+    }
 
-        const trackWidth = 56;
+    /** Inverse of the continuous pace map, used at fixed pit checkpoints. */
+    timeAtProgress(progress) {
+        this.checkpointTimes ||= new Map();
+        if (this.checkpointTimes.has(progress)) return this.checkpointTimes.get(progress);
+        let low = 0, high = 2;
+        for (let i = 0; i < 35; i++) {
+            const mid = (low + high) / 2;
+            if (this.progressAtTime(mid) < progress) low = mid;
+            else high = mid;
+        }
+        const result = (low + high) / 2;
+        this.checkpointTimes.set(progress, result);
+        return result;
+    }
 
-        // Outer gravel / grass boundary
+    _buildPitLane() {
+        const entry = this.sample(PIT_ENTRY_PROGRESS);
+        const exit = this.sample(PIT_EXIT_PROGRESS);
+        this.pitEntry = entry; this.pitExit = exit;
+        const points = [];
+        const cubic = (a, b, c, d, t) => (1-t)**3*a + 3*(1-t)**2*t*b + 3*(1-t)*t*t*c + t**3*d;
+        for (let i = 0; i <= 200; i++) {
+            const t = i / 200;
+            let x, y;
+            if (t < .2) {
+                const u = t / .2;
+                x = cubic(entry.x, entry.x, 145, 145, u);
+                y = cubic(entry.y, entry.y - 30, 960, 900, u);
+            } else if (t <= .8) { x = 145; y = 900 - (t - .2) / .6 * 380; }
+            else {
+                const u = (t - .8) / .2;
+                x = cubic(145, 145, exit.x, exit.x, u);
+                y = cubic(520, 470, exit.y + 40, exit.y, u);
+            }
+            const previous = points.at(-1);
+            points.push({x, y, distance: previous ? previous.distance + Math.hypot(x-previous.x, y-previous.y) : 0});
+        }
+        this.pitSamples = points;
+    }
+
+    samplePit(fraction) {
+        const target = Math.max(0, Math.min(1, fraction)) * this.pitSamples.at(-1).distance;
+        let low = 0, high = this.pitSamples.length - 1;
+        while (high - low > 1) {
+            const mid = Math.floor((low + high) / 2);
+            if (this.pitSamples[mid].distance < target) low = mid;
+            else high = mid;
+        }
+        const a = this.pitSamples[low], b = this.pitSamples[high];
+        const u = (target - a.distance) / (b.distance - a.distance);
+        return {x: a.x + (b.x-a.x)*u, y: a.y + (b.y-a.y)*u,
+            heading: Math.atan2(b.y-a.y, b.x-a.x), laneScale: 0};
+    }
+
+    /** Cubic interpolation returns a value and its first two derivatives. */
+    _interpolate(p0, p1, p2, p3, t) {
+        const a = (-p0 + 3 * p1 - 3 * p2 + p3) / 2;
+        const b = p0 - 2.5 * p1 + 2 * p2 - .5 * p3;
+        const c = (p2 - p0) / 2;
+        return {value: ((a * t + b) * t + c) * t + p1,
+            first: (3 * a * t + 2 * b) * t + c, second: 6 * a * t + 2 * b};
+    }
+
+    /** Sample continuous position, tangent and curvature (per virtual distance unit). */
+    sample(progress) {
+        const count = this.sampleResolution;
+        const s = ((progress % 1) + 1) % 1;
+        const position = s * count;
+        const index = Math.floor(position);
+        const t = position - index;
+        const indices = [-1, 0, 1, 2].map(offset => (index + offset + count) % count);
+        const points = indices.map(i => this.splineSamples[i]);
+        const x = this._interpolate(...points.map(p => p.x), t);
+        const y = this._interpolate(...points.map(p => p.y), t);
+        const length = Math.hypot(x.first, y.first);
+        const curvature = Math.abs(x.first * y.second - y.first * x.second) / Math.max(length ** 3, 1e-9);
+        // Fixed offsets can collapse an inside lane at a tight apex. Converging
+        // smoothly toward the centre avoids near-stops and keeps cars on the road.
+        const laneBend = this.laneCurvatures
+            ? this._interpolate(...indices.map(i => this.laneCurvatures[i]), t).value : 0;
+        return {x: x.value, y: y.value, heading: Math.atan2(y.first, x.first), curvature,
+            laneScale: 1 / (1 + 100 * Math.max(0, laneBend))};
+    }
+
+    _traceRoad(ctx) {
+        // Render the exact spline as a continuous cubic path. Hundreds of short
+        // stroked segments can leave tessellation seams on mobile canvas GPUs.
+        const points = this.controlPoints;
         ctx.beginPath();
-        for (let i = 0; i <= this.sampleResolution; i++) {
-            const pt = this.splineSamples[i];
-            if (i === 0) ctx.moveTo(pt.x, pt.y);
-            else ctx.lineTo(pt.x, pt.y);
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 0; i < points.length; i++) {
+            const p0 = points[(i - 1 + points.length) % points.length];
+            const p1 = points[i];
+            const p2 = points[(i + 1) % points.length];
+            const p3 = points[(i + 2) % points.length];
+            ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6,
+                p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
         }
         ctx.closePath();
-        ctx.strokeStyle = "#D1D5DC";
-        ctx.lineWidth = trackWidth + 14;
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
-        ctx.stroke();
+    }
 
-        // Asphalt road surface
-        ctx.strokeStyle = "#E2E4E9";
-        ctx.lineWidth = trackWidth;
-        ctx.stroke();
-
-        // White racing center-line guides (dashed)
-        ctx.beginPath();
-        for (let i = 0; i <= this.sampleResolution; i++) {
-            const pt = this.splineSamples[i];
-            if (i === 0) ctx.moveTo(pt.x, pt.y);
-            else ctx.lineTo(pt.x, pt.y);
-        }
-        ctx.strokeStyle = "#C0C4CE";
-        ctx.lineWidth = 2;
-        ctx.setLineDash([8, 12]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Start / Finish Checkered Line
-        const startPt = this.sample(0.0);
+    /** Render a narrow racing surface, pit lane and restrained kerb details. */
+    render(ctx, renderWidth, renderHeight) {
+        const scale = Math.min(renderWidth / CIRCUIT_WIDTH, renderHeight / CIRCUIT_HEIGHT);
         ctx.save();
-        ctx.translate(startPt.x, startPt.y);
-        ctx.rotate(startPt.heading + Math.PI / 2);
-        ctx.fillStyle = "#1A1A2E";
-        ctx.fillRect(-trackWidth / 2, -4, trackWidth, 8);
-        ctx.fillStyle = "#FFFFFF";
-        const blocks = 8;
-        const bw = trackWidth / blocks;
-        for (let b = 0; b < blocks; b += 2) {
-            ctx.fillRect(-trackWidth / 2 + b * bw, -4, bw, 4);
-            ctx.fillRect(-trackWidth / 2 + (b + 1) * bw, 0, bw, 4);
-        }
-        ctx.restore();
+        ctx.translate((renderWidth - CIRCUIT_WIDTH * scale) / 2, (renderHeight - CIRCUIT_HEIGHT * scale) / 2);
+        ctx.scale(scale, scale);
 
-        ctx.restore();
+        // Pit lane follows the main straight; the buildings sit outside the race line.
+        ctx.beginPath(); ctx.moveTo(this.pitEntry.x, this.pitEntry.y);
+        ctx.bezierCurveTo(this.pitEntry.x, this.pitEntry.y - 30, 145, 960, 145, 900);
+        ctx.lineTo(145, 520);
+        ctx.bezierCurveTo(145, 470, this.pitExit.x, this.pitExit.y + 40, this.pitExit.x, this.pitExit.y);
+        ctx.strokeStyle = CIRCUIT_PALETTE.line; ctx.lineWidth = 28; ctx.stroke();
+        ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 22; ctx.stroke();
+        ctx.fillStyle = '#E2DCE8'; ctx.fillRect(83, 550, 32, 300);
+        ctx.strokeStyle = CIRCUIT_PALETTE.line; ctx.lineWidth = 1.5;
+        for (let y = 570; y < 850; y += 36) {
+            ctx.beginPath(); ctx.moveTo(83, y); ctx.lineTo(115, y); ctx.stroke();
+        }
+
+        this._traceRoad(ctx);
+        ctx.lineJoin = "round"; ctx.lineCap = "round";
+        ctx.strokeStyle = CIRCUIT_PALETTE.runoff; ctx.lineWidth = 92; ctx.stroke();
+        ctx.strokeStyle = CIRCUIT_PALETTE.line; ctx.lineWidth = 76; ctx.stroke();
+        ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 72; ctx.stroke();
+        ctx.lineCap = "butt";
+        ctx.strokeStyle = CIRCUIT_PALETTE.kerb; ctx.setLineDash([14, 14]); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = CIRCUIT_PALETTE.paper; ctx.lineWidth = 68; ctx.stroke();
+        ctx.strokeStyle = CIRCUIT_PALETTE.asphalt; ctx.lineWidth = 64; ctx.stroke();
+
+        const start = this.sample(0);
+        ctx.save(); ctx.translate(start.x, start.y); ctx.rotate(start.heading);
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 2; col++) {
+                ctx.fillStyle = (row + col) % 2 ? CIRCUIT_PALETTE.paper : CIRCUIT_PALETTE.asphalt;
+                ctx.fillRect(col * 7 - 7, row * 8 - 32, 7, 8);
+            }
+        }
+        // Grid boxes behind the start are small, straight-edged timing cues.
+        ctx.strokeStyle = '#B6ABBF'; ctx.lineWidth = 1.5;
+        for (let row = 0; row < 3; row++) {
+            for (const side of [-1, 1]) {
+                const x = -30 - row * 56, y = side * 16;
+                ctx.beginPath(); ctx.moveTo(x - 22, y - 7); ctx.lineTo(x, y - 7);
+                ctx.lineTo(x, y + 7); ctx.lineTo(x - 22, y + 7); ctx.stroke();
+            }
+        }
+        ctx.restore(); ctx.restore();
         return scale;
     }
 }

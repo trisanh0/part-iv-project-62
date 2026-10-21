@@ -1,332 +1,196 @@
-/**
- * TEMPO Display Day Pareto Frontier Canvas Plotter.
- *
- * Renders an interactive, touch-friendly 2D scatter plot mapping empirical
- * Latency (log scale) vs Accuracy/Score, with Pareto frontier curve and racer positions.
- */
+import {algorithmName, formatPerformance, metricInfo, formatSeconds, speedQualityFrontier} from './presentation.js';
 
+const latency = p => p.metrics?.total_latency_s ?? p.latency_s;
+const score = p => p.metrics?.score ?? p.score;
+const valid = p => Number.isFinite(latency(p)) && latency(p) > 0 && Number.isFinite(score(p));
+const buildName = p => ['extractor', 'selector', 'model'].map(k => algorithmName(p.pipeline?.[k] ?? p[k])).join(' · ');
+
+/** Measured speed/quality comparison. Memory stays outside this two-axis frontier. */
 export class ParetoCanvasChart {
-    /**
-     * @param {HTMLCanvasElement} canvas
-     * @param {HTMLElement} tooltipEl Optional DOM element for details display
-     */
-    constructor(canvas, tooltipEl = null) {
+    constructor(canvas, tooltipEl = null, inspector = null) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext("2d");
+        this.ctx = canvas.getContext('2d');
         this.tooltipEl = tooltipEl;
-
+        this.inspector = inspector;
         this.allPoints = [];
         this.paretoPoints = [];
         this.racerPoints = [];
+        this.inspectionPoints = [];
         this.selectedPoint = null;
-
-        this.padding = { top: 30, right: 30, bottom: 50, left: 60 };
-        this._setupListeners();
-    }
-
-    _setupListeners() {
-        const handleInteraction = (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-
-            this._checkHitPoint(x, y);
-        };
-
-        this.canvas.addEventListener("click", handleInteraction);
-        this.canvas.addEventListener("touchstart", handleInteraction, { passive: true });
-
-        window.addEventListener("resize", () => this.resize());
-        if (typeof ResizeObserver !== "undefined") {
+        this.taskType = 'classification';
+        this.padding = {top: 26, right: 14, bottom: 54, left: 65};
+        canvas.addEventListener('click', e => {
+            const rect = canvas.getBoundingClientRect();
+            this._checkHitPoint(e.clientX - rect.left, e.clientY - rect.top);
+        });
+        inspector?.addEventListener('change', () => this._selectPoint(this.inspectionPoints[Number(inspector.value)]));
+        window.addEventListener('resize', () => this.resize());
+        if (typeof ResizeObserver !== 'undefined') {
             this.resizeObserver = new ResizeObserver(() => this.resize());
-            if (this.canvas.parentElement) {
-                this.resizeObserver.observe(this.canvas.parentElement);
-            }
-            this.resizeObserver.observe(this.canvas);
+            this.resizeObserver.observe(canvas);
         }
-        setTimeout(() => this.resize(), 50);
     }
 
-    /**
-     * Measure and configure backing buffer dimensions.
-     */
     resize() {
         const rect = this.canvas.getBoundingClientRect();
-        let w = rect.width;
-        let h = rect.height;
-
-        if (w <= 0 || h <= 0) {
-            const parent = this.canvas.parentElement;
-            if (parent && parent.clientWidth > 0) {
-                w = parent.clientWidth;
-                h = parent.clientHeight > 0 ? parent.clientHeight : Math.round(w * (3 / 4));
-            } else {
-                w = Math.min(800, Math.max(320, (window.innerWidth || 600) - 32));
-                h = Math.round(w * (3 / 4));
-            }
-        }
-
+        if (rect.width <= 0 || rect.height <= 0) return;
         const dpr = window.devicePixelRatio || 1;
-        this.canvas.width = Math.floor(w * dpr);
-        this.canvas.height = Math.floor(h * dpr);
+        this.canvas.width = Math.round(rect.width * dpr);
+        this.canvas.height = Math.round(rect.height * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.displayWidth = rect.width;
+        this.displayHeight = rect.height;
+        this.render();
+    }
 
-        if (this.ctx.resetTransform) {
-            this.ctx.resetTransform();
-        } else {
-            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    setData(allPoints, _paretoFrontier, racers = [], taskType = 'classification', viewerClientId = null) {
+        this.taskType = taskType;
+        this.allPoints = (allPoints || []).filter(valid);
+        this.racerPoints = racers.filter(valid);
+        this.paretoPoints = speedQualityFrontier(this.allPoints, taskType);
+        this.inspectionPoints = [...this.racerPoints, ...this.allPoints];
+        if (this.inspector) {
+            this.inspector.replaceChildren();
+            for (const [label, points] of [['This heat', this.racerPoints], ['All measured builds', this.allPoints]]) {
+                if (!points.length) continue;
+                const group = document.createElement('optgroup');
+                group.label = label;
+                for (const point of points) {
+                    const option = document.createElement('option');
+                    option.value = String(this.inspectionPoints.indexOf(point));
+                    option.textContent = point.nickname ? `${point.nickname}${point.client_id === viewerClientId ? ' · you' : ''}` : buildName(point);
+                    group.append(option);
+                }
+                this.inspector.append(group);
+            }
+            this.inspector.disabled = !this.inspectionPoints.length;
         }
-        this.ctx.scale(dpr, dpr);
-        this.displayWidth = w;
-        this.displayHeight = h;
-
-        this.render();
-    }
-
-    /**
-     * Set data and draw chart.
-     */
-    setData(allPoints, paretoFrontier, racers = []) {
         this.resize();
-        this.allPoints = allPoints || [];
-        this.paretoPoints = (paretoFrontier || []).sort((a, b) => a.latency_s - b.latency_s);
-        this.racerPoints = racers || [];
-        this.selectedPoint = null;
-        this.render();
+        this._selectPoint(this.racerPoints.find(p => p.client_id === viewerClientId) || this.inspectionPoints[0] || null);
     }
 
-    _checkHitPoint(clickX, clickY) {
-        const threshold = 18;
-        let closest = null;
-        let minDist = threshold;
+    _checkHitPoint(x, y) {
+        let nearest = null, distance = 18;
+        for (const point of this.inspectionPoints) {
+            const pos = this._toScreenCoords(latency(point), score(point));
+            const delta = Math.hypot(pos.x - x, pos.y - y);
+            if (delta < distance) { nearest = point; distance = delta; }
+        }
+        if (nearest) this._selectPoint(nearest);
+    }
 
-        // Check racers first (highest priority)
-        const candidates = [...this.racerPoints, ...this.paretoPoints, ...this.allPoints];
-
-        for (const pt of candidates) {
-            const lat = pt.metrics ? pt.metrics.total_latency_s : (pt.latency_s ?? pt.total_latency_s);
-            const score = pt.metrics ? pt.metrics.score : pt.score;
-            if (lat === undefined || score === undefined) continue;
-
-            const screen = this._toScreenCoords(lat, score);
-            const dist = Math.hypot(screen.x - clickX, screen.y - clickY);
-            if (dist < minDist) {
-                minDist = dist;
-                closest = pt;
+    _selectPoint(point) {
+        this.selectedPoint = point;
+        if (this.inspector && point) this.inspector.value = String(this.inspectionPoints.indexOf(point));
+        if (this.tooltipEl) {
+            this.tooltipEl.hidden = !point;
+            this.tooltipEl.replaceChildren();
+            if (point) {
+                const title = document.createElement('p');
+                title.className = 'chart-selection-title';
+                title.textContent = point.nickname || 'Measured build';
+                const pipeline = document.createElement('p');
+                pipeline.textContent = buildName(point);
+                const measurements = document.createElement('dl');
+                measurements.className = 'technical-measurements';
+                const ram = point.metrics?.extraction_ram_mb ?? point.ram_mb ?? point.extraction_ram_mb;
+                const values = [['Compute time', formatSeconds(latency(point))],
+                    [metricInfo(this.taskType).label, formatPerformance({score: score(point), task_type: this.taskType})],
+                    ['Extraction memory', Number.isFinite(ram) ? `${ram.toFixed(1)} MB` : '—']];
+                for (const [label, value] of values) {
+                    const dt = document.createElement('dt'), dd = document.createElement('dd');
+                    dt.textContent = label; dd.textContent = value;
+                    measurements.append(dt, dd);
+                }
+                this.tooltipEl.append(title, pipeline, measurements);
             }
         }
-
-        this.selectedPoint = closest;
         this.render();
-
-        if (this.tooltipEl && closest) {
-            const title = closest.nickname ? `${closest.nickname} (${closest.pipeline?.extractor || closest.extractor || "TEMPO"})` : (closest.extractor || "Configuration");
-            const sel = closest.pipeline?.selector || closest.selector || "None";
-            const mod = closest.pipeline?.model || closest.model || "None";
-            const lat = closest.metrics ? closest.metrics.total_latency_s : (closest.latency_s ?? closest.total_latency_s ?? 0);
-            const score = closest.metrics ? closest.metrics.score : (closest.score ?? 0);
-            const ram = closest.metrics ? closest.metrics.extraction_ram_mb : (closest.ram_mb ?? closest.extraction_ram_mb ?? 0);
-            const speedup = closest.metrics ? closest.metrics.speedup_vs_tsfresh : (closest.speedup_vs_tsfresh ?? 1.0);
-
-            this.tooltipEl.innerHTML = `
-                <div style="font-weight: 700; font-size: 0.9rem; color: #1A1A2E; margin-bottom: 4px;">${title}</div>
-                <div style="font-size: 0.75rem; color: #6B7185; line-height: 1.5;">
-                    Selector: <span style="color: #1A1A2E;">${sel}</span> | Model: <span style="color: #1A1A2E;">${mod}</span><br>
-                    Latency: <span style="color: #4E2277; font-family: ui-monospace, monospace;">${lat.toFixed(3)}s</span><br>
-                    Score: <span style="color: #0F8B5B; font-family: ui-monospace, monospace;">${(score * 100).toFixed(1)}%</span><br>
-                    Peak RAM: <span style="color: #D4A843; font-family: ui-monospace, monospace;">${ram.toFixed(1)} MB</span><br>
-                    Speedup vs tsfresh: <span style="color: #D4A843; font-weight: 600;">${speedup.toFixed(1)}x</span>
-                </div>
-            `;
-            this.tooltipEl.style.display = "block";
-        } else if (this.tooltipEl) {
-            this.tooltipEl.style.display = "none";
-        }
     }
 
     _getBounds() {
-        const allLatencies = [
-            ...this.allPoints.map(p => p.latency_s),
-            ...this.racerPoints.map(p => p.metrics?.total_latency_s || 1.0),
-        ].filter(v => v > 0);
-
-        const allScores = [
-            ...this.allPoints.map(p => p.score),
-            ...this.racerPoints.map(p => p.metrics?.score || 0.8),
-        ];
-
-        const minLat = allLatencies.length ? Math.min(...allLatencies) : 0.01;
-        const maxLat = allLatencies.length ? Math.max(...allLatencies) : 100.0;
-        const minScore = allScores.length ? Math.min(...allScores) : 0.8;
-        const maxScore = allScores.length ? Math.max(...allScores) : 1.0;
-
+        const points = [...this.allPoints, ...this.racerPoints].filter(valid);
+        const times = points.map(latency), scores = points.map(score);
+        const low = scores.length ? Math.min(...scores) : 0;
+        const high = scores.length ? Math.max(...scores) : 1;
+        const pad = Math.max((high - low) * .12, Math.abs(high) * .02, .01);
         return {
-            logMinLat: Math.log10(Math.max(0.001, minLat * 0.7)),
-            logMaxLat: Math.log10(maxLat * 1.5),
-            minScore: Math.max(0.0, minScore - 0.03),
-            maxScore: Math.min(1.02, maxScore + 0.02),
+            logMinLat: Math.log10(times.length ? Math.min(...times) * .7 : .01),
+            logMaxLat: Math.log10(times.length ? Math.max(...times) * 1.5 : 100),
+            minScore: this.taskType === 'classification' ? Math.max(0, low - pad) : low - pad,
+            maxScore: this.taskType === 'classification' ? Math.min(1, high + pad) : high + pad,
         };
     }
 
-    _toScreenCoords(lat, score) {
-        const bounds = this._getBounds();
-        const width = this.displayWidth || this.canvas.width;
-        const height = this.displayHeight || this.canvas.height;
-
-        const plotW = width - this.padding.left - this.padding.right;
-        const plotH = height - this.padding.top - this.padding.bottom;
-
-        const logLat = Math.log10(Math.max(0.001, lat));
-        const normX = (logLat - bounds.logMinLat) / (bounds.logMaxLat - bounds.logMinLat);
-        const normY = (score - bounds.minScore) / (bounds.maxScore - bounds.minScore);
-
-        const x = this.padding.left + normX * plotW;
-        const y = this.padding.top + (1.0 - normY) * plotH;
-
-        return { x, y };
+    _toScreenCoords(lat, value) {
+        const b = this._getBounds();
+        const w = this.displayWidth || this.canvas.width;
+        const h = this.displayHeight || this.canvas.height;
+        const quality = (value - b.minScore) / (b.maxScore - b.minScore);
+        return {
+            x: this.padding.left + (Math.log10(lat) - b.logMinLat) / (b.logMaxLat - b.logMinLat) * (w - this.padding.left - this.padding.right),
+            y: this.padding.top + (this.taskType === 'forecasting' ? quality : 1 - quality) * (h - this.padding.top - this.padding.bottom),
+        };
     }
 
     render() {
-        if (!this.displayWidth || this.displayWidth <= 0 || !this.displayHeight || this.displayHeight <= 0) {
-            this.resize();
+        if (!this.displayWidth || !this.displayHeight) return;
+        const ctx = this.ctx, w = this.displayWidth, h = this.displayHeight, p = this.padding;
+        ctx.clearRect(0, 0, w, h);
+        const b = this._getBounds(), plotW = w - p.left - p.right, plotH = h - p.top - p.bottom;
+        ctx.font = '10px system-ui, sans-serif';
+        ctx.fillStyle = '#776D82'; ctx.strokeStyle = '#E5DFEB'; ctx.lineWidth = 1;
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 4; i++) {
+            const quality = this.taskType === 'forecasting' ? i / 4 : 1 - i / 4;
+            const value = b.minScore + quality * (b.maxScore - b.minScore);
+            const y = p.top + i / 4 * plotH;
+            ctx.beginPath(); ctx.moveTo(p.left, y); ctx.lineTo(w - p.right, y); ctx.stroke();
+            const label = this.taskType === 'classification' ? `${(value * 100).toFixed(0)}%` : Number(value.toPrecision(3)).toString();
+            ctx.fillText(label, p.left - 8, y + 3);
         }
-        const width = this.displayWidth || 800;
-        const height = this.displayHeight || 600;
-        const ctx = this.ctx;
-
-        ctx.clearRect(0, 0, width, height);
-
-        // Chart area background
-        ctx.fillStyle = "#F7F8FA";
-        ctx.fillRect(0, 0, width, height);
-
-        const bounds = this._getBounds();
-        const plotW = width - this.padding.left - this.padding.right;
-        const plotH = height - this.padding.top - this.padding.bottom;
-
-        // Grid lines & Axis Labels
-        ctx.strokeStyle = "#E8E9ED";
-        ctx.lineWidth = 1;
-
-        // Horizontal score grids
-        const scoreSteps = 5;
-        ctx.fillStyle = "#8B8FA3";
-        ctx.font = "10px system-ui, sans-serif";
-        ctx.textAlign = "right";
-
-        for (let i = 0; i <= scoreSteps; i++) {
-            const scoreVal = bounds.minScore + (i / scoreSteps) * (bounds.maxScore - bounds.minScore);
-            const y = this.padding.top + (1.0 - i / scoreSteps) * plotH;
-
-            ctx.beginPath();
-            ctx.moveTo(this.padding.left, y);
-            ctx.lineTo(this.padding.left + plotW, y);
-            ctx.stroke();
-
-            ctx.fillText(`${(scoreVal * 100).toFixed(0)}%`, this.padding.left - 8, y + 3);
+        ctx.textAlign = 'center';
+        // Even log intervals stay legible when a challenge spans less than a decade.
+        for (let i = 0; i <= 2; i++) {
+            const x = p.left + i / 2 * plotW;
+            const value = 10 ** (b.logMinLat + i / 2 * (b.logMaxLat - b.logMinLat));
+            ctx.fillText(`${Number(value.toPrecision(2))} s`, x, h - p.bottom + 19);
         }
+        ctx.fillStyle = '#564760';
+        ctx.fillText('Compute time · logarithmic scale', p.left + plotW / 2, h - 9);
+        ctx.textAlign = 'left';
+        ctx.fillText(`${metricInfo(this.taskType).label} · better ↑`, p.left, 13);
 
-        // Vertical Log-Latency grids
-        ctx.textAlign = "center";
-        const minDecade = Math.floor(bounds.logMinLat);
-        const maxDecade = Math.ceil(bounds.logMaxLat);
-
-        for (let d = minDecade; d <= maxDecade; d++) {
-            const normX = (d - bounds.logMinLat) / (bounds.logMaxLat - bounds.logMinLat);
-            if (normX >= 0 && normX <= 1) {
-                const x = this.padding.left + normX * plotW;
-                ctx.beginPath();
-                ctx.moveTo(x, this.padding.top);
-                ctx.lineTo(x, this.padding.top + plotH);
-                ctx.stroke();
-
-                const secVal = Math.pow(10, d);
-                const label = secVal < 1 ? `${secVal.toFixed(2)}s` : `${secVal.toFixed(0)}s`;
-                ctx.fillText(label, x, this.padding.top + plotH + 18);
-            }
-        }
-
-        // Axis Titles
-        ctx.fillStyle = "#6B7185";
-        ctx.font = "bold 11px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Total Latency (Log Scale, s)", this.padding.left + plotW / 2, height - 12);
-
-        ctx.save();
-        ctx.translate(16, this.padding.top + plotH / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText("Score / Accuracy", 0, 0);
-        ctx.restore();
-
-        // 1. Draw all background configurations (grey circles)
-        this.allPoints.forEach((pt) => {
-            const coords = this._toScreenCoords(pt.latency_s, pt.score);
-            ctx.fillStyle = "#C8CBD3";
-            ctx.beginPath();
-            ctx.arc(coords.x, coords.y, 3, 0, Math.PI * 2);
-            ctx.fill();
+        const dot = (point, radius, colour) => {
+            const pos = this._toScreenCoords(latency(point), score(point));
+            ctx.beginPath(); ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = colour; ctx.fill();
+        };
+        this.allPoints.forEach(point => dot(point, 2.5, '#C2B8CB'));
+        ctx.beginPath();
+        this.paretoPoints.forEach((point, i) => {
+            const pos = this._toScreenCoords(point.latency_s, point.score);
+            if (i) ctx.lineTo(pos.x, pos.y); else ctx.moveTo(pos.x, pos.y);
         });
-
-        // 2. Draw Pareto Frontier Curve (Cyan Line + shaded dots)
-        if (this.paretoPoints.length > 1) {
-            ctx.beginPath();
-            this.paretoPoints.forEach((pt, idx) => {
-                const coords = this._toScreenCoords(pt.latency_s, pt.score);
-                if (idx === 0) ctx.moveTo(coords.x, coords.y);
-                else ctx.lineTo(coords.x, coords.y);
-            });
-            ctx.strokeStyle = "#4E2277";
-            ctx.lineWidth = 2;
-            ctx.stroke();
+        ctx.strokeStyle = '#4E2277'; ctx.lineWidth = 1.5; ctx.stroke();
+        this.paretoPoints.forEach(point => dot(point, 3, '#4E2277'));
+        // Segmented rings keep coincident participants visible at their true measurements.
+        const groups = new Map();
+        for (const point of this.racerPoints) {
+            const key = `${latency(point)}:${score(point)}`;
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(point);
         }
-
-        this.paretoPoints.forEach((pt) => {
-            const coords = this._toScreenCoords(pt.latency_s, pt.score);
-            ctx.fillStyle = "#4E2277";
+        for (const group of groups.values()) group.forEach((point, i) => {
+            const pos = this._toScreenCoords(latency(point), score(point));
             ctx.beginPath();
-            ctx.arc(coords.x, coords.y, 5, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.arc(pos.x, pos.y, 6, i / group.length * Math.PI * 2, (i + 1) / group.length * Math.PI * 2);
+            ctx.strokeStyle = point.avatar_color || '#4E2277'; ctx.lineWidth = 3; ctx.stroke();
         });
-
-        // 3. Highlight Racers in completed heat
-        this.racerPoints.forEach((r) => {
-            const m = r.metrics;
-            if (!m) return;
-            const coords = this._toScreenCoords(m.total_latency_s, m.score);
-
-            // Pulsing highlight circle
-            ctx.fillStyle = r.avatar_color || "#D4A843";
-            ctx.beginPath();
-            ctx.arc(coords.x, coords.y, 9, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = "#1A1A2E";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(coords.x, coords.y, 11, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Label
-            ctx.fillStyle = "#1A1A2E";
-            ctx.font = "bold 11px system-ui, sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText(r.nickname, coords.x, coords.y - 15);
-        });
-
-        // 4. Selection ring
         if (this.selectedPoint) {
-            const lat = this.selectedPoint.latency_s || this.selectedPoint.total_latency_s || 1.0;
-            const score = this.selectedPoint.score || 0.9;
-            const coords = this._toScreenCoords(lat, score);
-
-            ctx.strokeStyle = "#D4A843";
-            ctx.lineWidth = 2;
-            ctx.setLineDash([4, 4]);
-            ctx.beginPath();
-            ctx.arc(coords.x, coords.y, 16, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
+            const pos = this._toScreenCoords(latency(this.selectedPoint), score(this.selectedPoint));
+            ctx.beginPath(); ctx.arc(pos.x, pos.y, 11, 0, Math.PI * 2);
+            ctx.strokeStyle = '#20182B'; ctx.lineWidth = 1; ctx.stroke();
         }
     }
 }

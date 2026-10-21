@@ -1,5 +1,5 @@
 # TEMPO Display Day Live Demo Container
-# Lightweight, scale-agnostic deployment image for opti homelab server or local testing.
+# Single-process booth deployment image for opti homelab server or local testing.
 
 FROM python:3.11-slim
 
@@ -23,4 +23,4 @@ COPY demo /app/demo
 EXPOSE 8000
 
 # Run uvicorn server bound to 0.0.0.0
-CMD ["python", "-m", "uvicorn", "demo.server:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "demo.server:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

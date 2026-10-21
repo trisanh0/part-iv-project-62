@@ -1,196 +1,231 @@
-"""Unit tests for the TEMPO Display Day Booth Room Manager and Game State."""
-
-from __future__ import annotations
-
+"""Room invariants, immutable heats, and reconnection behaviour."""
+from dataclasses import FrozenInstanceError
 import pytest
-
-from demo.game_state import BoothRoomManager, GamePhase, PlayerSlot
 from demo.query import DemoQueryEngine
-
-
-@pytest.fixture
-def query_engine() -> DemoQueryEngine:
-    """Fixture providing initialized query engine with in-memory catalogue."""
-    return DemoQueryEngine(prefer_memory_cache=True)
-
+from demo.game_state import BoothRoomManager, GamePhase
 
 @pytest.fixture
-def room_manager(query_engine: DemoQueryEngine) -> BoothRoomManager:
-    """Fixture providing initialized room manager on the default track."""
-    return BoothRoomManager(
-        query_engine=query_engine,
-        initial_track_id="beed",
-        max_active_racers=4,
-        race_duration_seconds=10.0,
-        countdown_seconds=2.0,
-        admin_pin="7000",
-    )
+def room():
+    return BoothRoomManager(DemoQueryEngine())
+
+def start(room):
+    room.start_countdown()
+    room.start_racing()
+
+def test_initial_state(room):
+    state = room.get_state_snapshot()
+    assert state['phase'] == 'LOBBY'
+    assert state['race_duration_seconds'] == 27
+    assert state['countdown_seconds'] == 7
+    assert state['protocol_version'] == 2
+    assert state['build_id'] == room.engine.build_id
+    assert 'phase_start_time_utc' in state
+    assert state['track']['track_id'] == 'gas-sensor-drift-sub'
 
 
-def test_initial_state(room_manager: BoothRoomManager) -> None:
-    """Verify initial state of the booth room manager."""
-    assert room_manager.phase == GamePhase.LOBBY
-    assert room_manager.current_track_id == "beed"
-    assert len(room_manager.players) == 0
-    snapshot = room_manager.get_state_snapshot()
-    assert snapshot["phase"] == "LOBBY"
-    assert snapshot["track"]["track_id"] == "beed"
-    assert len(snapshot["active_racers"]) == 0
-    assert len(snapshot["spectators"]) == 0
+def test_guided_builds_have_real_measurements(room):
+    from itertools import product
+    for extractor, selector, model in product(
+        ['numpy_statistical', 'numba_efficient', 'tsfresh_minimal'],
+        ['None', 'select_k_best_anova', 'subsampled_fdr'],
+        ['logistic_regression', 'random_forest'],
+    ):
+        c = room.engine.get_config(room.current_track_id, extractor, selector, model)
+        assert c is not None and c.sample_count > 0
+        assert 0 < c.n_selected_features <= c.n_extracted_features
 
 
-def test_player_registration_and_color_assignment(room_manager: BoothRoomManager) -> None:
-    """Verify player registration, nickname cleanup, and car index assignment."""
-    p1 = room_manager.add_player("client_1", "Alice")
-    assert p1.client_id == "client_1"
-    assert p1.nickname == "Alice"
-    assert not p1.is_spectator
-    assert p1.car_index == 0
-    assert p1.metrics is not None
-
-    p2 = room_manager.add_player("client_2", "Bob")
-    assert p2.client_id == "client_2"
-    assert p2.car_index == 1
-    assert p2.avatar_color != p1.avatar_color
-
-    assert len(room_manager.players) == 2
-
-
-def test_capacity_and_spectator_overflow(room_manager: BoothRoomManager) -> None:
-    """Verify that players exceeding max_active_racers join as spectators."""
-    for i in range(4):
-        p = room_manager.add_player(f"client_{i}", f"Player {i}")
-        assert not p.is_spectator
-
-    # 5th player should be spectator
-    p5 = room_manager.add_player("client_4", "Player 4")
-    assert p5.is_spectator
-
-    snapshot = room_manager.get_state_snapshot()
-    assert len(snapshot["active_racers"]) == 4
-    assert len(snapshot["spectators"]) == 1
+def test_accuracy_changes_winner_and_schedule_survives_disconnect(room):
+    room.add_player('fast', 'Fast')
+    room.add_player('accurate', 'Accurate')
+    room.update_pipeline('fast', 'numpy_statistical', 'None', 'logistic_regression')
+    room.update_pipeline('accurate', 'numba_efficient', 'None', 'logistic_regression')
+    start(room)
+    snapshot = room.get_state_snapshot()
+    schedules = {p['client_id']: p['race_schedule'] for p in snapshot['active_racers']}
+    assert schedules['fast']['driving_ms'] < schedules['accurate']['driving_ms']
+    assert schedules['fast']['pit_ms'] > schedules['accurate']['pit_ms']
+    assert schedules['fast']['finish_ms'] > schedules['accurate']['finish_ms']
+    assert max(s['finish_ms'] for s in schedules.values()) == 27000
+    room.disconnect('fast')
+    room.reconnect('fast')
+    assert room.get_state_snapshot()['active_racers'] == snapshot['active_racers']
+    results = room.finish_race()
+    assert results['rankings'][0]['client_id'] == 'accurate'
+    assert results['race_rules_version'] == snapshot['race_rules_version']
+    assert all(r['race_schedule'] == schedules[r['client_id']] for r in results['rankings'])
 
 
-def test_spectator_promotion_on_disconnect(room_manager: BoothRoomManager) -> None:
-    """Verify that when an active player disconnects in the lobby, a spectator is promoted."""
-    for i in range(4):
-        room_manager.add_player(f"client_{i}", f"Player {i}")
-
-    p5 = room_manager.add_player("client_4", "Spectator Player")
-    assert p5.is_spectator
-
-    # Remove active player 1
-    removed = room_manager.remove_player("client_1")
-    assert removed is not None
-    assert not removed.is_spectator
-
-    # Spectator should now be promoted
-    promoted = room_manager.players["client_4"]
-    assert not promoted.is_spectator
-    assert promoted.car_index == 1
+@pytest.mark.parametrize('duration', [5, 27, 60])
+def test_six_schedules_share_ties_and_exact_deadline(duration):
+    room = BoothRoomManager(DemoQueryEngine(), max_active_racers=6, race_duration_seconds=duration)
+    for i in range(6):
+        room.add_player(str(i), 'Twenty character nam')
+    start(room)
+    for schedule in room.heat.schedules:
+        assert schedule.driving_ms + schedule.pit_ms == schedule.finish_ms == duration * 1000
+        assert 0 < schedule.pit_entry_ms < schedule.pit_stop_ms
+        assert schedule.pit_stop_ms <= schedule.pit_departure_ms < schedule.pit_exit_ms < schedule.finish_ms
+    rows = room.finish_race()['rankings']
+    assert all(row['finish_position'] == 1 and row['tied'] for row in rows)
 
 
-def test_pipeline_update_and_metric_resolution(room_manager: BoothRoomManager) -> None:
-    """Verify updating player pipeline and resolving empirical metrics."""
-    p = room_manager.add_player("c1", "Alice")
-    updated = room_manager.update_pipeline(
-        client_id="c1",
-        extractor="numba_efficient",
-        selector="None",
-        model="random_forest",
-    )
-    assert updated is not None
-    assert updated.metrics is not None
-    assert updated.metrics.extractor == "numba_efficient"
-    assert updated.metrics.total_latency_s < 5.0
-    assert updated.metrics.score > 0.95
+def test_perfect_accuracy_and_nonclassification_rules(room):
+    from dataclasses import replace
+    from demo.race import build_schedules
+    room.add_player('a', 'A')
+    start(room)
+    entry = room.heat.entries[0]
+    perfect = replace(entry, metrics=replace(entry.metrics, score=1))
+    schedule, = build_schedules((perfect,), 27)
+    assert schedule.uses_accuracy and schedule.pit_ms == 0
+    for task, score in [('regression', -15), ('forecasting', 500)]:
+        schedule, = build_schedules((replace(entry, metrics=replace(entry.metrics, task_type=task, score=score)),), 27)
+        assert not schedule.uses_accuracy and schedule.pit_ms == 0
+        assert schedule.finish_ms == 27000
 
+def test_player_registration_and_idempotency(room):
+    p = room.add_player('a', ' Alice ')
+    assert p.nickname == 'Alice' and p.car_index == 0 and p.metrics
+    assert room.add_player('a', 'Again') is p
+    assert len(room.players) == 1
 
-def test_ready_flow_and_auto_countdown(room_manager: BoothRoomManager) -> None:
-    """Verify that when all active players are ready, the room enters countdown."""
-    p1 = room_manager.add_player("c1", "Alice")
-    p2 = room_manager.add_player("c2", "Bob")
+@pytest.mark.parametrize('slot', range(4))
+def test_capacity_and_spectator_promotion(room, slot):
+    for i in range(5):
+        room.add_player(str(i), f'Player {i}')
+    assert room.players['4'].is_spectator
+    room.remove_player(str(slot))
+    assert not room.players['4'].is_spectator
+    assert room.players['4'].car_index == slot
+    assert sorted(p.car_index for p in room.players.values()) == [0, 1, 2, 3]
 
-    triggered = room_manager.set_player_ready("c1", True)
-    assert not triggered
-    assert room_manager.phase == GamePhase.LOBBY
-
-    triggered = room_manager.set_player_ready("c2", True)
-    assert triggered
-    assert room_manager.phase == GamePhase.COUNTDOWN
-    assert room_manager.race_start_timestamp_ms > 0
-
-
-def test_add_bot(room_manager: BoothRoomManager) -> None:
-    """Verify injecting a benchmark bot into the race."""
-    p1 = room_manager.add_player("c1", "Solo Human")
-    bot = room_manager.add_bot(
-        nickname="Benchmark: tsfresh",
-        extractor="tsfresh_efficient",
-        selector="None",
-        model="random_forest",
-    )
-    assert bot is not None
-    assert bot.is_bot
-    assert bot.is_ready
-    assert bot.car_index == 1
-    assert bot.metrics is not None
-    assert bot.metrics.extractor == "tsfresh_efficient"
-
-    # Now when human readies, countdown triggers
-    triggered = room_manager.set_player_ready("c1", True)
-    assert triggered
-    assert room_manager.phase == GamePhase.COUNTDOWN
-
-
-def test_change_track(room_manager: BoothRoomManager) -> None:
-    """Verify changing competition track refreshes player metrics and resets state."""
-    p = room_manager.add_player("c1", "Alice")
-    room_manager.set_player_ready("c1", True)
-
-    changed = room_manager.change_track("pred-maintenance-w100-cls")
-    assert changed
-    assert room_manager.current_track_id == "pred-maintenance-w100-cls"
-    assert room_manager.phase == GamePhase.LOBBY
+def test_pipeline_validation_and_readiness(room):
+    p = room.add_player('a', 'A')
+    room.add_player('b', 'B')
+    assert not room.set_player_ready('a')
+    old = p.metrics
+    with pytest.raises(ValueError, match='Unsupported'):
+        room.update_pipeline('a', 'missing', 'None', 'random_forest')
+    assert p.metrics is old and p.is_ready
+    room.update_pipeline('a', **p.pipeline)
     assert not p.is_ready
-    assert p.metrics is not None
-    assert p.metrics.track_id == "pred-maintenance-w100-cls"
+    room.set_player_ready('a')
+    assert room.set_player_ready('b')
+    assert room.phase == GamePhase.COUNTDOWN
+
+def test_freeze_disconnect_mutation_and_duplicate_start(room):
+    p = room.add_player('a', 'A')
+    start(room)
+    heat = room.heat
+    assert not room.start_countdown()
+    with pytest.raises(ValueError):
+        room.update_pipeline('a', **p.pipeline)
+    with pytest.raises(ValueError):
+        room.change_track('har')
+    with pytest.raises(FrozenInstanceError):
+        heat.entries[0].nickname = 'changed'
+    room.remove_player('a')
+    results = room.finish_race()
+    assert any(r['client_id'] == 'a' for r in results['rankings'])
+    assert results['heat_id'] == heat.heat_id
+    assert room.finish_race() is results
+
+def test_bot_configuration_is_real(room):
+    b = room.add_bot()
+    assert b.is_bot and b.is_ready and b.metrics
+    with pytest.raises(ValueError):
+        room.add_bot(extractor='missing')
+
+def test_all_tracks_defaults_and_switch(room):
+    p = room.add_player('a', 'A')
+    for track in room.engine.list_tracks():
+        assert room.change_track(track.track_id)
+        assert p.metrics and p.metrics.track_id == track.track_id
+        assert not p.is_ready
+    assert not room.change_track('missing')
+
+def test_shared_awards_and_scoring(room):
+    room.add_player('a', 'A')
+    room.add_player('b', 'B')
+    start(room)
+    results = room.finish_race()
+    a, b = results['rankings']
+    assert a['pareto_score'] == b['pareto_score']
+    assert set(a['awards']) == set(b['awards']) == {'speed_champion','accuracy_champion','green_compute_champion','pareto_champion'}
+    assert a['client_id'] == 'a'
+    assert a['pareto_score'] == room.heat.entries[0].metrics.pareto_composite_score
+
+def test_disconnect_reservation_expiration_and_resume(room):
+    for i in range(5): room.add_player(str(i), str(i))
+    room.disconnect('0')
+    then = room.players['0'].disconnected_at
+    room.expire_disconnected(then + 29)
+    assert '0' in room.players and room.players['4'].is_spectator
+    room.reconnect('0')
+    assert room.players['0'].connected and not room.players['0'].is_ready
+    room.disconnect('0')
+    room.expire_disconnected(room.players['0'].disconnected_at + 30)
+    assert '0' not in room.players and not room.players['4'].is_spectator
+
+def test_disconnected_slot_blocks_start(room):
+    room.add_player('a', 'A'); room.add_player('b', 'B')
+    room.disconnect('b')
+    assert not room.set_player_ready('a')
+    with pytest.raises(ValueError, match='connected'):room.start_countdown()
+
+def test_reset_and_expiry_after_heat(room):
+    room.add_player('a', 'A'); start(room)
+    room.disconnect('a')
+    room.players['a'].disconnected_at -= 31
+    room.expire_disconnected()
+    assert 'a' in room.players
+    room.finish_race(); room.reset_to_lobby()
+    assert not room.players and room.heat is None
+
+def test_invalid_identity(room):
+    for name in (' ', 'a' * 21):
+        with pytest.raises(ValueError):room.add_player('a', name)
+    with pytest.raises(ValueError):room.add_player('a', 'A', 'red" onload="bad')
 
 
-def test_race_finish_and_award_assignment(room_manager: BoothRoomManager) -> None:
-    """Verify finishing a heat, computing Pareto scores, and awarding badges."""
-    p1 = room_manager.add_player("c1", "Numba Fast")
-    room_manager.update_pipeline("c1", "numba_efficient", "None", "random_forest")
-
-    p2 = room_manager.add_player("c2", "tsfresh Heavy")
-    room_manager.update_pipeline("c2", "tsfresh_efficient", "None", "random_forest")
-
-    room_manager.start_racing()
-    results = room_manager.finish_race()
-
-    assert room_manager.phase == GamePhase.RESULTS
-    assert "rankings" in results
-    assert len(results["rankings"]) == 2
-
-    r1 = results["rankings"][0]
-    r2 = results["rankings"][1]
-
-    # Numba should beat tsfresh in Pareto score due to massive speedup
-    assert r1["nickname"] == "Numba Fast"
-    assert "speed_champion" in r1["awards"]
-    assert "green_compute_champion" in r1["awards"]
-    assert "pareto_champion" in r1["awards"]
+def test_race_again_only_current_completed_heat_entrant(room):
+    room.add_player('a', 'Alice')
+    start(room)
+    heat_id = room.heat.heat_id
+    with pytest.raises(ValueError, match='completed heat'):
+        room.request_race_again('a', heat_id)
+    room.finish_race()
+    with pytest.raises(ValueError, match='entrant'):
+        room.request_race_again('viewer', heat_id)
+    with pytest.raises(ValueError, match='completed heat'):
+        room.request_race_again('a', 'stale-heat')
+    room.request_race_again('a', heat_id)
+    assert room.phase == GamePhase.RESULTS
+    assert room.heat.heat_id == heat_id
+    assert room.players['a'].preparing_next
+    assert not room.players['a'].is_ready
+    start(room)
+    room.finish_race()
+    with pytest.raises(ValueError, match='completed heat'):
+        room.request_race_again('a', heat_id)
 
 
-def test_reset_to_lobby(room_manager: BoothRoomManager) -> None:
-    """Verify resetting room state to lobby cleans up bots and resets readiness."""
-    room_manager.add_player("c1", "Alice")
-    room_manager.add_bot("Bot")
-    room_manager.start_racing()
-    room_manager.finish_race()
-
-    room_manager.reset_to_lobby()
-    assert room_manager.phase == GamePhase.LOBBY
-    assert len(room_manager.players) == 1
-    assert "c1" in room_manager.players
-    assert not room_manager.players["c1"].is_ready
+def test_next_round_preparation_is_per_player(room):
+    room.add_player('a', 'Alice')
+    room.add_player('b', 'Bob')
+    start(room)
+    results = room.finish_race()
+    heat_id = room.heat.heat_id
+    room.request_race_again('a', heat_id)
+    room.update_pipeline('a', **room.players['a'].pipeline)
+    assert not room.set_player_ready('a')
+    assert room.phase == GamePhase.RESULTS
+    assert room.race_results_cache is results
+    assert not room.players['b'].preparing_next
+    with pytest.raises(ValueError):
+        room.update_pipeline('b', **room.players['b'].pipeline)
+    room.request_race_again('b', heat_id)
+    assert room.set_player_ready('b')
+    assert room.phase == GamePhase.COUNTDOWN
+    assert room.heat.heat_id != heat_id
