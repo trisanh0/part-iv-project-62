@@ -1,4 +1,4 @@
-import {drawVehicle, VEHICLES, COLOR_NAMES} from './vehicles.js';
+import {drawVehicle, VEHICLES, COLOR_NAMES, CAR_COLORS} from './vehicles.js';
 import {setupDisclosures} from './disclosures.js';
 /** Mobile participant journey, driven by confirmed room state. */
 import {RaceCanvasRenderer} from './canvas_renderer.js';
@@ -326,7 +326,7 @@ export class DemoClientApp {
     }
     _renderAppearance() {
         const player = this.myPlayer;
-        const colors = this.state.car_colors || ['#FF4D4D', '#00E5FF', '#76FF03', '#FFD600', '#D500F9', '#FF9100'];
+        const colors = this.state.car_colors || CAR_COLORS;
         const signature = JSON.stringify([player.vehicle, player.avatar_color, player.preferred_color, !!this.pending, this.connected]);
         if (signature === this.appearanceSignature) return;
         this.appearanceSignature = signature;

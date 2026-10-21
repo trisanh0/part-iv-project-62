@@ -424,7 +424,7 @@ def test_removed_phone_gets_notice_new_identity_and_frozen_results():
             data = hello(ws)
             ws.send_json({'action': 'join', 'nickname': 'Alex'})
             receive(ws, 'STATE_UPDATE')
-            ws.send_json({'action': 'set_appearance', 'vehicle': 'motorbike', 'color': '#00E5FF'})
+            ws.send_json({'action': 'set_appearance', 'vehicle': 'motorbike', 'color': '#5C9FA0'})
             state = receive(ws, 'STATE_UPDATE')['data']
             assert state['participant']['vehicle'] == 'motorbike'
             ws.send_json({'action': 'set_ready', 'ready': True})
@@ -548,3 +548,23 @@ def test_normal_countdown_settings_do_not_replace_three_second_ready_shortcut():
         assert admin(client, 'set_laps', laps=3).status_code == 200
         assert room_manager.heat.countdown_seconds == server.ALL_READY_COUNTDOWN_SECONDS
         assert room_manager.countdown_seconds == 12
+
+
+def test_camper_choice_is_confirmed_and_frozen_with_muted_livery():
+    from demo.game_state import CAR_COLORS
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as ws:
+            identity = hello(ws)
+            ws.send_json({'action': 'join', 'nickname': 'Camper racer'})
+            receive(ws, 'STATE_UPDATE')
+            ws.send_json({'action': 'set_appearance', 'vehicle': 'camper', 'color': CAR_COLORS[5]})
+            state = receive(ws, 'STATE_UPDATE')['data']
+            assert state['participant']['vehicle'] == 'camper'
+            assert state['participant']['avatar_color'] == CAR_COLORS[5]
+            ws.send_json({'action': 'set_ready', 'ready': True})
+            while True:
+                state = receive(ws, 'STATE_UPDATE')['data']
+                if state['phase'] == 'COUNTDOWN':
+                    break
+            entry = next(row for row in state['active_racers'] if row['client_id'] == identity['client_id'])
+            assert entry['vehicle'] == 'camper' and entry['avatar_color'] == CAR_COLORS[5]

@@ -549,8 +549,8 @@ test('explicitly removed participant stays on landing despite their frozen car',
 
 test('appearance changes require matching server confirmation', () => {
     const app = Object.create(DemoClientApp.prototype);
-    app.pending = {action: 'set_appearance', vehicle: 'motorbike', color: '#00E5FF'};
-    app.myPlayer = {vehicle: 'formula', preferred_color: '#00E5FF'};
+    app.pending = {action: 'set_appearance', vehicle: 'motorbike', color: '#5C9FA0'};
+    app.myPlayer = {vehicle: 'formula', preferred_color: '#5C9FA0'};
     app._confirmPending();
     assert.ok(app.pending);
     app.myPlayer.vehicle = 'motorbike';

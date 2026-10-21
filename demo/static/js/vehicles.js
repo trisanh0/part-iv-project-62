@@ -1,8 +1,33 @@
 /** Cosmetic vehicle silhouettes; all use identical race physics. */
-export const VEHICLES = [{id: 'formula', name: 'Formula'}, {id: 'hatchback', name: 'Hatchback'}, {id: 'motorbike', name: 'Motorbike'}];
-export const COLOR_NAMES = ['Red', 'Cyan', 'Lime', 'Yellow', 'Violet', 'Orange'];
+export const VEHICLES = [{id: 'formula', name: 'Formula'}, {id: 'hatchback', name: 'Hatchback'}, {id: 'motorbike', name: 'Motorbike'}, {id: 'camper', name: 'Camper van'}];
+export const CAR_COLORS = ['#C66E7A', '#5C9FA0', '#99AD87', '#D0AF68', '#9E83B4', '#C58B64'];
+export const COLOR_NAMES = ['Rose', 'Teal', 'Sage', 'Ochre', 'Plum', 'Terracotta'];
 export function drawVehicle(ctx, vehicle, color, length) {
     const width = length * .44;
+    if (vehicle === 'camper') {
+        // A two-tone little camper, with a surfboard strapped to its cream roof.
+        const bodyWidth = width * 1.18;
+        ctx.fillStyle = '#17131C';
+        for (const x of [-.32, .24]) for (const side of [-1, 1]) {
+            ctx.fillRect(x * length, side * bodyWidth * .5 - bodyWidth * .12, length * .17, bodyWidth * .24);
+        }
+        ctx.fillStyle = color; ctx.strokeStyle = '#20182B'; ctx.lineWidth = .6;
+        ctx.beginPath(); ctx.roundRect(-length * .48, -bodyWidth * .5, length * .96, bodyWidth, length * .1); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#F1E8D6';
+        ctx.beginPath(); ctx.roundRect(-length * .36, -bodyWidth * .37, length * .54, bodyWidth * .74, length * .05); ctx.fill();
+        ctx.fillStyle = '#302E3C';
+        ctx.fillRect(length * .25, -bodyWidth * .36, length * .13, bodyWidth * .72);
+        ctx.fillRect(-length * .43, -bodyWidth * .25, length * .05, bodyWidth * .5);
+        ctx.strokeStyle = '#5B5244'; ctx.lineWidth = .7;
+        ctx.beginPath(); ctx.moveTo(-length * .24, -bodyWidth * .37); ctx.lineTo(-length * .24, bodyWidth * .37);
+        ctx.moveTo(length * .06, -bodyWidth * .37); ctx.lineTo(length * .06, bodyWidth * .37); ctx.stroke();
+        ctx.fillStyle = '#D0AF68'; ctx.strokeStyle = '#5B5244'; ctx.lineWidth = .55;
+        ctx.beginPath(); ctx.ellipse(-length * .08, 0, length * .29, bodyWidth * .13, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-length * .31, 0); ctx.lineTo(length * .15, 0); ctx.stroke();
+        ctx.fillStyle = '#FAF9FC';
+        for (const y of [-.37, .24]) ctx.fillRect(length * .41, y * bodyWidth, length * .04, bodyWidth * .13);
+        return;
+    }
     if (vehicle === 'hatchback') {
         ctx.fillStyle = '#17131C';
         for (const x of [-.3, .25]) for (const y of [-.5, .35]) ctx.fillRect(x * length, y * width, length * .16, width * .18);

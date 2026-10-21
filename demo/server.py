@@ -59,7 +59,7 @@ class Command(BaseModel):
     selector: Optional[str] = Field(default=None, min_length=1, max_length=100)
     model: Optional[str] = Field(default=None, min_length=1, max_length=100)
     track_id: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    vehicle: Optional[Literal['formula', 'hatchback', 'motorbike']] = None
+    vehicle: Optional[Literal['formula', 'hatchback', 'motorbike', 'camper']] = None
     target_client_id: Optional[str] = Field(default=None, min_length=1, max_length=100)
     interrupt_heat: bool = False
     grid_window_seconds: Optional[float] = Field(default=None, ge=1, le=120, allow_inf_nan=False)

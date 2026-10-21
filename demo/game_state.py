@@ -15,8 +15,8 @@ PROTOCOL_VERSION = 2
 ALL_READY_COUNTDOWN_SECONDS = 3.0
 DEFAULT_SETTINGS = dict(track_id='gas-sensor-drift-sub', race_duration_seconds=27.0,
                         grid_window_seconds=20.0, countdown_seconds=7.0, laps=2)
-VEHICLE_TYPES = ('formula', 'hatchback', 'motorbike')
-CAR_COLORS = ['#FF4D4D', '#00E5FF', '#76FF03', '#FFD600', '#D500F9', '#FF9100']
+VEHICLE_TYPES = ('formula', 'hatchback', 'motorbike', 'camper')
+CAR_COLORS = ['#C66E7A', '#5C9FA0', '#99AD87', '#D0AF68', '#9E83B4', '#C58B64']
 
 
 class GamePhase(str, Enum):
