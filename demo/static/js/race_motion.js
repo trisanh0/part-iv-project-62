@@ -4,12 +4,12 @@ export const PIT_EXIT_PROGRESS = 1.08653;
 
 const hermite = (u, a, b) => (3*u*u - 2*u*u*u) + (u*u*u - 2*u*u + u)*a + (u*u*u - u*u)*b;
 
-export function scheduledMotion(schedule, elapsedMs, circuit, phase = 0) {
+export function scheduledMotion(schedule, elapsedMs, circuit, phase = 0, totalLaps = 2) {
     const elapsed = Math.max(0, elapsedMs);
     const finish = schedule.finish_ms;
-    if (elapsed >= finish) return {progress: 2, finished: true, inPit: false, pitRemaining: 0};
+    if (elapsed >= finish) return {progress: totalLaps, finished: true, inPit: false, pitRemaining: 0};
     if (!schedule.uses_accuracy) {
-        return {progress: circuit.progressAtTime(2 * elapsed / finish), inPit: false, pitRemaining: 0};
+        return {progress: circuit.progressAtTime(totalLaps * elapsed / finish), inPit: false, pitRemaining: 0};
     }
     const entry = schedule.pit_entry_ms, stop = schedule.pit_stop_ms;
     const departure = schedule.pit_departure_ms, exit = schedule.pit_exit_ms;
@@ -32,7 +32,7 @@ export function scheduledMotion(schedule, elapsedMs, circuit, phase = 0) {
     const u = before ? elapsed / entry : (elapsed - exit) / (finish - exit);
     // A small wave between fixed checkpoints cannot move the pit or finish times.
     const start = before ? 0 : circuit.timeAtProgress(PIT_EXIT_PROGRESS);
-    const end = before ? circuit.timeAtProgress(PIT_ENTRY_PROGRESS) : 2;
+    const end = before ? circuit.timeAtProgress(PIT_ENTRY_PROGRESS) : totalLaps;
     const pitLength = circuit.pitSamples.at(-1).distance;
     const checkpoint = before ? end : start;
     const paceSlope = (circuit.progressAtTime(checkpoint + 1e-5) - circuit.progressAtTime(checkpoint - 1e-5)) / 2e-5;

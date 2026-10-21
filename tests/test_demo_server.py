@@ -16,6 +16,7 @@ def reset(monkeypatch):
     room_manager.grid_window_seconds = .01
     room_manager.countdown_seconds = .01
     room_manager.race_duration_seconds = 5
+    room_manager.laps = 2
 
 
 def hello(ws, token=None):
@@ -501,3 +502,49 @@ def test_builder_disconnect_triggers_short_countdown_and_reviewers_do_not_block(
             assert state['phase'] == 'COUNTDOWN'
             assert any(p['client_id'] == racer_id for p in state['active_racers'])
             assert not any(p['client_id'] == 'reviewer' for p in state['active_racers'])
+
+
+def test_lap_and_countdown_settings_broadcast_and_defaults_restore():
+    from demo.game_state import DEFAULT_SETTINGS
+    with TestClient(app) as client:
+        room_manager.add_player('builder', 'Builder')
+        response = admin(client, 'set_laps', laps=4)
+        assert response.status_code == 200 and response.json()['state']['laps'] == 4
+        response = admin(client, 'set_countdown', countdown_seconds=9.0)
+        assert response.status_code == 200 and response.json()['state']['settings']['countdown_seconds'] == 9
+        assert admin(client, 'set_laps', laps=1).status_code == 422
+        assert admin(client, 'set_laps', laps=3.5).status_code == 422
+        assert admin(client, 'set_countdown', countdown_seconds=100.0).status_code == 422
+        assert admin(client, 'set_duration', duration_seconds=12.0).status_code == 200
+        assert admin(client, 'set_grid_window', grid_window_seconds=40.0).status_code == 200
+        assert admin(client, 'change_track', track_id='har').status_code == 200
+        state = admin(client, 'reset_settings').json()['state']
+        assert state['settings'] == DEFAULT_SETTINGS
+        assert state['track']['track_id'] == DEFAULT_SETTINGS['track_id']
+        assert 'builder' in room_manager.players
+
+
+def test_reset_settings_requires_confirmation_to_end_frozen_heat():
+    from demo.game_state import DEFAULT_SETTINGS
+    with TestClient(app) as client:
+        room_manager.add_player('ready', 'Ready')
+        room_manager.set_player_ready('ready')
+        assert admin(client, 'set_laps', laps=4).status_code == 200
+        frozen = room_manager.heat
+        assert frozen and frozen.laps == 4
+        assert admin(client, 'reset_settings').status_code == 409
+        assert room_manager.heat is frozen
+        state = admin(client, 'reset_settings', interrupt_heat=True).json()['state']
+        assert state['heat_id'] is None
+        assert state['settings'] == DEFAULT_SETTINGS
+        assert not room_manager.players['ready'].is_ready
+
+
+def test_normal_countdown_settings_do_not_replace_three_second_ready_shortcut():
+    with TestClient(app) as client:
+        assert admin(client, 'set_countdown', countdown_seconds=12.0).status_code == 200
+        room_manager.add_player('ready', 'Ready')
+        room_manager.set_player_ready('ready')
+        assert admin(client, 'set_laps', laps=3).status_code == 200
+        assert room_manager.heat.countdown_seconds == server.ALL_READY_COUNTDOWN_SECONDS
+        assert room_manager.countdown_seconds == 12

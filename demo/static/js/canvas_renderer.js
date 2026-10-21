@@ -82,7 +82,8 @@ export class RaceCanvasRenderer {
     /**
      * Set active racers and race parameters.
      */
-    setupRace(racers, durationSec = 27.0, startTimeMs = 0) {
+    setupRace(racers, durationSec = 27.0, startTimeMs = 0, totalLaps = 2) {
+        this.totalLaps = totalLaps;
         this.resize();
         this.raceDurationSec = durationSec;
         this.raceStartTimeMs = startTimeMs || Date.now();
@@ -187,7 +188,7 @@ export class RaceCanvasRenderer {
             // A common monotonic time-to-distance map slows corners while preserving
             // completion times, tied finishes and deterministic reconnect playback.
             const motion = car.race_schedule
-                ? scheduledMotion(car.race_schedule, elapsedSec * 1000, this.circuit, car.pacePhase) : null;
+                ? scheduledMotion(car.race_schedule, elapsedSec * 1000, this.circuit, car.pacePhase, this.totalLaps) : null;
             const lapProgress = motion ? motion.progress : this.circuit.progressAtTime(elapsedLaps);
             car.inPit = !!motion?.inPit;
             car.dwelling = !!motion?.dwelling;
@@ -207,9 +208,9 @@ export class RaceCanvasRenderer {
                 const coastSeconds = 1.8 + (car.car_index || 0) * .1;
                 const u = Math.min(1, Math.max(0, elapsedSec - car.completionTimeSec) / coastSeconds);
                 const prior = car.race_schedule
-                    ? scheduledMotion(car.race_schedule, (car.completionTimeSec - .001) * 1000, this.circuit, car.pacePhase).progress
-                    : this.circuit.progressAtTime(2 - .002 / car.completionTimeSec);
-                const velocity = (2 - prior) / .001;
+                    ? scheduledMotion(car.race_schedule, (car.completionTimeSec - .001) * 1000, this.circuit, car.pacePhase, this.totalLaps).progress
+                    : this.circuit.progressAtTime(this.totalLaps - this.totalLaps * .001 / car.completionTimeSec);
+                const velocity = (this.totalLaps - prior) / .001;
                 visualProgress += velocity * coastSeconds / 3 * (1 - (1-u)**3);
             }
             car.visualProgress = visualProgress;

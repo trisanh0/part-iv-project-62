@@ -51,7 +51,7 @@ export class DemoClientApp {
             const seconds = (telemetry.elapsed % 60).toFixed(1).padStart(4, '0');
             byId('race-elapsed').textContent = `${minutes}:${seconds}`;
             byId('race-position').textContent = telemetry.position ? `P${telemetry.position}` : '—';
-            byId('race-lap').textContent = `${telemetry.lap || '—'} / 2`;
+            byId('race-lap').textContent = `${telemetry.lap || '—'} / ${this.raceRenderer.totalLaps}`;
             if (telemetry.finish) {
                 const notice = byId('race-finish-notice');
                 notice.classList.remove('hidden');
@@ -330,6 +330,7 @@ export class DemoClientApp {
         const signature = JSON.stringify([player.vehicle, player.avatar_color, player.preferred_color, !!this.pending, this.connected]);
         if (signature === this.appearanceSignature) return;
         this.appearanceSignature = signature;
+        byId('car-summary').textContent = `${VEHICLES.find(v => v.id === player.vehicle)?.name || 'Formula'} · ${COLOR_NAMES[colors.indexOf(player.avatar_color)] || 'Auto'}`;
         const choose = (vehicle, color, focus) => { this.appearanceFocus = focus; this._command({action: 'set_appearance', vehicle, color}); };
         const vehicles = byId('vehicle-choices');
         vehicles.replaceChildren(...VEHICLES.map(vehicle => {
@@ -415,10 +416,11 @@ export class DemoClientApp {
         if (renderer.heatKey !== key || (state.phase === 'RACING' && !renderer.isRunning)) {
             renderer.stop(); renderer.heatKey = key; renderer.raceHeatId = state.heat_id;
             byId('race-finish-notice').classList.add('hidden');
-            renderer.setupRace(state.active_racers, state.race_duration_seconds, state.race_start_timestamp_ms - this.serverOffsetMs);
+            renderer.setupRace(state.active_racers, state.race_duration_seconds, state.race_start_timestamp_ms - this.serverOffsetMs, state.laps || 2);
             if (state.phase === 'RACING' && !document.hidden) renderer.start();
             else renderer.renderFrame(0);
         }
+        byId('race-lap-count').textContent = `${renderer.totalLaps} laps`;
         byId('race-phase').textContent = state.phase === 'COUNTDOWN' ? 'Starting' : 'Live';
         clearInterval(this.countdownTimer);
         const update = () => {

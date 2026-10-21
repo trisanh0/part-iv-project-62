@@ -45,12 +45,15 @@ export class PresenterApp {
             else { this.renderRace(true); this.poll(); this.updateWakeLock(); }
         });
         $('control-library').addEventListener('change', () => this.renderTrackOptions(true));
-        for (const id of ['challenge-form', 'duration-form', 'window-form']) {
+        for (const id of ['challenge-form', 'duration-form', 'window-form', 'laps-form', 'countdown-form']) {
             $(id).addEventListener('input', () => { $(id).dataset.dirty = 'true'; });
         }
         $('challenge-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('change_track', {track_id: $('control-track').value}, 'challenge-form'); });
         $('duration-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_duration', {duration_seconds: Number($('control-duration').value)}, 'duration-form'); });
         $('window-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_grid_window', {grid_window_seconds: Number($('control-window').value)}, 'window-form'); });
+        $('laps-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_laps', {laps: Number($('control-laps').value)}, 'laps-form'); });
+        $('countdown-form').addEventListener('submit', event => { event.preventDefault(); this.applySetting('set_countdown', {countdown_seconds: Number($('control-countdown').value)}, 'countdown-form'); });
+        $('restore-defaults').addEventListener('click', () => this.confirm('Restore default settings?', `Gas sensors, 2 laps, a 27-second race, a 20-second entry window and 7-second lights.${activeHeat(this.state) ? ' This ends the current heat and returns racers to setup.' : ''}`, () => this.command('reset_settings', {interrupt_heat: activeHeat(this.state)}), 'Restore defaults'));
         $('start-ready').addEventListener('click', () => this.command('start_race'));
         $('add-bot').addEventListener('click', () => this.command('add_bot'));
         $('reset-room').addEventListener('click', () => this.confirm('Reset the room?', 'This ends the current heat and returns everyone to setup.', () => this.command('reset_lobby'), 'Reset room'));
@@ -85,7 +88,7 @@ export class PresenterApp {
         this.authGeneration++; this.pin = ''; this.roster = []; this.peopleSignature = null; this.display = display; this.loginFromDisplay = false;
         clearTimeout(this.pollTimer);
         $('people-groups').replaceChildren(); $('people-count').textContent = '';
-        $('presenter-pin').value = ''; $('unlock-error').textContent = ''; $('control-status').textContent = '';
+        $('presenter-pin').value = ''; $('unlock-error').textContent = ''; $('control-status').textContent = ''; $('control-status').classList.remove('is-confirmed');
         try { sessionStorage.setItem('tempoDisplayMode', String(display)); } catch { /* Optional view preference. */ }
         this.syncAccess(); this.renderBuilds();
     }
@@ -125,7 +128,7 @@ export class PresenterApp {
         } catch (error) {
             if (generation !== this.authGeneration) return;
             if (error.status === 403) { this.lock(false); $('unlock-error').textContent = 'Unlock again to manage the session.'; }
-            else $('control-status').textContent = 'Management connection lost. Retrying…';
+            else { $('control-status').classList.remove('is-confirmed'); $('control-status').textContent = 'Management connection lost. Retrying…'; }
             this.managementConnected = false; this.updateButtons();
         } finally { this.pollBusy = false; this.schedulePoll(); }
     }
@@ -159,7 +162,7 @@ export class PresenterApp {
             if (!this.managementConnected && $('control-status').textContent === 'Management connection lost. Retrying…') $('control-status').textContent = '';
             this.managementConnected = true; this.renderPeople();
         }
-        $('dashboard-phase').textContent = activeHeat(state) ? 'Grand Prix / 2 laps' : 'Next race';
+        $('dashboard-phase').textContent = activeHeat(state) ? `Grand Prix / ${state.laps || 2} laps` : 'Next race';
         $('dashboard-title').textContent = phaseTitle(state);
         $('control-challenge').textContent = state.track.display_name;
         this.renderBuilds(); this.renderSettings(); this.renderRace(); this.updateButtons(); this.updateClock();
@@ -170,11 +173,12 @@ export class PresenterApp {
         const key = running ? `${this.state.heat_id}:${this.state.phase}` : 'idle';
         if (force || this.raceKey !== key) {
             this.raceKey = key; this.renderer.stop();
-            this.renderer.setupRace(running ? this.state.active_racers : [], this.state.race_duration_seconds, this.state.race_start_timestamp_ms - this.offset);
+            this.renderer.setupRace(running ? this.state.active_racers : [], this.state.race_duration_seconds, this.state.race_start_timestamp_ms - this.offset, this.state.laps || 2);
             if (this.state.phase === 'RACING' && this.connected) this.renderer.start(); else this.renderer.renderFrame(0);
         }
         $('live-timing').classList.toggle('hidden', !running);
-        if (!running) $('control-timing').textContent = '2 laps';
+        $('control-lap-count').textContent = `${this.state.laps || 2} laps`;
+        if (!running) $('control-timing').textContent = `${this.state.laps || 2} laps`;
     }
     updateClock() {
         if (!this.state) return;
@@ -246,7 +250,7 @@ export class PresenterApp {
         const tracks = this.tracks.filter(track => $('control-library').checked || curated.includes(track.track_id) || track.track_id === selected || track.track_id === this.state.track.track_id);
         if (!$('control-library').checked) tracks.sort((a, b) => (curated.includes(a.track_id) ? curated.indexOf(a.track_id) : 3) - (curated.includes(b.track_id) ? curated.indexOf(b.track_id) : 3));
         const signature = JSON.stringify([tracks.map(t => t.track_id), selected]);
-        if ($('control-track').dataset.signature === signature) return;
+        if ($('control-track').dataset.signature === signature) { $('control-track').value = selected; return; }
         $('control-track').replaceChildren(...tracks.map(track => {
             const option = document.createElement('option'); option.value = track.track_id; option.textContent = track.display_name; option.selected = track.track_id === selected; return option;
         }));
@@ -255,7 +259,7 @@ export class PresenterApp {
     renderSettings() {
         if (!this.state) return;
         this.renderTrackOptions();
-        for (const [form, input, value] of [['duration-form', 'control-duration', this.state.settings.race_duration_seconds], ['window-form', 'control-window', this.state.settings.grid_window_seconds]]) {
+        for (const [form, input, value] of [['duration-form', 'control-duration', this.state.settings.race_duration_seconds], ['window-form', 'control-window', this.state.settings.grid_window_seconds], ['laps-form', 'control-laps', this.state.settings.laps], ['countdown-form', 'control-countdown', this.state.settings.countdown_seconds]]) {
             if (!$(form).dataset.dirty && document.activeElement !== $(input)) $(input).value = value;
         }
     }
@@ -270,7 +274,9 @@ export class PresenterApp {
         $('confirm-title').textContent = title; $('confirm-message').textContent = message; $('confirm-apply').textContent = label; this.confirmAction = action; $('control-confirm').showModal(); $('confirm-cancel').focus();
     }
     applySetting(action, payload, form) {
-        const unchanged = action === 'change_track' ? payload.track_id === this.state.settings.track_id : action === 'set_duration' ? payload.duration_seconds === this.state.settings.race_duration_seconds : payload.grid_window_seconds === this.state.settings.grid_window_seconds;
+        const key = {change_track: 'track_id', set_duration: 'race_duration_seconds', set_grid_window: 'grid_window_seconds', set_laps: 'laps', set_countdown: 'countdown_seconds'}[action];
+        const value = action === 'set_duration' ? payload.duration_seconds : payload[key];
+        const unchanged = value === this.state.settings[key];
         if (unchanged) { delete $(form).dataset.dirty; $('control-status').textContent = 'Already applied.'; return; }
         const apply = interrupt => this.command(action, {...payload, interrupt_heat: interrupt}, form);
         if (activeHeat(this.state) && action !== 'set_grid_window') this.confirm('Apply now and end this heat?', 'Racers return to setup immediately with the new setting.', () => apply(true), 'Apply now');
@@ -278,18 +284,40 @@ export class PresenterApp {
     }
     async command(action, payload = {}, form = null) {
         if (this.busy || !this.pin || !this.connected || !this.managementConnected) return;
-        this.busy = true; this.updateButtons(); $('control-status').textContent = 'Applying…';
+        this.busy = true; this.updateButtons(); $('control-status').classList.remove('is-confirmed'); $('control-status').textContent = 'Applying…';
         const generation = this.authGeneration;
         try {
             const result = await this.post('/api/admin/action', {pin: this.pin, action, ...payload});
             if (generation !== this.authGeneration || !this.pin) return;
             if (form) delete $(form).dataset.dirty;
-            this.applyState(result.state, true); $('control-status').textContent = 'Applied.';
+            if (action === 'reset_settings') {
+                for (const id of ['challenge-form', 'duration-form', 'window-form', 'laps-form', 'countdown-form']) delete $(id).dataset.dirty;
+                $('control-library').checked = false;
+            }
+            this.applyState(result.state, true);
+            this.showConfirmation(action, result.state);
         } catch (error) {
             if (generation !== this.authGeneration) return;
             if (error.status === 403) { this.lock(false); $('unlock-error').textContent = 'Unlock again to apply changes.'; }
             $('control-status').textContent = error.name === 'TimeoutError' ? 'No confirmation received. Check the current state before trying again.' : error.message;
         } finally { this.busy = false; this.updateButtons(); }
+    }
+    showConfirmation(action, state) {
+        const settings = state.settings;
+        const message = {
+            change_track: `Challenge changed to ${state.track.display_name}.`,
+            set_duration: `Race length changed to ${settings.race_duration_seconds} seconds.`,
+            set_grid_window: `Entry window changed to ${settings.grid_window_seconds} seconds.`,
+            set_laps: `Lap count changed to ${settings.laps}.`,
+            set_countdown: `Normal starting lights changed to ${settings.countdown_seconds} seconds.`,
+            reset_settings: 'Default settings restored: gas sensors, 2 laps, 27-second race, 20-second entry window and 7-second lights.',
+            remove_participant: 'Participant removed.', add_bot: 'Benchmark car added.',
+            reset_lobby: 'Room reset. Everyone is back in setup.', start_race: 'The race is starting.',
+        }[action] || 'Settings updated.';
+        const status = $('control-status');
+        status.textContent = message;
+        status.classList.remove('is-confirmed');
+        requestAnimationFrame(() => { if (status.textContent === message) status.classList.add('is-confirmed'); });
     }
     async updateWakeLock() {
         try {

@@ -590,3 +590,47 @@ test('presenter commands preserve unlock on rejected settings and ignore respons
         assert.equal(app.pin, '');
     } finally { globalThis.document = previousDocument; }
 });
+
+test('configured lap counts retain smooth pit playback, exact finish and coasting', () => {
+    for (const laps of [2, 3, 6]) {
+        const circuit = new TrackCircuit();
+        const drive = 20000, pit = 4000;
+        const schedule = {driving_ms: drive, pit_ms: pit, pit_entry_ms: Math.round(drive * .88 / laps),
+            pit_stop_ms: Math.round(drive * .96 / laps), pit_departure_ms: Math.round(drive * .96 / laps) + pit,
+            pit_exit_ms: Math.round(drive * 1.12 / laps) + pit, finish_ms: drive + pit, uses_accuracy: true, pit_box: 0};
+        let previous = 0;
+        for (let time = 0; time <= schedule.finish_ms; time += 10) {
+            const motion = scheduledMotion(schedule, time, circuit, 0, laps);
+            assert.ok(motion.progress >= previous && motion.progress <= laps);
+            previous = motion.progress;
+        }
+        const r = renderer([1], 24);
+        r.circuit = circuit; r.circuit.render = () => 1;
+        r.setupRace([{metrics: {total_latency_s: 1}, race_schedule: schedule}], 24, 1000, laps);
+        r.renderFrame(0);
+        assert.equal(r.racers[0].progress, 0);
+        r.renderFrame(23.999);
+        assert.equal(r.racers[0].isFinished, false);
+        r.renderFrame(24);
+        assert.equal(r.racers[0].progress, laps);
+        assert.equal(r.racers[0].finishTimeSec, 24);
+        r.renderFrame(25);
+        assert.ok(r.racers[0].visualProgress > laps);
+        assert.equal(r.racers[0].progress, laps);
+        assert.equal(scheduledMotion({...schedule, uses_accuracy: false}, 24000, circuit, 0, laps).progress, laps);
+    }
+});
+
+test('restoring defaults replaces an unapplied challenge selection even when options are cached', () => {
+    const originalDocument = globalThis.document;
+    const select = {value: 'beed', dataset: {signature: JSON.stringify([['gas-sensor-drift-sub', 'beed'], 'gas-sensor-drift-sub'])}};
+    const elements = {'control-track': select, 'challenge-form': {dataset: {}}, 'control-library': {checked: false}};
+    globalThis.document = {getElementById: id => elements[id]};
+    const app = Object.create(PresenterApp.prototype);
+    app.state = {track: {track_id: 'gas-sensor-drift-sub'}};
+    app.tracks = [{track_id: 'gas-sensor-drift-sub'}, {track_id: 'beed'}];
+    try {
+        app.renderTrackOptions();
+        assert.equal(select.value, 'gas-sensor-drift-sub');
+    } finally { globalThis.document = originalDocument; }
+});

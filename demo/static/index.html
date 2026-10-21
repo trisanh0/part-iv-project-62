@@ -51,7 +51,7 @@
             <p id="race-rules" class="race-rules"></p>
             <p class="section-intro">Swap components and compare speed, accuracy and peak RAM.</p>
             <div class="pipeline-strip" aria-label="Your pipeline"><span>Signals</span><span aria-hidden="true">→</span><strong>Extract</strong><span aria-hidden="true">→</span><strong>Select</strong><span aria-hidden="true">→</span><strong>Predict</strong></div>
-            <details class="build-stage car-customisation" name="pipeline-build"><summary><span class="stage-number">00</span><span class="stage-heading">Your car</span><span class="stage-toggle" aria-hidden="true">+</span></summary><div id="vehicle-choices" class="vehicle-choices" role="radiogroup" aria-label="Vehicle"></div><div id="color-choices" class="color-choices" role="radiogroup" aria-label="Car colour"></div><p id="car-color-note" class="help-text" role="status"></p></details>
+            <details class="build-stage car-customisation" name="pipeline-build"><summary><span class="stage-number">00</span><span class="stage-heading">Your car<small id="car-summary"></small></span><span class="stage-toggle" aria-hidden="true">+</span></summary><div id="vehicle-choices" class="vehicle-choices" role="radiogroup" aria-label="Vehicle"></div><div id="color-choices" class="color-choices" role="radiogroup" aria-label="Car colour"></div><p id="car-color-note" class="help-text" role="status"></p></details>
             <div id="guided-builder" class="guided-builder"></div>
             <p id="custom-build-summary" class="custom-build-summary hidden"></p>
             <div class="measurement-heading"><h2>Your build</h2></div>
@@ -69,7 +69,7 @@
             <div id="race-identity" class="race-identity">Watching the race</div>
             <dl class="timing-strip"><div><dt>Elapsed</dt><dd id="race-elapsed">00:00.0</dd></div><div><dt>Your position</dt><dd id="race-position">—</dd></div><div><dt>Lap</dt><dd id="race-lap">— / 2</dd></div></dl>
             <div class="race-canvas-wrapper"><div id="race-finish-notice" class="finish-notice hidden" role="status" aria-live="polite"><span class="finish-flag" aria-hidden="true"></span><div><strong id="finish-notice-title"></strong><span id="finish-notice-time"></span></div></div><canvas id="race-canvas" aria-label="Live race circuit"></canvas><div id="countdown-overlay" class="countdown-overlay hidden"><div class="start-sequence"><div id="start-lights" class="start-lights" aria-hidden="true"><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span><span class="start-light-column"><span></span><span></span></span></div><p id="start-light-status" class="start-light-status" role="status" aria-live="polite">Automatic start</p></div></div></div>
-            <div class="live-telemetry"><div class="section-heading"><h2>Live positions</h2><span class="help-text">2 laps</span></div><ol id="live-leaderboard" class="live-leaderboard" aria-label="Live race positions"></ol></div>
+            <div class="live-telemetry"><div class="section-heading"><h2>Live positions</h2><span id="race-lap-count" class="help-text">2 laps</span></div><ol id="live-leaderboard" class="live-leaderboard" aria-label="Live race positions"></ol></div>
             <p id="race-measurement-note" class="measurement-note"></p>
         </section>
 

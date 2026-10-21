@@ -18,7 +18,7 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Quer
 from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
-from demo.game_state import BoothRoomManager, GamePhase, PROTOCOL_VERSION, ALL_READY_COUNTDOWN_SECONDS
+from demo.game_state import BoothRoomManager, GamePhase, PROTOCOL_VERSION, ALL_READY_COUNTDOWN_SECONDS, DEFAULT_SETTINGS
 from demo.query import DemoQueryEngine
 
 logger = logging.getLogger('demo.server')
@@ -41,14 +41,15 @@ room_manager = BoothRoomManager(query_engine, initial_track_id=os.getenv('DEMO_D
     max_active_racers=int(os.getenv('DEMO_MAX_ACTIVE_RACERS', '6')),
     race_duration_seconds=float(os.getenv('DEMO_RACE_DURATION_SECONDS', '27')),
     countdown_seconds=float(os.getenv('DEMO_COUNTDOWN_SECONDS', '7')),
-    grid_window_seconds=float(os.getenv('DEMO_GRID_WINDOW_SECONDS', '20')))
+    grid_window_seconds=float(os.getenv('DEMO_GRID_WINDOW_SECONDS', '20')),
+    laps=int(os.getenv('DEMO_LAPS', '2')))
 
 
 class Command(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     action: Literal['join', 'leave', 'set_pipeline', 'set_ready', 'ping', 'start_race', 'reset_lobby',
                     'change_track', 'add_bot', 'set_duration', 'start_building', 'race_again',
-                    'set_grid_window', 'remove_participant', 'set_appearance']
+                    'set_grid_window', 'remove_participant', 'set_appearance', 'set_laps', 'set_countdown', 'reset_settings']
     heat_id: Optional[str] = Field(default=None, min_length=1, max_length=64)
     pin: Optional[str] = Field(default=None, max_length=128)
     nickname: Optional[str] = Field(default=None, min_length=1, max_length=20)
@@ -62,6 +63,8 @@ class Command(BaseModel):
     target_client_id: Optional[str] = Field(default=None, min_length=1, max_length=100)
     interrupt_heat: bool = False
     grid_window_seconds: Optional[float] = Field(default=None, ge=1, le=120, allow_inf_nan=False)
+    laps: Optional[int] = Field(default=None, ge=2, le=6)
+    countdown_seconds: Optional[float] = Field(default=None, ge=3, le=15, allow_inf_nan=False)
     ready: bool = True
     duration_seconds: Optional[float] = Field(default=None, ge=5, le=60, allow_inf_nan=False)
 
@@ -93,7 +96,7 @@ connections: dict[str, Connection] = {}
 race_task = None
 command_lock = asyncio.Lock()
 background_tasks = set()
-PRESENTER_ACTIONS = {'start_race', 'reset_lobby', 'change_track', 'add_bot', 'set_duration', 'start_building', 'set_grid_window', 'remove_participant'}
+PRESENTER_ACTIONS = {'start_race', 'reset_lobby', 'change_track', 'add_bot', 'set_duration', 'start_building', 'set_grid_window', 'remove_participant', 'set_laps', 'set_countdown', 'reset_settings'}
 
 
 def spawn(coro):
@@ -160,7 +163,7 @@ async def execute_race_lifecycle(heat):
         room_manager.start_racing()
         logger.info('heat_started heat_id=%s', heat.heat_id)
         snapshot = room_manager.get_state_snapshot()
-        await broadcast_event('RACE_START', {'duration_seconds': heat.duration_seconds,
+        await broadcast_event('RACE_START', {'duration_seconds': heat.duration_seconds, 'laps': heat.laps,
             'race_rules_version': heat.race_rules_version, 'racers': snapshot['active_racers'],
             'track_id': heat.track_id, 'race_start_timestamp_ms': heat.race_start_timestamp_ms})
         await broadcast_state()
@@ -289,6 +292,29 @@ async def dispatch(command, client_id=None):
                     await cancel_race()
                     room_manager.reset_to_lobby()
                 room_manager.race_duration_seconds = command.duration_seconds
+                room_manager.touch()
+            elif action in ('set_laps', 'set_countdown', 'reset_settings'):
+                if action == 'set_laps' and command.laps is None:
+                    raise ValueError('Lap count is required')
+                if action == 'set_countdown' and command.countdown_seconds is None:
+                    raise ValueError('Countdown duration is required')
+                if not room_manager.admission_open:
+                    if not command.interrupt_heat:
+                        raise ValueError('Applying now ends the current heat. Confirm to continue.')
+                    await cancel_race()
+                    room_manager.reset_to_lobby()
+                if action == 'set_laps':
+                    room_manager.laps = command.laps
+                elif action == 'set_countdown':
+                    room_manager.countdown_seconds = command.countdown_seconds
+                else:
+                    defaults = DEFAULT_SETTINGS
+                    if room_manager.current_track_id != defaults['track_id']:
+                        room_manager.change_track(defaults['track_id'])
+                    room_manager.race_duration_seconds = defaults['race_duration_seconds']
+                    room_manager.laps = defaults['laps']
+                    room_manager.countdown_seconds = defaults['countdown_seconds']
+                    room_manager.set_grid_window(defaults['grid_window_seconds'])
                 room_manager.touch()
             elif action == 'set_grid_window':
                 if command.grid_window_seconds is None:

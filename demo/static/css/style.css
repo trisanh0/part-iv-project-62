@@ -88,12 +88,12 @@ body[data-view="landing"] .connection-status, body[data-view="joining"] .connect
 .pipeline-strip > span { color: var(--muted); }
 .guided-builder { border-top: 0; }
 .build-stage { border-bottom: 1px solid var(--line); }
-.build-stage > summary { min-height: 76px; display: flex; align-items: center; gap: 14px; list-style: none; cursor: pointer; }
+.build-stage > summary { min-height: 76px; display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: start; padding: 14px 0; gap: 14px; list-style: none; cursor: pointer; }
 .build-stage > summary::-webkit-details-marker { display: none; }
-.stage-number { align-self: flex-start; padding-top: 22px; font-size: .7rem; color: var(--purple); font-variant-numeric: tabular-nums; }
+.stage-number { align-self: start; padding-top: .42rem; font-size: .7rem; color: var(--purple); font-variant-numeric: tabular-nums; }
 .stage-heading { flex: 1; font-size: 1.1rem; font-weight: 600; }
 .stage-heading small { display: block; font-weight: 400; font-size: .78rem; color: var(--muted); margin-top: 2px; }
-.stage-toggle { color: var(--purple); }
+.stage-toggle { color: var(--purple); align-self: center; }
 .build-stage[open] .stage-toggle { transform: rotate(45deg); }
 .build-stage > .help-text { margin-bottom: 14px; }
 .build-stage [role="radiogroup"] { display: grid; gap: 8px; padding-bottom: 20px; }
