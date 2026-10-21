@@ -18,7 +18,7 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Quer
 from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
-from demo.game_state import BoothRoomManager, GamePhase, PROTOCOL_VERSION
+from demo.game_state import BoothRoomManager, GamePhase, PROTOCOL_VERSION, ALL_READY_COUNTDOWN_SECONDS
 from demo.query import DemoQueryEngine
 
 logger = logging.getLogger('demo.server')
@@ -152,7 +152,7 @@ async def broadcast_state():
 async def execute_race_lifecycle(heat):
     try:
         await broadcast_state()
-        await broadcast_event('COUNTDOWN_START', {'countdown_seconds': room_manager.countdown_seconds,
+        await broadcast_event('COUNTDOWN_START', {'countdown_seconds': heat.countdown_seconds,
             'race_start_timestamp_ms': heat.race_start_timestamp_ms})
         await asyncio.sleep(max(0, heat.race_start_timestamp_ms / 1000 - time.time()))
         if room_manager.heat is not heat or room_manager.phase != GamePhase.COUNTDOWN:
@@ -183,6 +183,9 @@ async def execute_race_lifecycle(heat):
 async def execute_ready_races():
     """Collect ready entrants without making builders or result viewers wait."""
     while True:
+        async with command_lock:
+            if room_manager.all_configurators_ready():
+                room_manager.start_countdown(ready_only=True, countdown_seconds=ALL_READY_COUNTDOWN_SECONDS)
         if room_manager.phase == GamePhase.COUNTDOWN and room_manager.heat:
             await execute_race_lifecycle(room_manager.heat)
             continue
@@ -208,7 +211,9 @@ def trigger_race_lifecycle():
 async def restart_grid_timer():
     if room_manager.admission_open:
         await cancel_race()
-        if room_manager.grid_close_timestamp_ms:
+        if room_manager.all_configurators_ready():
+            room_manager.start_countdown(ready_only=True, countdown_seconds=ALL_READY_COUNTDOWN_SECONDS)
+        if room_manager.grid_close_timestamp_ms or room_manager.phase == GamePhase.COUNTDOWN:
             trigger_race_lifecycle()
 
 
@@ -323,6 +328,7 @@ async def expire_sessions():
                         and time.monotonic() - session.disconnected_at >= 30):
                     sessions.pop(token, None)
             if room_manager.revision != before:
+                await restart_grid_timer()
                 await broadcast_state()
 
 
@@ -452,12 +458,14 @@ async def websocket_game_endpoint(websocket: WebSocket):
         connections[client_id] = connection
         if old:
             spawn(close_connection(old, 1000))
-        session.disconnected_at = None
-        room_manager.reconnect(client_id)
-        connection.writer = spawn(writer_loop(connection))
-        enqueue(connection, envelope('INIT', {'client_id': client_id, 'resume_token': session.token, 'state': room_manager.get_state_snapshot(client_id)}))
-        if resumed:
-            await broadcast_state()
+        async with command_lock:
+            session.disconnected_at = None
+            room_manager.reconnect(client_id)
+            await restart_grid_timer()
+            connection.writer = spawn(writer_loop(connection))
+            enqueue(connection, envelope('INIT', {'client_id': client_id, 'resume_token': session.token, 'state': room_manager.get_state_snapshot(client_id)}))
+            if resumed:
+                await broadcast_state()
         while True:
             try:
                 command = Command.model_validate(await websocket.receive_json())
@@ -481,11 +489,14 @@ async def websocket_game_endpoint(websocket: WebSocket):
                 connection.writer.cancel()
                 with suppress(asyncio.CancelledError):
                     await connection.writer
-            if connections.get(client_id) is connection:
-                connections.pop(client_id, None)
-                session.disconnected_at = time.monotonic()
-                room_manager.disconnect(client_id)
-                await broadcast_state()
+            async with command_lock:
+                if connections.get(client_id) is connection:
+                    connections.pop(client_id, None)
+                    session.disconnected_at = time.monotonic()
+                    room_manager.disconnect(client_id)
+                    await restart_grid_timer()
+                    await broadcast_state()
+
 
 
 @app.middleware('http')

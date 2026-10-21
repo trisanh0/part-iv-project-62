@@ -485,3 +485,45 @@ def test_presenter_roster_includes_reviewers_offline_and_queue(room):
     roster = room.presenter_snapshot()['roster']
     assert next(p for p in roster if p['client_id'] == 'a')['status'] == 'Reviewing results'
     assert not any('last_results' in p or 'token' in p for p in roster)
+
+
+def test_all_ready_counts_connected_builders_not_reviewers_offline_or_bots(room, monkeypatch):
+    from demo.game_state import ALL_READY_COUNTDOWN_SECONDS
+    import demo.game_state as state
+    monkeypatch.setattr(state.time, 'time', lambda: 100.0)
+    room.add_player('alex', 'Alex')
+    room.add_player('sam', 'Sam')
+    room.add_player('reviewer', 'Reviewer').reviewing_results = True
+    room.add_player('offline', 'Offline')
+    room.disconnect('offline')
+    assert not room.all_configurators_ready()
+    room.set_player_ready('alex')
+    assert not room.all_configurators_ready()
+    room.set_grid_window(60)
+    assert room.grid_close_timestamp_ms == 160000
+    room.set_player_ready('sam')
+    assert room.all_configurators_ready()
+    room.start_countdown(ready_only=True, countdown_seconds=ALL_READY_COUNTDOWN_SECONDS)
+    state = room.get_state_snapshot('alex')
+    assert state['countdown_seconds'] == 3
+    assert state['race_start_timestamp_ms'] == 103000
+    assert not state['grid_close_timestamp_ms']
+    assert room.countdown_seconds == 7  # Normal starts retain the full lights sequence.
+    assert not room.all_configurators_ready()
+
+
+def test_all_ready_requires_real_people_and_handles_full_grid_queue(room):
+    bot = room.add_bot()
+    assert not room.all_configurators_ready()
+    room.remove_player(bot.client_id)
+    for i in range(5):
+        room.add_player(str(i), f'Racer {i}')
+        room.set_player_ready(str(i))
+    assert room.players['4'].is_spectator
+    assert room.all_configurators_ready()
+    room.set_player_ready('0', False)
+    assert not room.all_configurators_ready()
+    room.disconnect('0')
+    assert room.all_configurators_ready()
+    room.reconnect('0')
+    assert not room.all_configurators_ready()

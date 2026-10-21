@@ -9,6 +9,7 @@ from demo.server import app, room_manager
 @pytest.fixture(autouse=True)
 def reset(monkeypatch):
     monkeypatch.setenv('DEMO_ADMIN_PIN', 'test-presenter')
+    monkeypatch.setattr(server, 'ALL_READY_COUNTDOWN_SECONDS', .01)
     room_manager.players.clear()
     room_manager.reset_to_lobby()
     room_manager.change_track('beed')
@@ -349,8 +350,11 @@ def test_late_arrival_promotes_when_race_finishes_and_results_admit_new_visitors
             with client.websocket_connect('/ws/game') as newcomer:
                 newcomer_id = hello(newcomer)['client_id']
                 newcomer.send_json({'action': 'join', 'nickname': 'After the race'})
-                state = receive(newcomer, 'STATE_UPDATE')['data']
-                entrant = next(p for p in state['active_racers'] if p['client_id'] == newcomer_id)
+                while True:
+                    state = receive(newcomer, 'STATE_UPDATE')['data']
+                    if state['participant'] and state['participant']['client_id'] == newcomer_id:
+                        break
+                entrant = state['participant']
                 assert entrant['preparing_next'] and not entrant['is_spectator']
                 newcomer.send_json({'action': 'set_pipeline', **entrant['pipeline']})
                 assert receive(newcomer, 'STATE_UPDATE')['data']['results'] == results
@@ -373,6 +377,7 @@ def test_presenter_state_is_private_and_dedicated_page_is_versioned():
 
 def test_grid_setting_shortens_live_deadline_and_wakes_old_timer():
     room_manager.grid_window_seconds = 60
+    room_manager.add_player('still-building', 'Still building')
     with TestClient(app) as client:
         with client.websocket_connect('/ws/game') as ws:
             hello(ws)
@@ -443,3 +448,56 @@ def test_presenter_start_never_pulls_unready_builders_into_heat():
         room_manager.set_player_ready('ready')
         assert admin(client, 'start_race').status_code == 200
         assert 'builder' not in {entry.client_id for entry in room_manager.heat.entries}
+
+
+def test_last_ready_skips_entry_window_and_launches_after_three_seconds(monkeypatch):
+    monkeypatch.setattr(server, 'ALL_READY_COUNTDOWN_SECONDS', 3.0)
+    room_manager.grid_window_seconds = 60
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as alex, client.websocket_connect('/ws/game') as sam:
+            alex_id, sam_id = hello(alex)['client_id'], hello(sam)['client_id']
+            alex.send_json({'action': 'join', 'nickname': 'Alex'})
+            receive(alex, 'STATE_UPDATE')
+            sam.send_json({'action': 'join', 'nickname': 'Sam'})
+            receive(sam, 'STATE_UPDATE')
+            alex.send_json({'action': 'set_ready', 'ready': True})
+            while True:
+                state = receive(alex, 'STATE_UPDATE')['data']
+                if state['participant']['is_ready']:
+                    break
+            assert state['phase'] == 'LOBBY' and state['grid_close_timestamp_ms']
+            sam.send_json({'action': 'set_ready', 'ready': True})
+            while True:
+                state = receive(sam, 'STATE_UPDATE')['data']
+                if state['phase'] == 'COUNTDOWN':
+                    break
+            assert state['countdown_seconds'] == 3
+            assert not state['grid_close_timestamp_ms']
+            assert 2.5 < state['race_start_timestamp_ms'] / 1000 - state['server_time_utc'] <= 3
+            assert {p['client_id'] for p in state['active_racers']} == {alex_id, sam_id}
+            assert receive(sam, 'COUNTDOWN_START')['data']['countdown_seconds'] == 3
+            assert receive(sam, 'RACE_START')['data']['race_start_timestamp_ms'] == state['race_start_timestamp_ms']
+
+
+def test_builder_disconnect_triggers_short_countdown_and_reviewers_do_not_block():
+    room_manager.grid_window_seconds = 60
+    with TestClient(app) as client:
+        with client.websocket_connect('/ws/game') as racer:
+            racer_id = hello(racer)['client_id']
+            room_manager.add_player('reviewer', 'Reviewer').reviewing_results = True
+            with client.websocket_connect('/ws/game') as builder:
+                hello(builder)
+                racer.send_json({'action': 'join', 'nickname': 'Ready'})
+                receive(racer, 'STATE_UPDATE')
+                builder.send_json({'action': 'join', 'nickname': 'Builder'})
+                receive(builder, 'STATE_UPDATE')
+                racer.send_json({'action': 'set_ready', 'ready': True})
+                while True:
+                    state = receive(racer, 'STATE_UPDATE')['data']
+                    if state['participant']['is_ready']:
+                        break
+                assert state['phase'] == 'LOBBY'
+            state = receive(racer, 'STATE_UPDATE')['data']
+            assert state['phase'] == 'COUNTDOWN'
+            assert any(p['client_id'] == racer_id for p in state['active_racers'])
+            assert not any(p['client_id'] == 'reviewer' for p in state['active_racers'])

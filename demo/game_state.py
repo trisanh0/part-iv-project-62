@@ -12,6 +12,7 @@ from demo.race import RACE_RULES_VERSION, RaceSchedule, build_schedules
 from demo.scoring import SCORING_VERSION, composite_score, performance_order, performance_utility
 
 PROTOCOL_VERSION = 2
+ALL_READY_COUNTDOWN_SECONDS = 3.0
 VEHICLE_TYPES = ('formula', 'hatchback', 'motorbike')
 CAR_COLORS = ['#FF4D4D', '#00E5FF', '#76FF03', '#FFD600', '#D500F9', '#FF9100']
 
@@ -86,6 +87,7 @@ class Heat:
     duration_seconds: float
     race_start_timestamp_ms: int
     schedules: tuple[RaceSchedule, ...]
+    countdown_seconds: float = 7.0
     race_rules_version: str = RACE_RULES_VERSION
     scoring_version: str = SCORING_VERSION
 
@@ -137,6 +139,10 @@ class BoothRoomManager:
     def _ready_grid(self):
         return [p for p in self.players.values() if p.connected and p.is_ready
                 and not p.is_spectator and not p.reviewing_results]
+
+    def all_configurators_ready(self):
+        people = [p for p in self.players.values() if p.connected and not p.is_bot and not p.reviewing_results]
+        return self.admission_open and bool(self._ready_grid()) and bool(people) and all(p.is_ready for p in people)
 
     def _allocate_car_index(self, exclude=None):
         used = {p.car_index for p in self._ready_grid() if p.client_id != exclude}
@@ -233,6 +239,7 @@ class BoothRoomManager:
     def reconnect(self, client_id):
         if p := self.players.get(client_id):
             p.connected, p.disconnected_at = True, None
+            self.ensure_grid_window()
             self.touch()
 
     def expire_disconnected(self, now=None):
@@ -343,7 +350,7 @@ class BoothRoomManager:
         self.ensure_grid_window()
         self.touch()
 
-    def start_countdown(self, ready_only=False):
+    def start_countdown(self, ready_only=False, countdown_seconds=None):
         if not self.admission_open:
             return False
         if ready_only:
@@ -365,11 +372,12 @@ class BoothRoomManager:
             active.append(self.add_bot())
         self.grid_close_timestamp_ms = self.grid_open_timestamp_ms = 0
         self.phase, self.phase_start_time_utc = GamePhase.COUNTDOWN, time.time()
-        self.race_start_timestamp_ms = int((self.phase_start_time_utc + self.countdown_seconds) * 1000)
+        countdown = self.countdown_seconds if countdown_seconds is None else countdown_seconds
+        self.race_start_timestamp_ms = int((self.phase_start_time_utc + countdown) * 1000)
         entries = tuple(RaceEntry(p.client_id, p.nickname, p.avatar_color, p.car_index, p.is_bot, p.metrics, p.vehicle) for p in active)
         self.heat = Heat(uuid.uuid4().hex, self.current_track_id, self.engine.build_id,
                          entries, self.race_duration_seconds, self.race_start_timestamp_ms,
-                         build_schedules(entries, self.race_duration_seconds))
+                         build_schedules(entries, self.race_duration_seconds), countdown_seconds=countdown)
         self.touch()
         return True
 
@@ -474,5 +482,5 @@ class BoothRoomManager:
                     build_id=self.engine.build_id, scoring_version=SCORING_VERSION, phase=self.phase.value, track=track,
                     active_racers=active, spectators=[p.to_dict() for p in sorted(self.players.values(), key=lambda p: p.ready_at) if p.is_spectator],
                     max_active_racers=self.max_active_racers, race_duration_seconds=self.heat.duration_seconds if self.heat and not self.admission_open else self.race_duration_seconds,
-                    countdown_seconds=self.countdown_seconds, phase_start_time_utc=self.phase_start_time_utc,
+                    countdown_seconds=self.heat.countdown_seconds if self.heat and not self.admission_open else self.countdown_seconds, phase_start_time_utc=self.phase_start_time_utc,
                     race_start_timestamp_ms=self.race_start_timestamp_ms, server_time_utc=time.time(), results=self.race_results_cache)

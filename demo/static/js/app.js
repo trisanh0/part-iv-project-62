@@ -285,7 +285,8 @@ export class DemoClientApp {
         const signature = JSON.stringify([configurations, pipeline, !!this.pending, this.connected]);
         if (this.guidedSignature === signature) return;
         const root = byId('guided-builder');
-        const open = root.querySelector('details[open]:not([data-expanded="false"])')?.dataset.stage || 'extractor';
+        const open = root.querySelector('details[open]:not([data-expanded="false"])')?.dataset.stage
+            || (document.querySelector('.car-customisation[open]:not([data-expanded="false"])') ? null : 'extractor');
         if (document.activeElement?.dataset.choice) {
             this.guidedFocus = {choice: document.activeElement.dataset.choice, stage: document.activeElement.dataset.stage};
         }
@@ -329,7 +330,6 @@ export class DemoClientApp {
         const signature = JSON.stringify([player.vehicle, player.avatar_color, player.preferred_color, !!this.pending, this.connected]);
         if (signature === this.appearanceSignature) return;
         this.appearanceSignature = signature;
-        byId('car-summary').textContent = `${VEHICLES.find(v => v.id === player.vehicle)?.name || 'Formula'} · ${COLOR_NAMES[colors.indexOf(player.avatar_color)] || 'Auto'}`;
         const choose = (vehicle, color, focus) => { this.appearanceFocus = focus; this._command({action: 'set_appearance', vehicle, color}); };
         const vehicles = byId('vehicle-choices');
         vehicles.replaceChildren(...VEHICLES.map(vehicle => {
@@ -446,7 +446,7 @@ export class DemoClientApp {
         const previous = this._previousBuild(results.heat_id);
         byId('previous-build-comparison').textContent = own && previous ? `Since your last race: ${measurementChange(own.metrics, previous.metrics)}.` : '';
         if (this.resultSignature !== results.heat_id) {
-            byId('podium-cards').innerHTML = rows.map(row => `<li class="result-row ${row.client_id === this.clientId ? 'is-you' : ''}"><div class="result-person"><span class="finish-position">${row.finish_position}${row.tied ? '=' : ''}</span><span class="racer-dot" data-color="${row.client_id}"></span><span>${escapeText(row.client_id === this.clientId ? row.nickname : row.is_bot ? "Benchmark" : `Racer ${row.car_index + 1}`)}</span>${row.client_id === this.clientId ? '<span class="you-label">You</span>' : ''}</div>${metricMarkup(row.metrics)}${row.race_schedule ? `<p class="race-breakdown">${row.race_schedule.uses_accuracy ? `Drive ${raceTime(row.race_schedule.driving_ms)} · Pit ${raceTime(row.race_schedule.pit_ms)} · ` : ''}<strong>Total ${raceTime(row.race_schedule.finish_ms)}</strong></p>` : ''}</li>`).join('');
+            byId('podium-cards').innerHTML = rows.map(row => `<li class="result-row ${row.client_id === this.clientId ? 'is-you' : ''}"><div class="result-person"><span class="finish-position">${row.finish_position}${row.tied ? '=' : ''}</span><span class="racer-dot" data-color="${row.client_id}"></span><span>${escapeText(row.nickname)}</span>${row.client_id === this.clientId ? '<span class="you-label">You</span>' : ''}</div>${metricMarkup(row.metrics)}${row.race_schedule ? `<p class="race-breakdown">${row.race_schedule.uses_accuracy ? `Drive ${raceTime(row.race_schedule.driving_ms)} · Pit ${raceTime(row.race_schedule.pit_ms)} · ` : ''}<strong>Total ${raceTime(row.race_schedule.finish_ms)}</strong></p>` : ''}</li>`).join('');
             byId('podium-cards').querySelectorAll('[data-color]').forEach(dot => dot.style.setProperty('--racer-color', rows.find(r => r.client_id === dot.dataset.color).avatar_color));
             const details = byId('result-technical-content');
             details.replaceChildren(...rows.map(row => {
